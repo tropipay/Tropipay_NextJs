@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
 
   // Condición 1: Redirigir a /login si se intenta acceder a /dashboard sin autenticación
   if (pathname.startsWith("/dashboard") && !token) {
-    return NextResponse.redirect(new URL("/", req.url))
+    return NextResponse.redirect(new URL("/login", req.url))
   }
 
   // Condición 2: Redirigir a /dashboard si el usuario autenticado intenta acceder a otras rutas
