@@ -1,7 +1,15 @@
-import React from "react"
+import { auth } from "@/auth"
 
-const homePage = () => {
-  return <div>BIENVENIDO</div>
+export default async function Page() {
+  const session = await auth()
+
+  if (!session) {
+    return <div>Not authenticated</div>
+  }
+
+  return (
+    <div className="container">
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+    </div>
+  )
 }
-
-export default homePage
