@@ -8,6 +8,10 @@ export default {
         token: {},
       },
       authorize: async (credentials) => {
+        console.log(
+          "-------------------------------------credentials.token:",
+          credentials
+        )
         try {
           const res = await fetch("http://localhost:3000/api2/users/profile", {
             method: "GET",
@@ -25,7 +29,6 @@ export default {
             )
           }
 
-          // Procesa la respuesta JSON
           const user = await res.json()
           return {
             id: user.id,
