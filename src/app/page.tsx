@@ -1,15 +1,13 @@
-import { auth } from "@/auth"
+"use client"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
-export default async function Page() {
-  const session = await auth()
-
-  if (!session) {
-    return <div>Not authenticated</div>
-  }
+export default function Page() {
+  const router = useRouter()
 
   return (
     <div className="container">
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      <Button onClick={() => router.push("/login")}>goto login</Button>
     </div>
   )
 }

@@ -2,15 +2,13 @@
 import { signIn, signOut } from "@/auth"
 
 export const autoLogin = async (token: string) => {
+  console.log("token:", token)
   try {
-    await signIn("credentials", {
-      token,
-      callbackUrl: "/dashboard",
-    })
+    await signIn("credentials", { redirect: true, token })
   } catch (error) {
     console.error(error)
   }
 }
 export const logout = async () => {
-  await signOut()
+  await signOut({ redirect: true })
 }

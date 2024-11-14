@@ -1,12 +1,13 @@
 "use client"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 // import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 import { autoLogin } from "@/actions/sessionActions"
+import { Button } from "@/components/ui/button"
 
 function LoginPage() {
-  // const [isLoginFormVisible, setIsLoginFormVisible] = useState(false)
+  const [tokenSession, setTokenSession] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -15,13 +16,20 @@ function LoginPage() {
     const sessionData = sessionCookie
       ? JSON.parse(decodeURIComponent(sessionCookie || "")).sessionData
       : {}
-    const tokenSession = sessionData?.token
+    setTokenSession(sessionData?.token)
 
     console.log("autoLogin con :", sessionCookie)
-    autoLogin(tokenSession)
+    // autoLogin(tokenSession)
   }, [router])
 
-  return <div>Formulario de Login aquí</div>
+  return (
+    <div>
+      Formulario de Login aquí{" "}
+      {tokenSession && (
+        <Button onClick={() => autoLogin(tokenSession)}>LOGIN</Button>
+      )}
+    </div>
+  )
 }
 
 export default LoginPage

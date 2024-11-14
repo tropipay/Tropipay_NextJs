@@ -8,10 +8,6 @@ export default {
         token: {},
       },
       authorize: async (credentials) => {
-        console.log(
-          "-------------------------------------credentials.token:",
-          credentials
-        )
         try {
           const res = await fetch("http://localhost:3000/api2/users/profile", {
             method: "GET",
@@ -22,7 +18,6 @@ export default {
             },
           })
 
-          // Verifica si la respuesta es exitosa
           if (!res.ok) {
             throw new Error(
               `Failed to fetch user profile: ${res.status} ${res.statusText}`
@@ -38,7 +33,6 @@ export default {
             lang: user.lang,
           }
         } catch (error) {
-          // Aseguramos que error sea de tipo Error
           if (error instanceof Error) {
             throw new Error(`Authorization failed: ${error.message}`)
           } else {
@@ -48,4 +42,21 @@ export default {
       },
     }),
   ],
+
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      console.log("-----------------------url, baseUrl:", url, baseUrl)
+
+      // Redirecciona a `/dashboard` si `url` incluye `signin`
+      if (url.includes("/signin")) {
+        return `${baseUrl}/dashboard`
+      }
+      // Redirecciona a `/login` si `url` incluye `signout`
+      if (url.includes("/signout")) {
+        return `${baseUrl}/login`
+      }
+      // Si no se cumplen las condiciones anteriores, usa la URL base
+      return baseUrl
+    },
+  },
 } satisfies NextAuthConfig
