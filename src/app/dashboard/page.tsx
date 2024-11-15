@@ -1,18 +1,7 @@
-import { logout } from "@/actions/sessionActions"
-import { auth } from "@/auth"
-import { Button } from "@/components/ui/button"
-
-export default async function Page() {
-  const session = await auth()
-
-  if (!session) {
-    return <div>DASHBOARD</div>
-  }
-
+export default function Home() {
   return (
-    <div className="container">
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      <Button onClick={logout}>Logout</Button>
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      DASHBOARD
     </div>
   )
 }
