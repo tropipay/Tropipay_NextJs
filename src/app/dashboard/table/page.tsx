@@ -1,4 +1,4 @@
-import AccordionTPP from "@/components/customShadcn/AccordionTPP"
+"use client"
 import TableTPP from "@/components/customShadcn/TableTPP"
 import React from "react"
 const items = [

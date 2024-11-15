@@ -1,19 +1,28 @@
 "use client"
 import AccordionTPP from "@/components/customShadcn/AccordionTPP"
-import { fetchGetWithTriggers } from "@/lib/utils"
-import DestinationCountryStore from "@/stores/DestinationCountryStore"
+// import DestinationCountryStore from "@/stores/DestinationCountryStore"
 import { useQuery } from "@tanstack/react-query"
 import React from "react"
 
+// You can define the query hook separately or directly within the component
+const useDestinationCountryData = () => {
+  return useQuery({
+    queryKey: ["items"],
+    queryFn: () => fetchGetWithTriggers(DestinationCountryStore.List),
+  })
+}
+
 const Page = () => {
-  function ProcessStore(store) {
-    return useQuery({
-      queryKey: ["items"],
-      queryFn: () => fetchGetWithTriggers(store),
-    })
+  // Fetch data using the custom hook
+  const { data, isLoading, isError, error } = useDestinationCountryData()
+
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
-  const { data } = ProcessStore(DestinationCountryStore.List)
+  if (isError) {
+    return <div>Error: {error?.message}</div>
+  }
 
   return (
     <AccordionTPP
