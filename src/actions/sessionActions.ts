@@ -2,7 +2,6 @@
 import { signIn, signOut } from "@/auth"
 
 export const autoLogin = async (token: string) => {
-  console.log("token:", token)
   try {
     await signIn("credentials", { redirect: true, token })
   } catch (error) {

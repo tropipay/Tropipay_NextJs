@@ -21,7 +21,11 @@ import { Input } from "../ui/input"
 import DropdownMenuTPP from "./DropdownMenuTPP"
 import { ChevronDown } from "lucide-react"
 
-const TableTPP = ({ data, columns }) => {
+interface dataType {
+  [key: string]: string | number | boolean | Date | null
+}
+
+const TableTPP = ({ data, columns }: { data: dataType[]; columns: any }) => {
   const [sorting, setSorting] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState([])
   const [columnVisibility, setColumnVisibility] = React.useState({})

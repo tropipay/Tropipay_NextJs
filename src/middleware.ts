@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*", // Aplica a todas las rutas dentro de /dashboard
-    "/((?!api|_next/static|_next/image|favicon.ico).*)", // Aplica a todas las rutas, excluyendo las mencionadas
+    "/dashboard/:path*",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 }

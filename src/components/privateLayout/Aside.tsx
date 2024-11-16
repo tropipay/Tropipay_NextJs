@@ -1,5 +1,7 @@
 import Link from "next/link"
 import React, { useState } from "react"
+import { Button } from "../ui/button"
+import { logout } from "@/actions/sessionActions"
 
 const links = [
   { name: "accordion", href: "/dashboard/accordion" },
@@ -37,6 +39,7 @@ const Aside = () => {
                     </Link>
                   </li>
                 ))}
+                <Button onClick={logout}>Logout</Button>
               </ul>
             </div>
           </div>

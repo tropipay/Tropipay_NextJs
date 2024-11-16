@@ -4,9 +4,6 @@ import type { NextAuthConfig } from "next-auth"
 export default {
   providers: [
     Credentials({
-      credentials: {
-        token: {},
-      },
       authorize: async (credentials) => {
         try {
           const res = await fetch("http://localhost:3000/api2/users/profile", {
@@ -26,11 +23,8 @@ export default {
 
           const user = await res.json()
           return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            image: user.logo,
-            lang: user.lang,
+            ...user,
+            token: credentials.token,
           }
         } catch (error) {
           if (error instanceof Error) {
@@ -44,18 +38,27 @@ export default {
   ],
 
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      console.log("-----------------------url, baseUrl:", url, baseUrl)
+    async jwt({ token, user }) {
+      return { ...token, ...user }
+    },
 
-      // Redirecciona a `/dashboard` si `url` incluye `signin`
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          ...session.user,
+          ...token,
+        }
+      }
+      return session
+    },
+
+    async redirect({ url, baseUrl }) {
       if (url.includes("/signin")) {
         return `${baseUrl}/dashboard`
       }
-      // Redirecciona a `/login` si `url` incluye `signout`
       if (url.includes("/signout")) {
         return `${baseUrl}/login`
       }
-      // Si no se cumplen las condiciones anteriores, usa la URL base
       return baseUrl
     },
   },

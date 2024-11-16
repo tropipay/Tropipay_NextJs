@@ -56,7 +56,7 @@ interface MenuItemType {
 
 interface DropdownMenuTPPProps {
   text: string
-  icon?: React.Component
+  icon?: React.Component | null
   items: MenuItemType[]
   checkbox?: {
     checked: (item: any) => boolean
