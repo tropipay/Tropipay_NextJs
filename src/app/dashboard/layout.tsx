@@ -3,7 +3,6 @@ import Aside from "@/components/privateLayout/Aside"
 import Header from "@/components/privateLayout/Header"
 import Footer from "@/components/privateLayout/Footer"
 import React, { useState } from "react"
-import TanstackProvider from "@/providers/TanstackProvider"
 
 export default function DashboardLayout({ children }: ChildrenProps) {
   const [isSidebarOpen, setSidebarOpen] = useState(false)
@@ -32,7 +31,7 @@ export default function DashboardLayout({ children }: ChildrenProps) {
             <div className="pt-6 px-4">
               <div className="w-full min-h-[calc(100vh-230px)]">
                 <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8">
-                  <TanstackProvider>{children}</TanstackProvider>
+                  {children}
                 </div>
               </div>
             </div>
