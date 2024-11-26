@@ -1,16 +1,27 @@
+import { QueryClient, dehydrate } from "@tanstack/react-query"
+import DataComponent from "../components/DataComponent"
+import UserTable from "../components/preformatedData/UserTable"
 import { fetchGetWithTriggers } from "@/lib/utils"
-import { getUser } from "@/lib/utilsUser"
 
-export default async function Home() {
-  const session = await getUser()
-  const lista = await fetchGetWithTriggers({
-    endpoint: "/api2/countries/destinations",
+export default async function Page() {
+  const queryClient = new QueryClient()
+  const usersURL = "https://jsonplaceholder.typicode.com/users"
+
+  await queryClient.prefetchQuery({
+    queryKey: ["users"],
+    queryFn: () =>
+      fetchGetWithTriggers({
+        endpoint: usersURL,
+        isPublic: true,
+        filter: { active: true },
+      }),
   })
-  console.log("lista:", lista)
+
+  const dehydratedState = dehydrate(queryClient)
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      DASHBOARD
-      <pre>{session}</pre>
-    </div>
+    <>
+      <h1>Bienvenido al Dashboard</h1>
+    </>
   )
 }

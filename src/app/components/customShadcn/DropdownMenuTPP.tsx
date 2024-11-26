@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/app/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/app/components/ui/dropdown-menu"
 import React from "react"
 
 /**

@@ -4,9 +4,8 @@ import { Button } from "../ui/button"
 import { logout } from "@/actions/sessionActions"
 
 const links = [
-  { name: "accordion", href: "/dashboard/accordion" },
-  { name: "table", href: "/dashboard/table" },
-  { name: "table / test", href: "/dashboard/table/test" },
+  { name: "Home", href: "/dashboard" },
+  { name: "basic table", href: "/dashboard/basicTable" },
 ]
 
 const Aside = () => {
@@ -39,7 +38,9 @@ const Aside = () => {
                     </Link>
                   </li>
                 ))}
-                <Button onClick={logout}>Logout</Button>
+                <Button className="w-full" onClick={logout}>
+                  Logout
+                </Button>
               </ul>
             </div>
           </div>
