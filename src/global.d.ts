@@ -17,6 +17,17 @@ declare global {
     createdAt?: date
     updatedAt?: date
   }
+
+  type Movement = {
+    amount: string
+    state: "Pendiente" | "Procesando" | "Completado" | "Reembolsado"
+    date: string
+    type: string
+    method: string
+    user: string
+    bankOrderCode: string
+    concept: string
+  }
 }
 
 export {}

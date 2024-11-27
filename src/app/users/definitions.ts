@@ -23,3 +23,26 @@ export const usersRole = [
     label: "Provider",
   },
 ]
+
+export const movementsState = [
+  {
+    value: "pendingIn",
+    label: "Pendiente",
+    icon: CheckCircledIcon,
+  },
+  {
+    value: "procesing",
+    label: "Procesando",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "completed",
+    label: "Completado",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "refund",
+    label: "Reembolsado",
+    icon: CrossCircledIcon,
+  },
+]

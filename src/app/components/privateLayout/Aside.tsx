@@ -6,7 +6,8 @@ import { logout } from "@/app/actions/sessionActions"
 const links = [
   { name: "Home", href: "/dashboard" },
   { name: "basic table", href: "/dashboard/basicTable" },
-  { name: "full table", href: "/dashboard/fullTable" },
+  { name: "Movimientos", href: "/dashboard/movements" },
+  { name: "Usuarios", href: "/dashboard/users" },
 ]
 
 const Aside = () => {

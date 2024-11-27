@@ -4,10 +4,10 @@ import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
 
 import { usersRole, usersStatus } from "@/app/users/definitions"
-import { DataTableColumnHeader } from "./dataTableColumnHeader"
-import { DataTableRowActions } from "./dataTableRowActions"
+import { DataTableColumnHeader } from "@/app/components/table/dataTableColumnHeader"
+import { DataTableRowActions } from "@/app/components/table/dataTableRowActions"
 
-export const columns: ColumnDef<User>[] = [
+export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: "userName",
     header: ({ column }) => (
@@ -76,7 +76,6 @@ export const columns: ColumnDef<User>[] = [
       if (!status) {
         return null
       }
-
       return (
         <div
           className={clsx("flex w-[100px] items-center", {

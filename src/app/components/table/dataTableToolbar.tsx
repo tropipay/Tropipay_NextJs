@@ -47,12 +47,14 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          {table.getColumn("status") && (
-            <DataTableFacetedFilter
-              column={table.getColumn("status")}
-              title={"Status"}
-              options={usersStatus}
-            />
+          {table.getColumn("state") && (
+            <>
+              <DataTableFacetedFilter
+                column={table.getColumn("state")}
+                title={"Status"}
+                options={usersStatus}
+              />
+            </>
           )}
 
           {isFiltered && (
