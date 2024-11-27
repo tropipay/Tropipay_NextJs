@@ -1,10 +1,10 @@
-import { fetchGetWithTriggers } from "@/lib/utils"
+import { fetchGetWithTriggers } from "@/app/lib/utils"
 
-const DestinationCountryStore = {
+export const DestinationCountryStore = {
   name: "DestinationCountryActions",
   List: () => {
     return fetchGetWithTriggers({
-      endpoint: "/api2/countries",
+      endpoint: "http://localhost:3000/api2/countries",
     })
   },
   Destinations: () => {
@@ -13,10 +13,8 @@ const DestinationCountryStore = {
     })
   },
   Locations: (id = 0) => {
-    return ProcessStore({
+    return fetchGetWithTriggers({
       endpoint: "/api/countries/" + id + "/locations",
     })
   },
 }
-
-export default DestinationCountryStore

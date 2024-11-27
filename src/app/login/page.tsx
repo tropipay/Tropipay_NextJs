@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 // import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
-import { autoLogin } from "@/actions/sessionActions"
+import { autoLogin } from "@/app/actions/sessionActions"
 import { Button } from "@/app/components/ui/button"
 
 function LoginPage() {

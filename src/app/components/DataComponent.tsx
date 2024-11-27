@@ -16,15 +16,13 @@ export default function DataComponent({
   fetchURL,
   children,
 }: DataComponentProps) {
-  const fetchData = async () => {
-    const res = await fetch(fetchURL)
-    if (!res.ok) throw new Error("Error fetching data")
-    return res.json()
-  }
-
   const { data, error, isLoading } = useQuery({
     queryKey,
-    queryFn: fetchData,
+    queryFn: async () => {
+      const res = await fetch(fetchURL)
+      if (!res.ok) throw new Error("Error fetching data")
+      return res.json()
+    },
     initialData: dehydratedState.queries?.find(
       (query) => JSON.stringify(query.queryKey) === JSON.stringify(queryKey)
     )?.state?.data,

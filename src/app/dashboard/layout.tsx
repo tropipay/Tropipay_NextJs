@@ -1,7 +1,7 @@
 "use client"
-import Aside from "@/components/privateLayout/Aside"
-import Header from "@/components/privateLayout/Header"
-import Footer from "@/components/privateLayout/Footer"
+import Aside from "@/app/components/privateLayout/Aside"
+import Header from "@/app/components/privateLayout/Header"
+import Footer from "@/app/components/privateLayout/Footer"
 import React, { useState } from "react"
 
 export default function DashboardLayout({ children }: ChildrenProps) {

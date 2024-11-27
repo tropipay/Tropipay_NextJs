@@ -1,11 +1,12 @@
 import Link from "next/link"
 import React, { useState } from "react"
 import { Button } from "../ui/button"
-import { logout } from "@/actions/sessionActions"
+import { logout } from "@/app/actions/sessionActions"
 
 const links = [
   { name: "Home", href: "/dashboard" },
   { name: "basic table", href: "/dashboard/basicTable" },
+  { name: "full table", href: "/dashboard/fullTable" },
 ]
 
 const Aside = () => {

@@ -1,5 +1,5 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query"
-import { fetchGetWithTriggers } from "@/lib/utils"
+import { fetchGetWithTriggers } from "@/app/lib/utils"
 import DataComponent from "@/app/components/DataComponent"
 import UserTable from "@/app/components/preformatedData/UserTable"
 

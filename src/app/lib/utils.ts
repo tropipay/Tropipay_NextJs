@@ -1,6 +1,59 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
+import { DehydratedState, QueryKey } from "@tanstack/react-query"
+
+// Definimos un tipo para una función de búsqueda que toma un parámetro `T` y devuelve un endpoint
+type FetchFunction<T extends any[]> = (...args: T) => { endpoint: string }
+
+// Tipo de configuración para `useQuery`
+type QueryConfig<TData> = {
+  queryKey: QueryKey
+  queryFn: () => Promise<TData>
+  initialData?: TData
+  staleTime?: number
+}
+
+// Tipo de retorno de `setSSROptions`
+type setSSROptions = Record<string, any>
+
+// Tipo de retorno de `getUseQueryConfig`
+type GetUseQueryConfigReturn<TData> = Required<QueryConfig<TData>>
+
+export function setSSR<T extends any[], TData>(
+  func: (...args: T) => Promise<TData>, // Función que devuelve una promesa con datos de tipo TData
+  config: setSSROptions = {}, // Configuración adicional opcional
+  args: T = [] as T // Argumentos para la función de búsqueda, con valor predeterminado
+) {
+  return {
+    queryKey: [func.name, ...args] as QueryKey, // Generamos el queryKey usando el nombre de la función y los argumentos
+    queryFn: () => func(...args), // Llamamos a la función con los argumentos proporcionados
+    ...config, // Fusionamos la configuración adicional proporcionada
+  }
+}
+
+export function getUseQueryConfig<T extends any[], TData>(
+  func: FetchFunction<T>,
+  dehydratedState: DehydratedState,
+  args: T,
+  staleTime = 1000 * 60 * 5
+): GetUseQueryConfigReturn<TData> {
+  const queryKey = [func.name, ...args] as QueryKey
+  const { endpoint: fetchURL } = func(...args)
+
+  return {
+    queryKey,
+    queryFn: async () => {
+      const res = await fetch(fetchURL)
+      if (!res.ok) throw new Error("Error fetching data")
+      return (await res.json()) as TData
+    },
+    initialData: dehydratedState.queries?.find(
+      (query) => JSON.stringify(query.queryKey) === JSON.stringify(queryKey)
+    )?.state?.data as TData,
+    staleTime,
+  }
+}
 
 // Función para combinar clases (cn)
 export function cn(...inputs: ClassValue[]): string {
@@ -38,7 +91,7 @@ export const fetchGetWithTriggers = async (
     try {
       user = await getUser()
     } catch (error) {
-      console.warn("No se pudo obtener el usuario en el servidor")
+      console.warn("No se pudo obtener el usuario en el servidor:", error)
       user = {} // Default vacío si no se puede obtener en el servidor
     }
 
