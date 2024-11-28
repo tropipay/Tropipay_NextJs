@@ -2,7 +2,7 @@ import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
-} from "@/app/components/ui/accordion"
+} from "@/components/ui/accordion"
 import { AccordionContent } from "@radix-ui/react-accordion"
 import React from "react"
 

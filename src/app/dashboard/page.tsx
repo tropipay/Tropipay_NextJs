@@ -1,6 +1,6 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query"
-import DataComponent from "@/app/components/DataComponent"
-import UserTable from "@/app/components/preformatedData/UserTable"
+import DataComponent from "@/components/DataComponent"
+import UserTable from "@/components/preformatedData/UserTable"
 import { setSSR } from "@/app/lib/utils"
 import { DestinationCountryStore } from "@/app/stores/DestinationCountryStore"
 

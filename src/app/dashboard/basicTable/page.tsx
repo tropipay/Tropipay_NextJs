@@ -1,7 +1,7 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query"
 import { fetchGetWithTriggers } from "@/app/lib/utils"
-import DataComponent from "@/app/components/DataComponent"
-import UserTable from "@/app/components/preformatedData/UserTable"
+import DataComponent from "@/components/DataComponent"
+import UserTable from "@/components/preformatedData/UserTable"
 
 export default async function Page() {
   const queryClient = new QueryClient()

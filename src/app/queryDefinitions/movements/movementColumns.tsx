@@ -3,8 +3,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
 
-import { DataTableColumnHeader } from "@/app/components/table/dataTableColumnHeader"
-import { DataTableRowActions } from "@/app/components/table/dataTableRowActions"
+import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
+import { DataTableRowActions } from "@/components/table/dataTableRowActions"
 import { movementsState } from "@/app/users/definitions"
 
 export const movementColumns: ColumnDef<Movement>[] = [

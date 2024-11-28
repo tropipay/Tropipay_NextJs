@@ -1,4 +1,4 @@
-import DataTable from "@/app/components/table/dataTable"
+import DataTable from "@/components/table/dataTable"
 import { movementColumns } from "@/app/queryDefinitions/movements/movementColumns"
 import { movements } from "@/app/queryDefinitions/movements/movements"
 

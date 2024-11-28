@@ -4,8 +4,8 @@ import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
 
 import { usersRole, usersStatus } from "@/app/users/definitions"
-import { DataTableColumnHeader } from "@/app/components/table/dataTableColumnHeader"
-import { DataTableRowActions } from "@/app/components/table/dataTableRowActions"
+import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
+import { DataTableRowActions } from "@/components/table/dataTableRowActions"
 
 export const userColumns: ColumnDef<User>[] = [
   {

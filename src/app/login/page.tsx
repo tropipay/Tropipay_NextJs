@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"
 import { autoLogin } from "@/app/actions/sessionActions"
-import { Button } from "@/app/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 function LoginPage() {
   const [tokenSession, setTokenSession] = useState(null)

@@ -1,4 +1,4 @@
-import DataTable from "@/app/components/table/dataTable"
+import DataTable from "@/components/table/dataTable"
 import { userColumns } from "@/app/queryDefinitions/users/userColumns"
 import { users } from "@/app/queryDefinitions/users/users"
 
