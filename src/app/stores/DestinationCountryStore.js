@@ -1,4 +1,4 @@
-import { fetchGetWithTriggers } from "@/app/lib/utils"
+import { fetchGetWithTriggers } from "@/lib/utils"
 
 export const DestinationCountryStore = {
   name: "DestinationCountryActions",

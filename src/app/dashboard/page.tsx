@@ -1,7 +1,7 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query"
 import DataComponent from "@/components/DataComponent"
 import UserTable from "@/components/preformatedData/UserTable"
-import { setSSR } from "@/app/lib/utils"
+import { setSSR } from "@/lib/utils"
 import { DestinationCountryStore } from "@/app/stores/DestinationCountryStore"
 
 export default async function Page() {
