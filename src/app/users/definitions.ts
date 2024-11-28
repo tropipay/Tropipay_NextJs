@@ -26,22 +26,22 @@ export const usersRole = [
 
 export const movementsState = [
   {
-    value: "pendingIn",
+    value: "Pendiente",
     label: "Pendiente",
     icon: CheckCircledIcon,
   },
   {
-    value: "procesing",
+    value: "Procesando",
     label: "Procesando",
     icon: CrossCircledIcon,
   },
   {
-    value: "completed",
+    value: "Completado",
     label: "Completado",
     icon: CrossCircledIcon,
   },
   {
-    value: "refund",
+    value: "Reembolsado",
     label: "Reembolsado",
     icon: CrossCircledIcon,
   },

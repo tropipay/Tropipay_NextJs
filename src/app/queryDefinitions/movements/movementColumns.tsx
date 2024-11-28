@@ -30,6 +30,7 @@ export const movementColumns: ColumnDef<Movement>[] = [
       if (!state) {
         return null
       }
+      const Icon = state.icon
       return (
         <div
           className={clsx("flex items-center", {
@@ -39,6 +40,7 @@ export const movementColumns: ColumnDef<Movement>[] = [
             "text-gray-500": state.value === "Reembolsado",
           })}
         >
+          <Icon className="mr-2 h-4 w-4" />
           <span>{state.label}</span>
         </div>
       )
@@ -82,9 +84,5 @@ export const movementColumns: ColumnDef<Movement>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Concept"} />
     ),
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ]
