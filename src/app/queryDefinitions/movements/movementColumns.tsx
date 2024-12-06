@@ -5,7 +5,7 @@ import clsx from "clsx"
 
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { DataTableRowActions } from "@/components/table/dataTableRowActions"
-import { movementsState } from "@/app/users/definitions"
+import { movementsState } from "@/app/queryDefinitions/users/definitions"
 
 export const movementColumns: ColumnDef<Movement>[] = [
   {

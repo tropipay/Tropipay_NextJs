@@ -3,7 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
 
-import { usersRole, usersStatus } from "@/app/users/definitions"
+import {
+  usersRole,
+  usersStatus,
+} from "@/app/queryDefinitions/users/definitions"
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { DataTableRowActions } from "@/components/table/dataTableRowActions"
 

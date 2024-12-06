@@ -5,7 +5,10 @@ import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { usersStatus } from "@/app/users/definitions"
+import {
+  movementsState,
+  usersStatus,
+} from "@/app/queryDefinitions/users/definitions"
 import { DataTableFacetedFilter } from "./dataTableFacetedFilter"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
@@ -51,8 +54,8 @@ export function DataTableToolbar<TData>({
             <>
               <DataTableFacetedFilter
                 column={table.getColumn("state")}
-                title={"Status"}
-                options={usersStatus}
+                title={"State"}
+                options={movementsState}
               />
             </>
           )}

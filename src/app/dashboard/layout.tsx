@@ -1,44 +1,45 @@
-"use client"
-import Aside from "@/components/privateLayout/Aside"
-import Header from "@/components/privateLayout/Header"
-import Footer from "@/components/privateLayout/Footer"
-import React, { useState } from "react"
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
-export default function DashboardLayout({ children }: ChildrenProps) {
-  const [isSidebarOpen, setSidebarOpen] = useState(false)
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen)
-  }
-
+export default function Page({ children }: ChildrenProps) {
   return (
-    <>
-      <Header toggleSidebar={toggleSidebar} />
-      <div className="flex overflow-hidden bg-white pt-16">
-        <Aside /* isOpen={isSidebarOpen} */ /> {/* Asegúrate de pasar isOpen */}
-        {isSidebarOpen && (
-          <div
-            className="bg-gray-900 opacity-50 fixed inset-0 z-10"
-            id="sidebarBackdrop"
-            onClick={toggleSidebar}
-          ></div>
-        )}
-        <div
-          id="main-content"
-          className="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64"
-        >
-          <main>
-            <div className="pt-6 px-4">
-              <div className="w-full min-h-[calc(100vh-230px)]">
-                <div className="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8">
-                  {children}
-                </div>
-              </div>
-            </div>
-          </main>
-          <Footer />
-        </div>
-      </div>
-    </>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">
+                    Building Your Application
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
