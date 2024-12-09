@@ -65,12 +65,18 @@ export const movementColumns: ColumnDef<Movement>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Method"} />
     ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     accessorKey: "user",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"User"} />
     ),
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     accessorKey: "bankOrderCode",
