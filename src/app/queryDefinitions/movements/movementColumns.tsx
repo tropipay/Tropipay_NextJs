@@ -4,8 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
 
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
-import { DataTableRowActions } from "@/components/table/dataTableRowActions"
-import { movementsState } from "@/app/queryDefinitions/users/definitions"
+import { movementsState } from "@/app/filterDefinitions/definitions"
 
 export const movementColumns: ColumnDef<Movement>[] = [
   {

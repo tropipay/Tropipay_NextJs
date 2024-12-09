@@ -5,14 +5,15 @@ import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  movementsState,
-  usersStatus,
-} from "@/app/queryDefinitions/users/definitions"
 import { DataTableFacetedFilter } from "./dataTableFacetedFilter"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation"
+import {
+  methodList,
+  movementsState,
+  userList,
+} from "@/app/filterDefinitions/definitions"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -53,9 +54,23 @@ export function DataTableToolbar<TData>({
           {table.getColumn("state") && (
             <>
               <DataTableFacetedFilter
+                key={"state"}
                 column={table.getColumn("state")}
                 title={"State"}
                 options={movementsState}
+              />
+              <DataTableFacetedFilter
+                key={"method"}
+                column={table.getColumn("method")}
+                title={"Method"}
+                options={methodList}
+              />
+              <DataTableFacetedFilter
+                column={table.getColumn("user")}
+                title={"User"}
+                options={userList.sort((a, b) =>
+                  a.label.localeCompare(b.label)
+                )}
               />
             </>
           )}
