@@ -12,7 +12,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command"
 import {
   Popover,
@@ -37,10 +36,15 @@ export function DataTableFilterFaceted<TData, TValue>({
   title,
   options,
 }: DataTableFilterFacetedProps<TData, TValue>) {
-  const { setParam } = useFilterParams()
-  const facets = column?.getFacetedUniqueValues()
-  const selectedValues = new Set(column?.getFilterValue() as string[])
   const thisColumn = column?.id || ""
+  const { setParam, getParam } = useFilterParams()
+  const facets = column?.getFacetedUniqueValues()
+  /*                       column?.setFilterValue(getParam(thisColumn) ? [getParam(thisColumn)]
+                         : undefined
+                      )
+ */
+  console.log("getParam(thisColumn):", getParam(thisColumn))
+  const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
     <Popover>
@@ -104,8 +108,6 @@ export function DataTableFilterFaceted<TData, TValue>({
                       column?.setFilterValue(
                         filterValues.length ? filterValues : undefined
                       )
-                      console.log("filterValues:", filterValues)
-
                       setParam(thisColumn, filterValues)
                     }}
                   >
@@ -132,19 +134,14 @@ export function DataTableFilterFaceted<TData, TValue>({
                 )
               })}
             </CommandGroup>
-            {selectedValues.size > 0 && (
-              <>
-                <CommandSeparator />
-                <CommandGroup>
-                  <CommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center"
-                  >
-                    {"Clean Filters"}
-                  </CommandItem>
-                </CommandGroup>
-              </>
-            )}
+            <div className="m-2">
+              <Button
+                variant="default"
+                className="bg-blue-600 text-white w-full mt-2"
+              >
+                Aplicar
+              </Button>
+            </div>
           </CommandList>
         </Command>
       </PopoverContent>

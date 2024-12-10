@@ -14,7 +14,9 @@ import {
 } from "@/app/filterDefinitions/definitions"
 import useFilterParams from "@/hooks/useFilterParams"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
-import { DataTableSingleValue } from "./dataTableFilterSingleValue"
+import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
+import { DataTableFilterDate } from "./dataTableFilterDate"
+import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -47,15 +49,22 @@ export function DataTableToolbar<TData>({
                 title={"State"}
                 options={movementsState}
               />
-              <DataTableFilterFaceted
+              <DataTableFilterDate
                 key={"method"}
                 column={table.getColumn("method")}
                 title={"Method"}
                 options={methodList}
               />
-              <DataTableSingleValue
-                column={table.getColumn("user")}
-                title={"User"}
+              <DataTableFilterSingleValue
+                column={table.getColumn("Card BIN")}
+                title={"Card BIN"}
+                options={userList.sort((a, b) =>
+                  a.label.localeCompare(b.label)
+                )}
+              />
+              <DataTableFilterRangeAmount
+                column={table.getColumn("Amount")}
+                title={"Amount"}
                 options={userList.sort((a, b) =>
                   a.label.localeCompare(b.label)
                 )}

@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 
-interface DataTableFilterSingleValueProps<TData, TValue> {
+interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
   title?: string
   options: {
@@ -22,11 +22,11 @@ interface DataTableFilterSingleValueProps<TData, TValue> {
   }[]
 }
 
-export function DataTableFilterSingleValue<TData, TValue>({
+export function DataTableFilterRangeAmount<TData, TValue>({
   column,
   title,
   options,
-}: DataTableFilterSingleValueProps<TData, TValue>) {
+}: DataTableFilterRangeAmountProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
@@ -72,12 +72,21 @@ export function DataTableFilterSingleValue<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-1" align="start">
         <div className="m-3">
-          <Label htmlFor="width" className="my-2">
-            Card BIN
-          </Label>
+          <div className="pb-4">
+            <Label htmlFor="width" className="font-bold">
+              Monto
+            </Label>
+          </div>
+          <Label htmlFor="width">Desde</Label>
           <Input
             id="width"
-            className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
+            className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
+            placeholder="Ingrese el Card BIN"
+          />
+          <Label htmlFor="width">Hasta</Label>
+          <Input
+            id="width"
+            className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder="Ingrese el Card BIN"
           />
           <Button
