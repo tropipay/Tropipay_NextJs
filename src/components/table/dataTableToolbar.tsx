@@ -5,15 +5,16 @@ import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DataTableFacetedFilter } from "./dataTableFacetedFilter"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
-import { useSearchParams, usePathname, useRouter } from "next/navigation"
 import {
   methodList,
   movementsState,
   userList,
 } from "@/app/filterDefinitions/definitions"
+import useFilterParams from "@/hooks/useFilterParams"
+import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
+import { DataTableSingleValue } from "./dataTableFilterSingleValue"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -22,30 +23,17 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
-  const { replace } = useRouter()
-
+  const { setParam, getParam } = useFilterParams()
   const isFiltered = table.getState().columnFilters.length > 0
-  function filterInput(query: string) {
-    const params = new URLSearchParams(searchParams)
-    if (query) {
-      params.set("search", query)
-    } else {
-      params.delete("search")
-    }
-    replace(`${pathname}?${params.toString()}`)
-  }
-
   return (
     <>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
           <Input
             placeholder={"Filter"}
-            onChange={(event) => filterInput(event.target.value)}
+            onChange={(event) => setParam("search", event.target.value)}
             className="w-full"
-            defaultValue={searchParams.get("query")?.toString()}
+            defaultValue={getParam("query")?.toString()}
           />
         </div>
       </div>
@@ -53,19 +41,19 @@ export function DataTableToolbar<TData>({
         <div className="flex flex-1 items-center space-x-2">
           {table.getColumn("state") && (
             <>
-              <DataTableFacetedFilter
+              <DataTableFilterFaceted
                 key={"state"}
                 column={table.getColumn("state")}
                 title={"State"}
                 options={movementsState}
               />
-              <DataTableFacetedFilter
+              <DataTableFilterFaceted
                 key={"method"}
                 column={table.getColumn("method")}
                 title={"Method"}
                 options={methodList}
               />
-              <DataTableFacetedFilter
+              <DataTableSingleValue
                 column={table.getColumn("user")}
                 title={"User"}
                 options={userList.sort((a, b) =>
