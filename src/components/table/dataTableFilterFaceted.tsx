@@ -37,13 +37,12 @@ export function DataTableFilterFaceted<TData, TValue>({
   options,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   const thisColumn = column?.id || ""
-  const { setParam, getParam } = useFilterParams()
+  const { setParam } = useFilterParams()
   const facets = column?.getFacetedUniqueValues()
   /*                       column?.setFilterValue(getParam(thisColumn) ? [getParam(thisColumn)]
                          : undefined
                       )
  */
-  console.log("getParam(thisColumn):", getParam(thisColumn))
   const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
@@ -137,7 +136,7 @@ export function DataTableFilterFaceted<TData, TValue>({
             <div className="m-2">
               <Button
                 variant="default"
-                className="bg-blue-600 text-white w-full mt-2"
+                className="bg-blue-600 text-white w-full m-2"
               >
                 Aplicar
               </Button>

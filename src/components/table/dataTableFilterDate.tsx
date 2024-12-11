@@ -13,7 +13,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import useFilterParams from "@/hooks/useFilterParams"
 import { DateRange } from "react-day-picker"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
@@ -41,19 +40,15 @@ export function DataTableFilterDate<TData, TValue>({
   title,
   options,
 }: DataTableFilterDateProps<TData, TValue>) {
-  const thisColumn = column?.id || ""
-
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(),
     to: new Date(),
   })
 
-  const { getParam } = useFilterParams()
   /*                       column?.setFilterValue(getParam(thisColumn) ? [getParam(thisColumn)]
                          : undefined
                       )
  */
-  console.log("getParam(thisColumn):", getParam(thisColumn))
   const selectedValues = new Set(column?.getFilterValue() as string[])
 
   return (
