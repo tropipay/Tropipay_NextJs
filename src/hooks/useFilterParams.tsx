@@ -1,4 +1,4 @@
-import { useSearchParams, usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback } from "react"
 
 const useFilterParams = () => {
@@ -51,7 +51,7 @@ const useFilterParams = () => {
       if (isEmptyValue(queryValue)) {
         params.delete(paramName) // Elimina si el valor es vacío
       } else {
-        params.set(paramName, serializeValue(queryValue))
+        params.set(paramName, serializeValue(queryValue ?? ""))
       }
 
       replace(`${pathname}?${params.toString()}`, { scroll: false })
