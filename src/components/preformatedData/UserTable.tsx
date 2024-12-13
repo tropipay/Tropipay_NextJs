@@ -8,7 +8,7 @@ type User = {
 }
 
 type UserTableProps = {
-  data: User[] // Se espera un array
+  data?: User[] // Se espera un array
 }
 
 const UserTable: React.FC<UserTableProps> = ({ data = [] }) => {
