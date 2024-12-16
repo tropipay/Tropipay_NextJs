@@ -70,6 +70,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
+
       <PopoverContent className="w-[200px] p-2" align="start">
         <Label htmlFor="width" className="my-2">
           Card BIN
@@ -81,7 +82,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
         />
         <Button
           variant="default"
-          className="bg-blue-600 text-white w-full mt-2"
+          className="bg-blue-600 text-white w-full mt-3"
         >
           Aplicar
         </Button>

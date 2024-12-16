@@ -93,23 +93,6 @@ export function DataTableFilterDate<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">
-        <div className="mb-2">
-          <Select
-            onValueChange={(value) =>
-              setDate(addDays(new Date(), parseInt(value)))
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              <SelectItem value="0">Today</SelectItem>
-              <SelectItem value="1">Tomorrow</SelectItem>
-              <SelectItem value="3">In 3 days</SelectItem>
-              <SelectItem value="7">In a week</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
         <Label htmlFor="width" className="my-3 mt-3">
           Desde:
         </Label>
@@ -147,7 +130,7 @@ export function DataTableFilterDate<TData, TValue>({
         <Label htmlFor="width" className="my-3">
           Hasta:
         </Label>
-        <div className="mb-2">
+        <div className="">
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -177,10 +160,7 @@ export function DataTableFilterDate<TData, TValue>({
             </PopoverContent>
           </Popover>
         </div>
-        <Button
-          variant="default"
-          className="bg-blue-600 text-white w-full mt-2"
-        >
+        <Button variant="default" className="bg-blue-600 text-white w-full">
           Aplicar
         </Button>
       </PopoverContent>

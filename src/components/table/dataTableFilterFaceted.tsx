@@ -136,10 +136,7 @@ export function DataTableFilterFaceted<TData, TValue>({
           </CommandList>
         </Command>
         <div className="p-2">
-          <Button
-            variant="default"
-            className="bg-blue-600 text-white w-full m-2"
-          >
+          <Button variant="default" className="bg-blue-600 text-white w-full">
             Aplicar
           </Button>
         </div>
