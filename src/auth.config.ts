@@ -1,19 +1,22 @@
-import Credentials from "next-auth/providers/credentials"
 import type { NextAuthConfig } from "next-auth"
+import Credentials from "next-auth/providers/credentials"
 
 export default {
   providers: [
     Credentials({
-      authorize: async (credentials) => {
+      authorize: async ({ token }) => {
         try {
-          const res = await fetch("http://localhost:3000/api2/users/profile", {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${credentials.token}`,
-            },
-          })
+          const res = await fetch(
+            `${process.env.NEXTAUTH_URL}/api2/users/profile`,
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
 
           if (!res.ok) {
             throw new Error(
@@ -24,7 +27,7 @@ export default {
           const user = await res.json()
           return {
             ...user,
-            token: credentials.token,
+            token,
           }
         } catch (error) {
           if (error instanceof Error) {
@@ -38,28 +41,22 @@ export default {
   ],
 
   callbacks: {
+    async authorized({ request, auth }) {
+      return !!auth
+    },
+
     async jwt({ token, user }) {
       return { ...token, ...user }
     },
 
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       if (token) {
         session.user = {
-          ...session.user,
+          ...user,
           ...token,
-        }
+        } as any
       }
       return session
-    },
-
-    async redirect({ url, baseUrl }) {
-      if (url.includes("/signin")) {
-        return `${baseUrl}/dashboard`
-      }
-      if (url.includes("/signout")) {
-        return `${baseUrl}/login`
-      }
-      return baseUrl
     },
   },
 } satisfies NextAuthConfig
