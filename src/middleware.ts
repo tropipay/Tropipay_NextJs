@@ -1,23 +1,37 @@
-// middleware.ts
-import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
 import type { NextRequest } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { NextResponse } from "next/server"
+import { getTokenFromSession } from "./lib/utilsUser"
+
+// Specify protected and public routes
+const protectedRoutes = ["/dashboard"]
+const publicRoutes = ["/login"]
 
 export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET })
-  const { pathname } = req.nextUrl
+  // Check if the current route is protected or public
+  const path = req.nextUrl.pathname
+  const isProtectedRoute = protectedRoutes.includes(path)
+  const isPublicRoute = publicRoutes.includes(path)
 
-  // Condición 1: Redirigir a /login si se intenta acceder a /dashboard sin autenticación
-  if (pathname.startsWith("/dashboard") && !token) {
-    return NextResponse.redirect(new URL("/login", req.url))
+  // Decrypt the session from the cookie
+  const cookie = (await cookies()).get("session")?.value
+  const token = getTokenFromSession(cookie)
+
+  // Redirect to /login if the user is not authenticated
+  if (isProtectedRoute && !token) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl))
   }
 
-  // Condición 2: Redirigir a /dashboard si el usuario autenticado intenta acceder a otras rutas
-  if (!pathname.startsWith("/dashboard") && token) {
-    return NextResponse.redirect(new URL("/dashboard", req.url))
-  }
+  // Redirect to /dashboard if the user is authenticated
+  // if (
+  //   isPublicRoute &&
+  //   token &&
+  //   !req.nextUrl.pathname.startsWith("/dashboard")
+  // ) {
+  //   return NextResponse.redirect(new URL("/dashboard", req.nextUrl))
+  // }
 
-  // Si no se cumple ninguna condición, se permite el acceso a la ruta solicitada
+  // Access to the requested route is permitted
   return NextResponse.next()
 }
 

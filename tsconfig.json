@@ -29,5 +29,6 @@
     ".next/types/**/*.ts",
     "src/global.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "typeRoots": ["./types", "./node_modules/@types"]
 }
