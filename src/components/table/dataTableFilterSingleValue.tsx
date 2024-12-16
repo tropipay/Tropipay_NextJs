@@ -70,25 +70,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-<<<<<<< Updated upstream
-      <PopoverContent className="w-[200px] p-1" align="start">
-        <div className="m-3">
-          <Label htmlFor="width" className="my-2">
-            Card BIN
-          </Label>
-          <Input
-            id="width"
-            className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
-          />
-          <Button
-            variant="default"
-            className="bg-blue-600 text-white w-full mt-2"
-          >
-            Aplicar
-          </Button>
-        </div>
-=======
+
       <PopoverContent className="w-[200px] p-2" align="start">
         <Label htmlFor="width" className="my-2">
           Card BIN
@@ -104,7 +86,6 @@ export function DataTableFilterSingleValue<TData, TValue>({
         >
           Aplicar
         </Button>
->>>>>>> Stashed changes
       </PopoverContent>
     </Popover>
   )

@@ -133,24 +133,13 @@ export function DataTableFilterFaceted<TData, TValue>({
                 )
               })}
             </CommandGroup>
-            <div className="m-2">
-              <Button
-                variant="default"
-                className="bg-blue-600 text-white w-full m-2"
-              >
-                Aplicar
-              </Button>
-            </div>
           </CommandList>
         </Command>
-<<<<<<< Updated upstream
-=======
         <div className="p-2">
           <Button variant="default" className="bg-blue-600 text-white w-full">
             Aplicar
           </Button>
         </div>
->>>>>>> Stashed changes
       </PopoverContent>
     </Popover>
   )
