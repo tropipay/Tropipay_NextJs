@@ -92,99 +92,97 @@ export function DataTableFilterDate<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
-        <div className="m-3">
-          <div className="mb-2">
-            <Select
-              onValueChange={(value) =>
-                setDate(addDays(new Date(), parseInt(value)))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value="0">Today</SelectItem>
-                <SelectItem value="1">Tomorrow</SelectItem>
-                <SelectItem value="3">In 3 days</SelectItem>
-                <SelectItem value="7">In a week</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Label htmlFor="width" className="my-3 mt-3">
-            Desde:
-          </Label>
-          <div className="mb-2">
-            {" "}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={"outline"}
-                  className={cn(
-                    "justify-start text-left font-normal w-full mt-3 mb-3",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon />
-                  {date?.from ? (
-                    format(date.from, "dd/M/yyyy")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  initialFocus
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <Label htmlFor="width" className="my-3">
-            Hasta:
-          </Label>
-          <div className="mb-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date"
-                  variant={"outline"}
-                  className={cn(
-                    "justify-start text-left font-normal w-full mt-3 mb-3",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon />
-                  {date?.from ? (
-                    format(date.from, "dd/M/yyyy")
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  initialFocus
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={setDate}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          <Button
-            variant="default"
-            className="bg-blue-600 text-white w-full mt-2"
+      <PopoverContent className="w-[200px] p-2" align="start">
+        <div className="mb-2">
+          <Select
+            onValueChange={(value) =>
+              setDate(addDays(new Date(), parseInt(value)))
+            }
           >
-            Aplicar
-          </Button>
+            <SelectTrigger>
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="0">Today</SelectItem>
+              <SelectItem value="1">Tomorrow</SelectItem>
+              <SelectItem value="3">In 3 days</SelectItem>
+              <SelectItem value="7">In a week</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+        <Label htmlFor="width" className="my-3 mt-3">
+          Desde:
+        </Label>
+        <div className="mb-2">
+          {" "}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="date"
+                variant={"outline"}
+                className={cn(
+                  "justify-start text-left font-normal w-full mt-3 mb-3",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon />
+                {date?.from ? (
+                  format(date.from, "dd/M/yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                initialFocus
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={setDate}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Label htmlFor="width" className="my-3">
+          Hasta:
+        </Label>
+        <div className="mb-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="date"
+                variant={"outline"}
+                className={cn(
+                  "justify-start text-left font-normal w-full mt-3 mb-3",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon />
+                {date?.from ? (
+                  format(date.from, "dd/M/yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                initialFocus
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={setDate}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Button
+          variant="default"
+          className="bg-blue-600 text-white w-full mt-2"
+        >
+          Aplicar
+        </Button>
       </PopoverContent>
     </Popover>
   )

@@ -70,32 +70,30 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-1" align="start">
-        <div className="m-3">
-          <div className="pb-4">
-            <Label htmlFor="width" className="font-bold">
-              Monto
-            </Label>
-          </div>
-          <Label htmlFor="width">Desde</Label>
-          <Input
-            id="width"
-            className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
-          />
-          <Label htmlFor="width">Hasta</Label>
-          <Input
-            id="width"
-            className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
-          />
-          <Button
-            variant="default"
-            className="bg-blue-600 text-white w-full mt-2"
-          >
-            Aplicar
-          </Button>
+      <PopoverContent className="w-[200px] p-2" align="start">
+        <div className="pb-4">
+          <Label htmlFor="width" className="font-bold">
+            Monto
+          </Label>
         </div>
+        <Label htmlFor="width">Desde</Label>
+        <Input
+          id="width"
+          className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
+          placeholder="Ingrese el Card BIN"
+        />
+        <Label htmlFor="width">Hasta</Label>
+        <Input
+          id="width"
+          className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
+          placeholder="Ingrese el Card BIN"
+        />
+        <Button
+          variant="default"
+          className="bg-blue-600 text-white w-full mt-2"
+        >
+          Aplicar
+        </Button>
       </PopoverContent>
     </Popover>
   )
