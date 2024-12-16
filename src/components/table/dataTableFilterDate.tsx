@@ -185,6 +185,79 @@ export function DataTableFilterDate<TData, TValue>({
             Aplicar
           </Button>
         </div>
+<<<<<<< Updated upstream
+=======
+        <Label htmlFor="width" className="my-3 mt-3">
+          Desde:
+        </Label>
+        <div className="mb-2">
+          {" "}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="date"
+                variant={"outline"}
+                className={cn(
+                  "justify-start text-left font-normal w-full mt-3 mb-3",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon />
+                {date?.from ? (
+                  format(date.from, "dd/M/yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                initialFocus
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={setDate}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Label htmlFor="width" className="my-3">
+          Hasta:
+        </Label>
+        <div className="">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                id="date"
+                variant={"outline"}
+                className={cn(
+                  "justify-start text-left font-normal w-full mt-3 mb-3",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon />
+                {date?.from ? (
+                  format(date.from, "dd/M/yyyy")
+                ) : (
+                  <span>Pick a date</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                initialFocus
+                defaultMonth={date?.from}
+                selected={date}
+                onSelect={setDate}
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Button variant="default" className="bg-blue-600 text-white w-full">
+          Aplicar
+        </Button>
+>>>>>>> Stashed changes
       </PopoverContent>
     </Popover>
   )
