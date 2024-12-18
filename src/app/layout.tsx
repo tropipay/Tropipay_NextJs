@@ -1,3 +1,4 @@
+import IntlWrapper from "@/components/intl/wrapper"
 import TanstackProvider from "@/components/TanstackProvider"
 import type { Metadata } from "next"
 import localFont from "next/font/local"
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: ChildrenProps) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TanstackProvider>{children}</TanstackProvider>
+        <IntlWrapper>
+          <TanstackProvider>{children}</TanstackProvider>
+        </IntlWrapper>
       </body>
     </html>
   )
