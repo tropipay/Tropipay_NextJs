@@ -47,7 +47,9 @@ function LoginPage() {
 
   useEffect(() => {
     const token = getToken()
-    !token && setIsOpen(true)
+    if (!token) {
+      setIsOpen(true)
+    }
   }, [])
 
   return (
@@ -55,7 +57,7 @@ function LoginPage() {
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col w-4/5 md:w-1/3 gap-y-4">
           <div>
-            <p>For developers' purposes:</p>
+            <p>For developers purposes:</p>
             <p className="text-black/70">
               Please set the session cookie obtained by a session on the
               Tropipay site and click the Login button.
