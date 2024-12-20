@@ -15,11 +15,13 @@ import Cookies from "js-cookie"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useIntl } from "react-intl"
 
 function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
+  const { formatMessage } = useIntl()
 
   const getToken = (): string => getTokenFromSession(Cookies.get("session"))
 
@@ -57,16 +59,15 @@ function LoginPage() {
       <div className="flex items-center justify-center h-screen">
         <div className="flex flex-col w-4/5 md:w-1/3 gap-y-4">
           <div>
-            <p>For developers purposes:</p>
+            <p>{formatMessage({ id: "login_title" })}</p>
             <p className="text-black/70">
-              Please set the session cookie obtained by a session on the
-              Tropipay site and click the Login button.
+              {formatMessage({ id: "login_description" })}
             </p>
           </div>
           <div>
             <Button onClick={onLogin}>
               {loading && <Loader2 className="animate-spin" />}
-              LOGIN
+              {formatMessage({ id: "login" })}
             </Button>
           </div>
         </div>
@@ -75,15 +76,18 @@ function LoginPage() {
       <Dialog {...{ open: isOpen }}>
         <DialogContent>
           <DialogHeader className="text-start">
-            <DialogTitle>Authentication error</DialogTitle>
+            <DialogTitle>
+              {formatMessage({ id: "authentication_error" })}
+            </DialogTitle>
             <DialogDescription>
-              Invalid session token or token is expired.
+              {formatMessage({ id: "error_login_dialog_title" })}
               <br />
-              Please make sure that you have logged into Tropipay site and your
-              session is valid.
+              {formatMessage({ id: "error_login_dialog_description" })}
             </DialogDescription>
           </DialogHeader>
-          <DialogClose onClick={onBack}>BACK</DialogClose>
+          <DialogClose onClick={onBack}>
+            {formatMessage({ id: "back" })}
+          </DialogClose>
         </DialogContent>
       </Dialog>
     </>
