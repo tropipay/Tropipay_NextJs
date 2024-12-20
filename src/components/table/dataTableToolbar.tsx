@@ -7,16 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
-import {
-  methodList,
-  movementsState,
-  userList,
-} from "@/app/filterDefinitions/definitions"
+import { methodList, movementsState } from "@/app/filterDefinitions/definitions"
 import useFilterParams from "@/hooks/useFilterParams"
-import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
-import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableFilterDate } from "./dataTableFilterDate"
-import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
+import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -55,20 +49,20 @@ export function DataTableToolbar<TData>({
                 title={"Method"}
                 options={methodList}
               />
-              <DataTableFilterSingleValue
+              {/* <DataTableFilterSingleValue
                 column={table.getColumn("Card BIN")}
                 title={"Card BIN"}
                 options={userList.sort((a, b) =>
                   a.label.localeCompare(b.label)
                 )}
-              />
-              <DataTableFilterRangeAmount
+              /> */}
+              {/* <DataTableFilterRangeAmount
                 column={table.getColumn("Amount")}
                 title={"Amount"}
                 options={userList.sort((a, b) =>
                   a.label.localeCompare(b.label)
                 )}
-              />
+              /> */}
             </>
           )}
 

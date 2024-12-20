@@ -1,23 +1,24 @@
 "use client"
 
-import * as React from "react"
 import {
-  AudioWaveform,
-  UsersRound,
-  HandCoins,
-  Command,
-  GalleryVerticalEnd,
-  ScrollText,
   ArrowLeftRight,
-  PackagePlus,
+  AudioWaveform,
   BadgeDollarSign,
-  Store,
+  Command,
   CreditCard,
+  GalleryVerticalEnd,
+  HandCoins,
+  PackagePlus,
+  ScrollText,
   SquareTerminal,
+  Store,
+  UsersRound,
 } from "lucide-react"
+import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
 // import { NavProjects } from "@/components/nav-projects"
+import { getSession } from "@/app/actions/sessionActions"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -115,10 +116,23 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState<UserSession>()
+
+  const setUserSession = async () => {
+    const session = await getSession()
+    if (session) {
+      setUser(session.user)
+    }
+  }
+
+  React.useEffect(() => {
+    setUserSession()
+  }, [])
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser {...{ user }} />
       </SidebarFooter>
       <SidebarContent>
         <NavMain items={data.navMain} />

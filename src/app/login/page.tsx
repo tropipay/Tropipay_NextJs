@@ -49,7 +49,9 @@ function LoginPage() {
 
   useEffect(() => {
     const token = getToken()
-    !token && setIsOpen(true)
+    if (!token) {
+      setIsOpen(true)
+    }
   }, [])
 
   return (
