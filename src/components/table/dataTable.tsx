@@ -2,7 +2,6 @@
 
 import React from "react"
 import {
-  ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
@@ -24,9 +23,10 @@ import {
 } from "@/components/ui/table"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
+  columns: CustomColumnDef<TData, TValue>[]
   data: TData[]
 }
 
@@ -64,7 +64,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} columns={columns} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

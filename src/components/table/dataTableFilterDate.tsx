@@ -27,7 +27,7 @@ import {
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue>
-  title?: string
+  label?: string
   options: {
     label: string
     value: string
@@ -37,7 +37,7 @@ interface DataTableFilterDateProps<TData, TValue> {
 
 export function DataTableFilterDate<TData, TValue>({
   column,
-  title,
+  label,
   options,
 }: DataTableFilterDateProps<TData, TValue>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
@@ -54,9 +54,9 @@ export function DataTableFilterDate<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircledIcon className="mr-2 h-4 w-4" />
-          {title}
+        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
+          <PlusCircledIcon className="h-4 w-4" />
+          {label}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
@@ -93,6 +93,23 @@ export function DataTableFilterDate<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">
+        <div className="mb-2">
+          <Select
+            onValueChange={(value) =>
+              setDate(addDays(new Date(), parseInt(value)))
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="0">Today</SelectItem>
+              <SelectItem value="1">Tomorrow</SelectItem>
+              <SelectItem value="3">In 3 days</SelectItem>
+              <SelectItem value="7">In a week</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <Label htmlFor="width" className="my-3 mt-3">
           Desde:
         </Label>

@@ -23,34 +23,56 @@ import useFilterParams from "@/hooks/useFilterParams"
 
 interface DataTableFilterFacetedProps<TData, TValue> {
   column?: Column<TData, TValue>
-  title?: string
-  options: {
+  label?: string
+  options?: {
     label: string
     value: string
     icon?: React.ComponentType<{ className?: string }>
   }[]
+  apiUrl?: string
 }
 
 export function DataTableFilterFaceted<TData, TValue>({
   column,
-  title,
-  options,
+  label,
+  options = [],
+  apiUrl,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   const thisColumn = column?.id || ""
   const { setParam } = useFilterParams()
   const facets = column?.getFacetedUniqueValues()
-  /*                       column?.setFilterValue(getParam(thisColumn) ? [getParam(thisColumn)]
-                         : undefined
-                      )
- */
+
+  const [fetchedOptions, setFetchedOptions] = React.useState<
+    { label: string; value: string }[]
+  >([])
+
   const selectedValues = new Set(column?.getFilterValue() as string[])
+
+  React.useEffect(() => {
+    console.log("apiUrl:", apiUrl)
+    if ((!options || options.length === 0) && apiUrl) {
+      fetch(apiUrl)
+        .then((res) => res.json())
+        .then((data) => {
+          const mappedOptions = data.map((item: any) => ({
+            label: item.name || item.label || "Unnamed",
+            value: item.id || item.value || "",
+            icon: null,
+          }))
+          setFetchedOptions(mappedOptions)
+        })
+        .catch((err) => console.error("Error fetching data:", err))
+    }
+  }, [apiUrl])
+
+  const displayOptions = options.length > 0 ? options : fetchedOptions
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircledIcon className="mr-2 h-4 w-4" />
-          {title}
+        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
+          <PlusCircledIcon className="h-4 w-4" />
+          {label}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
@@ -69,7 +91,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                     {selectedValues.size} {"Selected"}
                   </Badge>
                 ) : (
-                  options
+                  displayOptions
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
                       <Badge
@@ -88,11 +110,11 @@ export function DataTableFilterFaceted<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={title} />
+          <CommandInput placeholder={label} />
           <CommandList>
             <CommandEmpty>{"No Filter results"}</CommandEmpty>
             <CommandGroup>
-              {options.map((option) => {
+              {displayOptions.map((option) => {
                 const isSelected = selectedValues.has(option.value)
                 return (
                   <CommandItem
@@ -104,10 +126,10 @@ export function DataTableFilterFaceted<TData, TValue>({
                         selectedValues.add(option.value)
                       }
                       const filterValues = Array.from(selectedValues)
-                      column?.setFilterValue(
+                      /*                       column?.setFilterValue(
                         filterValues.length ? filterValues : undefined
                       )
-                      setParam(thisColumn, filterValues)
+ */ setParam(thisColumn, filterValues)
                     }}
                   >
                     <div

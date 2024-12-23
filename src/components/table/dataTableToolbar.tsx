@@ -7,26 +7,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
-import {
-  methodList,
-  movementsState,
-  userList,
-} from "@/app/filterDefinitions/definitions"
 import useFilterParams from "@/hooks/useFilterParams"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
 import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
+import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 
-interface DataTableToolbarProps<TData> {
+interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
+  columns: CustomColumnDef<TData, TValue>[]
 }
 
-export function DataTableToolbar<TData>({
+export function DataTableToolbar<TData, TValue>({
   table,
-}: DataTableToolbarProps<TData>) {
+  columns,
+}: DataTableToolbarProps<TData, TValue>) {
   const { setParam, getParam } = useFilterParams()
   const isFiltered = table.getState().columnFilters.length > 0
+
   return (
     <>
       <div className="flex w-full items-center justify-between">
@@ -41,37 +40,44 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          {table.getColumn("state") && (
-            <>
-              <DataTableFilterFaceted
-                key={"state"}
-                column={table.getColumn("state")}
-                title={"State"}
-                options={movementsState}
-              />
-              <DataTableFilterDate
-                key={"method"}
-                column={table.getColumn("method")}
-                title={"Method"}
-                options={methodList}
-              />
-              <DataTableFilterSingleValue
-                column={table.getColumn("Card BIN")}
-                title={"Card BIN"}
-                options={userList.sort((a, b) =>
-                  a.label.localeCompare(b.label)
-                )}
-              />
-              <DataTableFilterRangeAmount
-                column={table.getColumn("Amount")}
-                title={"Amount"}
-                options={userList.sort((a, b) =>
-                  a.label.localeCompare(b.label)
-                )}
-              />
-            </>
-          )}
-
+          {columns.map((column) => {
+            switch (column.filter?.type) {
+              case "list":
+                return (
+                  <DataTableFilterFaceted
+                    column={table.getColumn(column.filter?.column)}
+                    label={
+                      column.filter?.label ||
+                      table.getColumn(column.filter?.column)
+                    }
+                    options={column.filter?.options}
+                    apiUrl={column.filter?.apiUrl}
+                  />
+                )
+              case "date":
+                return (
+                  <DataTableFilterDate
+                    column={table.getColumn(column.filter?.column)}
+                    label={column.filter?.label}
+                  />
+                )
+              case "amount":
+                return (
+                  <DataTableFilterRangeAmount
+                    column={table.getColumn(column.filter?.column)}
+                    label={column.filter?.label}
+                  />
+                )
+              case "uniqueValue":
+                return (
+                  <DataTableFilterSingleValue
+                    column={table.getColumn(column.filter?.column)}
+                    label={column.filter?.label}
+                    placeHolder={column.filter?.placeHolder}
+                  />
+                )
+            }
+          })}
           {isFiltered && (
             <Button
               variant="outline"

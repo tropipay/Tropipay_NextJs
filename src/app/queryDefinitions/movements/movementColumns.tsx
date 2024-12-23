@@ -5,9 +5,48 @@ import clsx from "clsx"
 import { Checkbox } from "@/components/ui/checkbox"
 
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
-import { movementsState } from "@/app/filterDefinitions/definitions"
+import {
+  usersStatus,
+  movementsState,
+  methodList,
+} from "@/app/filterDefinitions/definitions"
 
-export const movementColumns: ColumnDef<Movement>[] = [
+type FilterConfig<T> =
+  | {
+      type: "list"
+      column: string
+      label: string
+      apiUrl: string
+      icon?: string
+      options?: {
+        label: string
+        value: string
+        icon?: React.ComponentType<{ className?: string }>
+      }[]
+    }
+  | {
+      type: "date"
+      label: string
+      column: string
+    }
+  | {
+      type: "uniqueValue"
+      column: string
+      label: string
+      placeHolder: string
+    }
+  | {
+      type: "amount"
+      column: string
+      label?: string
+    }
+
+// Ajustamos CustomColumnDef para usar FilterConfig con T
+export type CustomColumnDef<T> = ColumnDef<T> & {
+  filter?: FilterConfig<T>
+}
+
+export const movementColumns: CustomColumnDef<Movement>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -38,6 +77,11 @@ export const movementColumns: ColumnDef<Movement>[] = [
     cell: ({ row }) => {
       return <div className="font-medium">{row.getValue("amount")}</div>
     },
+    filter: {
+      type: "amount",
+      column: "amount",
+      label: "Monto",
+    },
   },
   {
     accessorKey: "state",
@@ -67,8 +111,14 @@ export const movementColumns: ColumnDef<Movement>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value) => {
+    /*     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
+    },
+ */ filter: {
+      type: "list",
+      column: "state",
+      label: "Estado",
+      options: usersStatus,
     },
   },
   {
@@ -76,6 +126,11 @@ export const movementColumns: ColumnDef<Movement>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Date"} />
     ),
+    filter: {
+      type: "date",
+      column: "date",
+      label: "Fecha",
+    },
   },
   {
     accessorKey: "type",
@@ -88,8 +143,11 @@ export const movementColumns: ColumnDef<Movement>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"Method"} />
     ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+    filter: {
+      type: "list",
+      column: "method",
+      label: "Método",
+      options: methodList,
     },
   },
   {
@@ -97,8 +155,11 @@ export const movementColumns: ColumnDef<Movement>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={"User"} />
     ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+    filter: {
+      type: "uniqueValue",
+      column: "user",
+      label: "Usuario",
+      placeHolder: "Nombre del Usuario",
     },
   },
   {

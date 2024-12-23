@@ -14,7 +14,8 @@ import { Input } from "../ui/input"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
-  title?: string
+  label?: string
+  placeHolder: string
   options: {
     label: string
     value: string
@@ -24,7 +25,8 @@ interface DataTableFilterSingleValueProps<TData, TValue> {
 
 export function DataTableFilterSingleValue<TData, TValue>({
   column,
-  title,
+  label,
+  placeHolder,
   options,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[])
@@ -32,9 +34,9 @@ export function DataTableFilterSingleValue<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircledIcon className="mr-2 h-4 w-4" />
-          {title}
+        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
+          <PlusCircledIcon className="h-4 w-4" />
+          {label}
           {selectedValues?.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
@@ -73,12 +75,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
 
       <PopoverContent className="w-[200px] p-2" align="start">
         <Label htmlFor="width" className="my-2">
-          Card BIN
+          {label}
         </Label>
         <Input
           id="width"
           className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-          placeholder="Ingrese el Card BIN"
+          placeholder={placeHolder}
         />
         <Button
           variant="default"
