@@ -7,12 +7,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
+import {
+  methodList,
+  movementsState,
+  userList,
+} from "@/app/filterDefinitions/definitions"
 import useFilterParams from "@/hooks/useFilterParams"
-import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
-import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
+import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
+import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
@@ -78,6 +83,7 @@ export function DataTableToolbar<TData, TValue>({
                 )
             }
           })}
+
           {isFiltered && (
             <Button
               variant="outline"

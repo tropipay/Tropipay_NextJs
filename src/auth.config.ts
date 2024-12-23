@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials"
 export default {
   providers: [
     Credentials({
-      authorize: async ({ token }) => {
+      async authorize({ token }) {
         try {
           const res = await fetch(
             `${process.env.NEXTAUTH_URL}/api2/users/profile`,
@@ -24,11 +24,7 @@ export default {
             )
           }
 
-          const user = await res.json()
-          return {
-            ...user,
-            token,
-          }
+          return await res.json()
         } catch (error) {
           if (error instanceof Error) {
             throw new Error(`Authorization failed: ${error.message}`)
@@ -41,7 +37,7 @@ export default {
   ],
 
   callbacks: {
-    async authorized({ request, auth }) {
+    async authorized({ auth }) {
       return !!auth
     },
 
@@ -54,7 +50,7 @@ export default {
         session.user = {
           ...user,
           ...token,
-        } as any
+        }
       }
       return session
     },
