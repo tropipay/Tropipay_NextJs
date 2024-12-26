@@ -1,12 +1,25 @@
 {
+  "all": "All",
+  "api": "API",
   "authentication_error": "Authentication error",
+  "back": "Back",
+  "benefits": "Benefits",
+  "bills": "Bills",
+  "dashboard": "Dashboard",
+  "disputes": "Disputes",
   "error_login_dialog_description": " Please make sure that you have logged into Tropipay site and your session is valid.",
   "error_login_dialog_title": "Invalid session token or token is expired.",
   "goto_login": "Go to Login",
   "login": "Login",
   "login_description": "Please set the session cookie obtained by a session on the Tropipay site and click the Login button.",
   "login_title": "For developers purposes:",
+  "market_sheet": "Market sheet",
+  "movements": "Movements",
+  "payroll": "Payroll",
+  "providers": "Providers",
+  "reports": "Reports",
+  "scheduled": "Scheduled",
+  "terminal": "Terminal",
   "welcome_description": "You will be able to obtain more information about operations, movements and more.",
-  "welcome_title": "Welcome to Tropipay Business Page",
-  "back": "Back"
+  "welcome_title": "Welcome to Tropipay Business Page"
 }

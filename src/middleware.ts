@@ -4,14 +4,13 @@ import { NextResponse } from "next/server"
 import { getTokenFromSession } from "./lib/utilsUser"
 
 // Specify protected and public routes
-const protectedRoutes = ["/dashboard"]
 const publicRoutes = ["/login"]
 
 export async function middleware(req: NextRequest) {
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
+  const isProtectedRoute = !isPublicRoute
 
   // Decrypt the session from the cookie
   const cookie = (await cookies()).get("session")?.value
