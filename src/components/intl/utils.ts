@@ -1,3 +1,4 @@
+import Cookies from "js-cookie"
 import English from "./messages/en.json"
 import Spanish from "./messages/es.json"
 import { Languages } from "./types"
@@ -21,10 +22,14 @@ export const getLocaleFromBrowser = () => {
 }
 
 export const getLocaleStored = () =>
-  sessionStorage.getItem(LOCALE_STORAGE_VAR) ?? getLocaleFromBrowser()
+  Cookies.get(LOCALE_STORAGE_VAR) ?? getLocaleFromBrowser()
 
 export const setLocaleStored = (locale: string) => {
-  sessionStorage.setItem(LOCALE_STORAGE_VAR, locale)
+  Cookies.set(LOCALE_STORAGE_VAR, locale, {
+    expires: 7,
+    path: "/",
+    sameSite: "strict",
+  })
 }
 
 export const getLocaleI18nResource = (locale: string): Record<string, string> =>

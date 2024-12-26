@@ -34,7 +34,7 @@ const IntlWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       value={useMemo(() => ({ locale, selectLanguage }), [])}
     >
       <IntlProvider messages={messages} locale={locale} defaultLocale={local}>
-        {children}
+        <>{children}</>
       </IntlProvider>
     </IntlContext.Provider>
   )

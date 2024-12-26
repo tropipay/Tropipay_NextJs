@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 
 import {
   Collapsible,
@@ -16,22 +16,11 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { SidebarOption } from "@/types/SidebarOption"
 import React from "react"
+import { FormattedMessage } from "react-intl"
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+export function NavMain({ items }: { items: SidebarOption[] }) {
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -45,19 +34,25 @@ export function NavMain({
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={item.title}>
+                    <SidebarMenuButton
+                      tooltip={<FormattedMessage id={item.title} />}
+                    >
                       {item.icon && <item.icon />}
-                      <span>{item.title}</span>
+                      <span>
+                        <FormattedMessage id={item.title} />
+                      </span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
+                      {items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
                             <a href={subItem.url}>
-                              <span>{subItem.title}</span>
+                              <span>
+                                {<FormattedMessage id={subItem.title} />}
+                              </span>
                             </a>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
@@ -68,9 +63,11 @@ export function NavMain({
               </Collapsible>
             ) : (
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip={"item.title"}>
+                <SidebarMenuButton
+                  tooltip={<FormattedMessage id={item.title} />}
+                >
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <span>{<FormattedMessage id={item.title} />}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
