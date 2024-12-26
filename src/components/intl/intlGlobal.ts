@@ -1,5 +1,3 @@
-"use client"
-
 import { createIntl, createIntlCache } from "react-intl"
 import { LANG_DEFAULT, getLocaleI18nResource, getLocaleStored } from "./utils"
 
