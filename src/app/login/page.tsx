@@ -23,6 +23,16 @@ function LoginPage() {
   const router = useRouter()
   const { formatMessage } = useIntl()
 
+  // Verificar y crear la cookie si no existe
+  if (!Cookies.get("session")) {
+    Cookies.set("session", "default_value", {
+      expires: 7, // Duración de 7 días
+      path: "/", // Disponible en todas las rutas
+      secure: true, // Solo en HTTPS
+      sameSite: "strict", // Protección CSRF
+    })
+  }
+
   const getToken = (): string => getTokenFromSession(Cookies.get("session"))
 
   const onLogin = async () => {
