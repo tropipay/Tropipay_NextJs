@@ -3,7 +3,7 @@ import English from "./messages/en.json"
 import Spanish from "./messages/es.json"
 import { Languages } from "./types"
 
-const LOCALE_STORAGE_VAR = "language"
+const LOCALE_STORAGE_VAR = "userLang"
 
 export const LANG_DEFAULT = "es"
 

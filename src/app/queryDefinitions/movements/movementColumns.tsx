@@ -1,11 +1,11 @@
 "use client"
 
+import { Checkbox } from "@/components/ui/checkbox"
 import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
-import { Checkbox } from "@/components/ui/checkbox"
 
-import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { movementsState } from "@/app/filterDefinitions/definitions"
+import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 
 export const movementColumns: ColumnDef<Movement>[] = [
   {
@@ -31,18 +31,20 @@ export const movementColumns: ColumnDef<Movement>[] = [
     enableHiding: false,
   },
   {
+    id: "amount",
     accessorKey: "amount",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Amount"} />
+      <DataTableColumnHeader column={column} title={"amount"} />
     ),
-    cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("amount")}</div>
-    },
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("amount")}</div>
+    ),
   },
   {
+    id: "state",
     accessorKey: "state",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"State"} />
+      <DataTableColumnHeader column={column} title={"state"} />
     ),
     cell: ({ row }) => {
       const state = movementsState.find(
@@ -67,50 +69,50 @@ export const movementColumns: ColumnDef<Movement>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
+    id: "date",
     accessorKey: "date",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Date"} />
+      <DataTableColumnHeader column={column} title={"date"} />
     ),
   },
   {
+    id: "type",
     accessorKey: "type",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Type"} />
+      <DataTableColumnHeader column={column} title={"type"} />
     ),
   },
   {
+    id: "method",
     accessorKey: "method",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Method"} />
+      <DataTableColumnHeader column={column} title={"method"} />
     ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
+    id: "user",
     accessorKey: "user",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"User"} />
+      <DataTableColumnHeader column={column} title={"user"} />
     ),
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
+    id: "bankOrderCode",
     accessorKey: "bankOrderCode",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Bank Order Code"} />
+      <DataTableColumnHeader column={column} title={"bank_order_code"} />
     ),
   },
   {
+    id: "concept",
     accessorKey: "concept",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Concept"} />
+      <DataTableColumnHeader column={column} title={"concept"} />
     ),
   },
 ]

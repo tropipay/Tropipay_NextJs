@@ -38,21 +38,17 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                       tooltip={<FormattedMessage id={item.title} />}
                     >
                       {item.icon && <item.icon />}
-                      <span>
-                        <FormattedMessage id={item.title} />
-                      </span>
+                      <FormattedMessage id={item.title} />
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {items?.map((subItem) => (
+                      {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
                             <a href={subItem.url}>
-                              <span>
-                                {<FormattedMessage id={subItem.title} />}
-                              </span>
+                              {<FormattedMessage id={subItem.title} />}
                             </a>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
@@ -67,7 +63,7 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                   tooltip={<FormattedMessage id={item.title} />}
                 >
                   {item.icon && <item.icon />}
-                  <span>{<FormattedMessage id={item.title} />}</span>
+                  {<FormattedMessage id={item.title} />}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
