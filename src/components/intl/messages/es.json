@@ -29,5 +29,8 @@
   "type": "Tipo",
   "user": "Usuario",
   "welcome_description": "Podrás obtener más información sobre operaciones, movimientos y más.",
-  "welcome_title": "Bienvenido a la Página Empresarial de Tropipay"
+  "welcome_title": "Bienvenido a la Página Empresarial de Tropipay",
+  "asc": "Asc",
+  "desc": "Desc",
+  "hide": "Ocultar"
 }
