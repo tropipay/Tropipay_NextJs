@@ -43,6 +43,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   const { initialSelected, values, setValues, onSubmit } = useFiltersManager({
     column,
   })
+
   const [fetchedOptions, setFetchedOptions] = React.useState<
     { label: string; value: string }[]
   >([])
