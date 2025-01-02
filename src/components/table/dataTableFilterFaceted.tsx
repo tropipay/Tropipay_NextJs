@@ -19,9 +19,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import useFilterParams from "@/hooks/useFilterParams"
 import { Checkbox } from "../ui/checkbox"
 import { PopoverClose } from "@radix-ui/react-popover"
+import useFiltersManager from "@/hooks/useFiltersManager"
 
 interface DataTableFilterFacetedProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -40,10 +40,9 @@ export function DataTableFilterFaceted<TData, TValue>({
   options = [],
   apiUrl,
 }: DataTableFilterFacetedProps<TData, TValue>) {
-  const thisColumn = column?.id || ""
-  const { setParam, getParam } = useFilterParams()
-  const initialSelected = getParam(thisColumn) || []
-  const [selected, setSelected] = React.useState(initialSelected || [])
+  const { initialSelected, values, setValues, onSubmit } = useFiltersManager({
+    column,
+  })
   const [fetchedOptions, setFetchedOptions] = React.useState<
     { label: string; value: string }[]
   >([])
@@ -66,23 +65,18 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const displayOptions = options.length > 0 ? options : fetchedOptions
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setParam(thisColumn, selected)
-  }
-
   const handleCheckboxClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     const checkbox = event.currentTarget
 
-    const order = selected.indexOf(checkbox.value)
+    const order = values.indexOf(checkbox.value)
     checkbox.checked = !order
 
     if (order > -1) {
-      selected.splice(order, 1)
+      values.splice(order, 1)
     } else {
-      selected.push(checkbox.value)
+      values.push(checkbox.value)
     }
-    setSelected([...selected])
+    setValues([...values])
   }
 
   return (
@@ -145,7 +139,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                           name="options"
                           value={option.value}
                           onClick={handleCheckboxClick}
-                          checked={selected.includes(option.value)}
+                          checked={values.includes(option.value)}
                         />
                       </div>
                       {option.icon && (
