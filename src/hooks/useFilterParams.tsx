@@ -47,7 +47,7 @@ const useFilterParams = () => {
       queryValue: string | number | boolean | object | null
     ) => {
       const params = new URLSearchParams(searchParams?.toString() || "")
-
+      console.log("queryValue:", queryValue)
       if (
         isEmptyValue(queryValue) ||
         queryValue === undefined ||

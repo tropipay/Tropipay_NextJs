@@ -1,8 +1,8 @@
 "use client"
 
+import { Checkbox } from "@/components/ui/checkbox"
 import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
-import { Checkbox } from "@/components/ui/checkbox"
 
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import {
@@ -70,9 +70,13 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     enableHiding: false,
   },
   {
+    id: "amount",
     accessorKey: "amount",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Amount"} />
+      <DataTableColumnHeader column={column} title={"amount"} />
+    ),
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("amount")}</div>
     ),
     cell: ({ row }) => {
       return <div className="font-medium">{row.getValue("amount")}</div>
@@ -84,9 +88,10 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
+    id: "state",
     accessorKey: "state",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"State"} />
+      <DataTableColumnHeader column={column} title={"state"} />
     ),
     cell: ({ row }) => {
       const state = movementsState.find(
@@ -122,9 +127,10 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
+    id: "date",
     accessorKey: "date",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Date"} />
+      <DataTableColumnHeader column={column} title={"date"} />
     ),
     filter: {
       type: "date",
@@ -133,15 +139,17 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
+    id: "type",
     accessorKey: "type",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Type"} />
+      <DataTableColumnHeader column={column} title={"type"} />
     ),
   },
   {
+    id: "method",
     accessorKey: "method",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Method"} />
+      <DataTableColumnHeader column={column} title={"method"} />
     ),
     filter: {
       type: "list",
@@ -151,9 +159,10 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
+    id: "user",
     accessorKey: "user",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"User"} />
+      <DataTableColumnHeader column={column} title={"user"} />
     ),
     filter: {
       type: "uniqueValue",
@@ -163,15 +172,17 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
+    id: "bankOrderCode",
     accessorKey: "bankOrderCode",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Bank Order Code"} />
+      <DataTableColumnHeader column={column} title={"bank_order_code"} />
     ),
   },
   {
+    id: "concept",
     accessorKey: "concept",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"Concept"} />
+      <DataTableColumnHeader column={column} title={"concept"} />
     ),
   },
 ]
