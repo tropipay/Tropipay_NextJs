@@ -70,7 +70,6 @@ export function DataTableFilterFaceted<TData, TValue>({
 
     const order = values.indexOf(checkbox.value)
     checkbox.checked = !order
-
     if (order > -1) {
       values.splice(order, 1)
     } else {

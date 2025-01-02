@@ -29,9 +29,11 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   label,
   options,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
-  const { initialSelected, values, setValues, onSubmit } = useFiltersManager({
-    column,
-  })
+  const { initialSelected, values, updateValues, onSubmit } = useFiltersManager(
+    {
+      column,
+    }
+  )
 
   return (
     <Popover>
@@ -87,13 +89,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder="Ingrese el Card BIN"
             value={values.min || ""}
-            onChange={(e) => {
-              if (e.target.value) {
-                setValues((prev) => ({ ...prev, min: e.target.value }))
-              } else {
-                setValues((prev) => ({ max: prev.max }))
-              }
-            }}
+            onChange={updateValues}
           />
           <Label htmlFor="width">Hasta</Label>
           <Input
@@ -101,13 +97,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder="Ingrese el Card BIN"
             value={values.max || ""}
-            onChange={(e) => {
-              if (e.target.value) {
-                setValues((prev) => ({ ...prev, max: e.target.value }))
-              } else {
-                setValues((prev) => ({ min: prev.min }))
-              }
-            }}
+            onChange={updateValues}
           />
           <PopoverClose asChild>
             <div className="py-2">

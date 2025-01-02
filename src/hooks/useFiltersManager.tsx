@@ -20,9 +20,20 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
     setValues(initialSelected)
   }, [initialSelected])
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setParam(thisColumn, values)
+  }
+
+  function updateValues(event: React.ChangeEvent<HTMLInputElement>) {
+    const currentValue = { ...values }
+    currentValue[event.target.id] = event.target.value
+    const filteredValues = Object.fromEntries(
+      Object.entries(currentValue).filter(
+        ([_, value]) => value !== null && value !== undefined && value !== ""
+      )
+    )
+    setValues(filteredValues)
   }
 
   return {
@@ -30,6 +41,7 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
     values,
     setValues,
     onSubmit,
+    updateValues,
   }
 }
 
