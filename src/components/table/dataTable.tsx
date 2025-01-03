@@ -12,9 +12,11 @@ import {
   closestCenter,
   DndContext,
   DragEndEvent,
+  DragStartEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
+  UniqueIdentifier,
   useSensor,
   useSensors,
 } from "@dnd-kit/core"
@@ -50,6 +52,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
   enableColumnOrder?: boolean
+  blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
   defaultColumnVisibility?: VisibilityState
   onChangeColumnOrder?: (_: string[]) => void
@@ -61,6 +64,7 @@ export default function DataTable<TData, TValue>({
   columns,
   data,
   enableColumnOrder = false,
+  blockedColumnOrder = ["select"],
   defaultColumnOrder,
   defaultColumnVisibility = {},
   onChangeColumnOrder,
@@ -83,6 +87,9 @@ export default function DataTable<TData, TValue>({
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
   )
+
+  const handleDragStart = ({ active }: DragStartEvent) =>
+    active.id || !blockedColumnOrder.includes(active.id)
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     if (active && over && active.id !== over.id) {
@@ -168,6 +175,7 @@ export default function DataTable<TData, TValue>({
         <DndContext
           collisionDetection={closestCenter}
           modifiers={[restrictToHorizontalAxis]}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           sensors={sensors}
         >
