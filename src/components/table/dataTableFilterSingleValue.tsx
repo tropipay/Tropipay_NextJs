@@ -11,6 +11,8 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
+import useFiltersManager from "@/hooks/useFiltersManager"
+import { PopoverClose } from "@radix-ui/react-popover"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -29,7 +31,9 @@ export function DataTableFilterSingleValue<TData, TValue>({
   placeHolder,
   options,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
-  const selectedValues = new Set(column?.getFilterValue() as string[])
+  const { values, updateValues, onSubmit } = useFiltersManager({
+    column,
+  })
 
   return (
     <Popover>
@@ -37,57 +41,42 @@ export function DataTableFilterSingleValue<TData, TValue>({
         <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
           <PlusCircledIcon className="h-4 w-4" />
           {label}
-          {selectedValues?.size > 0 && (
+          {values?.data && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
                 variant="secondary"
                 className="rounded-sm px-1 font-normal lg:hidden"
               >
-                {selectedValues.size}
+                {values.data}
               </Badge>
-              <div className="hidden space-x-1 lg:flex">
-                {selectedValues.size > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {selectedValues.size} {"Selected"}
-                  </Badge>
-                ) : (
-                  options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant="secondary"
-                        key={option.value}
-                        className="rounded-sm px-1 font-normal"
-                      >
-                        {option.label}
-                      </Badge>
-                    ))
-                )}
-              </div>
             </>
           )}
         </Button>
       </PopoverTrigger>
 
       <PopoverContent className="w-[200px] p-2" align="start">
-        <Label htmlFor="width" className="my-2">
-          {label}
-        </Label>
-        <Input
-          id="width"
-          className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-          placeholder={placeHolder}
-        />
-        <Button
-          variant="default"
-          className="bg-blue-600 text-white w-full mt-3"
-        >
-          Aplicar
-        </Button>
+        <form onSubmit={onSubmit}>
+          <Label htmlFor="filterValue" className="my-2">
+            {label}
+          </Label>
+          <Input
+            id="data"
+            className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+            placeholder={placeHolder}
+            value={values.data || ""}
+            onChange={updateValues}
+          />
+          <PopoverClose asChild>
+            <Button
+              variant="default"
+              className="bg-blue-600 text-white w-full mt-3"
+              type="submit"
+            >
+              Aplicar
+            </Button>
+          </PopoverClose>
+        </form>
       </PopoverContent>
     </Popover>
   )

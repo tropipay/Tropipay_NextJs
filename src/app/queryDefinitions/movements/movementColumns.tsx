@@ -6,10 +6,11 @@ import clsx from "clsx"
 
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import {
-  usersStatus,
   movementsState,
-  methodList,
+  movementTypes,
+  paymentMethods,
 } from "@/app/filterDefinitions/definitions"
+import { format } from "date-fns"
 
 type FilterConfig<T> =
   | {
@@ -41,6 +42,8 @@ type FilterConfig<T> =
       label?: string
     }
 
+type MovementState = "Pendiente" | "Procesando" | "Completado" | "Reembolsado"
+
 // Ajustamos CustomColumnDef para usar FilterConfig con T
 export type CustomColumnDef<T> = ColumnDef<T> & {
   filter?: FilterConfig<T>
@@ -70,16 +73,11 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     enableHiding: false,
   },
   {
-    id: "amount",
     accessorKey: "amount",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"amount"} />
-    ),
-    cell: ({ row }) => (
-      <div className="font-medium">{row.getValue("amount")}</div>
-    ),
+    header: "Monto",
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("amount")}</div>
+      const { value, currency } = row.original.amount
+      return `${value.toLocaleString()} ${currency}`
     },
     filter: {
       type: "amount",
@@ -88,82 +86,132 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
-    id: "state",
-    accessorKey: "state",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"state"} />
-    ),
+    accessorKey: "status",
+    header: "Estado",
     cell: ({ row }) => {
-      const state = movementsState.find(
-        (state) => state.value === row.getValue("state")
+      const status = movementsState.find(
+        (state) => state.value === row.getValue("status")
       )
 
-      if (!state) {
+      if (!status) {
         return null
       }
-      const Icon = state.icon
+      const Icon = status.icon
       return (
         <div
           className={clsx("flex items-center", {
-            "text-red-500": state.value === "Pendiente",
-            "text-yellow-500": state.value === "Procesando",
-            "text-green-500": state.value === "Completado",
-            "text-gray-500": state.value === "Reembolsado",
+            "text-red-500": status.value === "pendingIn",
+            "text-yellow-500": status.value === "processing",
+            "text-green-500": status.value === "paid",
+            "text-gray-500": status.value === "refund",
           })}
         >
           <Icon className="mr-2 h-4 w-4" />
-          <span>{state.label}</span>
+          <span>{status.label}</span>
         </div>
       )
     },
-    /*     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
- */ filter: {
+    filter: {
       type: "list",
-      column: "state",
+      column: "status",
       label: "Estado",
-      options: usersStatus,
+      options: movementsState,
     },
   },
   {
-    id: "date",
-    accessorKey: "date",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"date"} />
-    ),
+    accessorKey: "valueDate",
+    header: "Fecha",
+    cell: ({ getValue }) => {
+      const rawDate = getValue() as string
+      try {
+        const formattedDate = format(new Date(rawDate), "dd/MM/yyyy, HH:mm")
+        return formattedDate
+      } catch (error) {
+        console.error("Error formateando la fecha:", error)
+        return "Fecha inválida"
+      }
+    },
     filter: {
       type: "date",
-      column: "date",
+      column: "valueDate",
       label: "Fecha",
     },
   },
   {
-    id: "type",
-    accessorKey: "type",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"type"} />
-    ),
-  },
-  {
-    id: "method",
-    accessorKey: "method",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"method"} />
-    ),
+    accessorKey: "movementType",
+    header: "Tipo",
+    cell: ({ row }) => {
+      const movementType = movementTypes.find(
+        (movementType) => movementType.value === row.getValue("movementType")
+      )
+
+      if (!movementType) {
+        return null
+      }
+      const Icon = movementType.icon
+      return (
+        <div
+          className={clsx("flex items-center", {
+            "text-red-500": movementType.value === "transfer",
+            "text-yellow-500": movementType.value === "deposit",
+            "text-green-500": movementType.value === "payment",
+            "text-gray-500": movementType.value === "withdrawal",
+          })}
+        >
+          <Icon className="mr-2 h-4 w-4" />
+          <span>{movementType.label}</span>
+        </div>
+      )
+    },
     filter: {
       type: "list",
-      column: "method",
-      label: "Método",
-      options: methodList,
+      column: "movementType",
+      label: "Tipo",
+      options: movementTypes,
     },
   },
   {
-    id: "user",
+    accessorKey: "paymentMethod",
+    header: "Método",
+    cell: ({ row }) => {
+      const paymentMethod = paymentMethods.find(
+        (paymentMethod) => paymentMethod.value === row.getValue("paymentMethod")
+      )
+
+      if (!paymentMethod) {
+        return null
+      }
+      const Icon = paymentMethod.icon
+      return (
+        <div
+          className={clsx("flex items-center", {
+            "text-red-500": paymentMethod.value === "transfer",
+            "text-yellow-500": paymentMethod.value === "deposit",
+            "text-green-500": paymentMethod.value === "payment",
+            "text-gray-500": paymentMethod.value === "withdrawal",
+          })}
+        >
+          {Icon && <Icon className="mr-2 h-4 w-4" />}
+          <span>{paymentMethod.label}</span>
+        </div>
+      )
+    },
+    filter: {
+      type: "list",
+      column: "paymentMethod",
+      label: "Método",
+      options: paymentMethods,
+    },
+  },
+  {
     accessorKey: "user",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"user"} />
-    ),
+    header: "User",
+    cell: ({ row }) => {
+      const sender = row.getValue("sender")
+
+      // Si no hay remitente, muestra un valor predeterminado
+      return sender || "Desconocido"
+    },
     filter: {
       type: "uniqueValue",
       column: "user",
@@ -172,17 +220,18 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
-    id: "bankOrderCode",
-    accessorKey: "bankOrderCode",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"bank_order_code"} />
-    ),
-  },
-  {
-    id: "concept",
-    accessorKey: "concept",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"concept"} />
-    ),
+    accessorKey: "reference",
+    header: "Identificador",
+    cell: ({ row }) => {
+      const identifier = row.getValue("reference")
+
+      return identifier
+    },
+    filter: {
+      type: "uniqueValue",
+      column: "reference",
+      label: "Identificador",
+      placeHolder: "Identificador",
+    },
   },
 ]
