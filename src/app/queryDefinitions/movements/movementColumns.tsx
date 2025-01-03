@@ -77,7 +77,11 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     header: "Monto",
     cell: ({ row }) => {
       const { value, currency } = row.original.amount
-      return `${value.toLocaleString()} ${currency}`
+      return (
+        <div className="text-right">
+          {value.toLocaleString()} {currency}
+        </div>
+      )
     },
     filter: {
       type: "amount",
@@ -177,7 +181,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       const paymentMethod = paymentMethods.find(
         (paymentMethod) => paymentMethod.value === row.getValue("paymentMethod")
       )
-
       if (!paymentMethod) {
         return null
       }
@@ -204,17 +207,15 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     },
   },
   {
-    accessorKey: "user",
+    accessorKey: "sender",
     header: "User",
     cell: ({ row }) => {
       const sender = row.getValue("sender")
-
-      // Si no hay remitente, muestra un valor predeterminado
       return sender || "Desconocido"
     },
     filter: {
       type: "uniqueValue",
-      column: "user",
+      column: "sender",
       label: "Usuario",
       placeHolder: "Nombre del Usuario",
     },

@@ -50,6 +50,7 @@ export function DataTableToolbar<TData, TValue>({
               case "list":
                 return (
                   <DataTableFilterFaceted
+                    key={column.filter?.column}
                     column={table.getColumn(column.filter?.column)}
                     label={
                       column.filter?.label ||
@@ -62,6 +63,7 @@ export function DataTableToolbar<TData, TValue>({
               case "date":
                 return (
                   <DataTableFilterDate
+                    key={column.filter?.column}
                     column={table.getColumn(column.filter?.column)}
                     label={column.filter?.label}
                   />
@@ -69,6 +71,7 @@ export function DataTableToolbar<TData, TValue>({
               case "amount":
                 return (
                   <DataTableFilterRangeAmount
+                    key={column.filter?.column}
                     column={table.getColumn(column.filter?.column)}
                     label={column.filter?.label}
                   />
@@ -76,6 +79,7 @@ export function DataTableToolbar<TData, TValue>({
               case "uniqueValue":
                 return (
                   <DataTableFilterSingleValue
+                    key={column.filter?.column}
                     column={table.getColumn(column.filter?.column)}
                     label={column.filter?.label}
                     placeHolder={column.filter?.placeHolder}
