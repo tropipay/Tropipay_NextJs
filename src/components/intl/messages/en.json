@@ -29,5 +29,8 @@
   "type": "Type",
   "user": "User",
   "welcome_description": "You will be able to obtain more information about operations, movements and more.",
-  "welcome_title": "Welcome to Tropipay Business Page"
+  "welcome_title": "Welcome to Tropipay Business Page",
+  "asc": "Asc",
+  "desc": "Desc",
+  "hide": "Hide"
 }
