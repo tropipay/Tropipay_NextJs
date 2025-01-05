@@ -29,9 +29,7 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
     fallbackId?: string
   ) {
     const currentValue = { ...values }
-
     const id = event.target.id || fallbackId
-
     if (!id) {
       console.error("No se pudo determinar el identificador del campo")
       return
@@ -52,6 +50,7 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
     setValues,
     onSubmit,
     updateValues,
+    setParam,
   }
 }
 

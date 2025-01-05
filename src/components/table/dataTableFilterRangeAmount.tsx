@@ -1,5 +1,5 @@
 import * as React from "react"
-import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { PlusCircledIcon, MinusCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,48 +29,46 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   label,
   options,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
-  const { initialSelected, values, updateValues, onSubmit } = useFiltersManager(
-    {
+  const { initialSelected, values, updateValues, onSubmit, setParam } =
+    useFiltersManager({
       column,
-    }
-  )
+    })
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
-          <PlusCircledIcon className="h-4 w-4" />
+          {initialSelected?.min !== undefined ||
+          initialSelected?.max !== undefined ? (
+            <div
+              onClick={(event) => {
+                event.stopPropagation()
+                setParam(column.id, null)
+              }}
+            >
+              <MinusCircledIcon className="h-4 w-4" />
+            </div>
+          ) : (
+            <PlusCircledIcon className="h-4 w-4" />
+          )}
           {label}
-          {initialSelected?.lenght > 0 && (
+          {(initialSelected?.min !== undefined ||
+            initialSelected?.max !== undefined) && (
             <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
-                {initialSelected?.length}
-              </Badge>
+              <Separator orientation="vertical" className=" h-4" />
               <div className="hidden space-x-1 lg:flex">
-                {initialSelected?.length > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {initialSelected?.length} {"Selected"}
-                  </Badge>
-                ) : (
-                  options
-                    .filter((option) => initialSelected.includes(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant="secondary"
-                        key={option.value}
-                        className="rounded-sm px-1 font-normal"
-                      >
-                        {option.label}
-                      </Badge>
-                    ))
-                )}
+                <Badge
+                  variant="secondary"
+                  className="rounded-sm px-1 font-normal"
+                >
+                  min: {initialSelected?.min}
+                </Badge>
+                <Badge
+                  variant="secondary"
+                  className="rounded-sm px-1 font-normal"
+                >
+                  max: {initialSelected?.max}
+                </Badge>
               </div>
             </>
           )}

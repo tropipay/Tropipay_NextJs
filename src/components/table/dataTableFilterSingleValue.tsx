@@ -1,5 +1,5 @@
 import * as React from "react"
-import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -18,37 +18,44 @@ interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
   label?: string
   placeHolder: string
-  options: {
-    label: string
-    value: string
-    icon?: React.ComponentType<{ className?: string }>
-  }[]
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
   column,
   label,
   placeHolder,
-  options,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
-  const { values, updateValues, onSubmit } = useFiltersManager({
-    column,
-  })
+  const { initialSelected, values, updateValues, onSubmit, setParam } =
+    useFiltersManager({
+      column,
+    })
 
+  console.log("initialSelected:", initialSelected)
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
-          <PlusCircledIcon className="h-4 w-4" />
+          {initialSelected?.data ? (
+            <div
+              onClick={(event) => {
+                event.stopPropagation()
+                setParam(column.id, null)
+              }}
+            >
+              <MinusCircledIcon className="h-4 w-4" />
+            </div>
+          ) : (
+            <PlusCircledIcon className="h-4 w-4" />
+          )}
           {label}
-          {values?.data && (
+          {!!initialSelected.data && (
             <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
+              <Separator orientation="vertical" className=" h-4" />
               <Badge
                 variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
+                className="rounded-sm px-1 font-normal"
               >
-                {values.data}
+                {initialSelected.data}
               </Badge>
             </>
           )}

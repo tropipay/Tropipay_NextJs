@@ -1,5 +1,5 @@
 import * as React from "react"
-import { PlusCircledIcon } from "@radix-ui/react-icons"
+import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 
 import { cn } from "@/lib/utils"
@@ -40,9 +40,10 @@ export function DataTableFilterFaceted<TData, TValue>({
   options = [],
   apiUrl,
 }: DataTableFilterFacetedProps<TData, TValue>) {
-  const { initialSelected, values, setValues, onSubmit } = useFiltersManager({
-    column,
-  })
+  const { initialSelected, values, setValues, onSubmit, setParam } =
+    useFiltersManager({
+      column,
+    })
 
   const [fetchedOptions, setFetchedOptions] = React.useState<
     { label: string; value: string }[]
@@ -83,7 +84,18 @@ export function DataTableFilterFaceted<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
-          <PlusCircledIcon className="h-4 w-4" />
+          {initialSelected?.length > 0 ? (
+            <div
+              onClick={(event) => {
+                event.stopPropagation()
+                setParam(column.id, null)
+              }}
+            >
+              <MinusCircledIcon className="h-4 w-4" />
+            </div>
+          ) : (
+            <PlusCircledIcon className="h-4 w-4" />
+          )}
           {label}
           {initialSelected?.length > 0 && (
             <>
