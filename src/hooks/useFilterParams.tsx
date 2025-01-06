@@ -34,7 +34,7 @@ const useFilterParams = () => {
     try {
       return JSON.parse(value)
     } catch {
-      return value // Devuelve el valor como string si no es JSON válido
+      return value
     }
   }
 
@@ -47,8 +47,13 @@ const useFilterParams = () => {
       queryValue: string | number | boolean | object | null
     ) => {
       const params = new URLSearchParams(searchParams?.toString() || "")
-
-      if (isEmptyValue(queryValue)) {
+      if (
+        isEmptyValue(queryValue) ||
+        queryValue === undefined ||
+        queryValue === null ||
+        queryValue === "" ||
+        queryValue.length === 0
+      ) {
         params.delete(paramName) // Elimina si el valor es vacío
       } else {
         params.set(paramName, serializeValue(queryValue ?? ""))

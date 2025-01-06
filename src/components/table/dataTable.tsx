@@ -29,7 +29,6 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import {
-  ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
@@ -47,6 +46,7 @@ import { GripVerticalIcon } from "lucide-react"
 import React, { CSSProperties } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -170,7 +170,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} columns={columns} />
       <div className="rounded-md border">
         <DndContext
           collisionDetection={closestCenter}

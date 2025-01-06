@@ -1,11 +1,11 @@
-import DataComponent from "@/components/DataComponent";
-import UserTable from "@/components/preformatedData/UserTable";
-import { fetchGetWithTriggers } from "@/lib/utils";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+import DataComponent from "@/components/DataComponent"
+import UserTable from "@/components/preformatedData/UserTable"
+import { fetchGetWithTriggers } from "@/lib/utils"
+import { QueryClient, dehydrate } from "@tanstack/react-query"
 
 export default async function Page() {
-  const queryClient = new QueryClient();
-  const usersURL = "https://jsonplaceholder.typicode.com/users";
+  const queryClient = new QueryClient()
+  const usersURL = "https://jsonplaceholder.typicode.com/users"
 
   await queryClient.prefetchQuery({
     queryKey: ["users"],
@@ -15,10 +15,9 @@ export default async function Page() {
         isPublic: true,
         filter: { active: true },
       }),
-  });
+  })
 
-  const dehydratedState = dehydrate(queryClient);
-
+  const dehydratedState = dehydrate(queryClient)
   return (
     <>
       <h1>Users</h1>
@@ -30,5 +29,5 @@ export default async function Page() {
         <UserTable />
       </DataComponent>
     </>
-  );
+  )
 }

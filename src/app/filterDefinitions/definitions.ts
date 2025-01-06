@@ -12,53 +12,64 @@ export const usersStatus = [
     icon: CrossCircledIcon,
   },
 ]
-
 export const movementsState = [
   {
-    value: "Pendiente",
+    value: "pendingIn",
     label: "Pendiente",
     icon: CheckCircledIcon,
   },
   {
-    value: "Procesando",
+    value: "processing",
     label: "Procesando",
     icon: CrossCircledIcon,
   },
   {
-    value: "Completado",
+    value: "paid",
     label: "Completado",
     icon: CrossCircledIcon,
   },
   {
-    value: "Reembolsado",
+    value: "refund",
     label: "Reembolsado",
     icon: CrossCircledIcon,
   },
 ]
-
-export const methodList = [
+export const movementTypes = [
   {
-    value: "Visa",
-    label: "Visa",
+    value: "transfer",
+    label: "Transferencia",
+    icon: CheckCircledIcon,
   },
   {
-    value: "Saldo TropiPay",
+    value: "deposit",
+    label: "Deposito",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "withdrawal",
+    label: "Retiro",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "payment",
+    label: "Pago",
+    icon: CrossCircledIcon,
+  },
+]
+export const paymentMethods = [
+  {
+    value: "Credit Card",
+    label: "Tarjeta de crédito",
+  },
+  {
+    value: "Tropipay Balance",
     label: "Saldo TropiPay",
   },
   {
-    value: "Mastercard",
-    label: "Mastercard",
-  },
-  {
-    value: "Tropicard",
-    label: "Tropicard",
-  },
-  {
-    value: "Giftcard",
+    value: "GiftCard",
     label: "Giftcard",
   },
 ]
-
 export const userList = [
   {
     value: "Octavio Benitez",
