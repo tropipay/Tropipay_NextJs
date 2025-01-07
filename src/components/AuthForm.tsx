@@ -1,9 +1,5 @@
 "use client"
 
-import { authSchema } from "@/lib/zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -14,6 +10,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { authSchema } from "@/lib/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 const AuthForm = () => {
   const form = useForm<z.infer<typeof authSchema>>({
@@ -26,7 +26,6 @@ const AuthForm = () => {
   function onSubmit(values: z.infer<typeof authSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
   }
 
   return (

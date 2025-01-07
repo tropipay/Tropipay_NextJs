@@ -1,6 +1,3 @@
-import * as React from "react"
-import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
-import { Column } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -9,10 +6,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import { Label } from "../ui/label"
-import { Input } from "../ui/input"
 import useFiltersManager from "@/hooks/useFiltersManager"
+import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column } from "@tanstack/react-table"
+import { FormattedMessage, useIntl } from "react-intl"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -25,12 +25,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
   label,
   placeHolder,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
+  const { formatMessage } = useIntl()
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,
     })
 
-  console.log("initialSelected:", initialSelected)
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -70,7 +70,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
           <Input
             id="data"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder={placeHolder}
+            placeholder={placeHolder ? formatMessage({ id: placeHolder }) : ""}
             value={values.data || ""}
             onChange={updateValues}
           />
@@ -80,7 +80,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
               className="bg-blue-600 text-white w-full mt-3"
               type="submit"
             >
-              Aplicar
+              {<FormattedMessage id="apply" />}
             </Button>
           </PopoverClose>
         </form>
