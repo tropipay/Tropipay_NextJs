@@ -9,6 +9,7 @@
   "bank_order_code": "Códgo de Orden del Banco",
   "benefits": "Beneficios",
   "bills": "Facturas",
+  "clean_filters": "Limpiar filtros",
   "concept": "Concepto",
   "dashboard": "Panel de control",
   "date": "Fecha",
@@ -17,11 +18,13 @@
   "enter_card_bin": "Ingrese el Card BIN",
   "error_login_dialog_description": "Asegúrese de haber iniciado sesión en el sitio de Tropipay y de que su sesión sea válida.",
   "error_login_dialog_title": "El token de sesión no es válido o el token ha expirado.",
+  "filter": "Filtrar",
   "from": "Desde",
   "goto_login": "Ir a Login",
   "hide": "Ocultar",
   "in_3_days": "En 3 días",
   "in_a_week": "En una semana",
+  "loading": "Cargando ...",
   "login": "Entrar",
   "login_description": "Establezca la cookie de sesión obtenida al iniciar sesión en el sitio de Tropipay y haga clic en el botón Iniciar sesión.",
   "login_title": "Para fines de desarrollo:",
@@ -43,7 +46,5 @@
   "type": "Tipo",
   "user": "Usuario",
   "welcome_description": "Podrás obtener más información sobre operaciones, movimientos y más.",
-  "welcome_title": "Bienvenido a la Página Empresarial de Tropipay",
-  "clean_filters": "Limpiar filtros",
-  "filter": "Filtrar"
+  "welcome_title": "Bienvenido a la Página Empresarial de Tropipay"
 }
