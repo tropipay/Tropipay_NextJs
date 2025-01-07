@@ -24,7 +24,7 @@
   "providers": "Providers",
   "reports": "Reports",
   "scheduled": "Scheduled",
-  "state": "State",
+  "status": "State",
   "terminal": "Terminal",
   "type": "Type",
   "user": "User",
@@ -32,5 +32,18 @@
   "welcome_title": "Welcome to Tropipay Business Page",
   "asc": "Asc",
   "desc": "Desc",
-  "hide": "Hide"
+  "hide": "Hide",
+  "reference": "Reference",
+  "from": "From",
+  "to": "To",
+  "enter_card_bin": "Enter the Card BIN",
+  "apply": "Apply",
+  "pick_a_date": "Pick a date",
+  "today": "Today",
+    "tomorrow": "Tomorrow",
+    "in_3_days": "In 3 days",
+     "in_a_week": "In a week",
+     "select": "Select",
+          "clean_filters": "Clean Filters",
+            "filter": "Filter"
 }

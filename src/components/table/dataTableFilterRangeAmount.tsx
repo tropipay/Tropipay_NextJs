@@ -1,6 +1,3 @@
-import * as React from "react"
-import { PlusCircledIcon, MinusCircledIcon } from "@radix-ui/react-icons"
-import { Column } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -9,10 +6,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import { Label } from "../ui/label"
-import { Input } from "../ui/input"
 import useFiltersManager from "@/hooks/useFiltersManager"
+import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column } from "@tanstack/react-table"
+import * as React from "react"
+import { FormattedMessage, useIntl } from "react-intl"
+import { Input } from "../ui/input"
+import { Label } from "../ui/label"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -29,6 +30,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   label,
   options,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
+  const { formatMessage } = useIntl()
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,
@@ -81,19 +83,23 @@ export function DataTableFilterRangeAmount<TData, TValue>({
               {label}
             </Label>
           </div>
-          <Label htmlFor="width">Desde</Label>
+          <Label htmlFor="width">
+            <FormattedMessage id="from" />
+          </Label>
           <Input
             id="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
+            placeholder={formatMessage({ id: "enter_card_bin" })}
             value={values.min || ""}
             onChange={updateValues}
           />
-          <Label htmlFor="width">Hasta</Label>
+          <Label htmlFor="width">
+            <FormattedMessage id="to" />
+          </Label>
           <Input
             id="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
+            placeholder={formatMessage({ id: "enter_card_bin" })}
             value={values.max || ""}
             onChange={updateValues}
           />
@@ -105,7 +111,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
                   className="bg-blue-600 text-white w-full"
                   type="submit"
                 >
-                  Aplicar
+                  {<FormattedMessage id="apply" />}
                 </Button>
               </PopoverClose>
             </div>

@@ -1,23 +1,24 @@
 "use client"
 
-import { Checkbox } from "@/components/ui/checkbox"
-import { ColumnDef } from "@tanstack/react-table"
-import clsx from "clsx"
-
-import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import {
   movementsState,
   movementTypes,
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
+import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
+import { Checkbox } from "@/components/ui/checkbox"
+import { ColumnDef } from "@tanstack/react-table"
+import clsx from "clsx"
 import { format } from "date-fns"
+import React from "react"
+import { FormattedMessage } from "react-intl"
 
 type FilterConfig<T> =
   | {
       type: "list"
       column: string
-      label: string
-      apiUrl: string
+      label: React.ReactNode
+      apiUrl?: string
       icon?: string
       options?: {
         label: string
@@ -27,19 +28,19 @@ type FilterConfig<T> =
     }
   | {
       type: "date"
-      label: string
+      label: React.ReactNode
       column: string
     }
   | {
       type: "uniqueValue"
       column: string
-      label: string
+      label: React.ReactNode
       placeHolder: string
     }
   | {
       type: "amount"
       column: string
-      label?: string
+      label?: React.ReactNode
     }
 
 type MovementState = "Pendiente" | "Procesando" | "Completado" | "Reembolsado"
@@ -73,8 +74,11 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     enableHiding: false,
   },
   {
+    id: "amount",
     accessorKey: "amount",
-    header: "Monto",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"amount"} />
+    ),
     cell: ({ row }) => {
       const { value, currency } = row.original.amount
       return (
@@ -86,12 +90,15 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     filter: {
       type: "amount",
       column: "amount",
-      label: "Monto",
+      label: <FormattedMessage id={"amount"} />,
     },
   },
   {
+    id: "status",
     accessorKey: "status",
-    header: "Estado",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"status"} />
+    ),
     cell: ({ row }) => {
       const status = movementsState.find(
         (state) => state.value === row.getValue("status")
@@ -118,13 +125,16 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     filter: {
       type: "list",
       column: "status",
-      label: "Estado",
+      label: <FormattedMessage id={"status"} />,
       options: movementsState,
     },
   },
   {
+    id: "valueDate",
     accessorKey: "valueDate",
-    header: "Fecha",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"date"} />
+    ),
     cell: ({ getValue }) => {
       const rawDate = getValue() as string
       try {
@@ -138,12 +148,15 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     filter: {
       type: "date",
       column: "valueDate",
-      label: "Fecha",
+      label: <FormattedMessage id={"date"} />,
     },
   },
   {
+    id: "movementType",
     accessorKey: "movementType",
-    header: "Tipo",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"type"} />
+    ),
     cell: ({ row }) => {
       const movementType = movementTypes.find(
         (movementType) => movementType.value === row.getValue("movementType")
@@ -170,13 +183,16 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     filter: {
       type: "list",
       column: "movementType",
-      label: "Tipo",
+      label: <FormattedMessage id={"type"} />,
       options: movementTypes,
     },
   },
   {
+    id: "paymentMethod",
     accessorKey: "paymentMethod",
-    header: "Método",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"method"} />
+    ),
     cell: ({ row }) => {
       const paymentMethod = paymentMethods.find(
         (paymentMethod) => paymentMethod.value === row.getValue("paymentMethod")
@@ -202,13 +218,16 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     filter: {
       type: "list",
       column: "paymentMethod",
-      label: "Método",
+      label: <FormattedMessage id={"method"} />,
       options: paymentMethods,
     },
   },
   {
+    id: "sender",
     accessorKey: "sender",
-    header: "User",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"user"} />
+    ),
     cell: ({ row }) => {
       const sender = row.getValue("sender")
       return sender || "Desconocido"
@@ -216,23 +235,22 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
     filter: {
       type: "uniqueValue",
       column: "sender",
-      label: "Usuario",
-      placeHolder: "Nombre del Usuario",
+      label: <FormattedMessage id={"user"} />,
+      placeHolder: "user",
     },
   },
   {
+    id: "reference",
     accessorKey: "reference",
-    header: "Identificador",
-    cell: ({ row }) => {
-      const identifier = row.getValue("reference")
-
-      return identifier
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={"reference"} />
+    ),
+    cell: ({ row }) => row.getValue("reference"),
     filter: {
       type: "uniqueValue",
       column: "reference",
-      label: "Identificador",
-      placeHolder: "Identificador",
+      label: <FormattedMessage id={"reference"} />,
+      placeHolder: "reference",
     },
   },
 ]
