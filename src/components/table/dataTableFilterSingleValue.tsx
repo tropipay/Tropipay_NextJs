@@ -30,7 +30,6 @@ export function DataTableFilterSingleValue<TData, TValue>({
       column,
     })
 
-  console.log("initialSelected:", initialSelected)
   return (
     <Popover>
       <PopoverTrigger asChild>

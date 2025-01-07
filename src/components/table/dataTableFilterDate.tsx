@@ -1,6 +1,6 @@
 import * as React from "react"
 import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
-import { format, addDays } from "date-fns"
+import { format, addDays, addMonths } from "date-fns"
 
 import { Column } from "@tanstack/react-table"
 
@@ -46,6 +46,8 @@ export function DataTableFilterDate<TData, TValue>({
     useFiltersManager({
       column,
     })
+
+  const [selectedValue, setSelectedValue] = React.useState("")
 
   const handleDateChange = (
     key: "from" | "to",
@@ -103,18 +105,33 @@ export function DataTableFilterDate<TData, TValue>({
         <form onSubmit={onSubmit}>
           <div className="mb-2">
             <Select
-              onValueChange={(value) =>
-                handleDateChange("from", addDays(new Date(), parseInt(value)))
-              }
+              value={selectedValue}
+              onValueChange={(value) => {
+                setSelectedValue(value)
+                switch (value) {
+                  case "1":
+                    handleDateChange("from", new Date())
+                    break
+                  case "2":
+                    handleDateChange("from", addDays(new Date(), -7))
+                    break
+                  case "3":
+                    handleDateChange("from", addMonths(new Date(), -1))
+                    break
+                  case "4":
+                    handleDateChange("from", addMonths(new Date(), -6))
+                    break
+                }
+              }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select" />
+                <SelectValue placeholder="Seleccione el periodo" />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="0">Today</SelectItem>
-                <SelectItem value="1">Tomorrow</SelectItem>
-                <SelectItem value="3">In 3 days</SelectItem>
-                <SelectItem value="7">In a week</SelectItem>
+                <SelectItem value="1">Hoy</SelectItem>
+                <SelectItem value="2">Última semana</SelectItem>
+                <SelectItem value="3">Último mes</SelectItem>
+                <SelectItem value="4">Últimos 6 meses</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -85,7 +85,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Input
             id="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
+            placeholder={`${label} mínimo`}
             value={values.min || ""}
             onChange={updateValues}
           />
@@ -93,7 +93,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Input
             id="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder="Ingrese el Card BIN"
+            placeholder={`${label} mínimo`}
             value={values.max || ""}
             onChange={updateValues}
           />
