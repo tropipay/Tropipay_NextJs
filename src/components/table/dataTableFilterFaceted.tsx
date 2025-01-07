@@ -1,8 +1,7 @@
-import * as React from "react"
 import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
+import * as React from "react"
 
-import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,9 +18,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "../ui/checkbox"
-import { PopoverClose } from "@radix-ui/react-popover"
 import useFiltersManager from "@/hooks/useFiltersManager"
+import { cn } from "@/lib/utils"
+import { PopoverClose } from "@radix-ui/react-popover"
+import { FormattedMessage, useIntl } from "react-intl"
+import { Checkbox } from "../ui/checkbox"
 
 interface DataTableFilterFacetedProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -37,9 +38,11 @@ interface DataTableFilterFacetedProps<TData, TValue> {
 export function DataTableFilterFaceted<TData, TValue>({
   column,
   label,
+  placeHolder,
   options = [],
   apiUrl,
 }: DataTableFilterFacetedProps<TData, TValue>) {
+  const { formatMessage } = useIntl()
   const { initialSelected, values, setValues, onSubmit, setParam } =
     useFiltersManager({
       column,
@@ -135,7 +138,11 @@ export function DataTableFilterFaceted<TData, TValue>({
       <PopoverContent className="w-[200px] p-0" align="start">
         <form onSubmit={onSubmit}>
           <Command>
-            <CommandInput placeholder={label} />
+            <CommandInput
+              placeholder={
+                placeHolder ? formatMessage({ id: placeHolder }) : ""
+              }
+            />
             <CommandList>
               <CommandEmpty>{"No Filter results"}</CommandEmpty>
               <CommandGroup>
@@ -171,7 +178,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                 className="bg-blue-600 text-white w-full"
                 type="submit"
               >
-                Aplicar
+                {<FormattedMessage id="apply" />}
               </Button>
             </PopoverClose>
           </div>

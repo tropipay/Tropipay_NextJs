@@ -1,21 +1,22 @@
-import * as React from "react"
 import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { format, addDays, addMonths } from "date-fns"
 
 import { Column } from "@tanstack/react-table"
 
-import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import { DateRange } from "react-day-picker"
+import useFiltersManager from "@/hooks/useFiltersManager"
+import { cn } from "@/lib/utils"
+import { PopoverClose } from "@radix-ui/react-popover"
 import { CalendarIcon } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
+import { FormattedMessage } from "react-intl"
 import { Label } from "../ui/label"
 import {
   Select,
@@ -24,8 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { PopoverClose } from "@radix-ui/react-popover"
-import useFiltersManager from "@/hooks/useFiltersManager"
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -136,7 +135,7 @@ export function DataTableFilterDate<TData, TValue>({
             </Select>
           </div>
           <Label htmlFor="width" className="my-3 mt-3">
-            Desde:
+            <FormattedMessage id="from" />
           </Label>
           <div className="mb-2">
             <Popover>
@@ -153,7 +152,9 @@ export function DataTableFilterDate<TData, TValue>({
                   {values?.from ? (
                     format(values.from, "dd/MM/yyyy")
                   ) : (
-                    <span>Pick a date</span>
+                    <span>
+                      <FormattedMessage id="pick_a_date" />
+                    </span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -171,7 +172,7 @@ export function DataTableFilterDate<TData, TValue>({
             </Popover>
           </div>
           <Label htmlFor="width" className="my-3">
-            Hasta:
+            <FormattedMessage id="to" />
           </Label>
           <div className="">
             <Popover>
@@ -188,7 +189,9 @@ export function DataTableFilterDate<TData, TValue>({
                   {values?.to ? (
                     format(values.to, "dd/MM/yyyy")
                   ) : (
-                    <span>Pick a date</span>
+                    <span>
+                      <FormattedMessage id="pick_a_date" />
+                    </span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -212,7 +215,7 @@ export function DataTableFilterDate<TData, TValue>({
                 className="bg-blue-600 text-white w-full"
                 type="submit"
               >
-                Aplicar
+                {<FormattedMessage id="apply" />}
               </Button>
             </PopoverClose>
           </div>

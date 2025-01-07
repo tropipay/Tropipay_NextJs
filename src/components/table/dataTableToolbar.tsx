@@ -7,16 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 
-import {
-  methodList,
-  movementsState,
-  userList,
-} from "@/app/filterDefinitions/definitions"
-import useFilterParams from "@/hooks/useFilterParams"
-import { DataTableFilterDate } from "./dataTableFilterDate"
-import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
+import useFilterParams from "@/hooks/useFilterParams"
+import { FormattedMessage, useIntl } from "react-intl"
+import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
+import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 
 interface DataTableToolbarProps<TData, TValue> {
@@ -28,6 +24,7 @@ export function DataTableToolbar<TData, TValue>({
   table,
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
+  const { formatMessage } = useIntl()
   const { setParam, getParam } = useFilterParams()
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -36,7 +33,7 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
           <Input
-            placeholder={"Filter"}
+            placeholder={formatMessage({ id: "filter" })}
             onChange={(event) => setParam("search", event.target.value)}
             className="w-full"
             defaultValue={getParam("query")?.toString()}
@@ -94,7 +91,7 @@ export function DataTableToolbar<TData, TValue>({
               onClick={() => table.resetColumnFilters()}
               className="h-8 px-2 lg:px-3"
             >
-              {"Clean Filters"}
+              {<FormattedMessage id="clean_filters" />}
               <Cross2Icon className="ml-2 h-4 w-4" />
             </Button>
           )}
