@@ -55,6 +55,11 @@ export const movementTypes = [
     label: "Pago",
     icon: CrossCircledIcon,
   },
+  {
+    value: "refund",
+    label: "Reembolso",
+    icon: CrossCircledIcon,
+  },
 ]
 export const paymentMethods = [
   {

@@ -7,7 +7,7 @@ export default {
       async authorize({ token }) {
         try {
           const res = await fetch(
-            `${process.env.NEXTAUTH_URL}/api2/users/profile`,
+            `${process.env.NEXTAUTH_URL}/api/users/profile`,
             {
               method: "GET",
               headers: {

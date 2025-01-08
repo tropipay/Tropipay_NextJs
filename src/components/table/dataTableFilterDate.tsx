@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import React from "react"
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue>
