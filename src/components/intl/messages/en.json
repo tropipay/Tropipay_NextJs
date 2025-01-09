@@ -24,9 +24,8 @@
   "hide": "Hide",
   "in_3_days": "In 3 days",
   "in_a_week": "In a week",
+  "loading": "Loading ...",
   "login": "Login",
-  "login_description": "Please set the session cookie obtained by a session on the Tropipay site and click the Login button.",
-  "login_title": "For developers purposes:",
   "market_sheet": "Market sheet",
   "method": "Method",
   "movements": "Movements",
@@ -43,8 +42,5 @@
   "today": "Today",
   "tomorrow": "Tomorrow",
   "type": "Type",
-  "user": "User",
-  "welcome_description": "You will be able to obtain more information about operations, movements and more.",
-  "welcome_title": "Welcome to Tropipay Business Page",
-  "loading": "Loading ..."
+  "user": "User"
 }

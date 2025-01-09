@@ -1,6 +1,7 @@
 "use client"
 
 import { login } from "@/app/actions/sessionActions"
+import { useTranslation } from "@/components/intl/useTranslation"
 import {
   Dialog,
   DialogClose,
@@ -14,13 +15,13 @@ import Cookies from "js-cookie"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { FormattedMessage, useIntl } from "react-intl"
+import { FormattedMessage } from "react-intl"
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
-  const { formatMessage } = useIntl()
+  const { t } = useTranslation()
 
   const getToken = (): string => getTokenFromSession(Cookies.get("session"))
 
@@ -69,18 +70,14 @@ export default function Page() {
       <Dialog {...{ open: isOpen }}>
         <DialogContent>
           <DialogHeader className="text-start">
-            <DialogTitle>
-              {formatMessage({ id: "authentication_error" })}
-            </DialogTitle>
+            <DialogTitle>{t("authentication_error")}</DialogTitle>
             <DialogDescription>
-              {formatMessage({ id: "error_login_dialog_title" })}
+              {t("error_login_dialog_title")}
               <br />
-              {formatMessage({ id: "error_login_dialog_description" })}
+              {t("error_login_dialog_description")}
             </DialogDescription>
           </DialogHeader>
-          <DialogClose onClick={onBack}>
-            {formatMessage({ id: "back" })}
-          </DialogClose>
+          <DialogClose onClick={onBack}>{t("back")}</DialogClose>
         </DialogContent>
       </Dialog>
     </>

@@ -26,8 +26,6 @@
   "in_a_week": "En una semana",
   "loading": "Cargando ...",
   "login": "Entrar",
-  "login_description": "Establezca la cookie de sesión obtenida al iniciar sesión en el sitio de Tropipay y haga clic en el botón Iniciar sesión.",
-  "login_title": "Para fines de desarrollo:",
   "market_sheet": "Ficha del market",
   "method": "Método",
   "movements": "Movimientos",
@@ -44,7 +42,5 @@
   "today": "Hoy",
   "tomorrow": "Mañana",
   "type": "Tipo",
-  "user": "Usuario",
-  "welcome_description": "Podrás obtener más información sobre operaciones, movimientos y más.",
-  "welcome_title": "Bienvenido a la Página Empresarial de Tropipay"
+  "user": "Usuario"
 }
