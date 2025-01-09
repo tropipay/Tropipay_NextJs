@@ -4,22 +4,18 @@ import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 
 interface FetchDataOptions {
-  endpointKey: keyof typeof apiConfig
-  queryKey: string[]
+  config: any
   variables?: Record<string, any>
   dehydratedState: any
 }
 
 export function useFetchData<T>({
-  endpointKey,
-  queryKey,
+  config,
   variables,
   dehydratedState,
 }: FetchDataOptions): UseQueryResult<T> {
-  const config = apiConfig[endpointKey]
-
   return useQuery({
-    queryKey,
+    queryKey: [config.key],
     queryFn: async () => {
       const response = await fetch(config.url, {
         method: config.method,
@@ -35,7 +31,7 @@ export function useFetchData<T>({
       return response.json()
     },
     initialData: dehydratedState.queries?.find(
-      (query) => JSON.stringify(query.queryKey) === JSON.stringify(queryKey)
+      (query) => JSON.stringify(query.queryKey) === JSON.stringify(config.key)
     )?.state?.data,
 
     staleTime: 1000 * 60 * 5, // Mantiene los datos frescos durante 5 minutos

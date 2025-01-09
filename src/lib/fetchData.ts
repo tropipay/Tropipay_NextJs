@@ -1,19 +1,12 @@
+import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { QueryClient } from "@tanstack/react-query"
-
-interface FetchDataConfig {
-  url: string
-  method: string
-  headers: Record<string, string>
-  body?: Record<string, any>
-}
 
 export async function fetchData<T>(
   queryClient: QueryClient,
-  key: string[],
   config: FetchDataConfig
 ): Promise<T> {
   await queryClient.prefetchQuery({
-    queryKey: key,
+    queryKey: [config.key],
     queryFn: async () => {
       const response = await fetch(config.url, {
         method: config.method,
@@ -30,5 +23,5 @@ export async function fetchData<T>(
     },
   })
 
-  return queryClient.getQueryData<T>(key) as T
+  return queryClient.getQueryData<T>(config.key) as T
 }

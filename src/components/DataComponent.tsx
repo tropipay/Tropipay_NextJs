@@ -3,26 +3,21 @@
 import React from "react"
 import { DehydratedState } from "@tanstack/react-query"
 import { useFetchData } from "@/lib/useFetchData"
+import { FetchDataConfig } from "@/app/queryDefinitions/types"
 
 interface DataComponentProps {
   dehydratedState: DehydratedState
-  endpointKey: keyof typeof import("@/app/queryDefinitions/apiConfig").apiConfig
-  queryKey: string[]
-  variables?: Record<string, any>
   children: React.ReactElement<{ data: any }>
+  config: FetchDataConfig
 }
 
 export default function DataComponent({
   dehydratedState,
-  endpointKey,
-  queryKey,
-  variables,
+  config,
   children,
 }: DataComponentProps) {
   const { data, error, isLoading } = useFetchData({
-    endpointKey,
-    queryKey,
-    variables,
+    config,
     dehydratedState,
   })
 

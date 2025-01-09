@@ -15,11 +15,7 @@ export default async function Page() {
     <>
       <h1>Movements</h1>
       {dehydratedState && (
-        <DataComponent
-          dehydratedState={dehydratedState}
-          endpointKey="movements"
-          queryKey={["movements"]}
-        >
+        <DataComponent dehydratedState={dehydratedState} config={movements}>
           <PageClient columns={movements.columns} />
         </DataComponent>
       )}
