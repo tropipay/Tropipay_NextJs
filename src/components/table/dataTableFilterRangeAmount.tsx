@@ -11,7 +11,8 @@ import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import * as React from "react"
-import { FormattedMessage, useIntl } from "react-intl"
+import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 
@@ -30,7 +31,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   label,
   options,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
-  const { formatMessage } = useIntl()
+  const { t } = useTranslation()
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,

@@ -9,7 +9,8 @@ import { DataTableViewOptions } from "./dataTableViewOptions"
 
 import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 import useFilterParams from "@/hooks/useFilterParams"
-import { FormattedMessage, useIntl } from "react-intl"
+import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
 import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
@@ -24,7 +25,7 @@ export function DataTableToolbar<TData, TValue>({
   table,
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
-  const { formatMessage } = useIntl()
+  const { t } = useTranslation()
   const { setParam, getParam } = useFilterParams()
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -33,7 +34,7 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
           <Input
-            placeholder={formatMessage({ id: "filter" })}
+            placeholder={t("filter")}
             onChange={(event) => setParam("search", event.target.value)}
             className="w-full"
             defaultValue={getParam("query")?.toString()}
