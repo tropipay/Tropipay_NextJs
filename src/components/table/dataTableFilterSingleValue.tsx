@@ -10,7 +10,8 @@ import useFiltersManager from "@/hooks/useFiltersManager"
 import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
-import { FormattedMessage, useIntl } from "react-intl"
+import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 
@@ -25,7 +26,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   label,
   placeHolder,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
-  const { formatMessage } = useIntl()
+  const { t } = useTranslation()
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,
@@ -70,7 +71,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
           <Input
             id="data"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder={placeHolder ? formatMessage({ id: placeHolder }) : ""}
+            placeholder={placeHolder ? t(placeHolder) : ""}
             value={values.data || ""}
             onChange={updateValues}
           />

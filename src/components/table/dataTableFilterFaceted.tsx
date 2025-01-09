@@ -21,7 +21,8 @@ import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
 import { cn } from "@/lib/utils"
 import { PopoverClose } from "@radix-ui/react-popover"
-import { FormattedMessage, useIntl } from "react-intl"
+import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 import { Checkbox } from "../ui/checkbox"
 
 interface DataTableFilterFacetedProps<TData, TValue> {
@@ -42,7 +43,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   options = [],
   apiUrl,
 }: DataTableFilterFacetedProps<TData, TValue>) {
-  const { formatMessage } = useIntl()
+  const { t } = useTranslation()
   const { initialSelected, values, setValues, onSubmit, setParam } =
     useFiltersManager({
       column,
@@ -138,11 +139,7 @@ export function DataTableFilterFaceted<TData, TValue>({
       <PopoverContent className="w-[200px] p-0" align="start">
         <form onSubmit={onSubmit}>
           <Command>
-            <CommandInput
-              placeholder={
-                placeHolder ? formatMessage({ id: placeHolder }) : ""
-              }
-            />
+            <CommandInput placeholder={placeHolder ? t(placeHolder) : ""} />
             <CommandList>
               <CommandEmpty>{"No Filter results"}</CommandEmpty>
               <CommandGroup>

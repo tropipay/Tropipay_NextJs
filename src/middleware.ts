@@ -4,7 +4,7 @@ import { NextResponse } from "next/server"
 import { getTokenFromSession } from "./lib/utilsUser"
 
 // Specify protected and public routes
-const publicRoutes = ["/login"]
+const publicRoutes = ["/"]
 
 export async function middleware(req: NextRequest) {
   // Check if the current route is protected or public
@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
 
   // Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl))
+    return NextResponse.redirect(new URL("/", req.nextUrl))
   }
 
   // Redirect to /dashboard if the user is authenticated
