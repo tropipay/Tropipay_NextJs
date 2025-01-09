@@ -6,12 +6,13 @@ const pageClient = (props) => {
   const onChangeColumnOrder = (columnOrder: string[]) =>
     console.log("Change column order to ", columnOrder)
 
+  const newData = props.data?.data?.movements
   return (
     <div className="container p-2">
       <DataTable
         enableColumnOrder
         {...{
-          data: props.data,
+          data: newData,
           columns: props.columns,
           defaultColumnVisibility: {
             location: false,

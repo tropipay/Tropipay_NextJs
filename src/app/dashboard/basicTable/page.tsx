@@ -1,33 +1,28 @@
 import DataComponent from "@/components/DataComponent"
 import UserTable from "@/components/preformatedData/UserTable"
-import { fetchGetWithTriggers } from "@/lib/utils"
 import { QueryClient, dehydrate } from "@tanstack/react-query"
+import { fetchData } from "@/lib/fetchData"
+import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 
 export default async function Page() {
   const queryClient = new QueryClient()
-  const usersURL = "https://jsonplaceholder.typicode.com/users"
 
-  await queryClient.prefetchQuery({
-    queryKey: ["users"],
-    queryFn: () =>
-      fetchGetWithTriggers({
-        endpoint: usersURL,
-        isPublic: true,
-        filter: { active: true },
-      }),
-  })
+  await fetchData(queryClient, ["movements"], apiConfig.movements)
 
   const dehydratedState = dehydrate(queryClient)
+
   return (
     <>
-      <h1>Users</h1>
-      <DataComponent
-        dehydratedState={dehydratedState}
-        queryKey={["users"]}
-        fetchURL={usersURL}
-      >
-        <UserTable />
-      </DataComponent>
+      <h1>Movements</h1>
+      {dehydratedState && (
+        <DataComponent
+          dehydratedState={dehydratedState}
+          endpointKey="movements"
+          queryKey={["movements"]}
+        >
+          <UserTable />
+        </DataComponent>
+      )}
     </>
   )
 }

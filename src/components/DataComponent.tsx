@@ -1,32 +1,29 @@
 "use client"
 
-import { useQuery, DehydratedState } from "@tanstack/react-query"
 import React from "react"
+import { DehydratedState } from "@tanstack/react-query"
+import { useFetchData } from "@/lib/useFetchData"
 
 interface DataComponentProps {
   dehydratedState: DehydratedState
+  endpointKey: keyof typeof import("@/app/queryDefinitions/apiConfig").apiConfig
   queryKey: string[]
-  fetchURL: string
+  variables?: Record<string, any>
   children: React.ReactElement<{ data: any }>
 }
 
 export default function DataComponent({
   dehydratedState,
+  endpointKey,
   queryKey,
-  fetchURL,
+  variables,
   children,
 }: DataComponentProps) {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useFetchData({
+    endpointKey,
     queryKey,
-    queryFn: async () => {
-      const res = await fetch(fetchURL)
-      if (!res.ok) throw new Error("Error fetching data")
-      return res.json()
-    },
-    initialData: dehydratedState.queries?.find(
-      (query) => JSON.stringify(query.queryKey) === JSON.stringify(queryKey)
-    )?.state?.data,
-    staleTime: 1000 * 60 * 5, // Mantiene los datos frescos durante 5 minutos
+    variables,
+    dehydratedState,
   })
 
   if (isLoading) return <p>Cargando...</p>
