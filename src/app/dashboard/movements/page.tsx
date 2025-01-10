@@ -8,7 +8,7 @@ export default async function Page() {
   const queryClient = new QueryClient()
   const movements = apiConfig.movements
 
-  await fetchData(queryClient, ["movements"], movements)
+  await fetchData(queryClient, movements)
   const dehydratedState = dehydrate(queryClient)
 
   return (

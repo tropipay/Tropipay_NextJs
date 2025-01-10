@@ -1,10 +1,10 @@
 "use client"
 
-import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 
 interface FetchDataOptions {
-  config: any
+  config: FetchDataConfig
   variables?: Record<string, any>
   dehydratedState: any
 }
@@ -31,7 +31,7 @@ export function useFetchData<T>({
       return response.json()
     },
     initialData: dehydratedState.queries?.find(
-      (query) => JSON.stringify(query.queryKey) === JSON.stringify(config.key)
+      (query) => JSON.stringify(query.queryKey) === JSON.stringify([config.key])
     )?.state?.data,
 
     staleTime: 1000 * 60 * 5, // Mantiene los datos frescos durante 5 minutos

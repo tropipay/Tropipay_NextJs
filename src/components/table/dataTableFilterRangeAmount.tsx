@@ -19,17 +19,11 @@ import { Label } from "../ui/label"
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
   label?: string
-  options: {
-    label: string
-    value: string
-    icon?: React.ComponentType<{ className?: string }>
-  }[]
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
   column,
   label,
-  options,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
   const { initialSelected, values, updateValues, onSubmit, setParam } =
@@ -90,7 +84,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Input
             id="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder={`${label} mínimo`}
+            placeholder={`${label} mín`}
             value={values.min || ""}
             onChange={updateValues}
           />
@@ -100,7 +94,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Input
             id="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder={`${label} mínimo`}
+            placeholder={`${label} máx`}
             value={values.max || ""}
             onChange={updateValues}
           />
