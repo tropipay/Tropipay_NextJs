@@ -4,6 +4,7 @@ import React from "react"
 import { DehydratedState } from "@tanstack/react-query"
 import { useFetchData } from "@/lib/useFetchData"
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
+import { movements } from "@/app/queryDefinitions/movements/movements"
 
 interface DataComponentProps {
   dehydratedState: DehydratedState
@@ -23,6 +24,11 @@ export default function DataComponent({
 
   if (isLoading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
+
+  // START - REMOVE THIS LINES
+  const newData = data || { data: { movements } }
+  return React.cloneElement(children, { data: newData })
+  // END - REMOVE THIS LINES
 
   return React.cloneElement(children, { data })
 }
