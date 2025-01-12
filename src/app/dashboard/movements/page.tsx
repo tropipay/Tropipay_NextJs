@@ -1,27 +1,22 @@
-"use client"
+import PageClient from "./pageClient"
+import { dehydrate, QueryClient } from "@tanstack/react-query"
+import { fetchData } from "@/lib/fetchData"
+import DataComponent from "@/components/DataComponent"
+import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 
-import { movementColumns } from "@/app/queryDefinitions/movements/movementColumns"
-import { movements } from "@/app/queryDefinitions/movements/movements"
-import DataTable from "@/components/table/dataTable"
+export default async function Page() {
+  const queryClient = new QueryClient()
+  const queryConfig = apiConfig.movements
 
-export default function Home() {
-  const onChangeColumnOrder = (columnOrder: string[]) =>
-    console.log("Change column order to ", columnOrder)
-
+  await fetchData(queryClient, queryConfig)
+  const dehydratedState = dehydrate(queryClient)
   return (
-    <div className="container p-2">
-      <DataTable
-        enableColumnOrder
-        {...{
-          data: movements,
-          columns: movementColumns,
-          defaultColumnVisibility: {
-            location: false,
-            otherInformation: false,
-          },
-          onChangeColumnOrder,
-        }}
-      />
-    </div>
+    <>
+      {dehydratedState && (
+        <DataComponent dehydratedState={dehydratedState} config={queryConfig}>
+          <PageClient columns={queryConfig.columns} />
+        </DataComponent>
+      )}
+    </>
   )
 }

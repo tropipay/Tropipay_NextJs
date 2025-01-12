@@ -1,6 +1,5 @@
 import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
-import { addDays, format } from "date-fns"
-import * as React from "react"
+import { format, addDays, addMonths } from "date-fns"
 
 import { Column } from "@tanstack/react-table"
 
@@ -26,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import React from "react"
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -46,6 +46,8 @@ export function DataTableFilterDate<TData, TValue>({
     useFiltersManager({
       column,
     })
+
+  const [selectedValue, setSelectedValue] = React.useState("")
 
   const handleDateChange = (
     key: "from" | "to",
@@ -103,18 +105,33 @@ export function DataTableFilterDate<TData, TValue>({
         <form onSubmit={onSubmit}>
           <div className="mb-2">
             <Select
-              onValueChange={(value) =>
-                handleDateChange("from", addDays(new Date(), parseInt(value)))
-              }
+              value={selectedValue}
+              onValueChange={(value) => {
+                setSelectedValue(value)
+                switch (value) {
+                  case "1":
+                    handleDateChange("from", new Date())
+                    break
+                  case "2":
+                    handleDateChange("from", addDays(new Date(), -7))
+                    break
+                  case "3":
+                    handleDateChange("from", addMonths(new Date(), -1))
+                    break
+                  case "4":
+                    handleDateChange("from", addMonths(new Date(), -6))
+                    break
+                }
+              }}
             >
               <SelectTrigger>
-                <SelectValue placeholder={<FormattedMessage id="select" />} />
+                <SelectValue placeholder="Seleccione el periodo" />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="0"><FormattedMessage id="today" /></SelectItem>
-                <SelectItem value="1"><FormattedMessage id="tomorrow" /></SelectItem>
-                <SelectItem value="3"><FormattedMessage id="in_3_days" /></SelectItem>
-                <SelectItem value="7"><FormattedMessage id="in_a_week" /></SelectItem>
+                <SelectItem value="1">Hoy</SelectItem>
+                <SelectItem value="2">Última semana</SelectItem>
+                <SelectItem value="3">Último mes</SelectItem>
+                <SelectItem value="4">Últimos 6 meses</SelectItem>
               </SelectContent>
             </Select>
           </div>

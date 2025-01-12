@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api2/:path*",
-        destination: "https://tropipay-dev.herokuapp.com/api/:path*",
+        destination: "http://localhost:3002/api/:path*",
       },
     ]
   },
