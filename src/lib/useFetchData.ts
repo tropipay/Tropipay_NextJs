@@ -2,6 +2,7 @@
 
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
+import { useSession } from "next-auth/react"
 
 interface FetchDataOptions {
   config: FetchDataConfig
@@ -14,26 +15,43 @@ export function useFetchData<T>({
   variables,
   dehydratedState,
 }: FetchDataOptions): UseQueryResult<T> {
+  const { data: session } = useSession()
+  const token = session?.user?.access_token
+
   return useQuery({
     queryKey: [config.key],
     queryFn: async () => {
+      const headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+
       const response = await fetch(config.url, {
         method: config.method,
-        headers: config.headers,
+        headers,
         body: JSON.stringify({
           ...config.body,
-          variables: variables ?? config.body.variables,
+          variables: variables ?? config.body?.variables,
         }),
         cache: "no-store",
       })
 
-      if (!response.ok) throw new Error("Error fetching data")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(
+          errorData.message ||
+            `Error fetching data: ${response.status} ${response.statusText}`
+        )
+      }
+
       return response.json()
     },
     initialData: dehydratedState.queries?.find(
       (query) => JSON.stringify(query.queryKey) === JSON.stringify([config.key])
     )?.state?.data,
-
-    staleTime: 1000 * 60 * 5, // Mantiene los datos frescos durante 5 minutos
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    // Opcional: deshabilitar la query si no hay token
+    enabled: !!token,
   })
 }

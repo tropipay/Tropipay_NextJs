@@ -1,5 +1,17 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import { JWT } from "next-auth/jwt"
+
+// Extender los tipos para incluir el token en la sesión
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string
+      access_token?: string
+      [key: string]: any
+    }
+  }
+}
 
 export default {
   providers: [
@@ -24,7 +36,13 @@ export default {
             )
           }
 
-          return await res.json()
+          const userData = await res.json()
+
+          // Retornamos el usuario con el token incluido
+          return {
+            ...userData,
+            access_token: token, // Guardamos el token original
+          }
         } catch (error) {
           if (error instanceof Error) {
             throw new Error(`Authorization failed: ${error.message}`)
@@ -42,14 +60,21 @@ export default {
     },
 
     async jwt({ token, user }) {
-      return { ...token, ...user }
+      // Si tenemos un usuario (primera vez que se inicia sesión)
+      if (user) {
+        token.access_token = user.access_token
+        delete user.access_token // Limpiamos el token del objeto usuario
+      }
+      return token
     },
 
-    async session({ session, token, user }) {
+    async session({ session, token }) {
+      // Aseguramos que el token esté disponible en la sesión
       if (token) {
         session.user = {
-          ...user,
+          ...session.user,
           ...token,
+          access_token: token.access_token,
         }
       }
       return session

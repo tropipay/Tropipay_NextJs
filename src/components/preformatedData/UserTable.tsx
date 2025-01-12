@@ -12,7 +12,6 @@ type UserTableProps = {
 }
 
 const UserTable: React.FC<UserTableProps> = ({ data = [] }) => {
-  console.log("data:", data?.data?.movements)
   return (
     <div className="overflow-x-auto">
       <table className="table-auto border-collapse border border-gray-400 w-full">

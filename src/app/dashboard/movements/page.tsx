@@ -6,17 +6,15 @@ import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 
 export default async function Page() {
   const queryClient = new QueryClient()
-  const movements = apiConfig.movements
+  const queryConfig = apiConfig.movements
 
-  await fetchData(queryClient, movements)
+  await fetchData(queryClient, queryConfig)
   const dehydratedState = dehydrate(queryClient)
-
   return (
     <>
-      <h1>Movements</h1>
       {dehydratedState && (
-        <DataComponent dehydratedState={dehydratedState} config={movements}>
-          <PageClient columns={movements.columns} />
+        <DataComponent dehydratedState={dehydratedState} config={queryConfig}>
+          <PageClient columns={queryConfig.columns} />
         </DataComponent>
       )}
     </>
