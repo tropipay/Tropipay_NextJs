@@ -26,8 +26,6 @@ export async function fetchData<T>(
         },
       }
 
-      console.log("********************** body:", body)
-
       const response = await fetch(config.url, {
         method: config.method,
         headers,
