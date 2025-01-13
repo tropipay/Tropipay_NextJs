@@ -25,5 +25,10 @@ export default function DataComponent({
   if (isLoading) return <p>Cargando...</p>
   if (error) return <p>Error: {error.message}</p>
 
+  // START - REMOVE THIS LINES
+  const newData = data || { data: { movements } }
+  return React.cloneElement(children, { data: newData })
+  // END - REMOVE THIS LINES
+
   return React.cloneElement(children, { data })
 }
