@@ -64,9 +64,6 @@ export const apiConfig = {
       variables: {
         filter: {
           amountGte: 1000,
-          currency: "EUR",
-          creationDateFrom: "2024-12-01T00:00:00Z",
-          creationDateTo: "2024-12-31T23:59:59Z",
         },
         pagination: {
           limit: 10,

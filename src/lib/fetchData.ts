@@ -1,29 +1,35 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { QueryClient } from "@tanstack/react-query"
-// Importación correcta para next-auth v5
 import { auth } from "@/auth"
+import { urlParamsToFilter, urlParamsTyping } from "./utils"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
-  config: FetchDataConfig
+  config: FetchDataConfig,
+  urlParams: any
 ): Promise<T> {
-  // Obtener la sesión usando la nueva sintaxis de v5
   const session = await auth()
-
+  const filter = urlParamsToFilter(urlParamsTyping(urlParams))
   await queryClient.prefetchQuery({
     queryKey: [config.key],
     queryFn: async () => {
-      // Combinar los headers existentes con el header de autorización
       const headers = {
         ...config.headers,
         Authorization: `Bearer ${session?.user?.access_token}`,
         "Content-Type": "application/json",
       }
+      const body = {
+        ...config.body,
+        variables: {
+          ...config.body?.variables,
+          filter,
+        },
+      }
 
       const response = await fetch(config.url, {
         method: config.method,
         headers,
-        body: config.body ? JSON.stringify(config.body) : undefined,
+        body: JSON.stringify(body),
         cache: "no-store",
       })
 
