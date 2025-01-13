@@ -147,6 +147,26 @@ export const parseParams = (params: { [key: string]: string }) => {
   }
   return parsed
 }
+export const parseParamsString = (params: URLSearchParams) => {
+  const reference = params.get("reference")
+  const status = params.get("status")
+
+  // Parsear el valor de reference que está codificado como URL
+  const parsedReference = reference
+    ? JSON.parse(decodeURIComponent(reference))
+    : null
+  // Parsear el valor de status
+  const parsedStatus = status ? JSON.parse(decodeURIComponent(status)) : null
+
+  // Construir el objeto final
+  const result = {
+    reference: parsedReference,
+    status: parsedStatus,
+  }
+
+  console.log("Parsed Search Params:", result)
+  return result
+}
 
 export function urlParamsTyping(params: Record<string, any>) {
   return Object.entries(params).reduce((acc, [key, value]) => {

@@ -5,6 +5,8 @@ import { DehydratedState } from "@tanstack/react-query"
 import { useFetchData } from "@/lib/useFetchData"
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { movements } from "@/app/queryDefinitions/movements/movements"
+import { parseParamsString } from "@/lib/utils"
+import { useSearchParams } from "next/navigation"
 
 interface DataComponentProps {
   dehydratedState: DehydratedState
@@ -17,9 +19,11 @@ export default function DataComponent({
   config,
   children,
 }: DataComponentProps) {
+  const urlParams = parseParamsString(useSearchParams())
   const { data, error, isLoading } = useFetchData({
     config,
     dehydratedState,
+    urlParams,
   })
 
   if (isLoading) return <p>Cargando...</p>
