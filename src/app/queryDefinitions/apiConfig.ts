@@ -10,54 +10,23 @@ export const apiConfig = {
     },
     body: {
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {
-        movements(filter: $filter, pagination: $pagination) {
-          id
-          status
-          creationDate
-          valueDate
-          description
-          amount {
-            value
-            currency
-          }
-          destinationAmount {
-            value
-            currency
-          }
-          commission {
-            value
-            currency
-          }
-          exchangeRate
-          movementType
-          paymentMethod
-          reference
-          product
-          sender
-          recipient
-          charges {
+      movements(filter: $filter, pagination: $pagination) {
+        items {
             id
             status
-            email
-            cardLast4
-            cardBIN
-            cardHolderName
-            issuerBank
-            cardType
-            createdAt
-            errorCode
-            cardPan
-            clientName
-            clientLastName
-            cardBrand
-            state
-            cardExpirationDate
-            cardCountry
-            clientIp
-            clientEmail
-            clientAddress
-            source
+            creationDate
+            valueDate
+            description
+            amount {
+              value
+              currency
+            }
+            movementType
+            paymentMethod
+            reference
+            sender
           }
+          totalCount
         }
       }`,
       operationName: "GetMovements",

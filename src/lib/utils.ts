@@ -1,9 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
-import { DehydratedState, QueryKey } from "@tanstack/react-query"
-import { ParsedUrlQuery } from "querystring"
-import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
+import { QueryKey } from "@tanstack/react-query"
 
 // Definimos un tipo para una función de búsqueda que toma un parámetro `T` y devuelve un endpoint
 type FetchFunction<T extends any[]> = (...args: T) => { endpoint: string }
@@ -14,47 +12,6 @@ type QueryConfig<TData> = {
   queryFn: () => Promise<TData>
   initialData?: TData
   staleTime?: number
-}
-
-// Tipo de retorno de `setSSROptions`
-type setSSROptions = Record<string, any>
-
-// Tipo de retorno de `getUseQueryConfig`
-type GetUseQueryConfigReturn<TData> = Required<QueryConfig<TData>>
-
-export function setSSR<T extends any[], TData>(
-  func: (...args: T) => Promise<TData>, // Función que devuelve una promesa con datos de tipo TData
-  config: setSSROptions = {}, // Configuración adicional opcional
-  args: T = [] as T // Argumentos para la función de búsqueda, con valor predeterminado
-) {
-  return {
-    queryKey: [func.name, ...args] as QueryKey, // Generamos el queryKey usando el nombre de la función y los argumentos
-    queryFn: () => func(...args), // Llamamos a la función con los argumentos proporcionados
-    ...config, // Fusionamos la configuración adicional proporcionada
-  }
-}
-
-export function getUseQueryConfig<T extends any[], TData>(
-  func: FetchFunction<T>,
-  dehydratedState: DehydratedState,
-  args: T,
-  staleTime = 1000 * 60 * 5
-): GetUseQueryConfigReturn<TData> {
-  const queryKey = [func.name, ...args] as QueryKey
-  const { endpoint: fetchURL } = func(...args)
-
-  return {
-    queryKey,
-    queryFn: async () => {
-      const res = await fetch(fetchURL)
-      if (!res.ok) throw new Error("Error fetching data")
-      return (await res.json()) as TData
-    },
-    initialData: dehydratedState.queries?.find(
-      (query) => JSON.stringify(query.queryKey) === JSON.stringify(queryKey)
-    )?.state?.data as TData,
-    staleTime,
-  }
 }
 
 // Función para combinar clases (cn)
@@ -148,23 +105,16 @@ export const parseParams = (params: { [key: string]: string }) => {
   return parsed
 }
 export const parseParamsString = (params: URLSearchParams) => {
-  const reference = params.get("reference")
-  const status = params.get("status")
+  const result: Record<string, any> = {}
 
-  // Parsear el valor de reference que está codificado como URL
-  const parsedReference = reference
-    ? JSON.parse(decodeURIComponent(reference))
-    : null
-  // Parsear el valor de status
-  const parsedStatus = status ? JSON.parse(decodeURIComponent(status)) : null
-
-  // Construir el objeto final
-  const result = {
-    reference: parsedReference,
-    status: parsedStatus,
-  }
-
-  console.log("Parsed Search Params:", result)
+  params.forEach((value, key) => {
+    try {
+      const parsedValue = JSON.parse(decodeURIComponent(value))
+      result[key] = parsedValue
+    } catch {
+      result[key] = decodeURIComponent(value)
+    }
+  })
   return result
 }
 
@@ -231,4 +181,27 @@ export function urlParamsToFilter(processedParams: Record<string, any>) {
 
     return acc
   }, {} as Record<string, any>)
+}
+
+export function generateHashedKey(key: string, obj: any): string {
+  const str = JSON.stringify(obj)
+  return `${key} | ${btoa(str)}`
+}
+
+export async function processQueryParameters(
+  searchParams: Record<string, string>
+) {
+  try {
+    const resolvedParams = await searchParams
+    const queryString = new URLSearchParams()
+    Object.entries(resolvedParams).forEach(([key, value]) => {
+      queryString.append(key, value)
+    })
+
+    const urlParams = parseParams(Object.fromEntries(queryString.entries()))
+    return urlParams
+  } catch (error) {
+    console.error("Error processing query parameters:", error)
+    return {}
+  }
 }

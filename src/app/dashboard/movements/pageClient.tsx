@@ -6,7 +6,7 @@ const pageClient = (props) => {
   const onChangeColumnOrder = (columnOrder: string[]) =>
     console.log("Change column order to ", columnOrder)
 
-  const newData = props.data?.data?.movements
+  const newData = props.data?.data?.movements?.items
   return (
     <div className="container p-2">
       <DataTable
