@@ -205,3 +205,50 @@ export async function processQueryParameters(
     return {}
   }
 }
+
+export function selStyle(
+  condition: boolean,
+  classesTrue: string,
+  classesFalse: string,
+  commonStyle: string
+): string {
+  return condition ? classesTrue : classesFalse
+}
+
+export const formatAmount = (
+  amount: number,
+  currency: string = "",
+  position: "left" | "right" = "left"
+): string => {
+  let formatter = ""
+
+  if (currency === "") {
+    formatter = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+    }).format(amount / 100)
+  } else {
+    formatter =
+      position !== "left"
+        ? `${(amount / 100).toFixed(2)} ${currency}`
+        : new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency,
+            minimumFractionDigits: 2,
+          }).format(amount / 100)
+  }
+
+  return formatter
+}
+
+export const truncateLabels = (
+  options: string[],
+  maxLength: number = 20
+): string => {
+  const concatenated = options.map((option) => option).join(", ")
+
+  if (concatenated.length <= maxLength) {
+    return concatenated
+  }
+
+  return concatenated.substring(0, maxLength - 3) + "..."
+}

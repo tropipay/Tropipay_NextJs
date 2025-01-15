@@ -1,4 +1,4 @@
-import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 import * as React from "react"
 
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
-import { cn } from "@/lib/utils"
+import { cn, selStyle, truncateLabels } from "@/lib/utils"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
@@ -77,7 +77,31 @@ export function DataTableFilterFaceted<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
+        <Button
+          variant={selStyle(
+            initialSelected?.length > 0,
+            "active",
+            "inactive",
+            ""
+          )}
+          size="sm"
+          className="px-2 h-8"
+        >
+          {label}
+
+          {initialSelected?.length > 0 && (
+            <>
+              <Separator orientation="vertical" className="h-4 separator" />
+              <div className="space-x-1 lg:flex">
+                {truncateLabels(
+                  values.map(
+                    (value) =>
+                      options.find((option) => option.value === value).label
+                  )
+                )}
+              </div>
+            </>
+          )}
           {initialSelected?.length > 0 ? (
             <div
               onClick={(event) => {
@@ -85,45 +109,9 @@ export function DataTableFilterFaceted<TData, TValue>({
                 setParam(column.id, null)
               }}
             >
-              <MinusCircledIcon className="h-4 w-4" />
+              <CrossCircledIcon className="h-4 w-4" />
             </div>
-          ) : (
-            <PlusCircledIcon className="h-4 w-4" />
-          )}
-          {label}
-          {initialSelected?.length > 0 && (
-            <>
-              <Separator orientation="vertical" className="h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal lg:hidden"
-              >
-                {initialSelected?.length}
-              </Badge>
-              <div className="hidden space-x-1 lg:flex">
-                {initialSelected?.length > 2 ? (
-                  <Badge
-                    variant="secondary"
-                    className="rounded-sm px-1 font-normal"
-                  >
-                    {initialSelected?.length} {"Selected"}
-                  </Badge>
-                ) : (
-                  displayOptions
-                    .filter((option) => initialSelected.includes(option.value))
-                    .map((option) => (
-                      <Badge
-                        variant="secondary"
-                        key={option.value}
-                        className="rounded-sm px-1 font-normal"
-                      >
-                        {option.label}
-                      </Badge>
-                    ))
-                )}
-              </div>
-            </>
-          )}
+          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">

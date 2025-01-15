@@ -1,9 +1,8 @@
-import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { format, addDays, addMonths } from "date-fns"
 
 import { Column } from "@tanstack/react-table"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
-import { cn } from "@/lib/utils"
+import { cn, selStyle } from "@/lib/utils"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { CalendarIcon } from "lucide-react"
 import { FormattedMessage } from "react-intl"
@@ -59,7 +58,34 @@ export function DataTableFilterDate<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
+        <Button
+          variant={selStyle(
+            initialSelected?.from || initialSelected?.to,
+            "active",
+            "inactive",
+            ""
+          )}
+          size="sm"
+          className="px-2 h-8 "
+        >
+          {label}
+          {initialSelected?.from || initialSelected?.to ? (
+            <>
+              <Separator orientation="vertical" className="h-4 separator" />
+              {initialSelected?.from && initialSelected?.to
+                ? `${format(initialSelected.from, "dd/MM/yyyy")} | ${format(
+                    initialSelected.to,
+                    "dd/MM/yyyy"
+                  )}`
+                : null}
+              {initialSelected?.from && !initialSelected?.to
+                ? `Desde ${format(initialSelected.from, "dd/MM/yyyy")}`
+                : null}
+              {!initialSelected?.from && initialSelected?.to
+                ? `Hasta ${format(initialSelected.to, "dd/MM/yyyy")}`
+                : null}
+            </>
+          ) : null}
           {initialSelected?.from || initialSelected?.to ? (
             <div
               onClick={(event) => {
@@ -67,30 +93,8 @@ export function DataTableFilterDate<TData, TValue>({
                 setParam(column.id, null)
               }}
             >
-              <MinusCircledIcon className="h-4 w-4" />
+              <CrossCircledIcon className="h-4 w-4" />
             </div>
-          ) : (
-            <PlusCircledIcon className="h-4 w-4" />
-          )}
-          {label}
-          {initialSelected?.from || initialSelected?.to ? (
-            <>
-              <Separator orientation="vertical" className="h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal"
-              >
-                {`desde ${
-                  initialSelected?.from
-                    ? format(initialSelected.from, "dd/MM/yyyy")
-                    : "..."
-                } al ${
-                  initialSelected?.to
-                    ? format(initialSelected.to, "dd/MM/yyyy")
-                    : "..."
-                }`}
-              </Badge>
-            </>
           ) : null}
         </Button>
       </PopoverTrigger>
@@ -138,7 +142,7 @@ export function DataTableFilterDate<TData, TValue>({
                   id="date"
                   variant={"outline"}
                   className={cn(
-                    "justify-start text-left font-normal w-full mt-3 mb-3",
+                    "justify-start text-left font-normal w-full mt-3 mb-3 p-3",
                     !values && "text-muted-foreground"
                   )}
                 >
@@ -175,8 +179,8 @@ export function DataTableFilterDate<TData, TValue>({
                   id="date"
                   variant={"outline"}
                   className={cn(
-                    "justify-start text-left font-normal w-full mt-3 mb-3",
-                    !values && "text-muted-foreground"
+                    "justify-start text-left font-normal w-full mt-3 mb-3 p-3",
+                    !values && "text-muted-foreground border-selected"
                   )}
                 >
                   <CalendarIcon />
