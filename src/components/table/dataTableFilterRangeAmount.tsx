@@ -18,14 +18,13 @@ import { Label } from "../ui/label"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
-  label?: string
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
   column,
-  label,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
+  const label = column.filter?.label
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,

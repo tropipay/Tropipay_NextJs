@@ -27,21 +27,10 @@ import { Checkbox } from "../ui/checkbox"
 
 interface DataTableFilterFacetedProps<TData, TValue> {
   column?: Column<TData, TValue>
-  label?: string
-  options?: {
-    label: string
-    value: string
-    icon?: React.ComponentType<{ className?: string }>
-  }[]
-  apiUrl?: string
 }
 
 export function DataTableFilterFaceted<TData, TValue>({
   column,
-  label,
-  placeHolder,
-  options = [],
-  apiUrl,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   const { t } = useTranslation()
   const { initialSelected, values, setValues, onSubmit, setParam } =
@@ -52,6 +41,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   const [fetchedOptions, setFetchedOptions] = React.useState<
     { label: string; value: string }[]
   >([])
+  const { label, options, apiUrl, placeHolder } = column.filter || {}
 
   React.useEffect(() => {
     if ((!options || options.length === 0) && apiUrl) {

@@ -17,16 +17,14 @@ import { Label } from "../ui/label"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
-  label?: string
-  placeHolder: string
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
   column,
-  label,
-  placeHolder,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
+  const { label, placeHolder } = column.filter || {}
+
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,

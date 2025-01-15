@@ -27,7 +27,7 @@ export function DataTableToolbar<TData, TValue>({
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
   const { setParam, getParam } = useFilterParams()
-  const isFiltered = table.getState().columnFilters.length > 0
+  //const isFiltered = table.getState().columnFilters.length > 0
 
   return (
     <>
@@ -47,46 +47,22 @@ export function DataTableToolbar<TData, TValue>({
             switch (column.filter?.type) {
               case "list":
                 return (
-                  <DataTableFilterFaceted
-                    key={column.filter?.column}
-                    column={table.getColumn(column.filter?.column)}
-                    label={
-                      column.filter?.label ||
-                      table.getColumn(column.filter?.column)
-                    }
-                    options={column.filter?.options}
-                    apiUrl={column.filter?.apiUrl}
-                  />
+                  <DataTableFilterFaceted key={column.id} column={column} />
                 )
               case "date":
-                return (
-                  <DataTableFilterDate
-                    key={column.filter?.column}
-                    column={table.getColumn(column.filter?.column)}
-                    label={column.filter?.label}
-                  />
-                )
+                return <DataTableFilterDate key={column.id} column={column} />
               case "amount":
                 return (
-                  <DataTableFilterRangeAmount
-                    key={column.filter?.column}
-                    column={table.getColumn(column.filter?.column)}
-                    label={column.filter?.label}
-                  />
+                  <DataTableFilterRangeAmount key={column.id} column={column} />
                 )
               case "uniqueValue":
                 return (
-                  <DataTableFilterSingleValue
-                    key={column.filter?.column}
-                    column={table.getColumn(column.filter?.column)}
-                    label={column.filter?.label}
-                    placeHolder={column.filter?.placeHolder}
-                  />
+                  <DataTableFilterSingleValue key={column.id} column={column} />
                 )
             }
           })}
 
-          {isFiltered && (
+          {/*           {isFiltered && (
             <Button
               variant="outline"
               onClick={() => table.resetColumnFilters()}
@@ -95,7 +71,7 @@ export function DataTableToolbar<TData, TValue>({
               {<FormattedMessage id="clean_filters" />}
               <Cross2Icon className="ml-2 h-4 w-4" />
             </Button>
-          )}
+          )} */}
         </div>
         <DataTableViewOptions table={table} />
       </div>

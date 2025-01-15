@@ -29,18 +29,10 @@ import React from "react"
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue>
-  label?: string
-  options: {
-    label: string
-    value: string
-    icon?: React.ComponentType<{ className?: string }>
-  }[]
 }
 
 export function DataTableFilterDate<TData, TValue>({
   column,
-  label,
-  options,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { initialSelected, values, setValues, onSubmit, setParam } =
     useFiltersManager({
@@ -48,6 +40,7 @@ export function DataTableFilterDate<TData, TValue>({
     })
 
   const [selectedValue, setSelectedValue] = React.useState("")
+  const label = column.filter?.label || ""
 
   const handleDateChange = (
     key: "from" | "to",
