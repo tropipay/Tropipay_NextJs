@@ -40,10 +40,24 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        /* added */
         selected: {
           DEFAULT: "hsl(var(--selected))",
           foreground: "hsl(var(--selected-foreground))",
         },
+        statePending: {
+          DEFAULT: "hsl(var(--statePending))",
+          foreground: "hsl(var(--statePending-foreground))",
+        },
+        stateProcessing: {
+          DEFAULT: "hsl(var(--stateProcessing))",
+          foreground: "hsl(var(--stateProcessing-foreground))",
+        },
+        stateComplete: {
+          DEFAULT: "hsl(var(--stateComplete))",
+          foreground: "hsl(var(--stateComplete-foreground))",
+        },
+        /* end added */
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
