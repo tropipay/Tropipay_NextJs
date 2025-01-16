@@ -50,6 +50,7 @@ export default function Page() {
   useEffect(() => {
     const token = getToken()
     if (!token) {
+      Cookies.set("session", "fill_with_session_info")
       setIsOpen(true)
     } else {
       onLogin()
