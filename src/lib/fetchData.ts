@@ -2,6 +2,7 @@ import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
 import { makeApiRequest } from "./utilsApi"
+import { generateHashedKey, urlParamsToFilter, urlParamsTyping } from "./utils"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
@@ -9,9 +10,11 @@ export async function fetchData<T>(
   urlParams: any
 ): Promise<T> {
   const session = await auth()
+  const filter = urlParamsToFilter(urlParamsTyping(urlParams))
+  const QueryKey = generateHashedKey(config.key, filter)
 
   await queryClient.prefetchQuery({
-    queryKey: [config.key],
+    queryKey: [QueryKey],
     queryFn: () =>
       makeApiRequest({
         config,
@@ -20,5 +23,5 @@ export async function fetchData<T>(
       }),
   })
 
-  return queryClient.getQueryData<T>(config.key) as T
+  return queryClient.getQueryData<T>(QueryKey) as T
 }

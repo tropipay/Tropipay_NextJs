@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Popover,
@@ -7,7 +6,7 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
-import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import * as React from "react"
@@ -15,17 +14,17 @@ import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import { formatAmount, selStyle } from "@/lib/utils"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
-  label?: string
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
   column,
-  label,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
+  const label = column.filter?.label
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,
@@ -34,41 +33,55 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
-          {initialSelected?.min !== undefined ||
-          initialSelected?.max !== undefined ? (
-            <div
-              onClick={(event) => {
-                event.stopPropagation()
-                setParam(column.id, null)
-              }}
-            >
-              <MinusCircledIcon className="h-4 w-4" />
-            </div>
-          ) : (
-            <PlusCircledIcon className="h-4 w-4" />
+        <Button
+          variant={selStyle(
+            initialSelected?.min || initialSelected?.max,
+            "active",
+            "inactive",
+            ""
           )}
+          size="sm"
+          className="px-2 h-8"
+        >
           {label}
-          {(initialSelected?.min !== undefined ||
-            initialSelected?.max !== undefined) && (
+          {initialSelected?.min || initialSelected?.max ? (
             <>
-              <Separator orientation="vertical" className=" h-4" />
-              <div className="hidden space-x-1 lg:flex">
-                <Badge
-                  variant="secondary"
-                  className="rounded-sm px-1 font-normal"
-                >
-                  min: {initialSelected?.min}
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="rounded-sm px-1 font-normal"
-                >
-                  max: {initialSelected?.max}
-                </Badge>
+              <Separator orientation="vertical" className="h-4 separator" />
+              {initialSelected?.min && initialSelected?.max
+                ? `${formatAmount(
+                    initialSelected.min * 100,
+                    "EUR",
+                    "right"
+                  )} - ${formatAmount(
+                    initialSelected.max * 100,
+                    "EUR",
+                    "right"
+                  )}`
+                : null}
+              {initialSelected?.min && !initialSelected?.max
+                ? `Desde ${formatAmount(
+                    initialSelected.min * 100,
+                    "EUR",
+                    "right"
+                  )}`
+                : null}
+              {!initialSelected?.min && initialSelected?.max * 100
+                ? `Hasta ${formatAmount(
+                    initialSelected.max * 100,
+                    "EUR",
+                    "right"
+                  )}`
+                : null}
+              <div
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setParam(column.id, null)
+                }}
+              >
+                <CrossCircledIcon className="h-4 w-4" />
               </div>
             </>
-          )}
+          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">

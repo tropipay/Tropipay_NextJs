@@ -149,7 +149,7 @@ export default function DataTable<TData, TValue>({
   }
 
   const table = useReactTable({
-    data,
+    data: Array.isArray(data) ? data : [],
     columns,
     state: {
       sorting,

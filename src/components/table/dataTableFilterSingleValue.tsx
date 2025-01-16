@@ -7,26 +7,25 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
-import { MinusCircledIcon, PlusCircledIcon } from "@radix-ui/react-icons"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import { selStyle } from "@/lib/utils"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
-  label?: string
-  placeHolder: string
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
   column,
-  label,
-  placeHolder,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
+  const { label, placeHolder } = column.filter || {}
+
   const { initialSelected, values, updateValues, onSubmit, setParam } =
     useFiltersManager({
       column,
@@ -35,19 +34,11 @@ export function DataTableFilterSingleValue<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="px-2 h-8 border-dashed">
-          {initialSelected?.data ? (
-            <div
-              onClick={(event) => {
-                event.stopPropagation()
-                setParam(column.id, null)
-              }}
-            >
-              <MinusCircledIcon className="h-4 w-4" />
-            </div>
-          ) : (
-            <PlusCircledIcon className="h-4 w-4" />
-          )}
+        <Button
+          variant={selStyle(values.data, "active", "inactive", "")}
+          size="sm"
+          className="px-2 h-8"
+        >
           {label}
           {!!initialSelected.data && (
             <>
@@ -58,6 +49,14 @@ export function DataTableFilterSingleValue<TData, TValue>({
               >
                 {initialSelected.data}
               </Badge>
+              <div
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setParam(column.id, null)
+                }}
+              >
+                <CrossCircledIcon className="h-4 w-4" />
+              </div>
             </>
           )}
         </Button>

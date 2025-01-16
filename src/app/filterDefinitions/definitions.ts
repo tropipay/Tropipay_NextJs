@@ -1,4 +1,10 @@
+import BankIcon from "@/components/images/bankIcon"
+import CreditcardIcon from "@/components/images/creditcardIcon"
+import GiftcardIcon from "@/components/images/giftcardIcon"
+import TropicardIcon from "@/components/images/tropicardIcon"
+import TropipayIcon from "@/components/images/tropipayIcon"
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons"
+import { Check, Clock4, CornerUpLeft, LoaderCircle } from "lucide-react"
 
 export const usersStatus = [
   {
@@ -16,63 +22,71 @@ export const movementsState = [
   {
     value: "pendingIn",
     label: "Pendiente",
-    icon: CheckCircledIcon,
+    icon: Clock4,
   },
   {
     value: "processing",
     label: "Procesando",
-    icon: CrossCircledIcon,
+    icon: LoaderCircle,
   },
   {
     value: "paid",
     label: "Completado",
-    icon: CrossCircledIcon,
+    icon: Check,
   },
   {
     value: "refund",
     label: "Reembolsado",
-    icon: CrossCircledIcon,
+    icon: CornerUpLeft,
   },
 ]
 export const movementTypes = [
   {
     value: "transfer",
     label: "Transferencia",
-    icon: CheckCircledIcon,
   },
   {
     value: "deposit",
     label: "Deposito",
-    icon: CrossCircledIcon,
   },
   {
     value: "withdrawal",
     label: "Retiro",
-    icon: CrossCircledIcon,
   },
   {
     value: "payment",
     label: "Pago",
-    icon: CrossCircledIcon,
   },
   {
     value: "refund",
     label: "Reembolso",
-    icon: CrossCircledIcon,
   },
 ]
 export const paymentMethods = [
   {
     value: "Credit Card",
     label: "Tarjeta de crédito",
+    icon: CreditcardIcon,
   },
   {
     value: "Tropipay Balance",
     label: "Saldo TropiPay",
+    icon: TropipayIcon,
   },
   {
     value: "GiftCard",
     label: "Giftcard",
+    icon: GiftcardIcon,
+  },
+  {
+    value: "Deposit Bank",
+    label: "Deposito Bancario",
+    icon: BankIcon,
+  },
+  {
+    value: "TropiCard",
+    label: "TropiCard",
+    icon: TropicardIcon,
   },
 ]
 export const userList = [

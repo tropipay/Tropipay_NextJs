@@ -2,11 +2,11 @@
 import DataTable from "@/components/table/dataTable"
 import React from "react"
 
-const pageClient = (props) => {
+const PageClient = (props) => {
   const onChangeColumnOrder = (columnOrder: string[]) =>
     console.log("Change column order to ", columnOrder)
 
-  const newData = props.data?.data?.movements
+  const newData = props.data?.data?.movements?.items
   return (
     <div className="container p-2">
       <DataTable
@@ -25,4 +25,4 @@ const pageClient = (props) => {
   )
 }
 
-export default pageClient
+export default PageClient

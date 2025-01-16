@@ -6,6 +6,7 @@ import {
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
+import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ColumnDef } from "@tanstack/react-table"
 import clsx from "clsx"
@@ -108,18 +109,17 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         return null
       }
       const Icon = status.icon
+      const states = {
+        pendingIn: "statePending",
+        processing: "stateProcessing",
+        paid: "stateComplete",
+        refunded: "stateRefund",
+      }
       return (
-        <div
-          className={clsx("flex items-center", {
-            "text-red-500": status.value === "pendingIn",
-            "text-yellow-500": status.value === "processing",
-            "text-green-500": status.value === "paid",
-            "text-gray-500": status.value === "refund",
-          })}
-        >
-          <Icon className="mr-2 h-4 w-4" />
-          <span>{status.label}</span>
-        </div>
+        <Badge variant={states[row.getValue("status")]}>
+          <span className="ml-1">{status.label}</span>
+          <Icon className="ml-2 h-4 w-4 mr-1" />
+        </Badge>
       )
     },
     filter: {
@@ -165,17 +165,8 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       if (!movementType) {
         return null
       }
-      const Icon = movementType.icon
       return (
-        <div
-          className={clsx("flex items-center", {
-            "text-red-500": movementType.value === "transfer",
-            "text-yellow-500": movementType.value === "deposit",
-            "text-green-500": movementType.value === "payment",
-            "text-gray-500": movementType.value === "withdrawal",
-          })}
-        >
-          <Icon className="mr-2 h-4 w-4" />
+        <div>
           <span>{movementType.label}</span>
         </div>
       )
@@ -210,7 +201,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
             "text-gray-500": paymentMethod.value === "withdrawal",
           })}
         >
-          {Icon && <Icon className="mr-2 h-4 w-4" />}
+          {Icon && <Icon className="mr-2 h-5 w-5" />}
           <span>{paymentMethod.label}</span>
         </div>
       )
