@@ -152,11 +152,11 @@ export function urlParamsTyping(params: Record<string, any>) {
 }
 
 export function urlParamsToFilter(processedParams: Record<string, any>) {
-  return Object.entries(processedParams).reduce((acc, [key, value]) => {
+  return Object.entries(processedParams).reduce((acc, [keyRenamed, value]) => {
+    const key = keyRenamed.substring(1)
     if (!value.type) {
       return acc
     }
-
     switch (value.type) {
       case "rangeAmount":
         if (value.min) acc[`${key}Gte`] = parseFloat(value.min)

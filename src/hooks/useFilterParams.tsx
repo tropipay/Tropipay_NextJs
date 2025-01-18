@@ -54,9 +54,9 @@ const useFilterParams = () => {
         queryValue === "" ||
         queryValue.length === 0
       ) {
-        params.delete(paramName) // Elimina si el valor es vacío
+        params.delete("_" + paramName) // Elimina si el valor es vacío
       } else {
-        params.set(paramName, serializeValue(queryValue ?? ""))
+        params.set("_" + paramName, serializeValue(queryValue ?? ""))
       }
 
       replace(`${pathname}?${params.toString()}`, { scroll: false })
@@ -70,7 +70,7 @@ const useFilterParams = () => {
   const getParam = useCallback(
     (paramName: string): any => {
       const params = new URLSearchParams(searchParams?.toString() || "")
-      return deserializeValue(params.get(paramName))
+      return deserializeValue(params.get("_" + paramName))
     },
     [searchParams]
   )
