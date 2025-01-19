@@ -1,15 +1,15 @@
+import { getSession } from "@/app/actions/sessionActions"
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
-import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
-import { makeApiRequest } from "./utilsApi"
 import { generateHashedKey, urlParamsToFilter, urlParamsTyping } from "./utils"
+import { makeApiRequest } from "./utilsApi"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
   config: FetchDataConfig,
   urlParams: any
 ): Promise<T> {
-  const session = await auth()
+  const session = await getSession()
   const filter = urlParamsToFilter(urlParamsTyping(urlParams))
   const QueryKey = generateHashedKey(config.key, filter)
 
