@@ -19,8 +19,11 @@ import {
 import { SidebarOption } from "@/types/SidebarOption"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { useTranslation } from "./intl/useTranslation"
 
 export function NavMain({ items }: { items: SidebarOption[] }) {
+  const { t } = useTranslation()
+
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -34,9 +37,7 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton
-                      tooltip={<FormattedMessage id={item.title} />}
-                    >
+                    <SidebarMenuButton tooltip={t(item.title)}>
                       {item.icon && <item.icon />}
                       <FormattedMessage id={item.title} />
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -59,9 +60,7 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
               </Collapsible>
             ) : (
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  tooltip={<FormattedMessage id={item.title} />}
-                >
+                <SidebarMenuButton tooltip={t(item.title)}>
                   {item.icon && <item.icon />}
                   {<FormattedMessage id={item.title} />}
                 </SidebarMenuButton>

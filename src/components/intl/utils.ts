@@ -2,15 +2,19 @@ import Cookies from "js-cookie"
 import English from "./messages/en.json"
 import Spanish from "./messages/es.json"
 import Portuguese from "./messages/pt.json"
-import { Languages } from "./types"
 
 const LOCALE_STORAGE_VAR = "userLang"
 
 export const LANG_DEFAULT = "en"
 
-export const supportedLanguages: Languages[] = ["es", "en", "pt"]
+export const supportedLanguages: string[] = ["es", "en", "pt"]
 
-export const getLocaleStored = () => Cookies.get(LOCALE_STORAGE_VAR)
+export const getLocaleStored = () => {
+  const cookieLang = Cookies.get(LOCALE_STORAGE_VAR)
+  return cookieLang && supportedLanguages.includes(cookieLang)
+    ? cookieLang
+    : LANG_DEFAULT
+}
 
 export const setLocaleStored = (locale: string) => {
   Cookies.set(LOCALE_STORAGE_VAR, locale, {

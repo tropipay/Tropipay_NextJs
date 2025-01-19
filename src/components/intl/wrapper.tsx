@@ -1,14 +1,9 @@
 "use client"
 
-import React, { useMemo, useState } from "react"
+import React from "react"
 import { IntlProvider } from "react-intl"
 
-import {
-  LANG_DEFAULT,
-  getLocaleI18nResource,
-  getLocaleStored,
-  setLocaleStored,
-} from "./utils"
+import { LANG_DEFAULT, getLocaleI18nResource, getLocaleStored } from "./utils"
 
 export const IntlContext = React.createContext({
   locale: LANG_DEFAULT,
@@ -18,25 +13,13 @@ export const IntlContext = React.createContext({
 })
 
 const IntlWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const local = getLocaleStored() ?? LANG_DEFAULT
-  const lang = getLocaleI18nResource(local)
-  const [locale, setLocale] = useState(local)
-  const [messages, setMessages] = useState(lang)
-
-  const selectLanguage = (e: string) => {
-    setLocale(e)
-    setLocaleStored(e)
-    setMessages(getLocaleI18nResource(e))
-  }
+  const local = getLocaleStored()
+  const messages = getLocaleI18nResource(local)
 
   return (
-    <IntlContext.Provider
-      value={useMemo(() => ({ locale, selectLanguage }), [])}
-    >
-      <IntlProvider messages={messages} locale={locale} defaultLocale={local}>
-        <>{children}</>
-      </IntlProvider>
-    </IntlContext.Provider>
+    <IntlProvider messages={messages} locale={local} defaultLocale={local}>
+      <>{children}</>
+    </IntlProvider>
   )
 }
 export default IntlWrapper
