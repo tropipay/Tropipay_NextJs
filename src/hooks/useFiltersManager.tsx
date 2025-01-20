@@ -6,7 +6,7 @@ interface UrlParamsManagerProps {
 }
 
 const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
-  const { setParam, getParam } = useFilterParams()
+  const { setParams, getParam } = useFilterParams()
   const thisColumn = useMemo(() => column?.id || "", [column])
 
   const initialSelected = useMemo(() => {
@@ -21,7 +21,7 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setParam(thisColumn, values)
+    setParams({ [thisColumn]: values })
   }
 
   function updateValues(
@@ -50,7 +50,7 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
     setValues,
     onSubmit,
     updateValues,
-    setParam,
+    setParams,
   }
 }
 

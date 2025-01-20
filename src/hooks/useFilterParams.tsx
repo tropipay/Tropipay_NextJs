@@ -41,12 +41,12 @@ const useFilterParams = () => {
   /**
    * Método para establecer o eliminar un parámetro en la URL.
    */
-  const setParam = useCallback(
-    (
-      paramName: string,
-      queryValue: string | number | boolean | object | null
-    ) => {
-      const params = new URLSearchParams(searchParams?.toString() || "")
+  const setParams = (
+    paramsObject: Record<string, string | number | boolean | object | null>
+  ) => {
+    const params = new URLSearchParams(searchParams?.toString() || "")
+
+    Object.entries(paramsObject).forEach(([paramName, queryValue]) => {
       if (
         isEmptyValue(queryValue) ||
         queryValue === undefined ||
@@ -54,15 +54,14 @@ const useFilterParams = () => {
         queryValue === "" ||
         queryValue.length === 0
       ) {
-        params.delete("_" + paramName) // Elimina si el valor es vacío
+        params.delete("_" + paramName)
       } else {
         params.set("_" + paramName, serializeValue(queryValue ?? ""))
       }
+    })
 
-      replace(`${pathname}?${params.toString()}`, { scroll: false })
-    },
-    [searchParams, pathname, replace]
-  )
+    replace(`${pathname}?${params.toString()}`, { scroll: false })
+  }
 
   /**
    * Método para obtener el valor de un parámetro desde la URL.
@@ -75,7 +74,7 @@ const useFilterParams = () => {
     [searchParams]
   )
 
-  return { setParam, getParam }
+  return { setParams, getParam }
 }
 
 export default useFilterParams

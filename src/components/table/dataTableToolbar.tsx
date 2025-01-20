@@ -26,7 +26,7 @@ export function DataTableToolbar<TData, TValue>({
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
-  const { setParam, getParam } = useFilterParams()
+  const { setParams, getParam } = useFilterParams()
   //const isFiltered = table.getState().columnFilters.length > 0
 
   return (
@@ -35,7 +35,7 @@ export function DataTableToolbar<TData, TValue>({
         <div className="flex flex-1 items-center space-x-2">
           <Input
             placeholder={t("filter")}
-            onChange={(event) => setParam("search", event.target.value)}
+            onChange={(event) => setParams({ search: event.target.value })}
             className="w-full"
             defaultValue={getParam("query")?.toString()}
           />
