@@ -1,11 +1,8 @@
 "use client"
 
-import * as React from "react"
-
-import { NavMain } from "@/components/nav-main"
-// import { NavProjects } from "@/components/nav-projects"
 import { getSession } from "@/app/actions/sessionActions"
 import { sideBarOptions } from "@/app/data/sideBarOptions"
+import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -13,6 +10,7 @@ import {
   SidebarFooter,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import * as React from "react"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [user, setUser] = React.useState<UserSession>()

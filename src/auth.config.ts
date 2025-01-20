@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { JWT } from "next-auth/jwt"
 
 // Extender los tipos para incluir el token en la sesión
 declare module "next-auth" {
@@ -19,7 +18,7 @@ export default {
       async authorize({ token }) {
         try {
           const res = await fetch(
-            `${process.env.NEXTAUTH_URL}/api/users/profile`,
+            `${process.env.REACT_APP_API_URL}/api/users/profile`,
             {
               method: "GET",
               headers: {
