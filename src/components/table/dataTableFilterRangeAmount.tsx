@@ -25,7 +25,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
   const label = column.filter?.label
-  const { initialSelected, values, updateValues, onSubmit, setParam } =
+  const { initialSelected, values, updateValues, onSubmit, setParams } =
     useFiltersManager({
       column,
     })
@@ -75,7 +75,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
               <div
                 onClick={(event) => {
                   event.stopPropagation()
-                  setParam(column.id, null)
+                  setParams({ [column.id]: null })
                 }}
               >
                 <CrossCircledIcon className="h-4 w-4" />

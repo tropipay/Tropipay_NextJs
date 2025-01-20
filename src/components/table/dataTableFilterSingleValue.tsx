@@ -26,7 +26,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const { t } = useTranslation()
   const { label, placeHolder } = column.filter || {}
 
-  const { initialSelected, values, updateValues, onSubmit, setParam } =
+  const { initialSelected, values, updateValues, onSubmit, setParams } =
     useFiltersManager({
       column,
     })
@@ -52,7 +52,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
               <div
                 onClick={(event) => {
                   event.stopPropagation()
-                  setParam(column.id, null)
+                  setParams({ [column.id]: null })
                 }}
               >
                 <CrossCircledIcon className="h-4 w-4" />

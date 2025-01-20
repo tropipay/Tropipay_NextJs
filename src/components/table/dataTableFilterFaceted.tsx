@@ -2,7 +2,6 @@ import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 import * as React from "react"
 
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -33,7 +32,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   column,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   const { t } = useTranslation()
-  const { initialSelected, values, setValues, onSubmit, setParam } =
+  const { initialSelected, values, setValues, onSubmit, setParams } =
     useFiltersManager({
       column,
     })
@@ -106,7 +105,7 @@ export function DataTableFilterFaceted<TData, TValue>({
             <div
               onClick={(event) => {
                 event.stopPropagation()
-                setParam(column.id, null)
+                setParams({ [column.id]: "" })
               }}
             >
               <CrossCircledIcon className="h-4 w-4" />

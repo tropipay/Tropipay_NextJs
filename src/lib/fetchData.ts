@@ -13,6 +13,7 @@ export async function fetchData<T>(
   const filter = urlParamsToFilter(urlParamsTyping(urlParams))
   const QueryKey = generateHashedKey(config.key, filter)
 
+  console.log("filter:", filter)
   await queryClient.prefetchQuery({
     queryKey: [QueryKey],
     queryFn: () =>

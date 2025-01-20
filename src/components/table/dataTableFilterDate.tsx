@@ -33,7 +33,7 @@ interface DataTableFilterDateProps<TData, TValue> {
 export function DataTableFilterDate<TData, TValue>({
   column,
 }: DataTableFilterDateProps<TData, TValue>) {
-  const { initialSelected, values, setValues, onSubmit, setParam } =
+  const { initialSelected, values, setValues, onSubmit, setParams } =
     useFiltersManager({
       column,
     })
@@ -90,7 +90,7 @@ export function DataTableFilterDate<TData, TValue>({
             <div
               onClick={(event) => {
                 event.stopPropagation()
-                setParam(column.id, null)
+                setParams({ [column.id]: null })
               }}
             >
               <CrossCircledIcon className="h-4 w-4" />
