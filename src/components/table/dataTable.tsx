@@ -76,7 +76,7 @@ export default function DataTable<TData, TValue>({
   onChangeColumnOrder,
   onChangeColumnVisibility,
   manualPagination = true,
-  manualSorting = false,
+  manualSorting = true,
   manualFiltering = false,
   pageCount,
 }: DataTableProps<TData, TValue>) {
