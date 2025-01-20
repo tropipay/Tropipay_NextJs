@@ -1,5 +1,7 @@
 "use client"
 
+import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { useCallback } from "react"
 import {
   Table,
   TableBody,
@@ -58,6 +60,10 @@ interface DataTableProps<TData, TValue> {
   onChangeColumnOrder?: (_: string[]) => void
   onChangeColumnVisibility?: (_: Updater<VisibilityState>) => void
   onChangeSorting?: (_: SortingState) => void
+  manualPagination?: boolean
+  manualSorting?: boolean
+  manualFiltering?: boolean
+  pageCount?: number
 }
 
 export default function DataTable<TData, TValue>({
@@ -69,8 +75,52 @@ export default function DataTable<TData, TValue>({
   defaultColumnVisibility = {},
   onChangeColumnOrder,
   onChangeColumnVisibility,
+  manualPagination = true,
+  manualSorting = true,
+  manualFiltering = false,
+  pageCount,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  // Función helper para actualizar URL
+  const createQueryString = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams)
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === null) {
+          params.delete(key)
+        } else {
+          params.set(key, value)
+        }
+      })
+
+      return params.toString()
+    },
+    [searchParams]
+  )
+
+  // Inicializar estados desde URL
+  const [sorting, setSorting] = React.useState<SortingState>(() => {
+    const sortField = searchParams.get("sort")
+    const order = searchParams.get("order")
+    return sortField ? [{ id: sortField, desc: order === "desc" }] : []
+  })
+
+  const [pagination, setPagination] = React.useState({
+    pageIndex: Number(searchParams.get("page") ?? 0),
+    pageSize: Number(searchParams.get("size") ?? 10),
+  })
+
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    () => {
+      const filter = searchParams.get("filter")
+      return filter ? [{ id: "global", value: filter }] : []
+    }
+  )
+
   const [columnOrder, setColumnOrder] = React.useState<string[]>(
     defaultColumnOrder
       ? defaultColumnOrder
@@ -78,9 +128,6 @@ export default function DataTable<TData, TValue>({
   )
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(defaultColumnVisibility)
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
 
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
@@ -148,23 +195,92 @@ export default function DataTable<TData, TValue>({
     )
   }
 
+  const handlePaginationChange = useCallback(
+    (updater: Updater<typeof pagination>) => {
+      const newPagination =
+        typeof updater === "function" ? updater(pagination) : updater
+      setPagination(newPagination)
+      console.log("handlePaginationChange:", newPagination)
+
+      if (manualPagination) {
+        console.log("push:")
+        router.push(
+          `${pathname}?${createQueryString({
+            page: String(newPagination.pageIndex),
+            size: String(newPagination.pageSize),
+          })}`,
+          { scroll: false }
+        )
+      }
+    },
+    [pagination, manualPagination, router, pathname, createQueryString]
+  )
+
+  const handleSortingChange = useCallback(
+    (updater: Updater<SortingState>) => {
+      const newSorting =
+        typeof updater === "function" ? updater(sorting) : updater
+      setSorting(newSorting)
+
+      if (manualSorting) {
+        router.push(
+          `${pathname}?${createQueryString({
+            sort: newSorting[0]?.id ?? null,
+            order: newSorting[0]?.desc ? "desc" : null,
+            // Reset a primera página al cambiar ordenamiento
+            page: "0",
+          })}`,
+          { scroll: false }
+        )
+      }
+    },
+    [sorting, manualSorting, router, pathname, createQueryString]
+  )
+
+  const handleFiltersChange = useCallback(
+    (updater: Updater<ColumnFiltersState>) => {
+      const newFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater
+      setColumnFilters(newFilters)
+
+      if (manualFiltering) {
+        const filterValue = newFilters.find((f) => f.id === "global")?.value
+        router.push(
+          `${pathname}?${createQueryString({
+            filter: filterValue?.toString() ?? null,
+            // Reset a primera página al filtrar
+            page: "0",
+          })}`,
+          { scroll: false }
+        )
+      }
+    },
+    [columnFilters, manualFiltering, router, pathname, createQueryString]
+  )
+
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
     columns,
+    pageCount: pageCount ?? -1,
     state: {
       sorting,
       columnVisibility,
       columnFilters,
       columnOrder,
+      pagination,
     },
+    manualPagination,
+    manualSorting,
+    manualFiltering,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
+    onPaginationChange: handlePaginationChange,
+    onSortingChange: handleSortingChange,
+    onColumnFiltersChange: handleFiltersChange,
     onColumnVisibilityChange,
-    onColumnFiltersChange: setColumnFilters,
     onColumnOrderChange: setColumnOrder,
   })
 
