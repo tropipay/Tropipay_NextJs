@@ -9,7 +9,7 @@ body {
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --foreground: 245 26% 29%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -50,6 +50,8 @@ body {
     --stateProcessing-foreground: 242 26% 29% 0.1;
     --statePending: 231 59% 64%;
     --statePending-foreground: 231 100% 96%;
+    --grayFont: 217, 9%, 52%, 1;
+    --grayFont-foreground: 217, 9%, 52%, 1;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -93,6 +95,8 @@ body {
     --stateProcessing-foreground: 242 26% 29% 0.1;
     --statePending: 233 93% 20%;
     --statePending-foreground: 233 93% 20% 0.15;
+    --grayFont: 217, 9%, 52%, 1;
+    --grayFont-foreground: 217, 9%, 52%, 1;
   }
 }
 

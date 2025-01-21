@@ -28,13 +28,15 @@ export default function Page({ children }: ChildrenProps) {
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
+                    <BreadcrumbLink className="font-poppins font-semibold text-2xl text-foreground">
+                      Movements
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block" />
                   <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                    <BreadcrumbPage className="font-poppins font-semibold text-2xl text-foreground">
+                      All
+                    </BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
