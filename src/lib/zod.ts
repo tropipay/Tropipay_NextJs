@@ -1,5 +1,6 @@
 import { object, string } from "zod"
 
 export const authSchema = object({
-  token: string({ required_error: "Token is required" }),
+  email: string({ required_error: "Email is required" }),
+  password: string({ required_error: "Password is required" }),
 })

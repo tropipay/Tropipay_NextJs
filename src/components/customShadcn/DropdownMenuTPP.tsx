@@ -51,12 +51,12 @@ import React from "react"
  */
 
 interface MenuItemType {
-  [key: string]: string
+  [key: string]: any
 }
 
 interface DropdownMenuTPPProps {
   text: string
-  icon?: React.Component | null
+  icon?: typeof React.Component
   items: MenuItemType[]
   checkbox?: {
     checked: (item: any) => boolean
@@ -66,18 +66,17 @@ interface DropdownMenuTPPProps {
 
 const DropdownMenuTPP = ({
   text,
-  icon = null,
+  icon: Icon,
   items,
-  checkbox = null,
+  checkbox,
   ...anotherProps
 }: DropdownMenuTPPProps) => {
-  const Icon = icon
   if (items)
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild {...anotherProps}>
           <Button variant="outline">
-            {text} {!!icon && <Icon className="ml-2 h-4 w-4" />}
+            {text} {Icon && <Icon className="ml-2 h-4 w-4" />}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

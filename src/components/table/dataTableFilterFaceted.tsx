@@ -1,7 +1,3 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons"
-import { Column } from "@tanstack/react-table"
-import * as React from "react"
-
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -19,7 +15,10 @@ import {
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
 import { cn, selStyle, truncateLabels } from "@/lib/utils"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column } from "@tanstack/react-table"
+import * as React from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Checkbox } from "../ui/checkbox"
@@ -40,7 +39,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   const [fetchedOptions, setFetchedOptions] = React.useState<
     { label: string; value: string }[]
   >([])
-  const { label, options, apiUrl, placeHolder } = column.filter || {}
+  const { label, options, apiUrl, placeHolder } = (column as any)?.filter ?? {}
 
   React.useEffect(() => {
     if ((!options || options.length === 0) && apiUrl) {
@@ -60,8 +59,10 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const displayOptions = options.length > 0 ? options : fetchedOptions
 
-  const handleCheckboxClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const checkbox = event.currentTarget
+  const handleCheckboxClick = (
+    event: React.MouseEventHandler<HTMLButtonElement>
+  ) => {
+    const checkbox = (event as any).target
 
     const order = values.indexOf(checkbox.value)
     checkbox.checked = !order
@@ -95,7 +96,8 @@ export function DataTableFilterFaceted<TData, TValue>({
                 {truncateLabels(
                   values.map(
                     (value) =>
-                      options.find((option) => option.value === value).label
+                      options.find((option: any) => option.value === value)
+                        .label
                   )
                 )}
               </div>
@@ -105,7 +107,7 @@ export function DataTableFilterFaceted<TData, TValue>({
             <div
               onClick={(event) => {
                 event.stopPropagation()
-                setParams({ [column.id]: "" })
+                setParams({ [column?.id ?? ""]: "" })
               }}
             >
               <CrossCircledIcon className="h-4 w-4" />
@@ -120,7 +122,7 @@ export function DataTableFilterFaceted<TData, TValue>({
             <CommandList>
               <CommandEmpty>{"No Filter results"}</CommandEmpty>
               <CommandGroup>
-                {displayOptions.map((option) => {
+                {displayOptions.map((option: any) => {
                   return (
                     <CommandItem key={option.value}>
                       <div

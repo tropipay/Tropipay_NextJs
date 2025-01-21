@@ -11,7 +11,7 @@ export async function fetchData<T>(
 ): Promise<T> {
   const session = await getSession()
   const filter = urlParamsToFilter(urlParamsTyping(urlParams))
-  const QueryKey = generateHashedKey(config.key, filter)
+  const QueryKey = generateHashedKey(config.key ?? "", filter)
 
   console.log("filter:", filter)
   await queryClient.prefetchQuery({

@@ -1,4 +1,3 @@
-import React from "react"
 import {
   Table,
   TableBody,
@@ -8,26 +7,31 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table"
+import React from "react"
 
+import { ChevronDown } from "lucide-react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import DropdownMenuTPP from "./DropdownMenuTPP"
-import { ChevronDown } from "lucide-react"
 
 interface dataType {
   [key: string]: string | number | boolean | Date | null
 }
 
 const TableTPP = ({ data, columns }: { data: dataType[]; columns: any }) => {
-  const [sorting, setSorting] = React.useState([])
-  const [columnFilters, setColumnFilters] = React.useState([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [rowSelection, setRowSelection] = React.useState({})
 
@@ -51,13 +55,11 @@ const TableTPP = ({ data, columns }: { data: dataType[]; columns: any }) => {
   })
 
   const checkboxDropDown = {
-    checked: (item) => {
-      return item.getIsVisible()
-    },
-    onCheckedChange: (item, value) => {
-      return item.toggleVisibility(!!value)
-    },
+    checked: (item: any) => item.getIsVisible(),
+    onCheckedChange: (item: any, value: boolean) =>
+      item.toggleVisibility(!!value),
   }
+
   const itemsDropDown = [
     {
       text: "Email",

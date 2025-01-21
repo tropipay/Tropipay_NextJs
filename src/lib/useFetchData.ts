@@ -1,7 +1,7 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query"
+import { Query, useQuery, UseQueryResult } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
-import { makeApiRequest } from "./utilsApi"
 import { generateHashedKey, urlParamsToFilter, urlParamsTyping } from "./utils"
+import { makeApiRequest } from "./utilsApi"
 
 export function useFetchData<T>({
   config,
@@ -23,7 +23,8 @@ export function useFetchData<T>({
         urlParams,
       }),
     initialData: dehydratedState.queries?.find(
-      (query) => JSON.stringify(query.queryKey) === JSON.stringify([QueryKey])
+      (query: Query) =>
+        JSON.stringify(query.queryKey) === JSON.stringify([QueryKey])
     )?.state?.data,
     staleTime: 1000 * 60 * 5,
     enabled: !!token,

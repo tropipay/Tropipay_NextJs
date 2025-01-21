@@ -1,20 +1,15 @@
 "use client"
 
-import { Cross2Icon } from "@radix-ui/react-icons"
-import { Table } from "@tanstack/react-table"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DataTableViewOptions } from "./dataTableViewOptions"
-
 import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
+import { Input } from "@/components/ui/input"
 import useFilterParams from "@/hooks/useFilterParams"
-import { FormattedMessage } from "react-intl"
+import { Table } from "@tanstack/react-table"
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
 import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
+import { DataTableViewOptions } from "./dataTableViewOptions"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>

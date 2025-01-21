@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
+import { selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
@@ -14,7 +15,6 @@ import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
-import { selStyle } from "@/lib/utils"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -24,7 +24,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   column,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
-  const { label, placeHolder } = column.filter || {}
+  const { label, placeHolder } = (column as any)?.filter ?? {}
 
   const { initialSelected, values, updateValues, onSubmit, setParams } =
     useFiltersManager({

@@ -4,11 +4,14 @@ declare global {
   }>
 
   type UserSession = {
+    [key: string]: any
     name: string
     email: string
     logo: string
     createdAt?: Date
     updatedAt?: Date
+    id?: string
+    access_token?: string
   } & AdapterUser
 }
 

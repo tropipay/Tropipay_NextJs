@@ -1,7 +1,7 @@
+import { QueryKey } from "@tanstack/react-query"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
-import { QueryKey } from "@tanstack/react-query"
 
 // Definimos un tipo para una función de búsqueda que toma un parámetro `T` y devuelve un endpoint
 type FetchFunction<T extends any[]> = (...args: T) => { endpoint: string }
@@ -46,7 +46,7 @@ export const fetchGetWithTriggers = async (
 ): Promise<any> => {
   try {
     // Intenta obtener el usuario; en el servidor puede no estar disponible
-    let user
+    let user: UserSession
     try {
       user = await getUser()
     } catch (error) {
