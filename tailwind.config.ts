@@ -41,6 +41,10 @@ export default {
           foreground: "hsl(var(--destructive-foreground))",
         },
         /* added */
+        grayFont: {
+          DEFAULT: "hsl(var(--grayFont))",
+          foreground: "hsl(var(--grayFont-foreground))",
+        },
         selected: {
           DEFAULT: "hsl(var(--selected))",
           foreground: "hsl(var(--selected-foreground))",
@@ -105,6 +109,10 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        poppins: ["var(--font-poppins)"],
+        roboto: ["var(--font-roboto)"],
       },
     },
   },

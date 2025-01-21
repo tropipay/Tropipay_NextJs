@@ -84,7 +84,8 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       const { value, currency } = row.original.amount
       return (
         <div className="text-right">
-          {value.toLocaleString()} {currency}
+          <span className="font-bold">{value.toLocaleString()}</span>{" "}
+          <span className="text-grayFont">{currency}</span>
         </div>
       )
     },
