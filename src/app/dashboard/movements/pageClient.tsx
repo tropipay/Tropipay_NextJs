@@ -1,19 +1,33 @@
 "use client"
-import DataTable from "@/components/table/dataTable"
-import React from "react"
 
-const PageClient = (props) => {
+import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
+import DataTable from "@/components/table/dataTable"
+
+interface Props {
+  columns: CustomColumnDef<Movement>[]
+  data?: GetMovementsResponse
+}
+
+const PageClient = ({
+  columns,
+  data: {
+    data: {
+      movements: { items },
+    },
+  } = {
+    data: { movements: { items: [], totalCount: 0 } },
+  },
+}: Props) => {
   const onChangeColumnOrder = (columnOrder: string[]) =>
     console.log("Change column order to ", columnOrder)
 
-  const newData = props.data?.data?.movements?.items
   return (
     <div className="container p-2">
       <DataTable
         enableColumnOrder
         {...{
-          data: newData,
-          columns: props.columns,
+          data: items,
+          columns,
           defaultColumnVisibility: {
             location: false,
             otherInformation: false,

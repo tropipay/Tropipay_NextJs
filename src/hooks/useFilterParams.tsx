@@ -14,6 +14,7 @@ const useFilterParams = () => {
     if (typeof value === "string" && value.trim() === "") return true
     if (typeof value === "object" && Object.keys(value).length === 0)
       return true
+    if (Array.isArray(value) && value.length === 0) return true
     return false
   }
 
@@ -51,8 +52,7 @@ const useFilterParams = () => {
         isEmptyValue(queryValue) ||
         queryValue === undefined ||
         queryValue === null ||
-        queryValue === "" ||
-        queryValue.length === 0
+        queryValue === ""
       ) {
         params.delete("_" + paramName)
       } else {

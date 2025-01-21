@@ -109,14 +109,15 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         return null
       }
       const Icon = status.icon
-      const states = {
+      const states: Record<string, any> = {
         pendingIn: "statePending",
         processing: "stateProcessing",
         paid: "stateComplete",
         refunded: "stateRefund",
       }
+
       return (
-        <Badge variant={states[row.getValue("status")]}>
+        <Badge variant={states[row.getValue("status") as any]}>
           <span className="ml-1">{status.label}</span>
           <Icon className="ml-2 h-4 w-4 mr-1" />
         </Badge>

@@ -1,8 +1,3 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons"
-import { format, addDays, addMonths } from "date-fns"
-
-import { Column } from "@tanstack/react-table"
-
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -13,8 +8,12 @@ import {
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
 import { cn, selStyle } from "@/lib/utils"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column } from "@tanstack/react-table"
+import { addDays, addMonths, format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
+import React from "react"
 import { FormattedMessage } from "react-intl"
 import { Label } from "../ui/label"
 import {
@@ -24,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import React from "react"
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -39,20 +37,20 @@ export function DataTableFilterDate<TData, TValue>({
     })
 
   const [selectedValue, setSelectedValue] = React.useState("")
-  const label = column.filter?.label || ""
+  const label = (column as any)?.filter?.label || ""
 
   const handleDateChange = (
     key: "from" | "to",
     selectedDate: Date | undefined
   ) => {
     const currentValue = { ...values }
-    currentValue[key] = selectedDate
+    currentValue[key as any] = selectedDate as any
     const filteredValues = Object.fromEntries(
       Object.entries(currentValue).filter(
         ([_, value]) => value !== null && value !== undefined && value !== ""
       )
     )
-    setValues(filteredValues)
+    setValues(filteredValues as any)
   }
 
   return (
@@ -90,7 +88,7 @@ export function DataTableFilterDate<TData, TValue>({
             <div
               onClick={(event) => {
                 event.stopPropagation()
-                setParams({ [column.id]: null })
+                setParams({ [column?.id ?? ""]: null })
               }}
             >
               <CrossCircledIcon className="h-4 w-4" />

@@ -1,15 +1,5 @@
+import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { urlParamsToFilter, urlParamsTyping } from "./utils"
-
-interface FetchDataConfig {
-  key: string
-  url: string
-  method: string
-  headers?: Record<string, string>
-  body?: {
-    variables?: Record<string, any>
-    [key: string]: any
-  }
-}
 
 export interface FetchOptions {
   config: FetchDataConfig

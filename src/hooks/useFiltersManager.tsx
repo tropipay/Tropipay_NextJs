@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import useFilterParams from "./useFilterParams"
 
 interface UrlParamsManagerProps {
@@ -35,13 +35,13 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
       return
     }
 
-    currentValue[id] = event.target.value
+    currentValue[id as any] = event.target.value
     const filteredValues = Object.fromEntries(
       Object.entries(currentValue).filter(
         ([_, value]) => value !== null && value !== undefined && value !== ""
       )
     )
-    setValues(filteredValues)
+    setValues(filteredValues as any)
   }
 
   return {

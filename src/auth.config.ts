@@ -1,17 +1,6 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
-// Extender los tipos para incluir el token en la sesión
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id?: string
-      access_token?: string
-      [key: string]: any
-    }
-  }
-}
-
 export default {
   providers: [
     Credentials({
@@ -61,8 +50,8 @@ export default {
     async jwt({ token, user }) {
       // Si tenemos un usuario (primera vez que se inicia sesión)
       if (user) {
-        token.access_token = user.access_token
-        delete user.access_token // Limpiamos el token del objeto usuario
+        token.access_token = (user as UserSession).access_token
+        delete (user as UserSession).access_token // Limpiamos el token del objeto usuario
       }
       return token
     },

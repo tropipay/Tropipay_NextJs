@@ -6,15 +6,14 @@ import {
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import useFiltersManager from "@/hooks/useFiltersManager"
+import { formatAmount, selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
-import * as React from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
-import { formatAmount, selStyle } from "@/lib/utils"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -24,7 +23,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   column,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
-  const label = column.filter?.label
+  const label = (column as any)?.filter?.label
   const { initialSelected, values, updateValues, onSubmit, setParams } =
     useFiltersManager({
       column,
@@ -75,7 +74,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
               <div
                 onClick={(event) => {
                   event.stopPropagation()
-                  setParams({ [column.id]: null })
+                  setParams({ [column?.id ?? ""]: null })
                 }}
               >
                 <CrossCircledIcon className="h-4 w-4" />
