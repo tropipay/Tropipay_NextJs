@@ -10,6 +10,8 @@ import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
 import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableViewOptions } from "./dataTableViewOptions"
+import { Button } from "../ui/button"
+import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
@@ -26,14 +28,45 @@ export function DataTableToolbar<TData, TValue>({
 
   return (
     <>
-      <div className="flex w-full items-center justify-between">
-        <div className="flex flex-1 items-center space-x-2">
-          <Input
-            placeholder={t("filter")}
-            onChange={(event) => setParams({ search: event.target.value })}
-            className="w-full"
-            defaultValue={getParam("query")?.toString()}
-          />
+      <div className="flex items-center justify-between">
+        {/* Elementos alineados a la izquierda */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-grayBackground p-1 rounded-md">
+            <Button variant="filterActive" className="px-2 h-8">
+              Todos
+            </Button>
+            <Button variant="filterInactive" className="px-2 h-8">
+              Entrada
+            </Button>
+            <Button variant="filterInactive" className="px-2 h-8">
+              Salida
+            </Button>
+          </div>
+          <div className="relative flex items-center w-full">
+            <span className="absolute left-3 flex items-center text-gray-500">
+              <Search className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <Input
+              placeholder={t("Buscar")}
+              onChange={(event) => setParams({ search: event.target.value })}
+              className="pl-10 w-full" // Espacio para el ícono
+              defaultValue={getParam("query")?.toString()}
+            />
+          </div>{" "}
+        </div>
+
+        {/* Elementos alineados a la derecha */}
+        <div className="flex items-center gap-2">
+          <Button variant="outline" className="flex items-center gap-2">
+            <ArrowUpDown className="h-4 w-4" />
+            Fecha de creación
+          </Button>
+          <Button variant="outline">
+            <Download />
+          </Button>
+          <Button variant="outline" className="m-0">
+            <Ellipsis />
+          </Button>
         </div>
       </div>
       <div className="flex w-full items-center justify-between">

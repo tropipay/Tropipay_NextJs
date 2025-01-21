@@ -52,6 +52,8 @@ body {
     --statePending-foreground: 231 100% 96%;
     --grayFont: 217, 9%, 52%, 1;
     --grayFont-foreground: 217, 9%, 52%, 1;
+    --grayBackground: 0 0% 98%;
+    --grayBackground-foreground: 0 0% 98%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -97,6 +99,8 @@ body {
     --statePending-foreground: 233 93% 20% 0.15;
     --grayFont: 217, 9%, 52%, 1;
     --grayFont-foreground: 217, 9%, 52%, 1;
+    --grayBackground: 0 0% 98%;
+    --grayBackground-foreground: 0 0% 98%;
   }
 }
 

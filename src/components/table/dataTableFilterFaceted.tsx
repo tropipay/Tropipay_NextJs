@@ -59,9 +59,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const displayOptions = options.length > 0 ? options : fetchedOptions
 
-  const handleCheckboxClick = (
-    event: React.MouseEventHandler<HTMLButtonElement>
-  ) => {
+  const handleCheckboxClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const checkbox = (event as any).target
 
     const order = values.indexOf(checkbox.value)
@@ -78,12 +76,11 @@ export function DataTableFilterFaceted<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={selStyle(
-            initialSelected?.length > 0,
-            "active",
-            "inactive",
-            ""
-          )}
+          variant={
+            selStyle(initialSelected?.length > 0, "active", "inactive", "") as
+              | "active"
+              | "inactive"
+          }
           size="sm"
           className="px-2 h-8"
         >
