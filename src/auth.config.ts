@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import { fetchHeaders } from "./lib/utils"
 
 export default {
   providers: [
@@ -11,8 +12,7 @@ export default {
             {
               method: "GET",
               headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
+                ...fetchHeaders,
                 Authorization: `Bearer ${token}`,
               },
             }
