@@ -14,6 +14,7 @@ import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import InputAmount from "../inputAmount"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -93,7 +94,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Label htmlFor="width">
             <FormattedMessage id="from" />
           </Label>
-          <Input
+          <InputAmount
             id="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder={`${label} mín`}
@@ -103,7 +104,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Label htmlFor="width">
             <FormattedMessage id="to" />
           </Label>
-          <Input
+          <InputAmount
             id="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder={`${label} máx`}
