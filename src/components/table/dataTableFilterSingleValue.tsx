@@ -42,13 +42,8 @@ export function DataTableFilterSingleValue<TData, TValue>({
           {label}
           {!!initialSelected.data && (
             <>
-              <Separator orientation="vertical" className=" h-4" />
-              <Badge
-                variant="secondary"
-                className="rounded-sm px-1 font-normal"
-              >
-                {initialSelected.data}
-              </Badge>
+              <Separator orientation="vertical" className="h-4 separator" />
+              {initialSelected.data}
               <div
                 onClick={(event) => {
                   event.stopPropagation()

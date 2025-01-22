@@ -47,7 +47,7 @@ export function DataTableToolbar<TData, TValue>({
               <Search className="h-5 w-5" aria-hidden="true" />
             </span>
             <Input
-              placeholder={t("Buscar")}
+              placeholder={t("Search")}
               onChange={(event) => setParams({ search: event.target.value })}
               className="pl-10 w-full" // Espacio para el ícono
               defaultValue={getParam("query")?.toString()}

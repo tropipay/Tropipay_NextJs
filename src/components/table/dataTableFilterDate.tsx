@@ -57,12 +57,11 @@ export function DataTableFilterDate<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={selStyle(
-            initialSelected?.from || initialSelected?.to,
-            "active",
-            "inactive",
-            ""
-          )}
+          variant={
+            selStyle(initialSelected?.length > 0, "active", "inactive", "") as
+              | "active"
+              | "inactive"
+          }
           size="sm"
           className="px-2 h-8 "
         >
@@ -146,7 +145,17 @@ export function DataTableFilterDate<TData, TValue>({
                 >
                   <CalendarIcon />
                   {values?.from ? (
-                    format(values.from, "dd/MM/yyyy")
+                    <div className="flex justify-between w-full">
+                      {format(values.from, "dd/MM/yyyy")}
+                      <span
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          handleDateChange("from", undefined)
+                        }}
+                      >
+                        Borrar
+                      </span>
+                    </div>
                   ) : (
                     <span>
                       <FormattedMessage id="pick_a_date" />
@@ -183,7 +192,17 @@ export function DataTableFilterDate<TData, TValue>({
                 >
                   <CalendarIcon />
                   {values?.to ? (
-                    format(values.to, "dd/MM/yyyy")
+                    <div className="flex justify-between w-full">
+                      {format(values.to, "dd/MM/yyyy")}
+                      <span
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          handleDateChange("to", undefined)
+                        }}
+                      >
+                        Borrar
+                      </span>
+                    </div>
                   ) : (
                     <span>
                       <FormattedMessage id="pick_a_date" />
