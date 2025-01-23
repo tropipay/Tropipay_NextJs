@@ -81,7 +81,12 @@ export function DataTableToolbar<TData, TValue>({
                   />
                 )
               case "date":
-                return <DataTableFilterDate key={column.id} column={column} />
+                return (
+                  <DataTableFilterDate
+                    key={column.id}
+                    column={{ ...table.getColumn(column.id), config: column }}
+                  />
+                )
               case "amount":
                 return (
                   <DataTableFilterRangeAmount
