@@ -5,16 +5,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import useFiltersManager from "@/hooks/useFiltersManager"
 import { formatAmount, selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
-import { Input } from "../ui/input"
 import { Label } from "../ui/label"
-import InputAmount from "../inputAmount"
+import { Input } from "../ui/input"
+import { useState, useEffect } from "react"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -24,18 +23,72 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   column,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
-  const label = (column as any)?.filter?.label
-  const { initialSelected, values, updateValues, onSubmit, setParams } =
-    useFiltersManager({
-      column,
-    })
+  const { label } = column.config.filter
+
+  // Obtener el valor actual del filtro de la columna
+  const filterValue = column?.getFilterValue() as
+    | { min?: number; max?: number }
+    | undefined
+
+  // Estado local para manejar los valores mínimos y máximos
+  const [minValue, setMinValue] = useState<string>(
+    filterValue?.min?.toString() || ""
+  )
+  const [maxValue, setMaxValue] = useState<string>(
+    filterValue?.max?.toString() || ""
+  )
+
+  // Sincronizar el estado local con el valor del filtro cuando cambie
+  useEffect(() => {
+    setMinValue(filterValue?.min?.toString() || "")
+    setMaxValue(filterValue?.max?.toString() || "")
+  }, [filterValue])
+
+  // Función para actualizar los valores del estado local
+  const handleFilterChange = (id: string, value: string) => {
+    if (id === "min") {
+      setMinValue(value)
+    } else if (id === "max") {
+      setMaxValue(value)
+    }
+  }
+
+  // Función para aplicar el filtro
+  const handleApplyFilter = () => {
+    const min = minValue ? parseFloat(minValue) : undefined
+    const max = maxValue ? parseFloat(maxValue) : undefined
+
+    // Serializar el objeto a un formato válido para la URL
+    const serializedValue = JSON.stringify({ min, max })
+    column?.setFilterValue(serializedValue)
+  }
+
+  // Función para limpiar el filtro
+  const handleClearFilter = () => {
+    setMinValue("")
+    setMaxValue("")
+    column?.setFilterValue(undefined)
+  }
+
+  // Deserializar el valor del filtro si es necesario
+  useEffect(() => {
+    if (typeof filterValue === "string") {
+      try {
+        const parsedValue = JSON.parse(filterValue)
+        setMinValue(parsedValue.min?.toString() || "")
+        setMaxValue(parsedValue.max?.toString() || "")
+      } catch (error) {
+        console.error("Error parsing filter value:", error)
+      }
+    }
+  }, [filterValue])
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={selStyle(
-            initialSelected?.min || initialSelected?.max,
+            filterValue?.min || filterValue?.max,
             "active",
             "inactive",
             ""
@@ -44,38 +97,26 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           className="px-2 h-8"
         >
           {label}
-          {initialSelected?.min || initialSelected?.max ? (
+          {filterValue?.min || filterValue?.max ? (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
-              {initialSelected?.min && initialSelected?.max
+              {filterValue?.min && filterValue?.max
                 ? `${formatAmount(
-                    initialSelected.min * 100,
+                    filterValue.min * 100,
                     "EUR",
                     "right"
-                  )} - ${formatAmount(
-                    initialSelected.max * 100,
-                    "EUR",
-                    "right"
-                  )}`
+                  )} - ${formatAmount(filterValue.max * 100, "EUR", "right")}`
                 : null}
-              {initialSelected?.min && !initialSelected?.max
-                ? `Desde ${formatAmount(
-                    initialSelected.min * 100,
-                    "EUR",
-                    "right"
-                  )}`
+              {filterValue?.min && !filterValue?.max
+                ? `Desde ${formatAmount(filterValue.min * 100, "EUR", "right")}`
                 : null}
-              {!initialSelected?.min && initialSelected?.max * 100
-                ? `Hasta ${formatAmount(
-                    initialSelected.max * 100,
-                    "EUR",
-                    "right"
-                  )}`
+              {!filterValue?.min && filterValue?.max
+                ? `Hasta ${formatAmount(filterValue.max * 100, "EUR", "right")}`
                 : null}
               <div
                 onClick={(event) => {
                   event.stopPropagation()
-                  setParams({ [column?.id ?? ""]: null })
+                  handleClearFilter()
                 }}
               >
                 <CrossCircledIcon className="h-4 w-4" />
@@ -85,7 +126,12 @@ export function DataTableFilterRangeAmount<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">
-        <form onSubmit={onSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleApplyFilter()
+          }}
+        >
           <div className="pb-4">
             <Label htmlFor="width" className="font-bold">
               {label}
@@ -94,22 +140,22 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <Label htmlFor="width">
             <FormattedMessage id="from" />
           </Label>
-          <InputAmount
+          <Input
             id="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder={`${label} mín`}
-            value={values.min || ""}
-            onChange={updateValues}
+            value={minValue}
+            onChange={(e) => handleFilterChange("min", e.target.value)}
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
           </Label>
-          <InputAmount
+          <Input
             id="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
             placeholder={`${label} máx`}
-            value={values.max || ""}
-            onChange={updateValues}
+            value={maxValue}
+            onChange={(e) => handleFilterChange("max", e.target.value)}
           />
           <PopoverClose asChild>
             <div className="py-2">

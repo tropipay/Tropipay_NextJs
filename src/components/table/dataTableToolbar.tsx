@@ -84,7 +84,10 @@ export function DataTableToolbar<TData, TValue>({
                 return <DataTableFilterDate key={column.id} column={column} />
               case "amount":
                 return (
-                  <DataTableFilterRangeAmount key={column.id} column={column} />
+                  <DataTableFilterRangeAmount
+                    key={column.id}
+                    column={{ ...table.getColumn(column.id), config: column }}
+                  />
                 )
               case "uniqueValue":
                 return (
