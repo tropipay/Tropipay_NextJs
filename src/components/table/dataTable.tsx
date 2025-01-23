@@ -49,6 +49,7 @@ import { GripVerticalIcon } from "lucide-react"
 import React, { CSSProperties } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import { stringify } from "querystring"
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -77,7 +78,7 @@ export default function DataTable<TData, TValue>({
   onChangeColumnVisibility,
   manualPagination = true,
   manualSorting = true,
-  manualFiltering = false,
+  manualFiltering = true,
   pageCount,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
@@ -115,10 +116,7 @@ export default function DataTable<TData, TValue>({
   })
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    () => {
-      const filter = searchParams.get("filter")
-      return filter ? [{ id: "global", value: filter }] : []
-    }
+    getAppliedFilters(columns, searchParams) || []
   )
 
   const [columnOrder, setColumnOrder] = React.useState<string[]>(
@@ -134,6 +132,27 @@ export default function DataTable<TData, TValue>({
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
   )
+
+  function getAppliedFilters(columns, searchParams) {
+    const appliedFilters = []
+
+    columns.forEach((column) => {
+      if (column.filter) {
+        const filterId = column.filter.column || column.id
+        const filterValue = searchParams.get(filterId)
+
+        if (filterValue) {
+          const values = filterValue.split(",")
+          appliedFilters.push({
+            id: filterId,
+            value: values,
+          })
+        }
+      }
+    })
+
+    return appliedFilters
+  }
 
   const handleDragStart = ({ active }: DragStartEvent) =>
     active.id || !blockedColumnOrder.includes(active.id)
@@ -243,17 +262,15 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(columnFilters) : updater
       setColumnFilters(newFilters)
 
-      if (manualFiltering) {
-        const filterValue = newFilters.find((f) => f.id === "global")?.value
-        router.push(
-          `${pathname}?${createQueryString({
-            filter: filterValue?.toString() ?? null,
-            // Reset a primera página al filtrar
-            page: "0",
-          })}`,
-          { scroll: false }
-        )
-      }
+      const queryParams = new URLSearchParams()
+      newFilters.forEach((filter) => {
+        queryParams.set(filter.id, filter.value)
+      })
+      const newUrl = `${window.location.pathname}?${queryParams.toString()}`
+      window.history.pushState({}, "", newUrl)
+
+      // Aquí puedes hacer una llamada a la API con los nuevos filtros
+      // fetchData(queryParams)
     },
     [columnFilters, manualFiltering, router, pathname, createQueryString]
   )

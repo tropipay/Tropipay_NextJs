@@ -47,7 +47,7 @@ export function DataTableToolbar<TData, TValue>({
               <Search className="h-5 w-5" aria-hidden="true" />
             </span>
             <Input
-              placeholder={t("Search")}
+              placeholder={t("filter")}
               onChange={(event) => setParams({ search: event.target.value })}
               className="pl-10 w-full" // Espacio para el ícono
               defaultValue={getParam("query")?.toString()}
@@ -75,7 +75,10 @@ export function DataTableToolbar<TData, TValue>({
             switch (column.filter?.type) {
               case "list":
                 return (
-                  <DataTableFilterFaceted key={column.id} column={column} />
+                  <DataTableFilterFaceted
+                    key={column.id}
+                    column={{ ...table.getColumn(column.id), config: column }}
+                  />
                 )
               case "date":
                 return <DataTableFilterDate key={column.id} column={column} />
