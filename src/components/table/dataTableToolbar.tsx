@@ -88,7 +88,10 @@ export function DataTableToolbar<TData, TValue>({
                 )
               case "uniqueValue":
                 return (
-                  <DataTableFilterSingleValue key={column.id} column={column} />
+                  <DataTableFilterSingleValue
+                    key={column.id}
+                    column={{ ...table.getColumn(column.id), config: column }}
+                  />
                 )
             }
           })}
