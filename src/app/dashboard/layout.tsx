@@ -1,3 +1,4 @@
+"use client"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
@@ -14,6 +15,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Providers } from "../providers"
+import DynamicBreadcrumb from "@/components/dynamicBreadcrumb"
 
 export default function Page({ children }: ChildrenProps) {
   return (
@@ -25,21 +27,7 @@ export default function Page({ children }: ChildrenProps) {
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink className="font-poppins font-semibold text-2xl text-foreground">
-                      Movements
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="font-poppins font-semibold text-2xl text-foreground">
-                      All
-                    </BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
+              <DynamicBreadcrumb />
             </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>

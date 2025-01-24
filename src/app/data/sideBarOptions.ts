@@ -14,7 +14,7 @@ import {
 export const sideBarOptions: SidebarOption[] = [
   {
     title: "movements",
-    url: "#",
+    url: "",
     icon: ArrowLeftRight,
     isActive: true,
     items: [
