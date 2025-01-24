@@ -2,7 +2,6 @@
 
 import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 import { Input } from "@/components/ui/input"
-import useFilterParams from "@/hooks/useFilterParams"
 import { Table } from "@tanstack/react-table"
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./dataTableFilterDate"
@@ -12,6 +11,9 @@ import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { Button } from "../ui/button"
 import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Cross2Icon } from "@radix-ui/react-icons"
+import { useSearchParams } from "next/navigation" // Importa useSearchParams
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
@@ -23,8 +25,54 @@ export function DataTableToolbar<TData, TValue>({
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
-  const { setParams, getParam } = useFilterParams()
-  //const isFiltered = table.getState().columnFilters.length > 0
+  const searchParams = useSearchParams() // Obtén los searchParams de la URL
+  const searchParamValue = searchParams.get("search") || "" // Obtén el valor del parámetro "search"
+  const [searchValue, setSearchValue] = useState(searchParamValue) // Inicializa el estado con el valor de searchParams
+
+  // Efecto para sincronizar el valor del input con el filtro de la tabla al montar el componente
+  useEffect(() => {
+    if (searchParamValue) {
+      table.setColumnFilters((prev) => {
+        const searchFilter = prev.find((filter) => filter.id === "search")
+        if (searchFilter) {
+          return prev.map((filter) =>
+            filter.id === "search"
+              ? { ...filter, value: searchParamValue }
+              : filter
+          )
+        }
+        return [...prev, { id: "search", value: searchParamValue }]
+      })
+    }
+  }, []) // Solo se ejecuta al montar el componente
+
+  // Manejar cambios en el input de búsqueda
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setSearchValue(value)
+
+    // Actualizar el filtro de búsqueda en la tabla
+    table.setColumnFilters((prev) => {
+      const searchFilter = prev.find((filter) => filter.id === "search")
+      if (searchFilter) {
+        return prev.map((filter) =>
+          filter.id === "search" ? { ...filter, value } : filter
+        )
+      }
+      return [...prev, { id: "search", value }]
+    })
+  }
+
+  // Verificar si hay filtros aplicados
+  const isFiltered = table.getState().columnFilters.length > 0
+
+  // Efecto para detectar cuando la URL quede sin searchParams
+  useEffect(() => {
+    if (!searchParams || searchParams.toString() === "") {
+      setSearchValue("") // Limpia el input de búsqueda
+      table.resetColumnFilters() // Reinicia los filtros de la tabla
+    }
+  }, [searchParams]) // Dependencia: searchParams
 
   return (
     <>
@@ -47,12 +95,13 @@ export function DataTableToolbar<TData, TValue>({
               <Search className="h-5 w-5" aria-hidden="true" />
             </span>
             <Input
+              id="search"
               placeholder={t("filter")}
-              onChange={(event) => setParams({ search: event.target.value })}
-              className="pl-10 w-full" // Espacio para el ícono
-              defaultValue={getParam("query")?.toString()}
+              value={searchValue}
+              onChange={handleSearchChange}
+              className="pl-10 w-full"
             />
-          </div>{" "}
+          </div>
         </div>
 
         {/* Elementos alineados a la derecha */}
@@ -104,16 +153,15 @@ export function DataTableToolbar<TData, TValue>({
             }
           })}
 
-          {/*           {isFiltered && (
+          {isFiltered && (
             <Button
-              variant="outline"
+              variant="active"
               onClick={() => table.resetColumnFilters()}
               className="h-8 px-2 lg:px-3"
             >
-              {<FormattedMessage id="clean_filters" />}
-              <Cross2Icon className="ml-2 h-4 w-4" />
+              {t("clean_filters")}
             </Button>
-          )} */}
+          )}
         </div>
         <DataTableViewOptions table={table} />
       </div>
