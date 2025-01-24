@@ -1,37 +1,18 @@
-import * as React from "react"
+import Image from "next/image"
+import bankIcon from "/public/images/paymentMethodIcon/bankIcon.png"
 
-const BankIcon = ({
-  width = "30",
-  height = "30",
-  color = "#39365B",
-  ...props
-}) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
-    fill="none"
-    viewBox="0 0 20 20"
-    {...props}
-  >
-    <mask
-      id="mask0_1990_38097"
-      width="30"
-      height="30"
-      x="0"
-      y="0"
-      maskUnits="userSpaceOnUse"
-      style={{ maskType: "alpha" }}
-    >
-      <path fill="#D9D9D9" d="M0 0h20v20H0z"></path>
-    </mask>
-    <g mask="url(#mask0_1990_38097)">
-      <path
-        fill={color}
-        d="M4 13.75v-5q0-.32.214-.535a.72.72 0 0 1 .532-.216q.316 0 .535.216a.72.72 0 0 1 .219.534v5q0 .32-.214.535a.72.72 0 0 1-.532.215.73.73 0 0 1-.535-.215.72.72 0 0 1-.219-.535m5.25 0v-5q0-.32.214-.535a.72.72 0 0 1 .532-.216q.316 0 .535.216a.72.72 0 0 1 .219.534v5q0 .32-.214.535a.72.72 0 0 1-.532.215.73.73 0 0 1-.535-.215.72.72 0 0 1-.219-.535M2.75 17a.73.73 0 0 1-.534-.215.72.72 0 0 1-.216-.531q0-.317.216-.536a.72.72 0 0 1 .534-.219h14.5q.318 0 .534.215a.72.72 0 0 1 .216.531q0 .317-.216.536a.72.72 0 0 1-.534.218zm11.75-3.25v-5q0-.32.214-.535a.72.72 0 0 1 .532-.216q.316 0 .535.216a.72.72 0 0 1 .219.534v5q0 .32-.214.535a.72.72 0 0 1-.532.215.73.73 0 0 1-.535-.215.72.72 0 0 1-.219-.535M17 7H2.896a.87.87 0 0 1-.635-.26A.86.86 0 0 1 2 6.106v-.545q0-.25.135-.48A.8.8 0 0 1 2.5 4.75l6.833-3.416q.315-.167.667-.167t.667.167l6.791 3.396a.985.985 0 0 1 .542.886v.384q0 .425-.288.713a.97.97 0 0 1-.712.287M4.354 5.5h11.292L10 2.686z"
-      ></path>
-    </g>
-  </svg>
-)
+const BankIcon = () => {
+  return (
+    <div>
+      <Image
+        className="mr-1"
+        src={bankIcon}
+        alt="Bank method"
+        width={20}
+        height={20}
+      />
+    </div>
+  )
+}
 
 export default BankIcon

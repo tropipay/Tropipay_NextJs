@@ -17,11 +17,10 @@ import {
   isAfter,
   isBefore,
   startOfDay,
-  isSameDay,
   parse,
 } from "date-fns"
 import { CalendarIcon } from "lucide-react"
-import React from "react"
+import React, { useEffect } from "react"
 import { FormattedMessage } from "react-intl"
 import { Label } from "../ui/label"
 import {
@@ -77,6 +76,12 @@ export function DataTableFilterDate<TData, TValue>({
     return undefined // No coincide con ningún período
   }
 
+  // Efecto para actualizar el período seleccionado cuando las fechas cambien
+  useEffect(() => {
+    const period = checkPeriod(fromDate, toDate)
+    setSelectedValue(period || "")
+  }, [fromDate, toDate])
+
   const handleDateChange = (
     key: "from" | "to",
     selectedDate: Date | undefined
@@ -107,13 +112,6 @@ export function DataTableFilterDate<TData, TValue>({
           setToDate(formattedDate)
         }
       }
-
-      // Verificar si las fechas corresponden a un período
-      const period = checkPeriod(
-        key === "from" ? formattedDate : fromDate,
-        key === "to" ? formattedDate : toDate
-      )
-      setSelectedValue(period || "")
     } else {
       if (key === "from") {
         setFromDate(undefined)
@@ -152,11 +150,6 @@ export function DataTableFilterDate<TData, TValue>({
     setError(null)
     setSelectedValue("")
   }
-
-  console.log("column?.getFilterValue():", column?.getFilterValue())
-  const filterValue = column?.getFilterValue()
-
-  console.log("--------------------filterValue:", filterValue)
 
   // Función para deshabilitar fechas futuras
   const disableFutureDates = (date: Date) => {
@@ -205,6 +198,8 @@ export function DataTableFilterDate<TData, TValue>({
         break
     }
   }
+
+  const filterValue = column?.getFilterValue()
 
   return (
     <Popover>
@@ -268,7 +263,7 @@ export function DataTableFilterDate<TData, TValue>({
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  id="date"
+                  id="date-from"
                   variant={"outline"}
                   className={cn(
                     "justify-start text-left font-normal w-full mt-3 mb-3 p-3",
@@ -296,32 +291,30 @@ export function DataTableFilterDate<TData, TValue>({
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <PopoverClose asChild>
-                  <div>
-                    <Calendar
-                      mode="single"
-                      initialFocus
-                      defaultMonth={
-                        fromDate
-                          ? parse(fromDate, "dd/MM/yyyy", new Date())
-                          : undefined
-                      }
-                      selected={
-                        fromDate
-                          ? parse(fromDate, "dd/MM/yyyy", new Date())
-                          : undefined
-                      }
-                      onSelect={(selectedDate) => {
-                        handleDateChange("from", selectedDate)
-                      }}
-                      disabled={(date) =>
-                        disableFutureDates(date) || disableAfterToDate(date)
-                      }
-                    />
-                  </div>
-                </PopoverClose>
+                <Calendar
+                  mode="single"
+                  initialFocus
+                  defaultMonth={
+                    fromDate
+                      ? parse(fromDate, "dd/MM/yyyy", new Date())
+                      : undefined
+                  }
+                  selected={
+                    fromDate
+                      ? parse(fromDate, "dd/MM/yyyy", new Date())
+                      : undefined
+                  }
+                  onSelect={(selectedDate) => {
+                    handleDateChange("from", selectedDate)
+                    document.getElementById("close-popover-from")?.click()
+                  }}
+                  disabled={(date) =>
+                    disableFutureDates(date) || disableAfterToDate(date)
+                  }
+                />
+                <PopoverClose id="close-popover-from" className="hidden" />
               </PopoverContent>
-            </Popover>
+            </Popover>{" "}
           </div>
           <Label htmlFor="width" className="my-3">
             <FormattedMessage id="to" />
@@ -330,11 +323,11 @@ export function DataTableFilterDate<TData, TValue>({
             <Popover>
               <PopoverTrigger asChild>
                 <Button
-                  id="date"
+                  id="date-to"
                   variant={"outline"}
                   className={cn(
                     "justify-start text-left font-normal w-full mt-3 mb-3 p-3",
-                    !toDate && "text-muted-foreground border-selected"
+                    !toDate && "text-muted-foreground"
                   )}
                 >
                   <CalendarIcon />
@@ -358,30 +351,24 @@ export function DataTableFilterDate<TData, TValue>({
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <PopoverClose asChild>
-                  <div>
-                    <Calendar
-                      mode="single"
-                      initialFocus
-                      defaultMonth={
-                        toDate
-                          ? parse(toDate, "dd/MM/yyyy", new Date())
-                          : undefined
-                      }
-                      selected={
-                        toDate
-                          ? parse(toDate, "dd/MM/yyyy", new Date())
-                          : undefined
-                      }
-                      onSelect={(selectedDate) => {
-                        handleDateChange("to", selectedDate)
-                      }}
-                      disabled={(date) =>
-                        disableFutureDates(date) || disableBeforeFromDate(date)
-                      }
-                    />
-                  </div>
-                </PopoverClose>
+                <Calendar
+                  mode="single"
+                  initialFocus
+                  defaultMonth={
+                    toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : undefined
+                  }
+                  selected={
+                    toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : undefined
+                  }
+                  onSelect={(selectedDate) => {
+                    handleDateChange("to", selectedDate)
+                    document.getElementById("close-popover-to")?.click()
+                  }}
+                  disabled={(date) =>
+                    disableFutureDates(date) || disableBeforeFromDate(date)
+                  }
+                />
+                <PopoverClose id="close-popover-to" className="hidden" />
               </PopoverContent>
             </Popover>
           </div>

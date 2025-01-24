@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react"
+"use client" // Asegúrate de que el componente se ejecute en el cliente
+
+import { usePathname } from "next/navigation" // Importa usePathname
+import React from "react"
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -6,7 +9,7 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from "./ui/breadcrumb" // Asegúrate de importar los componentes correctos
+} from "./ui/breadcrumb"
 import { SidebarOption } from "@/types/SidebarOption"
 import { sideBarOptions } from "@/app/data/sideBarOptions"
 
@@ -35,14 +38,8 @@ const getBreadcrumbItems = (
 }
 
 const DynamicBreadcrumb: React.FC = () => {
-  const [currentPath, setCurrentPath] = useState("")
-
-  useEffect(() => {
-    // Solo se ejecuta en el cliente
-    setCurrentPath(window.location.pathname)
-  }, [])
-
-  const breadcrumbItems = getBreadcrumbItems(currentPath, sideBarOptions)
+  const pathname = usePathname() // Obtiene la ruta actual
+  const breadcrumbItems = getBreadcrumbItems(pathname, sideBarOptions)
 
   return (
     <Breadcrumb>
@@ -50,7 +47,6 @@ const DynamicBreadcrumb: React.FC = () => {
         {breadcrumbItems.map((item, index) => (
           <React.Fragment key={item.title}>
             <BreadcrumbItem className={index > 0 ? "hidden md:block" : ""}>
-              {/* Verifica si el elemento tiene una URL definida */}
               {item.url ? (
                 <BreadcrumbLink
                   href={item.url}
