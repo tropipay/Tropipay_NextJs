@@ -18,6 +18,7 @@ import {
   isBefore,
   startOfDay,
   isSameDay,
+  parse,
 } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import React from "react"
@@ -39,32 +40,36 @@ export function DataTableFilterDate<TData, TValue>({
   column,
 }: DataTableFilterDateProps<TData, TValue>) {
   const [selectedValue, setSelectedValue] = React.useState("")
-  const [fromDate, setFromDate] = React.useState<Date | undefined>(undefined)
-  const [toDate, setToDate] = React.useState<Date | undefined>(undefined)
+  const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
+  const [toDate, setToDate] = React.useState<string | undefined>(undefined)
   const [error, setError] = React.useState<string | null>(null)
 
-  const { label } = column.config.filter
+  const { label } = column?.config?.filter || { label: "Filtrar por fecha" }
 
   // Función para verificar si las fechas corresponden a un período
   const checkPeriod = (
-    from: Date | undefined,
-    to: Date | undefined
+    from: string | undefined,
+    to: string | undefined
   ): string | undefined => {
     const today = startOfDay(new Date())
+    const todayFormatted = format(today, "dd/MM/yyyy")
 
     if (from && to) {
-      if (isSameDay(from, today) && isSameDay(to, today)) {
+      if (from === todayFormatted && to === todayFormatted) {
         return "1" // Hoy
-      } else if (isSameDay(from, addDays(today, -7)) && isSameDay(to, today)) {
+      } else if (
+        from === format(addDays(today, -7), "dd/MM/yyyy") &&
+        to === todayFormatted
+      ) {
         return "2" // Última semana
       } else if (
-        isSameDay(from, addMonths(today, -1)) &&
-        isSameDay(to, today)
+        from === format(addMonths(today, -1), "dd/MM/yyyy") &&
+        to === todayFormatted
       ) {
         return "3" // Último mes
       } else if (
-        isSameDay(from, addMonths(today, -6)) &&
-        isSameDay(to, today)
+        from === format(addMonths(today, -6), "dd/MM/yyyy") &&
+        to === todayFormatted
       ) {
         return "4" // Últimos 6 meses
       }
@@ -76,55 +81,100 @@ export function DataTableFilterDate<TData, TValue>({
     key: "from" | "to",
     selectedDate: Date | undefined
   ) => {
-    if (key === "from") {
-      if (selectedDate && toDate && isAfter(selectedDate, toDate)) {
-        setError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.")
-        setFromDate(toDate)
-      } else {
-        setError(null)
-        setFromDate(selectedDate)
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, "dd/MM/yyyy")
+
+      if (key === "from") {
+        if (
+          toDate &&
+          isAfter(selectedDate, parse(toDate, "dd/MM/yyyy", new Date()))
+        ) {
+          setError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.")
+          setFromDate(toDate)
+        } else {
+          setError(null)
+          setFromDate(formattedDate)
+        }
+      } else if (key === "to") {
+        if (
+          fromDate &&
+          isBefore(selectedDate, parse(fromDate, "dd/MM/yyyy", new Date()))
+        ) {
+          setError("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.")
+          setToDate(fromDate)
+        } else {
+          setError(null)
+          setToDate(formattedDate)
+        }
       }
-    } else if (key === "to") {
-      if (selectedDate && fromDate && isBefore(selectedDate, fromDate)) {
-        setError("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.")
-        setToDate(fromDate)
-      } else {
-        setError(null)
-        setToDate(selectedDate)
+
+      // Verificar si las fechas corresponden a un período
+      const period = checkPeriod(
+        key === "from" ? formattedDate : fromDate,
+        key === "to" ? formattedDate : toDate
+      )
+      setSelectedValue(period || "")
+    } else {
+      if (key === "from") {
+        setFromDate(undefined)
+      } else if (key === "to") {
+        setToDate(undefined)
       }
     }
-
-    // Verificar si las fechas corresponden a un período
-    const period = checkPeriod(
-      key === "from" ? selectedDate : fromDate,
-      key === "to" ? selectedDate : toDate
-    )
-    setSelectedValue(period || "")
   }
 
   const handleApplyFilter = () => {
-    if (fromDate && toDate && isAfter(fromDate, toDate)) {
+    if (
+      fromDate &&
+      toDate &&
+      isAfter(
+        parse(fromDate, "dd/MM/yyyy", new Date()),
+        parse(toDate, "dd/MM/yyyy", new Date())
+      )
+    ) {
       setError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.")
       return
     }
     setError(null)
-    column?.setFilterValue({ from: fromDate, to: toDate })
+
+    // Pasar las fechas formateadas al filtro
+    column?.setFilterValue({
+      ...(fromDate && { from: fromDate }),
+      ...(toDate && { to: toDate }),
+    })
   }
 
   const handleClearFilter = () => {
+    // Limpiar el filtro en el estado
     column?.setFilterValue(undefined)
     setFromDate(undefined)
     setToDate(undefined)
     setError(null)
-    setSelectedValue("") // Limpiar la selección del período
+    setSelectedValue("")
   }
 
-  const filterValue = column?.getFilterValue() as
-    | { from?: Date; to?: Date }
-    | undefined
+  console.log("column?.getFilterValue():", column?.getFilterValue())
+  const filterValue = column?.getFilterValue()
 
+  console.log("--------------------filterValue:", filterValue)
+
+  // Función para deshabilitar fechas futuras
   const disableFutureDates = (date: Date) => {
     return isAfter(date, new Date())
+  }
+
+  // Función para deshabilitar fechas anteriores a `from` en el calendario de `to`
+  const disableBeforeFromDate = (date: Date) => {
+    return fromDate
+      ? isBefore(date, parse(fromDate, "dd/MM/yyyy", new Date()))
+      : false
+  }
+
+  // Función para deshabilitar fechas posteriores a `to` en el calendario de `from`
+  const disableAfterToDate = (date: Date) => {
+    return toDate
+      ? isAfter(date, parse(toDate, "dd/MM/yyyy", new Date()))
+      : false
   }
 
   // Función para manejar el cambio de período
@@ -134,20 +184,20 @@ export function DataTableFilterDate<TData, TValue>({
 
     switch (value) {
       case "1": // Hoy
-        setFromDate(today)
-        setToDate(today)
+        setFromDate(format(today, "dd/MM/yyyy"))
+        setToDate(format(today, "dd/MM/yyyy"))
         break
       case "2": // Última semana
-        setFromDate(addDays(today, -7))
-        setToDate(today)
+        setFromDate(format(addDays(today, -7), "dd/MM/yyyy"))
+        setToDate(format(today, "dd/MM/yyyy"))
         break
       case "3": // Último mes
-        setFromDate(addMonths(today, -1))
-        setToDate(today)
+        setFromDate(format(addMonths(today, -1), "dd/MM/yyyy"))
+        setToDate(format(today, "dd/MM/yyyy"))
         break
       case "4": // Últimos 6 meses
-        setFromDate(addMonths(today, -6))
-        setToDate(today)
+        setFromDate(format(addMonths(today, -6), "dd/MM/yyyy"))
+        setToDate(format(today, "dd/MM/yyyy"))
         break
       default:
         setFromDate(undefined)
@@ -169,16 +219,13 @@ export function DataTableFilterDate<TData, TValue>({
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               {filterValue?.from && filterValue?.to
-                ? `${format(filterValue.from, "dd/MM/yyyy")} | ${format(
-                    filterValue.to,
-                    "dd/MM/yyyy"
-                  )}`
+                ? `${filterValue.from} - ${filterValue.to}`
                 : null}
               {filterValue?.from && !filterValue?.to
-                ? `Desde ${format(filterValue.from, "dd/MM/yyyy")}`
+                ? `Desde ${filterValue.from}`
                 : null}
               {!filterValue?.from && filterValue?.to
-                ? `Hasta ${format(filterValue.to, "dd/MM/yyyy")}`
+                ? `Hasta ${filterValue.to}`
                 : null}
             </>
           ) : null}
@@ -231,7 +278,7 @@ export function DataTableFilterDate<TData, TValue>({
                   <CalendarIcon />
                   {fromDate ? (
                     <div className="flex justify-between w-full">
-                      {format(fromDate, "dd/MM/yyyy")}
+                      {fromDate}
                       <span
                         onClick={(event) => {
                           event.stopPropagation()
@@ -254,12 +301,22 @@ export function DataTableFilterDate<TData, TValue>({
                     <Calendar
                       mode="single"
                       initialFocus
-                      defaultMonth={fromDate}
-                      selected={fromDate}
+                      defaultMonth={
+                        fromDate
+                          ? parse(fromDate, "dd/MM/yyyy", new Date())
+                          : undefined
+                      }
+                      selected={
+                        fromDate
+                          ? parse(fromDate, "dd/MM/yyyy", new Date())
+                          : undefined
+                      }
                       onSelect={(selectedDate) => {
                         handleDateChange("from", selectedDate)
                       }}
-                      disabled={disableFutureDates}
+                      disabled={(date) =>
+                        disableFutureDates(date) || disableAfterToDate(date)
+                      }
                     />
                   </div>
                 </PopoverClose>
@@ -283,7 +340,7 @@ export function DataTableFilterDate<TData, TValue>({
                   <CalendarIcon />
                   {toDate ? (
                     <div className="flex justify-between w-full">
-                      {format(toDate, "dd/MM/yyyy")}
+                      {toDate}
                       <span
                         onClick={(event) => {
                           event.stopPropagation()
@@ -306,12 +363,22 @@ export function DataTableFilterDate<TData, TValue>({
                     <Calendar
                       mode="single"
                       initialFocus
-                      defaultMonth={toDate}
-                      selected={toDate}
+                      defaultMonth={
+                        toDate
+                          ? parse(toDate, "dd/MM/yyyy", new Date())
+                          : undefined
+                      }
+                      selected={
+                        toDate
+                          ? parse(toDate, "dd/MM/yyyy", new Date())
+                          : undefined
+                      }
                       onSelect={(selectedDate) => {
                         handleDateChange("to", selectedDate)
                       }}
-                      disabled={disableFutureDates}
+                      disabled={(date) =>
+                        disableFutureDates(date) || disableBeforeFromDate(date)
+                      }
                     />
                   </div>
                 </PopoverClose>

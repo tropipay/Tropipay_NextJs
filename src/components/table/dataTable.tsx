@@ -264,8 +264,9 @@ export default function DataTable<TData, TValue>({
 
       const queryParams = new URLSearchParams()
       newFilters.forEach((filter) => {
-        queryParams.set(filter.id, filter.value)
+        queryParams.set(filter.id, JSON.stringify(filter.value))
       })
+
       const newUrl = `${window.location.pathname}?${queryParams.toString()}`
       window.history.pushState({}, "", newUrl)
 
