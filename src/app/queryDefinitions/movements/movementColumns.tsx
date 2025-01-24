@@ -119,8 +119,8 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
 
       return (
         <Badge variant={states[row.getValue("status") as any]}>
-          <span className="ml-1">{status.label}</span>
-          <Icon className="ml-2 h-4 w-4 mr-1" />
+          <Icon className="ml-0 h-4 w-4 mr-2" />
+          <span className="mr-0">{status.label}</span>
         </Badge>
       )
     },
@@ -204,7 +204,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
           })}
         >
           {Icon && <Icon className="mr-2 h-5 w-5" />}
-          <span>{paymentMethod.label}</span>
+          <span className="ml-1">{paymentMethod.label}</span>
         </div>
       )
     },
