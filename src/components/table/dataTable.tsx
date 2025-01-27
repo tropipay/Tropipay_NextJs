@@ -1,7 +1,5 @@
 "use client"
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { useCallback } from "react"
 import {
   Table,
   TableBody,
@@ -39,14 +37,14 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   Header,
-  OnChangeFn,
   SortingState,
   Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
-import React, { CSSProperties } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import React, { CSSProperties, useCallback } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
 
@@ -57,13 +55,13 @@ interface DataTableProps<TData, TValue> {
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
   defaultColumnVisibility?: VisibilityState
-  onChangeColumnOrder?: (_: string[]) => void
-  onChangeColumnVisibility?: (_: Updater<VisibilityState>) => void
-  onChangeSorting?: (_: SortingState) => void
   manualPagination?: boolean
   manualSorting?: boolean
   manualFiltering?: boolean
   pageCount?: number
+  onChangeColumnOrder?: (_: string[]) => void
+  onChangeColumnVisibility?: (_: VisibilityState) => void
+  onChangeSorting?: (_: SortingState) => void
 }
 
 export default function DataTable<TData, TValue>({
@@ -73,12 +71,12 @@ export default function DataTable<TData, TValue>({
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
   defaultColumnVisibility = {},
-  onChangeColumnOrder,
-  onChangeColumnVisibility,
   manualPagination = true,
   manualSorting = true,
   manualFiltering = false,
   pageCount,
+  onChangeColumnOrder,
+  onChangeColumnVisibility,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -135,10 +133,10 @@ export default function DataTable<TData, TValue>({
     useSensor(KeyboardSensor, {})
   )
 
-  const handleDragStart = ({ active }: DragStartEvent) =>
+  const onDragStart = ({ active }: DragStartEvent) =>
     active.id || !blockedColumnOrder.includes(active.id)
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active && over && active.id !== over.id) {
       setColumnOrder((columnOrder) => {
         const oldIndex = columnOrder.indexOf(active.id as string)
@@ -151,19 +149,12 @@ export default function DataTable<TData, TValue>({
     }
   }
 
-  const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (
-    visibilityState: Updater<VisibilityState>
-  ) => {
-    setColumnVisibility(visibilityState)
-    onChangeColumnVisibility?.(visibilityState)
-  }
-
   const DraggableTableHeader = ({
     header,
   }: {
     header: Header<TData, unknown>
   }) => {
-    const { attributes, isDragging, listeners, setNodeRef, transform } =
+    const { attributes, isDragging, listeners, transform, setNodeRef } =
       useSortable({
         id: header.column.id,
       })
@@ -195,15 +186,23 @@ export default function DataTable<TData, TValue>({
     )
   }
 
-  const handlePaginationChange = useCallback(
+  const onColumnVisibilityChange = useCallback(
+    (updater: Updater<typeof columnVisibility>) => {
+      const visibilityState =
+        typeof updater === "function" ? updater(columnVisibility) : updater
+      setColumnVisibility(visibilityState)
+      onChangeColumnVisibility?.(columnVisibility)
+    },
+    [columnVisibility]
+  )
+
+  const onPaginationChange = useCallback(
     (updater: Updater<typeof pagination>) => {
       const newPagination =
         typeof updater === "function" ? updater(pagination) : updater
       setPagination(newPagination)
-      console.log("handlePaginationChange:", newPagination)
 
       if (manualPagination) {
-        console.log("push:")
         router.push(
           `${pathname}?${createQueryString({
             page: String(newPagination.pageIndex),
@@ -216,7 +215,7 @@ export default function DataTable<TData, TValue>({
     [pagination, manualPagination, router, pathname, createQueryString]
   )
 
-  const handleSortingChange = useCallback(
+  const onSortingChange = useCallback(
     (updater: Updater<SortingState>) => {
       const newSorting =
         typeof updater === "function" ? updater(sorting) : updater
@@ -237,7 +236,7 @@ export default function DataTable<TData, TValue>({
     [sorting, manualSorting, router, pathname, createQueryString]
   )
 
-  const handleFiltersChange = useCallback(
+  const onColumnFiltersChange = useCallback(
     (updater: Updater<ColumnFiltersState>) => {
       const newFilters =
         typeof updater === "function" ? updater(columnFilters) : updater
@@ -277,9 +276,9 @@ export default function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: handlePaginationChange,
-    onSortingChange: handleSortingChange,
-    onColumnFiltersChange: handleFiltersChange,
+    onPaginationChange,
+    onSortingChange,
+    onColumnFiltersChange,
     onColumnVisibilityChange,
     onColumnOrderChange: setColumnOrder,
   })
@@ -291,8 +290,8 @@ export default function DataTable<TData, TValue>({
         <DndContext
           collisionDetection={closestCenter}
           modifiers={[restrictToHorizontalAxis]}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
           sensors={sensors}
         >
           <Table>

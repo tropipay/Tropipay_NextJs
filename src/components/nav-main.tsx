@@ -16,7 +16,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
-import { SidebarOption } from "@/types/SidebarOption"
+import { SidebarOption } from "@/types/sidebarOption"
 import React from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "./intl/useTranslation"
