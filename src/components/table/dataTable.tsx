@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import {
   Table,
   TableBody,
@@ -46,10 +46,8 @@ import {
   VisibilityState,
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
-import React, { CSSProperties } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
-import { stringify } from "querystring"
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -85,11 +83,9 @@ export default function DataTable<TData, TValue>({
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Función helper para actualizar URL
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
       const params = new URLSearchParams(searchParams)
-
       Object.entries(updates).forEach(([key, value]) => {
         if (value === null) {
           params.delete(key)
@@ -97,62 +93,74 @@ export default function DataTable<TData, TValue>({
           params.set(key, value)
         }
       })
-
       return params.toString()
     },
     [searchParams]
   )
 
-  // Inicializar estados desde URL
-  const [sorting, setSorting] = React.useState<SortingState>(() => {
+  const [sorting, setSorting] = useState<SortingState>(() => {
     const sortField = searchParams.get("sort")
     const order = searchParams.get("order")
     return sortField ? [{ id: sortField, desc: order === "desc" }] : []
   })
 
-  const [pagination, setPagination] = React.useState({
+  const [pagination, setPagination] = useState({
     pageIndex: Number(searchParams.get("page") ?? 0),
     pageSize: Number(searchParams.get("size") ?? 10),
   })
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    getAppliedFilters(columns, searchParams) || []
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
+    const filters: ColumnFiltersState = []
+    searchParams.forEach((value, key) => {
+      if (
+        key !== "sort" &&
+        key !== "order" &&
+        key !== "page" &&
+        key !== "size"
+      ) {
+        try {
+          filters.push({
+            id: key,
+            value: value,
+          })
+        } catch (error) {
+          console.error("Error parsing filter value:", error)
+        }
+      }
+    })
+    return filters
+  })
+
+  const handleFiltersChange = useCallback(
+    (updater: Updater<ColumnFiltersState>) => {
+      const newFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater
+      setColumnFilters(newFilters)
+      const queryString = newFilters
+        .map(
+          (filter) =>
+            `${filter.id}=${JSON.stringify(filter.value).replace(/"/g, "")}`
+        )
+        .join("&")
+      router.push(`${pathname}?${queryString}`, { scroll: false })
+    },
+    [columnFilters, router, pathname]
   )
 
-  const [columnOrder, setColumnOrder] = React.useState<string[]>(
-    defaultColumnOrder
-      ? defaultColumnOrder
-      : columns.filter(({ id }) => !!id).map(({ id }) => id ?? "")
+  const [columnOrder, setColumnOrder] = useState<string[]>(
+    defaultColumnOrder ??
+      columns.filter(({ id }) => !!id).map(({ id }) => id ?? "")
   )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(defaultColumnVisibility)
+
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    defaultColumnVisibility
+  )
 
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
   )
-
-  function getAppliedFilters(columns, searchParams) {
-    const appliedFilters = []
-
-    columns.forEach((column) => {
-      if (column.filter) {
-        const filterId = column.filter.column || column.id
-        const filterValue = searchParams.get(filterId)
-
-        if (filterValue) {
-          const values = filterValue.split(",")
-          appliedFilters.push({
-            id: filterId,
-            value: values,
-          })
-        }
-      }
-    })
-
-    return appliedFilters
-  }
 
   const handleDragStart = ({ active }: DragStartEvent) =>
     active.id || !blockedColumnOrder.includes(active.id)
@@ -164,18 +172,80 @@ export default function DataTable<TData, TValue>({
         const newIndex = columnOrder.indexOf(over.id as string)
         const newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex)
         onChangeColumnOrder?.(newColumnOrder)
-
         return newColumnOrder
       })
     }
   }
 
   const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (
-    visibilityState: Updater<VisibilityState>
+    visibilityState
   ) => {
     setColumnVisibility(visibilityState)
     onChangeColumnVisibility?.(visibilityState)
   }
+
+  const handlePaginationChange = useCallback(
+    (updater: Updater<typeof pagination>) => {
+      const newPagination =
+        typeof updater === "function" ? updater(pagination) : updater
+      setPagination(newPagination)
+      if (manualPagination) {
+        router.push(
+          `${pathname}?${createQueryString({
+            page: String(newPagination.pageIndex),
+            size: String(newPagination.pageSize),
+          })}`,
+          { scroll: false }
+        )
+      }
+    },
+    [pagination, manualPagination, router, pathname, createQueryString]
+  )
+
+  const handleSortingChange = useCallback(
+    (updater: Updater<SortingState>) => {
+      const newSorting =
+        typeof updater === "function" ? updater(sorting) : updater
+      setSorting(newSorting)
+      if (manualSorting) {
+        router.push(
+          `${pathname}?${createQueryString({
+            sort: newSorting[0]?.id ?? null,
+            order: newSorting[0]?.desc ? "desc" : null,
+            page: "0",
+          })}`,
+          { scroll: false }
+        )
+      }
+    },
+    [sorting, manualSorting, router, pathname, createQueryString]
+  )
+
+  const table = useReactTable({
+    data: Array.isArray(data) ? data : [],
+    columns,
+    pageCount: pageCount ?? -1,
+    state: {
+      sorting,
+      columnVisibility,
+      columnFilters, // Pasar los filtros inicializados
+      columnOrder,
+      pagination,
+    },
+    manualPagination,
+    manualSorting,
+    manualFiltering,
+    enableRowSelection: true,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: handlePaginationChange,
+    onSortingChange: handleSortingChange,
+    onColumnFiltersChange: handleFiltersChange,
+    onColumnVisibilityChange,
+    onColumnOrderChange: setColumnOrder,
+  })
 
   const DraggableTableHeader = ({
     header,
@@ -201,105 +271,16 @@ export default function DataTable<TData, TValue>({
           {header.isPlaceholder
             ? null
             : flexRender(header.column.columnDef.header, header.getContext())}
-          {
-            <GripVerticalIcon
-              size={16}
-              className="opacity-0 hover:opacity-100"
-              {...attributes}
-              {...listeners}
-            />
-          }
+          <GripVerticalIcon
+            size={16}
+            className="opacity-0 hover:opacity-100"
+            {...attributes}
+            {...listeners}
+          />
         </div>
       </TableHead>
     )
   }
-
-  const handlePaginationChange = useCallback(
-    (updater: Updater<typeof pagination>) => {
-      const newPagination =
-        typeof updater === "function" ? updater(pagination) : updater
-      setPagination(newPagination)
-      console.log("handlePaginationChange:", newPagination)
-
-      if (manualPagination) {
-        console.log("push:")
-        router.push(
-          `${pathname}?${createQueryString({
-            page: String(newPagination.pageIndex),
-            size: String(newPagination.pageSize),
-          })}`,
-          { scroll: false }
-        )
-      }
-    },
-    [pagination, manualPagination, router, pathname, createQueryString]
-  )
-
-  const handleSortingChange = useCallback(
-    (updater: Updater<SortingState>) => {
-      const newSorting =
-        typeof updater === "function" ? updater(sorting) : updater
-      setSorting(newSorting)
-
-      if (manualSorting) {
-        router.push(
-          `${pathname}?${createQueryString({
-            sort: newSorting[0]?.id ?? null,
-            order: newSorting[0]?.desc ? "desc" : null,
-            // Reset a primera página al cambiar ordenamiento
-            page: "0",
-          })}`,
-          { scroll: false }
-        )
-      }
-    },
-    [sorting, manualSorting, router, pathname, createQueryString]
-  )
-
-  const handleFiltersChange = useCallback(
-    (updater: Updater<ColumnFiltersState>) => {
-      const newFilters =
-        typeof updater === "function" ? updater(columnFilters) : updater
-      setColumnFilters(newFilters)
-
-      const queryParams = new URLSearchParams()
-      newFilters.forEach((filter) => {
-        queryParams.set(filter.id, JSON.stringify(filter.value))
-      })
-      const newUrl = `${window.location.pathname}?${queryParams.toString()}`
-      window.history.pushState({}, "", newUrl)
-
-      // Aquí puedes hacer una llamada a la API con los nuevos filtros
-      // fetchData(queryParams)
-    },
-    [columnFilters, manualFiltering, router, pathname, createQueryString]
-  )
-
-  const table = useReactTable({
-    data: Array.isArray(data) ? data : [],
-    columns,
-    pageCount: pageCount ?? -1,
-    state: {
-      sorting,
-      columnVisibility,
-      columnFilters,
-      columnOrder,
-      pagination,
-    },
-    manualPagination,
-    manualSorting,
-    manualFiltering,
-    enableRowSelection: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: handlePaginationChange,
-    onSortingChange: handleSortingChange,
-    onColumnFiltersChange: handleFiltersChange,
-    onColumnVisibilityChange,
-    onColumnOrderChange: setColumnOrder,
-  })
 
   return (
     <div className="space-y-4">

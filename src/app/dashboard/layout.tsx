@@ -15,7 +15,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Providers } from "../providers"
-import DynamicBreadcrumb from "@/components/dynamicBreadcrumb"
+import DynamicBreadcrumb from "@/components/privateLayout/dynamicBreadcrumb"
 
 export default function Page({ children }: ChildrenProps) {
   return (

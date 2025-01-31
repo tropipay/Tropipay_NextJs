@@ -39,38 +39,17 @@ export function DataTableFilterFaceted<TData, TValue>({
   const { label, options, apiUrl, placeHolder } =
     (column as any)?.config.filter ?? {}
 
-  // Obtener los valores seleccionados directamente de la columna usando TanStack Table
   const selectedValues = React.useMemo(() => {
     const filterValue = column?.getFilterValue() as string[] | undefined
-    return new Set(filterValue || [])
+    return new Set(filterValue?.split(",") || [])
   }, [column?.getFilterValue()])
 
-  // Estado local para manejar los valores seleccionados temporalmente (solo para la UI del Popover)
   const [localSelectedValues, setLocalSelectedValues] =
     React.useState<Set<string>>(selectedValues)
 
-  // Cargar opciones desde la API si es necesario
-  React.useEffect(() => {
-    if ((!options || options.length === 0) && apiUrl) {
-      fetch(apiUrl)
-        .then((res) => res.json())
-        .then((data) => {
-          const mappedOptions = data.map((item: any) => ({
-            label: item.name || item.label || "Unnamed",
-            value: item.id || item.value || "",
-            icon: null,
-          }))
-          setFetchedOptions(mappedOptions)
-        })
-        .catch((err) => console.error("Error fetching data:", err))
-    }
-  }, [apiUrl, options])
-
-  // Obtener los valores únicos de la columna para mostrar conteos
   const facets = column?.getFacetedUniqueValues()
   const title = column?.config.filter.label
 
-  // Función para manejar la selección/deselección de opciones
   const handleSelectOption = (value: string) => {
     const newSelectedValues = new Set(localSelectedValues)
     if (newSelectedValues.has(value)) {
@@ -81,40 +60,30 @@ export function DataTableFilterFaceted<TData, TValue>({
     setLocalSelectedValues(newSelectedValues)
   }
 
-  // Función para aplicar los filtros cuando se hace clic en "Aplicar"
   const handleApplyFilters = () => {
     const filterValues = Array.from(localSelectedValues)
-    column?.setFilterValue(filterValues.length > 0 ? filterValues : undefined)
-
-    // Actualizar la URL con los nuevos filtros
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    if (filterValues.length > 0) {
-      newSearchParams.set(column?.id || "", filterValues.join(","))
-    } else {
-      newSearchParams.delete(column?.id || "")
-    }
-    router.push(`?${newSearchParams.toString()}`, { scroll: false }) // Evitar scroll al actualizar la URL
+    const serializedValue = filterValues.join(",")
+    column?.setFilterValue(
+      filterValues.length > 0 ? serializedValue : undefined
+    )
   }
 
-  // Función para limpiar los filtros
   const handleClearFilters = () => {
     setLocalSelectedValues(new Set())
     column?.setFilterValue(undefined)
 
-    // Limpiar los filtros de la URL
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.delete(column?.id || "")
-    router.push(`?${newSearchParams.toString()}`, { scroll: false }) // Evitar scroll al actualizar la URL
+    router.push(`?${newSearchParams.toString()}`, { scroll: false })
   }
 
-  // Efecto para inicializar el estado local con los valores de los searchParams al montar el componente
   React.useEffect(() => {
     const statusParam = searchParams.get(column?.id || "")
     const searchParamsValues = statusParam
       ? new Set(statusParam.split(","))
       : new Set<string>()
     setLocalSelectedValues(searchParamsValues)
-  }, []) // Solo se ejecuta al montar el componente
+  }, [])
 
   return (
     <Popover>

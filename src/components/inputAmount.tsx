@@ -5,6 +5,7 @@ interface InputAmountProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (value: string) => void // Prop que se ejecutará tras el cambio
   maxValue?: number // Máximo permitido en centavos
   amount?: number | string // Valor inicial en centavos o formateado
+  placeholder?: string // Propiedad placeholder
 }
 
 const InputAmount: React.FC<InputAmountProps> = ({
@@ -14,10 +15,11 @@ const InputAmount: React.FC<InputAmountProps> = ({
   amount,
   value,
   id,
+  placeholder = "", // Valor predeterminado para placeholder
   ...rest // Captura cualquier otra prop del input
 }) => {
   const [internalValue, setInternalValue] = useState(
-    formater(amount || value || 0)
+    formater(amount || value || "")
   )
 
   useEffect(() => {
@@ -28,6 +30,7 @@ const InputAmount: React.FC<InputAmountProps> = ({
 
   // Función para formatear el valor en formato decimal
   function formater(input: string | number) {
+    if (input === "") return ""
     const cents = parseInt(input as string, 10) || 0
     return (cents / 100).toFixed(2)
   }
@@ -63,7 +66,8 @@ const InputAmount: React.FC<InputAmountProps> = ({
       value={internalValue} // Valor controlado
       onChange={handleChange} // Manejar cambios
       className={`text-right ${className}`} // Clases personalizadas
-      {...rest} // Props adicionales
+      placeholder={internalValue ? "" : placeholder} // Mostrar placeholder solo si no hay valor
+      {...rest}
     />
   )
 }

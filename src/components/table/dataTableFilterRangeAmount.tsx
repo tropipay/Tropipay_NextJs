@@ -10,11 +10,9 @@ import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { FormattedMessage } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
 import { Label } from "../ui/label"
-import { Input } from "../ui/input"
-import { useState, useEffect } from "react"
 import InputAmount from "../inputAmount"
+import React from "react"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -23,26 +21,13 @@ interface DataTableFilterRangeAmountProps<TData, TValue> {
 export function DataTableFilterRangeAmount<TData, TValue>({
   column,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
-  const { t } = useTranslation()
-  const { label } = column.config.filter
+  const filterValue = column?.getFilterValue() as string | undefined
 
-  // Obtener el valor actual del filtro de la columna
-  const filterValue = column?.getFilterValue() as
-    | { min?: number; max?: number }
-    | string
-    | undefined
+  const [error, setError] = React.useState<string | null>(null)
 
-  // Parsear el valor del filtro si es una cadena
-  const parsedFilterValue =
-    typeof filterValue === "string"
-      ? (JSON.parse(filterValue) as { min?: number; max?: number })
-      : filterValue
-
-  // Función para aplicar el filtro
   const handleApplyFilter = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // Obtener los valores directamente del formulario
     const formData = new FormData(e.currentTarget)
     const min = formData.get("min") as string
     const max = formData.get("max") as string
@@ -50,14 +35,23 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     const minValue = min ? parseFloat(min) : undefined
     const maxValue = max ? parseFloat(max) : undefined
 
-    // Serializar el objeto a un formato válido para la URL
-    const serializedValue = JSON.stringify({ min: minValue, max: maxValue })
+    if (
+      minValue !== undefined &&
+      maxValue !== undefined &&
+      minValue > maxValue
+    ) {
+      setError("El valor mínimo no puede ser mayor que el valor máximo.")
+      return
+    }
+
+    setError(null)
+    const serializedValue = [minValue, maxValue].join(",")
     column?.setFilterValue(serializedValue)
   }
 
-  // Función para limpiar el filtro
   const handleClearFilter = () => {
     column?.setFilterValue(undefined)
+    setError(null)
   }
 
   return (
@@ -65,7 +59,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       <PopoverTrigger asChild>
         <Button
           variant={selStyle(
-            parsedFilterValue?.min || parsedFilterValue?.max,
+            filterValue, // Verificar si hay un valor en el filtro
             "active",
             "inactive",
             ""
@@ -73,35 +67,34 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {label}
-          {parsedFilterValue?.min || parsedFilterValue?.max ? (
+          {column?.config?.filter?.label || "Filtrar por monto"}
+          {filterValue && ( // Si hay un valor en el filtro
             <>
               <Separator orientation="vertical" className="h-4 separator" />
-              {parsedFilterValue?.min && parsedFilterValue?.max
-                ? `${formatAmount(
-                    parsedFilterValue.min * 100,
-                    "EUR",
-                    "right"
-                  )} - ${formatAmount(
-                    parsedFilterValue.max * 100,
-                    "EUR",
-                    "right"
-                  )}`
-                : null}
-              {parsedFilterValue?.min && !parsedFilterValue?.max
-                ? `Desde ${formatAmount(
-                    parsedFilterValue.min * 100,
-                    "EUR",
-                    "right"
-                  )}`
-                : null}
-              {!parsedFilterValue?.min && parsedFilterValue?.max
-                ? `Hasta ${formatAmount(
-                    parsedFilterValue.max * 100,
-                    "EUR",
-                    "right"
-                  )}`
-                : null}
+              {(() => {
+                const [min, max] = filterValue.split(",").map((value) => {
+                  const parsedValue = parseFloat(value)
+                  return isNaN(parsedValue) ? undefined : parsedValue
+                })
+
+                return (
+                  <>
+                    {min !== undefined && max !== undefined
+                      ? `${formatAmount(
+                          min * 100,
+                          "EUR",
+                          "right"
+                        )} - ${formatAmount(max * 100, "EUR", "right")}`
+                      : null}
+                    {min !== undefined && max === undefined
+                      ? `Desde ${formatAmount(min * 100, "EUR", "right")}`
+                      : null}
+                    {min === undefined && max !== undefined
+                      ? `Hasta ${formatAmount(max * 100, "EUR", "right")}`
+                      : null}
+                  </>
+                )
+              })()}
               <div
                 onClick={(event) => {
                   event.stopPropagation()
@@ -111,14 +104,45 @@ export function DataTableFilterRangeAmount<TData, TValue>({
                 <CrossCircledIcon className="h-4 w-4" />
               </div>
             </>
-          ) : null}
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">
-        <form onSubmit={handleApplyFilter}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault() // Evitar el envío del formulario por defecto
+
+            const formData = new FormData(e.currentTarget)
+            const min = formData.get("min") as string
+            const max = formData.get("max") as string
+
+            const minValue = min ? parseFloat(min) : undefined
+            const maxValue = max ? parseFloat(max) : undefined
+
+            if (
+              minValue !== undefined &&
+              maxValue !== undefined &&
+              minValue > maxValue
+            ) {
+              setError(
+                "El valor mínimo no puede ser mayor que el valor máximo."
+              )
+              return // Detener la ejecución si hay un error
+            }
+
+            setError(null)
+            const serializedValue = [minValue, maxValue].join(",")
+            column?.setFilterValue(serializedValue)
+
+            // Cerrar el Popover solo si no hay errores
+            if (!error) {
+              document.getElementById("close-popover")?.click()
+            }
+          }}
+        >
           <div className="pb-4">
             <Label htmlFor="width" className="font-bold">
-              {label}
+              {column?.config?.filter?.label || "Filtrar por monto"}
             </Label>
           </div>
           <Label htmlFor="width">
@@ -126,34 +150,33 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           </Label>
           <InputAmount
             name="min"
-            className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder={`${label} mín`}
-            defaultValue={parsedFilterValue?.min?.toString() || ""}
+            className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+            placeholder="Mínimo"
+            defaultValue={filterValue ? filterValue.split(",")[0] || "" : ""}
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
           </Label>
           <InputAmount
             name="max"
-            className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0 "
-            placeholder={`${label} máx`}
-            defaultValue={parsedFilterValue?.max?.toString() || ""}
+            className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+            placeholder="Máximo"
+            defaultValue={filterValue ? filterValue.split(",")[1] || "" : ""}
           />
-          <PopoverClose asChild>
-            <div className="py-2">
-              <PopoverClose asChild>
-                <Button
-                  variant="default"
-                  className="bg-blue-600 text-white w-full"
-                  type="submit"
-                >
-                  {<FormattedMessage id="apply" />}
-                </Button>
-              </PopoverClose>
-            </div>
-          </PopoverClose>
+          <PopoverClose id="close-popover" className="hidden" />
+          {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
+          <div className="py-2">
+            <Button
+              variant="default"
+              className="bg-blue-600 text-white w-full"
+              type="submit"
+            >
+              <FormattedMessage id="apply" />
+            </Button>
+          </div>
         </form>
       </PopoverContent>
+      <PopoverClose id="close-popover" />
     </Popover>
   )
 }

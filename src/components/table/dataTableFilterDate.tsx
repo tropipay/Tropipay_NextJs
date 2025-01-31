@@ -136,10 +136,8 @@ export function DataTableFilterDate<TData, TValue>({
     setError(null)
 
     // Pasar las fechas formateadas al filtro
-    column?.setFilterValue({
-      ...(fromDate && { from: fromDate }),
-      ...(toDate && { to: toDate }),
-    })
+    const serializedValue = [fromDate, toDate].join(",")
+    column?.setFilterValue(serializedValue)
   }
 
   const handleClearFilter = () => {
@@ -205,37 +203,36 @@ export function DataTableFilterDate<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={filterValue?.from || filterValue?.to ? "active" : "inactive"}
+          variant={filterValue ? "active" : "inactive"}
           size="sm"
           className="px-2 h-8"
         >
           {label}
-          {filterValue?.from || filterValue?.to ? (
+          {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
-              {filterValue?.from && filterValue?.to
-                ? `${filterValue.from} - ${filterValue.to}`
-                : null}
-              {filterValue?.from && !filterValue?.to
-                ? `Desde ${filterValue.from}`
-                : null}
-              {!filterValue?.from && filterValue?.to
-                ? `Hasta ${filterValue.to}`
-                : null}
+              {(() => {
+                const [from, to] = filterValue.split(",")
+                return (
+                  <>
+                    {from && to ? `${from} - ${to}` : null}
+                    {from && !to ? `Desde ${from}` : null}
+                    {!from && to ? `Hasta ${to}` : null}
+                  </>
+                )
+              })()}
+              <div
+                onClick={(event) => {
+                  event.stopPropagation()
+                  handleClearFilter()
+                }}
+              >
+                <CrossCircledIcon className="h-4 w-4" />
+              </div>
             </>
-          ) : null}
-          {filterValue?.from || filterValue?.to ? (
-            <div
-              onClick={(event) => {
-                event.stopPropagation()
-                handleClearFilter()
-              }}
-            >
-              <CrossCircledIcon className="h-4 w-4" />
-            </div>
-          ) : null}
+          )}
         </Button>
-      </PopoverTrigger>
+      </PopoverTrigger>{" "}
       <PopoverContent className="w-[200px] p-2" align="start">
         <form
           onSubmit={(e) => {
