@@ -163,6 +163,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             placeholder="Máximo"
             defaultValue={filterValue ? filterValue.split(",")[1] || "" : ""}
           />
+          <PopoverClose id="close-popover" />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
           <div className="py-2">
@@ -176,7 +177,6 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           </div>
         </form>
       </PopoverContent>
-      <PopoverClose id="close-popover" />
     </Popover>
   )
 }
