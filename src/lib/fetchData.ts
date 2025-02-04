@@ -10,10 +10,8 @@ export async function fetchData<T>(
   urlParams: any
 ): Promise<T> {
   const session = await getSession()
-  const filter = urlParamsToFilter(urlParamsTyping(urlParams))
-  const QueryKey = generateHashedKey(config.key ?? "", filter)
+  const QueryKey = generateHashedKey(config.key ?? "", urlParams)
 
-  console.log("filter:", filter)
   await queryClient.prefetchQuery({
     queryKey: [QueryKey],
     queryFn: () =>

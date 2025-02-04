@@ -10,9 +10,7 @@ export function useFetchData<T>({
 }: any): UseQueryResult<T> {
   const { data: session } = useSession()
   const token = session?.user?.access_token
-
-  const filter = urlParamsToFilter(urlParamsTyping(urlParams))
-  const QueryKey = generateHashedKey(config.key, filter)
+  const QueryKey = generateHashedKey(config.key, urlParams)
 
   return useQuery({
     queryKey: [QueryKey],

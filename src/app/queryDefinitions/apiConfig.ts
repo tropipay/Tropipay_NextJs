@@ -35,7 +35,7 @@ export const apiConfig = {
           amountGte: 1000,
         },
         pagination: {
-          limit: 10,
+          limit: 50,
           offset: 0,
         },
       },

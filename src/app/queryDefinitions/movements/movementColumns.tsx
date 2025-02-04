@@ -111,10 +111,12 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       }
       const Icon = status.icon
       const states: Record<string, any> = {
-        pendingIn: "statePending",
+        pending: "statePending",
         processing: "stateProcessing",
-        paid: "stateComplete",
+        completed: "stateComplete",
         refunded: "stateRefund",
+        failed: "stateFailed",
+        unknown: "stateUnknown",
       }
 
       return (
@@ -138,9 +140,11 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       <DataTableColumnHeader column={column} title={"date"} />
     ),
     cell: ({ getValue }) => {
-      const rawDate = getValue() as string
+      const timestamp = getValue() as string
+      const date = new Date(timestamp * 1000)
+      const formattedDate = format(date, "dd/MM/yyyy, HH:mm")
+
       try {
-        const formattedDate = format(new Date(rawDate), "dd/MM/yyyy, HH:mm")
         return formattedDate
       } catch (error) {
         console.error("Error formateando la fecha:", error)

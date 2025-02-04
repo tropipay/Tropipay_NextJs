@@ -62,7 +62,7 @@ interface DataTableProps<TData, TValue> {
   manualPagination?: boolean
   manualSorting?: boolean
   manualFiltering?: boolean
-  pageCount?: number
+  rowCount?: number
 }
 
 export default function DataTable<TData, TValue>({
@@ -77,7 +77,7 @@ export default function DataTable<TData, TValue>({
   manualPagination = true,
   manualSorting = true,
   manualFiltering = true,
-  pageCount,
+  rowCount,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -106,7 +106,7 @@ export default function DataTable<TData, TValue>({
 
   const [pagination, setPagination] = useState({
     pageIndex: Number(searchParams.get("page") ?? 0),
-    pageSize: Number(searchParams.get("size") ?? 10),
+    pageSize: Number(searchParams.get("size") ?? 50),
   })
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
@@ -224,7 +224,7 @@ export default function DataTable<TData, TValue>({
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
     columns,
-    pageCount: pageCount ?? -1,
+    pageCount: Math.ceil(rowCount / pagination.pageSize) ?? -1,
     state: {
       sorting,
       columnVisibility,

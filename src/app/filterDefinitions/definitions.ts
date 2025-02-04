@@ -20,7 +20,7 @@ export const usersStatus = [
 ]
 export const movementsState = [
   {
-    value: "pendingIn",
+    value: "pending",
     label: "Pendiente",
     icon: Clock4,
   },
@@ -30,7 +30,7 @@ export const movementsState = [
     icon: LoaderCircle,
   },
   {
-    value: "paid",
+    value: "completed",
     label: "Completado",
     icon: Check,
   },
@@ -39,6 +39,16 @@ export const movementsState = [
     label: "Reembolsado",
     icon: CornerUpLeft,
   },
+  {
+    value: "failed",
+    label: "Fallido",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "unknown",
+    label: "unknown *****",
+    icon: CrossCircledIcon,
+  },
 ]
 export const movementTypes = [
   {
@@ -46,7 +56,7 @@ export const movementTypes = [
     label: "Transferencia",
   },
   {
-    value: "deposit",
+    value: "income",
     label: "Deposito",
   },
   {
@@ -54,18 +64,27 @@ export const movementTypes = [
     label: "Retiro",
   },
   {
-    value: "payment",
+    value: "expense",
     label: "Pago",
   },
   {
     value: "refund",
     label: "Reembolso",
   },
+  {
+    value: "unknown",
+    label: "unknown ******",
+  },
 ]
 export const paymentMethods = [
   {
-    value: "Credit Card",
+    value: "CHARGE_USER_CARDS",
     label: "Tarjeta de crédito",
+    icon: CreditcardIcon,
+  },
+  {
+    value: "TOKENIZE_CARD",
+    label: "Tarjeta tokenizada",
     icon: CreditcardIcon,
   },
   {
@@ -74,7 +93,7 @@ export const paymentMethods = [
     icon: TropipayIcon,
   },
   {
-    value: "GiftCard",
+    value: "GIFT_CARD",
     label: "Giftcard",
     icon: GiftcardIcon,
   },
@@ -84,9 +103,14 @@ export const paymentMethods = [
     icon: BankIcon,
   },
   {
-    value: "TropiCard",
+    value: "CONSUME_TROPICARD",
     label: "TropiCard",
     icon: TropicardIcon,
+  },
+  {
+    value: null,
+    label: "null",
+    // icon: TropicardIcon,
   },
 ]
 export const userList = [

@@ -12,6 +12,12 @@ export async function makeApiRequest({
   token,
   urlParams,
 }: FetchOptions) {
+  console.log("(urlParams):", urlParams)
+  console.log("urlParamsTyping(urlParams):", urlParamsTyping(urlParams))
+  console.log(
+    "urlParamsToFilter(urlParamsTyping(urlParams)):",
+    urlParamsToFilter(urlParamsTyping(urlParams))
+  )
   const filter = urlParamsToFilter(urlParamsTyping(urlParams))
 
   const headers = {
@@ -24,9 +30,14 @@ export async function makeApiRequest({
     ...config.body,
     variables: {
       ...config.body?.variables,
-      filter,
+      pagination: {
+        limit: urlParams.size || 50,
+        offset: urlParams.page || 0,
+      },
     },
   }
+
+  // console.log("body:", body)
 
   const response = await fetch(config.url, {
     method: config.method,

@@ -108,7 +108,7 @@ const MyPage: React.FC = () => {
       {
         fields: ["nombre", "edad"],
         validate: (values) => {
-          if (values.nombre === "Luis" && values.edad === "50") {
+          if (values.nombre === "Luis" && values.edad !== "50") {
             return "La edad no se corresponde"
           }
           return null

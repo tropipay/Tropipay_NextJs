@@ -12,7 +12,7 @@ const PageClient = ({
   columns,
   data: {
     data: {
-      movements: { items },
+      movements: { items, totalCount: rowCount },
     },
   } = {
     data: { movements: { items: [], totalCount: 0 } },
@@ -33,6 +33,7 @@ const PageClient = ({
             otherInformation: false,
           },
           onChangeColumnOrder,
+          rowCount: rowCount * 100,
         }}
       />
     </div>

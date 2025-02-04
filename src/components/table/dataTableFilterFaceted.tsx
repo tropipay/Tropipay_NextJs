@@ -74,7 +74,6 @@ export function DataTableFilterFaceted<TData, TValue>({
 
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.delete(column?.id || "")
-    router.push(`?${newSearchParams.toString()}`, { scroll: false })
   }
 
   React.useEffect(() => {
