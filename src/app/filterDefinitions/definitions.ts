@@ -20,60 +20,73 @@ export const usersStatus = [
 ]
 export const movementsState = [
   {
-    value: "pending",
-    label: "Pendiente",
+    value: "pendingIn",
+    label: "pendingIn",
     icon: Clock4,
   },
   {
     value: "processing",
-    label: "Procesando",
+    label: "processing",
     icon: LoaderCircle,
   },
   {
-    value: "completed",
-    label: "Completado",
+    value: "paid",
+    label: "paid",
     icon: Check,
   },
   {
     value: "refund",
-    label: "Reembolsado",
+    label: "refund",
     icon: CornerUpLeft,
   },
   {
     value: "failed",
-    label: "Fallido",
+    label: "failed",
     icon: CrossCircledIcon,
   },
   {
-    value: "unknown",
-    label: "unknown *****",
+    value: "onReview",
+    label: "onReview",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "charged",
+    label: "charged",
     icon: CrossCircledIcon,
   },
 ]
 export const movementTypes = [
   {
-    value: "transfer",
-    label: "Transferencia",
+    value: "chargeUserCards",
+    label: "chargeUserCards",
   },
   {
-    value: "income",
-    label: "Deposito",
+    value: "internalTransfer",
+    label: "internalTransfer",
   },
   {
-    value: "withdrawal",
-    label: "Retiro",
+    value: "consumeTropicard",
+    label: "consumeTropicard",
   },
   {
-    value: "expense",
-    label: "Pago",
+    value: "giftCard",
+    label: "giftCard",
   },
   {
-    value: "refund",
-    label: "Reembolso",
+    value: "chargeExternalCards",
+    label: "chargeExternalCards",
+  },
+  {
+    value: "rechargeTropicard",
+    label: "rechargeTropicard",
+  },
+  {
+    value: "cryptoTopup",
+    label: "cryptoTopup",
   },
   {
     value: "unknown",
-    label: "unknown ******",
+    label: "unknown",
   },
 ]
 export const paymentMethods = [
@@ -108,9 +121,14 @@ export const paymentMethods = [
     icon: TropicardIcon,
   },
   {
-    value: null,
-    label: "null",
-    // icon: TropicardIcon,
+    value: "CHARGE_EXTERNAL_CARDS",
+    label: "CHARGE_EXTERNAL_CARDS",
+    icon: null,
+  },
+  {
+    value: "RECHARGE_TROPICARD",
+    label: "RECHARGE_TROPICARD",
+    icon: null,
   },
 ]
 export const userList = [

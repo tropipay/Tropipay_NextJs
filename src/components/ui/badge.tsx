@@ -15,11 +15,11 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
-        statePending:
+        statePendingIn:
           "border border-statePending bg-statePending-foreground text-statePending inline-flex w-fit items-center p-1 rounded-md",
         stateProcessing:
           "border border-stateProcessing bg-stateProcessing-foreground text-stateProcessing-foreground inline-flex w-fit items-center p-1 rounded-md",
-        stateComplete:
+        statePaid:
           "border border-stateComplete bg-stateComplete-foreground text-stateComplete inline-flex w-fit items-center p-1 rounded-md",
       },
     },

@@ -51,6 +51,11 @@ export type CustomColumnDef<T> = ColumnDef<T> & {
   filter?: FilterConfig<T>
 }
 
+function capitalizeText(text) {
+  if (!text) return ""
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
 export const movementColumns: CustomColumnDef<Movement>[] = [
   {
     id: "select",
@@ -107,20 +112,13 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       )
 
       if (!status) {
-        return null
+        return row.getValue("status")
       }
       const Icon = status.icon
-      const states: Record<string, any> = {
-        pending: "statePending",
-        processing: "stateProcessing",
-        completed: "stateComplete",
-        refunded: "stateRefund",
-        failed: "stateFailed",
-        unknown: "stateUnknown",
-      }
+      const states = `state${capitalizeText(status.value)}`
 
       return (
-        <Badge variant={states[row.getValue("status") as any]}>
+        <Badge variant={states}>
           <Icon className="ml-0 h-4 w-4 mr-2" />
           <span className="mr-0">{status.label}</span>
         </Badge>
@@ -140,11 +138,9 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       <DataTableColumnHeader column={column} title={"date"} />
     ),
     cell: ({ getValue }) => {
-      const timestamp = getValue() as string
-      const date = new Date(timestamp * 1000)
-      const formattedDate = format(date, "dd/MM/yyyy, HH:mm")
-
       try {
+        const isoDate = getValue() as string
+        const formattedDate = format(new Date(isoDate), "dd/MM/yy HH:mm")
         return formattedDate
       } catch (error) {
         console.error("Error formateando la fecha:", error)
@@ -169,11 +165,13 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       )
 
       if (!movementType) {
-        return null
+        return row.getValue("movementType")
       }
       return (
         <div>
-          <span>{movementType.label}</span>
+          <span>
+            {movementType.label} <b>OK</b>
+          </span>
         </div>
       )
     },
@@ -195,20 +193,15 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         (paymentMethod) => paymentMethod.value === row.getValue("paymentMethod")
       )
       if (!paymentMethod) {
-        return null
+        return row.getValue("paymentMethod")
       }
       const Icon = paymentMethod.icon
       return (
-        <div
-          className={clsx("flex items-center", {
-            "text-red-500": paymentMethod.value === "transfer",
-            "text-yellow-500": paymentMethod.value === "deposit",
-            "text-green-500": paymentMethod.value === "payment",
-            "text-gray-500": paymentMethod.value === "withdrawal",
-          })}
-        >
+        <div className="flex items-center">
           {Icon && <Icon className="mr-2 h-5 w-5" />}
-          <span className="ml-1">{paymentMethod.label}</span>
+          <span className="ml-1">
+            {paymentMethod.label} <b>OK</b>
+          </span>
         </div>
       )
     },

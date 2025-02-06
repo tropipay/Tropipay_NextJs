@@ -33,7 +33,7 @@ const PageClient = ({
             otherInformation: false,
           },
           onChangeColumnOrder,
-          rowCount: rowCount * 100,
+          rowCount: rowCount,
         }}
       />
     </div>
