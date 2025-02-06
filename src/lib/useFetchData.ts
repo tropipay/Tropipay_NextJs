@@ -4,20 +4,20 @@ import { generateHashedKey, urlParamsToFilter, urlParamsTyping } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 
 export function useFetchData<T>({
-  config,
+  queryConfig,
   dehydratedState,
   urlParams,
 }: any): UseQueryResult<T> {
   const { data: session } = useSession()
   const token = session?.user?.access_token
-  const QueryKey = generateHashedKey(config.key, urlParams)
-  const variables = buildGraphQLVariables(urlParams, config.filters)
+  const QueryKey = generateHashedKey(queryConfig.key, urlParams)
+  const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
 
   return useQuery({
     queryKey: [QueryKey],
     queryFn: () =>
       makeApiRequest({
-        config,
+        queryConfig,
         token,
         variables,
       }),

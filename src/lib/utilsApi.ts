@@ -2,29 +2,29 @@ import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { urlParamsToFilter, urlParamsTyping } from "./utils"
 
 export interface FetchOptions {
-  config: FetchDataConfig
+  queryConfig: FetchDataConfig
   token: string | undefined
   urlParams: any
 }
 
 export async function makeApiRequest({
-  config,
+  queryConfig,
   token,
   variables,
 }: FetchOptions) {
   const headers = {
-    ...config.headers,
+    ...queryConfig.headers,
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   }
 
   const body = {
-    ...config.body,
+    ...queryConfig.body,
     ...variables,
   }
 
-  const response = await fetch(config.url, {
-    method: config.method,
+  const response = await fetch(queryConfig.url, {
+    method: queryConfig.method,
     headers,
     body: JSON.stringify(body),
     cache: "no-store",

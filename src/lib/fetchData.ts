@@ -6,18 +6,18 @@ import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
-  config: FetchDataConfig,
+  queryConfig: FetchDataConfig,
   urlParams: any
 ): Promise<T> {
   const session = await getSession()
-  const QueryKey = generateHashedKey(config.key ?? "", urlParams)
-  const variables = buildGraphQLVariables(urlParams, config.filters)
+  const QueryKey = generateHashedKey(queryConfig.key ?? "", urlParams)
+  const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
 
   await queryClient.prefetchQuery({
     queryKey: [QueryKey],
     queryFn: () =>
       makeApiRequest({
-        config,
+        queryConfig,
         token: session?.user?.access_token,
         variables,
       }),

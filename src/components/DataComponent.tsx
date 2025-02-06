@@ -12,17 +12,17 @@ interface DataComponentProps {
   dehydratedState: DehydratedState
   children: React.ReactElement<{ data: any }>
   filters: any
-  config: FetchDataConfig
+  queryConfig: FetchDataConfig
 }
 
 export default function DataComponent({
   dehydratedState,
-  config,
+  queryConfig,
   children,
 }: DataComponentProps) {
   const urlParams = useSearchParams()
   const { data, error, isLoading } = useFetchData({
-    config,
+    queryConfig,
     dehydratedState,
     urlParams,
   })
