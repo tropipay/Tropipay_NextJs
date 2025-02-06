@@ -1,3 +1,4 @@
+import { movementsFilters } from "./movements/filters"
 import { movementColumns } from "./movements/movementColumns"
 
 export const apiConfig = {
@@ -41,6 +42,7 @@ export const apiConfig = {
       },
     },
     columns: movementColumns,
+    filters: JSON.parse(JSON.stringify(movementsFilters)),
     key: "generalMovements",
   },
 }

@@ -14,7 +14,6 @@ export default async function Page({
   const queryConfig = apiConfig.movements
 
   const urlParams = await processQueryParameters(searchParams)
-
   await fetchData(queryClient, queryConfig, urlParams)
   const dehydratedState = dehydrate(queryClient)
   return (

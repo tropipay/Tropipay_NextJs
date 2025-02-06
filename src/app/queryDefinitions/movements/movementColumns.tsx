@@ -9,10 +9,8 @@ import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ColumnDef } from "@tanstack/react-table"
-import clsx from "clsx"
 import { format } from "date-fns"
 import React from "react"
-import { FormattedMessage } from "react-intl"
 
 type FilterConfig<T> =
   | {
@@ -51,7 +49,7 @@ export type CustomColumnDef<T> = ColumnDef<T> & {
   filter?: FilterConfig<T>
 }
 
-function capitalizeText(text) {
+function capitalizeText(text: string) {
   if (!text) return ""
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
@@ -94,11 +92,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </div>
       )
     },
-    filter: {
-      type: "amount",
-      column: "amount",
-      label: <FormattedMessage id={"amount"} />,
-    },
   },
   {
     id: "status",
@@ -124,12 +117,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </Badge>
       )
     },
-    filter: {
-      type: "list",
-      column: "status",
-      label: <FormattedMessage id={"status"} />,
-      options: movementsState,
-    },
   },
   {
     id: "valueDate",
@@ -146,11 +133,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         console.error("Error formateando la fecha:", error)
         return "Fecha inválida"
       }
-    },
-    filter: {
-      type: "date",
-      column: "valueDate",
-      label: <FormattedMessage id={"date"} />,
     },
   },
   {
@@ -174,12 +156,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
           </span>
         </div>
       )
-    },
-    filter: {
-      type: "list",
-      column: "movementType",
-      label: <FormattedMessage id={"type"} />,
-      options: movementTypes,
     },
   },
   {
@@ -205,12 +181,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </div>
       )
     },
-    filter: {
-      type: "list",
-      column: "paymentMethod",
-      label: <FormattedMessage id={"method"} />,
-      options: paymentMethods,
-    },
   },
   {
     id: "sender",
@@ -222,12 +192,6 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       const sender = row.getValue("sender")
       return sender || "Desconocido"
     },
-    filter: {
-      type: "uniqueValue",
-      column: "sender",
-      label: <FormattedMessage id={"user"} />,
-      placeHolder: "user",
-    },
   },
   {
     id: "reference",
@@ -236,11 +200,5 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       <DataTableColumnHeader column={column} title={"reference"} />
     ),
     cell: ({ row }) => row.getValue("reference"),
-    filter: {
-      type: "uniqueValue",
-      column: "reference",
-      label: <FormattedMessage id={"reference"} />,
-      placeHolder: "reference",
-    },
   },
 ]

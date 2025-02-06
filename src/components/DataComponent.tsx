@@ -11,6 +11,7 @@ import { useSearchParams } from "next/navigation"
 interface DataComponentProps {
   dehydratedState: DehydratedState
   children: React.ReactElement<{ data: any }>
+  filters: any
   config: FetchDataConfig
 }
 
@@ -19,7 +20,7 @@ export default function DataComponent({
   config,
   children,
 }: DataComponentProps) {
-  const urlParams = parseParamsString(useSearchParams())
+  const urlParams = useSearchParams()
   const { data, error, isLoading } = useFetchData({
     config,
     dehydratedState,

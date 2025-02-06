@@ -10,10 +10,8 @@ export interface FetchOptions {
 export async function makeApiRequest({
   config,
   token,
-  urlParams,
+  variables,
 }: FetchOptions) {
-  const filter = urlParamsToFilter(urlParams)
-
   const headers = {
     ...config.headers,
     Authorization: `Bearer ${token}`,
@@ -22,13 +20,7 @@ export async function makeApiRequest({
 
   const body = {
     ...config.body,
-    variables: {
-      ...config.body?.variables,
-      pagination: {
-        limit: urlParams.size || 50,
-        offset: urlParams.page || 0,
-      },
-    },
+    ...variables,
   }
 
   const response = await fetch(config.url, {
@@ -47,4 +39,120 @@ export async function makeApiRequest({
   }
 
   return response.json()
+}
+
+interface SearchParams {
+  [key: string]: string // Parámetros de búsqueda dinámicos
+  page?: string
+  size?: string
+  sort?: string
+  order?: string
+  search?: string
+}
+
+interface FilterConfig {
+  type: "amount" | "list" | "date" | "uniqueValue"
+  column: string
+  label?: React.ReactNode
+  options?: any[]
+  placeHolder?: string
+}
+
+interface ColumnConfig {
+  id: string
+  filter?: FilterConfig
+  accessorKey?: string
+  header?: any
+  cell?: any
+  enableSorting?: boolean
+  enableHiding?: boolean
+}
+
+interface Config {
+  columns: ColumnConfig[]
+}
+
+interface GraphQLVariables {
+  filter: {
+    [key: string]: any // Filtros dinámicos
+    generalSearch?: string
+  }
+  pagination: {
+    limit: number
+    offset: number
+  }
+  sort?: {
+    field: string
+    direction: string
+  }
+}
+
+export function buildGraphQLVariables(
+  searchParams: SearchParams,
+  columns: any
+): { variables: GraphQLVariables } {
+  const { page, size, sort, order, search, ...filters } = searchParams
+  const variables: GraphQLVariables = {
+    filter: {},
+    pagination: {
+      limit: size ?? 50,
+      offset: page ?? 0,
+    },
+  }
+
+  // Procesar el campo de búsqueda general (search)
+  if (search) {
+    variables.filter.generalSearch = search
+  }
+
+  // Procesar los filtros adicionales
+  columns.forEach((column) => {
+    if (filters[column.column]) {
+      const filterType = column.type
+      const filterValue = filters[column.column]
+
+      switch (filterType) {
+        case "amount":
+          const [amountFrom, amountTo] = filterValue.split(",")
+          if (amountFrom)
+            variables.filter[`${column.column}Gte`] = parseFloat(amountFrom)
+          if (amountTo)
+            variables.filter[`${column.column}Lte`] = parseFloat(amountTo)
+          break
+
+        case "list":
+          variables.filter[column.column] = filterValue.split(",")
+          break
+
+        case "date":
+          const [dateFrom, dateTo] = filterValue.split(",")
+          if (dateFrom)
+            variables.filter[`${column.column}From`] = new Date(
+              dateFrom
+            ).toISOString()
+          if (dateTo)
+            variables.filter[`${column.column}To`] = new Date(
+              dateTo
+            ).toISOString()
+          break
+
+        case "uniqueValue":
+          variables.filter[column.column] = filterValue
+          break
+
+        default:
+          break
+      }
+    }
+  })
+
+  // Dejar espacio para sort y order (a implementar en el futuro)
+  if (sort || order) {
+    variables.sort = {
+      field: sort,
+      direction: order ?? "asc",
+    }
+  }
+
+  return { variables }
 }
