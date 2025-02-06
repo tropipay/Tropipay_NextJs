@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronRight } from "lucide-react"
-
+import Link from "next/link" // Importa el componente Link de Next.js
 import {
   Collapsible,
   CollapsibleContent,
@@ -48,9 +48,10 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
-                              {<FormattedMessage id={subItem.title} />}
-                            </a>
+                            {/* Usa Link en lugar de <a> */}
+                            <Link href={subItem.url}>
+                              <FormattedMessage id={subItem.title} />
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -62,7 +63,7 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
               <SidebarMenuItem>
                 <SidebarMenuButton tooltip={t(item.title)}>
                   {item.icon && <item.icon />}
-                  {<FormattedMessage id={item.title} />}
+                  <FormattedMessage id={item.title} />
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}

@@ -20,8 +20,14 @@ export default async function Page({
   return (
     <>
       {dehydratedState && (
-        <DataComponent dehydratedState={dehydratedState} config={queryConfig}>
-          <PageClient columns={queryConfig.columns} />
+        <DataComponent
+          dehydratedState={dehydratedState}
+          queryConfig={queryConfig}
+        >
+          <PageClient
+            columns={queryConfig.columns}
+            filters={JSON.parse(JSON.stringify(queryConfig.filters))}
+          />
         </DataComponent>
       )}
     </>

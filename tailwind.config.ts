@@ -41,6 +41,10 @@ export default {
           foreground: "hsl(var(--destructive-foreground))",
         },
         /* added */
+        grayBackground: {
+          DEFAULT: "hsl(var(--grayBackground))",
+          foreground: "hsl(var(--grayBackground-foreground))",
+        },
         grayFont: {
           DEFAULT: "hsl(var(--grayFont))",
           foreground: "hsl(var(--grayFont-foreground))",

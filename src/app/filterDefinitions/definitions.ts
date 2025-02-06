@@ -21,51 +21,83 @@ export const usersStatus = [
 export const movementsState = [
   {
     value: "pendingIn",
-    label: "Pendiente",
+    label: "pendingIn",
     icon: Clock4,
   },
   {
     value: "processing",
-    label: "Procesando",
+    label: "processing",
     icon: LoaderCircle,
   },
   {
     value: "paid",
-    label: "Completado",
+    label: "paid",
     icon: Check,
   },
   {
     value: "refund",
-    label: "Reembolsado",
+    label: "refund",
     icon: CornerUpLeft,
+  },
+  {
+    value: "failed",
+    label: "failed",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "onReview",
+    label: "onReview",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "charged",
+    label: "charged",
+    icon: CrossCircledIcon,
   },
 ]
 export const movementTypes = [
   {
-    value: "transfer",
-    label: "Transferencia",
+    value: "chargeUserCards",
+    label: "chargeUserCards",
   },
   {
-    value: "deposit",
-    label: "Deposito",
+    value: "internalTransfer",
+    label: "internalTransfer",
   },
   {
-    value: "withdrawal",
-    label: "Retiro",
+    value: "consumeTropicard",
+    label: "consumeTropicard",
   },
   {
-    value: "payment",
-    label: "Pago",
+    value: "giftCard",
+    label: "giftCard",
   },
   {
-    value: "refund",
-    label: "Reembolso",
+    value: "chargeExternalCards",
+    label: "chargeExternalCards",
+  },
+  {
+    value: "rechargeTropicard",
+    label: "rechargeTropicard",
+  },
+  {
+    value: "cryptoTopup",
+    label: "cryptoTopup",
+  },
+  {
+    value: "unknown",
+    label: "unknown",
   },
 ]
 export const paymentMethods = [
   {
-    value: "Credit Card",
+    value: "CHARGE_USER_CARDS",
     label: "Tarjeta de crédito",
+    icon: CreditcardIcon,
+  },
+  {
+    value: "TOKENIZE_CARD",
+    label: "Tarjeta tokenizada",
     icon: CreditcardIcon,
   },
   {
@@ -74,7 +106,7 @@ export const paymentMethods = [
     icon: TropipayIcon,
   },
   {
-    value: "GiftCard",
+    value: "GIFT_CARD",
     label: "Giftcard",
     icon: GiftcardIcon,
   },
@@ -84,9 +116,19 @@ export const paymentMethods = [
     icon: BankIcon,
   },
   {
-    value: "TropiCard",
+    value: "CONSUME_TROPICARD",
     label: "TropiCard",
     icon: TropicardIcon,
+  },
+  {
+    value: "CHARGE_EXTERNAL_CARDS",
+    label: "CHARGE_EXTERNAL_CARDS",
+    icon: null,
+  },
+  {
+    value: "RECHARGE_TROPICARD",
+    label: "RECHARGE_TROPICARD",
+    icon: null,
   },
 ]
 export const userList = [

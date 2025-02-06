@@ -10,10 +10,11 @@ export const LANG_DEFAULT = "en"
 export const supportedLanguages: string[] = ["es", "en", "pt"]
 
 export const getLocaleStored = () => {
-  const cookieLang = Cookies.get(LOCALE_STORAGE_VAR)
+  /* const cookieLang = Cookies.get(LOCALE_STORAGE_VAR)
   return cookieLang && supportedLanguages.includes(cookieLang)
     ? cookieLang
-    : LANG_DEFAULT
+    : LANG_DEFAULT */
+  return "es"
 }
 
 export const setLocaleStored = (locale: string) => {

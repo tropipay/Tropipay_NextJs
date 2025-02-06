@@ -1,3 +1,4 @@
+import { movementsFilters } from "./movements/filters"
 import { movementColumns } from "./movements/movementColumns"
 
 export const apiConfig = {
@@ -35,12 +36,13 @@ export const apiConfig = {
           amountGte: 1000,
         },
         pagination: {
-          limit: 10,
+          limit: 50,
           offset: 0,
         },
       },
     },
     columns: movementColumns,
+    filters: JSON.parse(JSON.stringify(movementsFilters)),
     key: "generalMovements",
   },
 }

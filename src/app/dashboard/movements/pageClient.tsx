@@ -17,14 +17,16 @@ import React from "react"
 
 interface Props {
   columns: CustomColumnDef<Movement>[]
+  filters: any
   data?: GetMovementsResponse
 }
 
 const PageClient = ({
   columns,
+  filters,
   data: {
     data: {
-      movements: { items },
+      movements: { items, totalCount: rowCount },
     },
   } = {
     data: { movements: { items: [], totalCount: 0 } },
@@ -76,13 +78,13 @@ const PageClient = ({
         {...{
           data: items,
           columns,
-          defaultColumnOrder:
-            columnsSettings?.movements.columnOrder ?? defaultColumnOrder,
-          defaultColumnVisibility:
-            columnsSettings?.movements.columnVisibility ??
-            defaultColumnVisibility,
+          filters,
+          defaultColumnVisibility: {
+            location: false,
+            otherInformation: false,
+          },
           onChangeColumnOrder,
-          onChangeColumnVisibility,
+          rowCount: rowCount,
         }}
       />
     </div>

@@ -1,26 +1,26 @@
 import { getSession } from "@/app/actions/sessionActions"
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { QueryClient } from "@tanstack/react-query"
-import { generateHashedKey, urlParamsToFilter, urlParamsTyping } from "./utils"
-import { makeApiRequest } from "./utilsApi"
+import { generateHashedKey } from "./utils"
+import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
-  config: FetchDataConfig,
+  queryConfig: FetchDataConfig,
   urlParams: any
 ): Promise<T> {
   const session = await getSession()
-  const filter = urlParamsToFilter(urlParamsTyping(urlParams))
-  const QueryKey = generateHashedKey(config.key ?? "", filter)
+  const QueryKey = generateHashedKey(queryConfig.key ?? "", urlParams)
+  const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
+  console.log("*********** variables:", variables)
 
-  console.log("filter:", filter)
   await queryClient.prefetchQuery({
     queryKey: [QueryKey],
     queryFn: () =>
       makeApiRequest({
-        config,
+        queryConfig,
         token: session?.user?.access_token,
-        urlParams,
+        variables,
       }),
   })
 
