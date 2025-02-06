@@ -1,0 +1,25 @@
+{
+  "settings": [
+    {
+      "id": "a9546500-65c0-11ed-97e6-2ffd2c53074d",
+      "tableColumnsSettings": {
+        "movements": {
+          "columnOrder": [
+            "select",
+            "valueDate",
+            "status",
+            "amount",
+            "movementType",
+            "paymentMethod",
+            "sender",
+            "reference"
+          ],
+          "columnVisibility": {
+            "location": false,
+            "otherInformation": false
+          }
+        }
+      }
+    }
+  ]
+}

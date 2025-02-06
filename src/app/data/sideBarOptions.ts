@@ -1,4 +1,4 @@
-import { SidebarOption } from "@/types/SidebarOption"
+import { SidebarOption } from "@/types/sidebarOption"
 import {
   ArrowLeftRight,
   BadgeDollarSign,

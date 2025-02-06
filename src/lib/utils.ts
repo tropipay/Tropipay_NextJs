@@ -39,6 +39,11 @@ interface HeaderData {
   [key: string]: string
 }
 
+export const fetchHeaders: Record<string, string> = {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+}
+
 // Función para hacer un fetch GET con triggers
 export const fetchGetWithTriggers = async (
   fetchGetData: FetchGetData,
@@ -55,8 +60,7 @@ export const fetchGetWithTriggers = async (
     }
 
     const headers: Record<string, string> = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      ...fetchHeaders,
       "Accept-Language": user?.lang || "en",
     }
 
