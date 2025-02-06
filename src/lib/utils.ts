@@ -93,96 +93,6 @@ export const fetchGetWithTriggers = async (
   }
 }
 
-export const parseParams = (params: { [key: string]: string }) => {
-  const parsed: Record<string, any> = {}
-  for (const [key, value] of Object.entries(params)) {
-    try {
-      parsed[key] = JSON.parse(value)
-    } catch {
-      parsed[key] = value
-    }
-  }
-  return parsed
-}
-export const parseParamsString = (params: URLSearchParams) => {
-  const result: Record<string, any> = {}
-
-  params.forEach((value, key) => {
-    try {
-      const parsedValue = JSON.parse(decodeURIComponent(value))
-      result[key] = parsedValue
-    } catch {
-      result[key] = decodeURIComponent(value)
-    }
-  })
-  return result
-}
-
-export function urlParamsTyping(params: Record<string, any>) {
-  return Object.entries(params).reduce((acc, [key, value]) => {
-    if (typeof value === "object" && value !== null) {
-      if (Array.isArray(value)) {
-        acc[key] = {
-          data: value,
-          type: "faceted",
-        }
-      } else if ("min" in value || "max" in value) {
-        acc[key] = {
-          ...value,
-          type: "rangeAmount",
-        }
-      } else if ("from" in value || "to" in value) {
-        acc[key] = {
-          ...value,
-          type: "date",
-        }
-      } else if ("data" in value) {
-        acc[key] = {
-          ...value,
-          type: "singleValue",
-        }
-      } else {
-        acc[key] = value
-      }
-    } else {
-      acc[key] = value
-    }
-    return acc
-  }, {} as Record<string, any>)
-}
-
-export function urlParamsToFilter(processedParams: Record<string, any>) {
-  return Object.entries(processedParams).reduce((acc, [keyRenamed, value]) => {
-    const key = keyRenamed.substring(1)
-    if (!value.type) {
-      return acc
-    }
-    switch (value.type) {
-      case "rangeAmount":
-        if (value.min) acc[`${key}Gte`] = parseFloat(value.min)
-        if (value.max) acc[`${key}Lte`] = parseFloat(value.max)
-        break
-
-      case "date":
-        if (value.from) acc[`${key}From`] = value.from
-        if (value.to) acc[`${key}To`] = value.to
-        break
-
-      case "singleValue":
-        acc[key] = value.data
-        break
-
-      case "faceted":
-        if (value.data && value.data.length > 0) {
-          acc[key] = value.data[0] // Tomamos el primer valor del array
-        }
-        break
-    }
-
-    return acc
-  }, {} as Record<string, any>)
-}
-
 export function generateHashedKey(key: string, obj: any): string {
   const str = JSON.stringify(obj)
   return `${key} | ${btoa(str)}`
@@ -193,17 +103,29 @@ export async function processQueryParameters(
 ) {
   try {
     const resolvedParams = await searchParams
-    const queryString = new URLSearchParams()
-    Object.entries(resolvedParams).forEach(([key, value]) => {
-      queryString.append(key, value)
-    })
-
-    const urlParams = parseParams(Object.fromEntries(queryString.entries()))
-    return urlParams
+    return resolvedParams
   } catch (error) {
     console.error("Error processing query parameters:", error)
     return {}
   }
+}
+
+export function searchParamsToObject(searchParams: URLSearchParams): {
+  [key: string]: string | string[]
+} {
+  const obj: { [key: string]: string | string[] } = {}
+  searchParams.forEach((value, key) => {
+    if (obj[key]) {
+      if (Array.isArray(obj[key])) {
+        ;(obj[key] as string[]).push(value)
+      } else {
+        obj[key] = [obj[key] as string, value]
+      }
+    } else {
+      obj[key] = value
+    }
+  })
+  return obj
 }
 
 export function selStyle(

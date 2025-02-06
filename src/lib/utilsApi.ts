@@ -1,5 +1,4 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
-import { urlParamsToFilter, urlParamsTyping } from "./utils"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
@@ -91,12 +90,19 @@ export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
 ): { variables: GraphQLVariables } {
-  const { page, size, sort, order, search, ...filters } = searchParams
+  const {
+    page = "0",
+    size = "50",
+    sort,
+    order,
+    search,
+    ...filters
+  } = searchParams
   const variables: GraphQLVariables = {
     filter: {},
     pagination: {
-      limit: size ?? 50,
-      offset: page ?? 0,
+      limit: parseInt(size),
+      offset: parseInt(page),
     },
   }
 
@@ -104,7 +110,6 @@ export function buildGraphQLVariables(
   if (search) {
     variables.filter.generalSearch = search
   }
-
   // Procesar los filtros adicionales
   columns.forEach((column) => {
     if (filters[column.column]) {
@@ -115,25 +120,22 @@ export function buildGraphQLVariables(
         case "amount":
           const [amountFrom, amountTo] = filterValue.split(",")
           if (amountFrom)
-            variables.filter[`${column.column}Gte`] = parseFloat(amountFrom)
+            variables.filter[`${column.column}Gte`] =
+              parseFloat(amountFrom.replace(".", ",")) * 100
           if (amountTo)
-            variables.filter[`${column.column}Lte`] = parseFloat(amountTo)
+            variables.filter[`${column.column}Lte`] =
+              parseFloat(amountTo.replace(".", ",")) * 100
           break
 
         case "list":
-          variables.filter[column.column] = filterValue.split(",")
+          variables.filter[column.column] = filterValue
           break
 
         case "date":
           const [dateFrom, dateTo] = filterValue.split(",")
-          if (dateFrom)
-            variables.filter[`${column.column}From`] = new Date(
-              dateFrom
-            ).toISOString()
-          if (dateTo)
-            variables.filter[`${column.column}To`] = new Date(
-              dateTo
-            ).toISOString()
+          if (dateFrom) variables.filter[`${column.column}From`] = dateFrom
+
+          if (dateTo) variables.filter[`${column.column}To`] = dateTo
           break
 
         case "uniqueValue":

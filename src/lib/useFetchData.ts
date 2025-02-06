@@ -1,6 +1,6 @@
 import { Query, useQuery, UseQueryResult } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
-import { generateHashedKey, urlParamsToFilter, urlParamsTyping } from "./utils"
+import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 
 export function useFetchData<T>({
