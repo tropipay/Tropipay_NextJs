@@ -13,6 +13,8 @@ export async function fetchData<T>(
   const QueryKey = generateHashedKey(queryConfig.key ?? "", urlParams)
   const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
 
+  console.log("variables:", variables)
+
   await queryClient.prefetchQuery({
     queryKey: [QueryKey],
     queryFn: () =>

@@ -52,6 +52,7 @@ import { DataTableToolbar } from "./dataTableToolbar"
 interface DataTableProps<TData, TValue> {
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
+  filters: any
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
@@ -67,6 +68,7 @@ interface DataTableProps<TData, TValue> {
 
 export default function DataTable<TData, TValue>({
   columns,
+  filters,
   data,
   enableColumnOrder = false,
   blockedColumnOrder = ["select"],
@@ -284,7 +286,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} columns={columns} />
+      <DataTableToolbar table={table} columns={columns} filters={filters} />
       <div className="rounded-md border">
         <DndContext
           collisionDetection={closestCenter}

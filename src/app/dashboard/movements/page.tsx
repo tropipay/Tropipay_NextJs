@@ -23,7 +23,10 @@ export default async function Page({
           dehydratedState={dehydratedState}
           queryConfig={queryConfig}
         >
-          <PageClient columns={queryConfig.columns} />
+          <PageClient
+            columns={queryConfig.columns}
+            filters={JSON.parse(JSON.stringify(queryConfig.filters))}
+          />
         </DataComponent>
       )}
     </>

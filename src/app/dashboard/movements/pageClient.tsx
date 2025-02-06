@@ -5,11 +5,13 @@ import DataTable from "@/components/table/dataTable"
 
 interface Props {
   columns: CustomColumnDef<Movement>[]
+  filters: any
   data?: GetMovementsResponse
 }
 
 const PageClient = ({
   columns,
+  filters,
   data: {
     data: {
       movements: { items, totalCount: rowCount },
@@ -28,6 +30,7 @@ const PageClient = ({
         {...{
           data: items,
           columns,
+          filters,
           defaultColumnVisibility: {
             location: false,
             otherInformation: false,

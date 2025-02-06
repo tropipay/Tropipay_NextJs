@@ -18,11 +18,13 @@ import { useSearchParams } from "next/navigation" // Importa useSearchParams
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
   columns: CustomColumnDef<TData, TValue>[]
+  filter: any
 }
 
 export function DataTableToolbar<TData, TValue>({
   table,
   columns,
+  filters,
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
   const searchParams = useSearchParams() // Obtén los searchParams de la URL
@@ -120,34 +122,50 @@ export function DataTableToolbar<TData, TValue>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          {columns.map((column) => {
-            switch (column.filter?.type) {
+          {filters.map((filter) => {
+            const column = {
+              ...columns.filter((col) => col.column === filter.column),
+              filter: filter,
+            }
+            switch (filter.type) {
               case "list":
                 return (
                   <DataTableFilterFaceted
-                    key={column.id}
-                    column={{ ...table.getColumn(column.id), config: column }}
+                    key={filter.column}
+                    column={{
+                      ...table.getColumn(filter.column),
+                      config: column,
+                    }}
                   />
                 )
               case "date":
                 return (
                   <DataTableFilterDate
-                    key={column.id}
-                    column={{ ...table.getColumn(column.id), config: column }}
+                    key={filter.column}
+                    column={{
+                      ...table.getColumn(filter.column),
+                      config: column,
+                    }}
                   />
                 )
               case "amount":
                 return (
                   <DataTableFilterRangeAmount
-                    key={column.id}
-                    column={{ ...table.getColumn(column.id), config: column }}
+                    key={filter.column}
+                    column={{
+                      ...table.getColumn(filter.column),
+                      config: column,
+                    }}
                   />
                 )
               case "uniqueValue":
                 return (
                   <DataTableFilterSingleValue
-                    key={column.id}
-                    column={{ ...table.getColumn(column.id), config: column }}
+                    key={filter.column}
+                    column={{
+                      ...table.getColumn(filter.column),
+                      config: column,
+                    }}
                   />
                 )
             }
