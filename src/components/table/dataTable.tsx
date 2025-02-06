@@ -186,6 +186,41 @@ export default function DataTable<TData, TValue>({
     onChangeColumnVisibility?.(visibilityState)
   }
 
+  const DraggableTableHeader = ({
+    header,
+  }: {
+    header: Header<TData, unknown>
+  }) => {
+    const { attributes, isDragging, listeners, setNodeRef, transform } =
+      useSortable({
+        id: header.column.id,
+      })
+
+    const style: CSSProperties = {
+      position: "relative",
+      transform: CSS.Translate.toString(transform),
+      transition: "width transform 0.2s ease-in-out",
+      whiteSpace: "nowrap",
+      ...(isDragging && { opacity: 0.8, zIndex: 1 }),
+    }
+
+    return (
+      <TableHead key={header.id} ref={setNodeRef} style={style}>
+        <div className="flex gap-1 items-center">
+          {header.isPlaceholder
+            ? null
+            : flexRender(header.column.columnDef.header, header.getContext())}
+          <GripVerticalIcon
+            size={16}
+            className="opacity-0 hover:opacity-100"
+            {...attributes}
+            {...listeners}
+          />
+        </div>
+      </TableHead>
+    )
+  }
+
   const handlePaginationChange = useCallback(
     (updater: Updater<typeof pagination>) => {
       const newPagination =
@@ -248,41 +283,6 @@ export default function DataTable<TData, TValue>({
     onColumnVisibilityChange,
     onColumnOrderChange: setColumnOrder,
   })
-
-  const DraggableTableHeader = ({
-    header,
-  }: {
-    header: Header<TData, unknown>
-  }) => {
-    const { attributes, isDragging, listeners, setNodeRef, transform } =
-      useSortable({
-        id: header.column.id,
-      })
-
-    const style: CSSProperties = {
-      position: "relative",
-      transform: CSS.Translate.toString(transform),
-      transition: "width transform 0.2s ease-in-out",
-      whiteSpace: "nowrap",
-      ...(isDragging && { opacity: 0.8, zIndex: 1 }),
-    }
-
-    return (
-      <TableHead key={header.id} ref={setNodeRef} style={style}>
-        <div className="flex gap-1 items-center">
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-          <GripVerticalIcon
-            size={16}
-            className="opacity-0 hover:opacity-100"
-            {...attributes}
-            {...listeners}
-          />
-        </div>
-      </TableHead>
-    )
-  }
 
   return (
     <div className="space-y-4">
