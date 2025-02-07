@@ -2,21 +2,10 @@ import { FetchDataConfig } from "@/app/queryDefinitions/types"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
-  token: string | undefined
-  urlParams: any
+  variables: { variables: GraphQLVariables }
 }
 
-export async function makeApiRequest({
-  queryConfig,
-  token,
-  variables,
-}: FetchOptions) {
-  const headers = {
-    ...queryConfig.headers,
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  }
-
+export async function makeApiRequest({ queryConfig, variables }: FetchOptions) {
   const body = {
     ...queryConfig.body,
     ...variables,
@@ -24,7 +13,6 @@ export async function makeApiRequest({
 
   const response = await fetch(queryConfig.url, {
     method: queryConfig.method,
-    headers,
     body: JSON.stringify(body),
     cache: "no-store",
   })
@@ -41,12 +29,13 @@ export async function makeApiRequest({
 }
 
 interface SearchParams {
-  [key: string]: string // Parámetros de búsqueda dinámicos
   page?: string
   size?: string
   sort?: string
   order?: string
   search?: string
+
+  [key: string]: string | undefined // Parámetros de búsqueda dinámicos
 }
 
 interface FilterConfig {
@@ -111,14 +100,14 @@ export function buildGraphQLVariables(
     variables.filter.generalSearch = search
   }
   // Procesar los filtros adicionales
-  columns.forEach((column) => {
+  columns.forEach((column: any) => {
     if (filters[column.column]) {
       const filterType = column.type
       const filterValue = filters[column.column]
 
       switch (filterType) {
         case "amount":
-          const [amountFrom, amountTo] = filterValue.split(",")
+          const [amountFrom, amountTo] = filterValue?.split(",") ?? []
           if (amountFrom)
             variables.filter[`${column.column}Gte`] =
               parseFloat(amountFrom.replace(".", ",")) * 100
@@ -132,7 +121,7 @@ export function buildGraphQLVariables(
           break
 
         case "date":
-          const [dateFrom, dateTo] = filterValue.split(",")
+          const [dateFrom, dateTo] = filterValue?.split(",") ?? []
           if (dateFrom) variables.filter[`${column.column}From`] = dateFrom
 
           if (dateTo) variables.filter[`${column.column}To`] = dateTo
@@ -151,7 +140,7 @@ export function buildGraphQLVariables(
   // Dejar espacio para sort y order (a implementar en el futuro)
   if (sort || order) {
     variables.sort = {
-      field: sort,
+      field: sort ?? "",
       direction: order ?? "asc",
     }
   }

@@ -3,9 +3,15 @@ import Credentials from "next-auth/providers/credentials"
 import { fetchHeaders } from "./lib/utils"
 
 export default {
+  session: { strategy: "jwt" },
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
+      credentials: {
+        token: {},
+      },
       async authorize({ token }) {
+        let user = null
         try {
           const res = await fetch(
             `${process.env.REACT_APP_API_URL}/api/users/profile`,
@@ -24,13 +30,7 @@ export default {
             )
           }
 
-          const userData = await res.json()
-
-          // Retornamos el usuario con el token incluido
-          return {
-            ...userData,
-            access_token: token, // Guardamos el token original
-          }
+          user = await res.json()
         } catch (error) {
           if (error instanceof Error) {
             throw new Error(`Authorization failed: ${error.message}`)
@@ -38,33 +38,24 @@ export default {
             throw new Error("Authorization failed: Unknown error occurred")
           }
         }
+
+        return user
       },
     }),
   ],
 
   callbacks: {
-    async authorized({ auth }) {
-      return !!auth
-    },
+    jwt: async ({ token, user }) => ({ ...token, ...user }),
 
-    async jwt({ token, user }) {
-      // Si tenemos un usuario (primera vez que se inicia sesión)
-      if (user) {
-        token.access_token = (user as UserSession).access_token
-        delete (user as UserSession).access_token // Limpiamos el token del objeto usuario
-      }
-      return token
-    },
-
-    async session({ session, token }) {
+    session: async ({ session, token }) => {
       // Aseguramos que el token esté disponible en la sesión
       if (token) {
         session.user = {
           ...session.user,
           ...token,
-          access_token: token.access_token,
         }
       }
+
       return session
     },
   },

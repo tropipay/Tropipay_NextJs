@@ -1,5 +1,4 @@
 import { Query, useQuery, UseQueryResult } from "@tanstack/react-query"
-import { useSession } from "next-auth/react"
 import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 
@@ -8,8 +7,6 @@ export function useFetchData<T>({
   dehydratedState,
   urlParams,
 }: any): UseQueryResult<T> {
-  const { data: session } = useSession()
-  const token = session?.user?.access_token
   const QueryKey = generateHashedKey(queryConfig.key, urlParams)
   const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
 
@@ -18,7 +15,6 @@ export function useFetchData<T>({
     queryFn: () =>
       makeApiRequest({
         queryConfig,
-        token,
         variables,
       }),
     initialData: dehydratedState.queries?.find(
@@ -26,6 +22,6 @@ export function useFetchData<T>({
         JSON.stringify(query.queryKey) === JSON.stringify([QueryKey])
     )?.state?.data,
     staleTime: 1000 * 60 * 5,
-    enabled: !!token,
+    enabled: true,
   })
 }

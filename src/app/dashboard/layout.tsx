@@ -16,10 +16,12 @@ import {
 } from "@/components/ui/sidebar"
 import { Providers } from "../providers"
 import DynamicBreadcrumb from "@/components/privateLayout/dynamicBreadcrumb"
+import { SessionProvider } from "next-auth/react"
 
 export default function Page({ children }: ChildrenProps) {
+  
   return (
-    <Providers>
+    <SessionProvider>
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
@@ -33,6 +35,7 @@ export default function Page({ children }: ChildrenProps) {
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
         </SidebarInset>
       </SidebarProvider>
-    </Providers>
+    </SessionProvider>
   )
 }
+
