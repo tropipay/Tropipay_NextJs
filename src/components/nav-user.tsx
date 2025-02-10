@@ -25,13 +25,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useSession } from "next-auth/react"
 
-interface Props {
-  user?: UserSession
-}
-
-export function NavUser({ user }: Props) {
+export function NavUser() {
   const { isMobile } = useSidebar()
+  const { data: session } = useSession()
+  const user = session?.user
 
   return (
     <SidebarMenu>

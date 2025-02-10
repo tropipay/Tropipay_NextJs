@@ -1,30 +1,29 @@
 import { cookies } from "next/headers"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
+import { auth } from "./auth"
 import { getTokenFromSession } from "./lib/utilsUser"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]
 
 export async function middleware(req: NextRequest) {
+  const session = await auth()
+
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isPublicRoute = publicRoutes.includes(path)
   const isProtectedRoute = !isPublicRoute
 
-  // Decrypt the session from the cookie
-  const cookie = (await cookies()).get("session")?.value
-  const token = getTokenFromSession(cookie)
-
   // Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !token) {
+  if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL("/", req.nextUrl))
   }
 
   // Redirect to /dashboard if the user is authenticated
   // if (
   //   isPublicRoute &&
-  //   token &&
+  //   session &&
   //   !req.nextUrl.pathname.startsWith("/dashboard")
   // ) {
   //   return NextResponse.redirect(new URL("/dashboard", req.nextUrl))
@@ -32,7 +31,11 @@ export async function middleware(req: NextRequest) {
 
   // Access to the requested route is permitted
   const requestHeaders = new Headers(req.headers)
-  requestHeaders.set("Authorization", `Bearer ${token}`)
+  const cookie = (await cookies()).get("session")?.value
+  const token = getTokenFromSession(cookie)
+  if (token) {
+    requestHeaders.set("Authorization", `Bearer ${token}`)
+  }
 
   return NextResponse.next({
     request: {
@@ -44,6 +47,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/((?!api|_next/static|_next/image|favicon.png).*)",
+    "/((?!_next/static|_next/image|favicon.png).*)",
   ],
 }

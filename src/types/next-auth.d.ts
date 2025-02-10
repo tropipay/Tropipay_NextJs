@@ -6,3 +6,9 @@ declare module "next-auth" {
     user: UserSession
   }
 }
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    user: UserSession
+  }
+}

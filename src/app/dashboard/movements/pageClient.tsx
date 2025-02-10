@@ -1,6 +1,5 @@
 "use client"
 
-import { getSession } from "@/app/actions/sessionActions"
 import {
   getUserTableSettings,
   updateUserTableSettings,
@@ -13,6 +12,7 @@ import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumn
 import DataTable from "@/components/table/dataTable"
 import { TableColumnsSettings } from "@/types/tableColumnsSettings"
 import { VisibilityState } from "@tanstack/react-table"
+import { useSession } from "next-auth/react"
 import React from "react"
 
 interface Props {
@@ -32,7 +32,10 @@ const PageClient = ({
     data: { movements: { items: [], totalCount: 0 } },
   },
 }: Props) => {
-  const [userId, setUserId] = React.useState<string>()
+  const { data: session } = useSession()
+  const user = session?.user
+  const userId = user?.id
+
   const [columnsSettings, setColumnsSettings] =
     React.useState<TableColumnsSettings>()
 
@@ -48,7 +51,6 @@ const PageClient = ({
     columnVisibility: VisibilityState
   ) => {
     if (!userId || !columnsSettings) return
-
     await updateUserTableSettings(userId, {
       ...columnsSettings,
       movements: { ...columnsSettings.movements, columnVisibility },
@@ -56,19 +58,14 @@ const PageClient = ({
   }
 
   const setUserTableColumnsSettings = async () => {
-    const session = await getSession()
-
-    if (session?.user) {
-      const userId = session.user.sub
+    if (userId) {
       const { tableColumnsSettings } = await getUserTableSettings(userId)
-
-      setUserId(userId)
       setColumnsSettings(tableColumnsSettings)
     }
   }
 
   React.useEffect(() => {
-    setUserTableColumnsSettings()
+    void setUserTableColumnsSettings()
   }, [])
 
   return (
