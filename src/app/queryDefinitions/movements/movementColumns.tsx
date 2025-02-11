@@ -107,11 +107,27 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       if (!status) {
         return row.getValue("status")
       }
+
+      const stateGroups = {
+        completedStates: ["charged", "paid"],
+        processingStates: ["pendingIn", "processing", "onReview"],
+        anotherStates: ["error"],
+      }
+
+      const getStateGroup = (state: string) => {
+        for (const group in stateGroups) {
+          if (stateGroups[group].includes(state)) {
+            return group
+          }
+        }
+        return null
+      }
+
+      const state = getStateGroup(row.getValue("status"))
       const Icon = status.icon
-      const states = `state${capitalizeText(status.value)}`
 
       return (
-        <Badge variant={states}>
+        <Badge variant={state}>
           <Icon className="ml-0 h-4 w-4 mr-2" />
           <span className="mr-0">{status.label}</span>
         </Badge>

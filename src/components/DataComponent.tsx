@@ -11,7 +11,6 @@ import { FormattedMessage } from "react-intl"
 interface DataComponentProps {
   dehydratedState: DehydratedState
   children: React.ReactElement<{ data: any }>
-  filters: any
   queryConfig: FetchDataConfig
 }
 
