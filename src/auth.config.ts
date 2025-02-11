@@ -14,7 +14,7 @@ export default {
         let user = null
         try {
           const res = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/users/profile`,
+            `${process.env.REACT_APP_API_URL}/users/profile`,
             {
               method: "GET",
               headers: {
