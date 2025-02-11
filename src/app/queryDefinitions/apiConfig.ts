@@ -7,27 +7,27 @@ export const apiConfig = {
     url: `${process.env.REACT_APP_APP_URL}/api/movements`,
     method: "POST",
     body: {
-      operationName: "GetMovements",
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {
-      movements(filter: $filter, pagination: $pagination) {
-        items {
-            id
-            status
-            creationDate
-            valueDate
-            description
-            amount {
-              value
-              currency
+        movements(filter: $filter, pagination: $pagination) {
+          items {
+              id
+              status
+              creationDate
+              valueDate
+              description
+              amount {
+                value
+                currency
+              }
+              movementType
+              paymentMethod
+              reference
+              sender
             }
-            movementType
-            paymentMethod
-            reference
-            sender
+            totalCount
           }
-          totalCount
-        }
-      }`,
+        }`,
+      operationName: "GetMovements",
       variables: {
         filter: {
           amountGte: 1000,
