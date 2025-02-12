@@ -11,7 +11,7 @@ declare global {
     createdAt?: Date
     updatedAt?: Date
     id?: string
-    access_token?: string
+    token?: string
     tableColumnsSettings?: TableColumnsSettings
   } & AdapterUser
 }

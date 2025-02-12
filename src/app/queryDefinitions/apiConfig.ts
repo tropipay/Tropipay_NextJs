@@ -4,7 +4,7 @@ import { movementColumns } from "./movements/movementColumns"
 export const apiConfig = {
   movements: {
     key: "generalMovements",
-    url: `${process.env.REACT_APP_APP_URL}/api/movements`,
+    url: `${process.env.REACT_APP_API_URL}/movements/business`,
     method: "POST",
     body: {
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {

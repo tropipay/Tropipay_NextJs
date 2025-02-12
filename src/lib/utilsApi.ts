@@ -1,20 +1,28 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
+import { fetchHeaders } from "./utils"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
   variables: { variables: GraphQLVariables }
+  token: string
 }
 
-export async function makeApiRequest({ queryConfig, variables }: FetchOptions) {
-  const body = {
-    ...queryConfig.body,
-    ...variables,
-  }
-
-  const response = await fetch(queryConfig.url, {
-    method: queryConfig.method,
-    body: JSON.stringify(body),
-    cache: "no-store",
+export async function makeApiRequest({
+  queryConfig: { body, url, method },
+  variables,
+  token,
+}: FetchOptions) {
+  const response = await fetch(url, {
+    method,
+    headers: {
+      ...fetchHeaders,
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      ...body,
+      ...variables,
+    }),
+    cache: "no-store"
   })
 
   if (!response.ok) {

@@ -31,6 +31,7 @@ export default {
           }
 
           user = await res.json()
+          user = { ...user, token }
         } catch (error) {
           if (error instanceof Error) {
             throw new Error(`Authorization failed: ${error.message}`)
