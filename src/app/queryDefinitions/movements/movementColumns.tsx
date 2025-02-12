@@ -8,46 +8,11 @@ import {
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ColumnDef } from "@tanstack/react-table"
+import { formatAmount } from "@/lib/utils"
 import { format } from "date-fns"
 import React from "react"
 
-type FilterConfig<T> =
-  | {
-      type: "list"
-      column: string
-      label: React.ReactNode
-      apiUrl?: string
-      icon?: string
-      options?: {
-        label: string
-        value: string
-        icon?: React.ComponentType<{ className?: string }>
-      }[]
-    }
-  | {
-      type: "date"
-      label: React.ReactNode
-      column: string
-    }
-  | {
-      type: "uniqueValue"
-      column: string
-      label: React.ReactNode
-      placeHolder: string
-    }
-  | {
-      type: "amount"
-      column: string
-      label?: React.ReactNode
-    }
-
-type MovementState = "Pendiente" | "Procesando" | "Completado" | "Reembolsado"
-
 // Ajustamos CustomColumnDef para usar FilterConfig con T
-export type CustomColumnDef<T> = ColumnDef<T> & {
-  filter?: FilterConfig<T>
-}
 
 function capitalizeText(text: string) {
   if (!text) return ""
@@ -87,25 +52,28 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       const { value, currency } = row.original.amount
       return (
         <div className="text-right">
-          <span className="font-bold">{value.toLocaleString()}</span>{" "}
+          <span className="font-bold">
+            {value > 0 ? "+" : ""}
+            {formatAmount(value, "")}
+          </span>{" "}
           <span className="text-grayFont">{currency}</span>
         </div>
       )
     },
   },
   {
-    id: "status",
-    accessorKey: "status",
+    id: "state",
+    accessorKey: "state",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={"status"} />
+      <DataTableColumnHeader column={column} title={"state"} />
     ),
     cell: ({ row }) => {
-      const status = movementsState.find(
-        (state) => state.value === row.getValue("status")
+      const state = movementsState.find(
+        (thisState) => thisState.value === row.getValue("state")
       )
 
-      if (!status) {
-        return row.getValue("status")
+      if (!state) {
+        return row.getValue("state")
       }
 
       const stateGroups = {
@@ -123,13 +91,13 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         return null
       }
 
-      const state = getStateGroup(row.getValue("status"))
-      const Icon = status.icon
+      const stateVariant = getStateGroup(row.getValue("state"))
+      const Icon = state.icon
 
       return (
-        <Badge variant={state}>
+        <Badge variant={stateVariant}>
           <Icon className="ml-0 h-4 w-4 mr-2" />
-          <span className="mr-0">{status.label}</span>
+          <span className="mr-0">{state.label}</span>
         </Badge>
       )
     },
@@ -173,6 +141,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </div>
       )
     },
+    sortable: false,
   },
   {
     id: "paymentMethod",

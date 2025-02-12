@@ -48,6 +48,12 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -64,6 +70,7 @@ interface DataTableProps<TData, TValue> {
   manualSorting?: boolean
   manualFiltering?: boolean
   rowCount?: number
+  rowClickChildren?: React.ComponentType<{ row: TData }>
 }
 
 export default function DataTable<TData, TValue>({
@@ -80,10 +87,14 @@ export default function DataTable<TData, TValue>({
   manualSorting = true,
   manualFiltering = true,
   rowCount,
+  rowClickChildren: RowClickChildren,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [selectedRow, setSelectedRow] = useState<TData | null>(null)
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -265,7 +276,7 @@ export default function DataTable<TData, TValue>({
     state: {
       sorting,
       columnVisibility,
-      columnFilters, // Pasar los filtros inicializados
+      columnFilters,
       columnOrder,
       pagination,
     },
@@ -283,6 +294,11 @@ export default function DataTable<TData, TValue>({
     onColumnVisibilityChange,
     onColumnOrderChange: setColumnOrder,
   })
+
+  const handleRowClick = (row: TData) => {
+    setSelectedRow(row)
+    setIsSheetOpen(true)
+  }
 
   return (
     <div className="space-y-4">
@@ -327,6 +343,8 @@ export default function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    onClick={() => handleRowClick(row.original)} // Manejar el clic en la fila
+                    className="cursor-pointer hover:bg-gray-100" // Cambiar el cursor y el color al pasar el mouse
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -353,6 +371,18 @@ export default function DataTable<TData, TValue>({
         </DndContext>
       </div>
       <DataTablePagination table={table} />
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetHeader>
+          <SheetTitle></SheetTitle>
+        </SheetHeader>
+        <SheetContent className="min-w-[500px]">
+          <div className="mt-6">
+            {selectedRow && RowClickChildren && (
+              <RowClickChildren row={selectedRow} /> // Renderizar el componente con la prop `row`
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
