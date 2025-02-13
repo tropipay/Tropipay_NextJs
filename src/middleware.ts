@@ -9,6 +9,7 @@ const publicRoutes = ["/"]
 
 export async function middleware(req: NextRequest) {
   const session = await auth()
+  const token = session?.user.token
 
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
@@ -16,7 +17,7 @@ export async function middleware(req: NextRequest) {
   const isProtectedRoute = !isPublicRoute
 
   // Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session) {
+  if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL("/", req.nextUrl))
   }
 
@@ -31,8 +32,6 @@ export async function middleware(req: NextRequest) {
 
   // Access to the requested route is permitted
   const requestHeaders = new Headers(req.headers)
-  const cookie = (await cookies()).get("session")?.value
-  const token = getTokenFromSession(cookie)
   if (token) {
     requestHeaders.set("Authorization", `Bearer ${token}`)
   }

@@ -1,20 +1,32 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
+import { fetchHeaders } from "./utils"
+import { getTokenFromSession } from "./utilsUser"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
   variables: { variables: GraphQLVariables }
+  token?: string
 }
 
-export async function makeApiRequest({ queryConfig, variables }: FetchOptions) {
+export async function makeApiRequest({
+  queryConfig,
+  variables,
+  token,
+}: FetchOptions) {
   const body = {
     ...queryConfig.body,
     ...variables,
   }
 
-  const response = await fetch(queryConfig.url, {
+  const endpointURL = `${process.env.NEXT_PUBLIC_API_URL}${queryConfig.url}`
+  const response = await fetch(endpointURL, {
     method: queryConfig.method,
     body: JSON.stringify(body),
     cache: "no-store",
+    headers: {
+      ...fetchHeaders,
+      Authorization: `Bearer ${token}`,
+    },
   })
 
   if (!response.ok) {

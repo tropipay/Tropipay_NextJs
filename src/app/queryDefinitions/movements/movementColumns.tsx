@@ -60,6 +60,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </div>
       )
     },
+    enableHiding: false,
   },
   {
     id: "state",
@@ -101,6 +102,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </Badge>
       )
     },
+    enableHiding: false,
   },
   {
     id: "valueDate",
@@ -118,6 +120,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         return "Fecha inválida"
       }
     },
+    enableHiding: false,
   },
   {
     id: "movementType",
@@ -141,7 +144,7 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
         </div>
       )
     },
-    sortable: false,
+    enableSorting: false,
   },
   {
     id: "paymentMethod",
