@@ -12,8 +12,8 @@ export const movementsFilters = [
   },
   {
     type: "list",
-    column: "status",
-    label: "status",
+    column: "state",
+    label: "state",
     options: movementsState,
   },
   {

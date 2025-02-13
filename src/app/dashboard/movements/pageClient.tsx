@@ -4,19 +4,15 @@ import {
   getUserTableSettings,
   updateUserTableSettings,
 } from "@/app/actions/userActions"
-import {
-  defaultColumnOrder,
-  defaultColumnVisibility,
-} from "@/app/queryDefinitions/movements"
-import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 import DataTable from "@/components/table/dataTable"
 import { TableColumnsSettings } from "@/types/tableColumnsSettings"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
 import React from "react"
+import MovementDetail from "./movementDetail"
 
 interface Props {
-  columns: CustomColumnDef<Movement>[]
+  columns: any
   filters: any
   data?: GetMovementsResponse
 }
@@ -59,8 +55,9 @@ const PageClient = ({
 
   const setUserTableColumnsSettings = async () => {
     if (userId) {
-      const { tableColumnsSettings } = await getUserTableSettings(userId)
+      /*       const { tableColumnsSettings } = await getUserTableSettings(userId)
       setColumnsSettings(tableColumnsSettings)
+ */
     }
   }
 
@@ -83,6 +80,7 @@ const PageClient = ({
           onChangeColumnOrder,
           rowCount: rowCount,
         }}
+        rowClickChildren={MovementDetail}
       />
     </div>
   )

@@ -11,7 +11,7 @@ export const apiConfig = {
         movements(filter: $filter, pagination: $pagination) {
           items {
               id
-              status
+              state
               creationDate
               valueDate
               description
