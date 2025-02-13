@@ -156,20 +156,20 @@ export function DataTableFilterFaceted<TData, TValue>({
                 )
               })}
             </CommandGroup>
-            <div className="p-2">
-              <PopoverClose asChild>
-                <Button
-                  variant="default"
-                  className="bg-blue-600 text-white w-full"
-                  type="submit"
-                  onClick={handleApplyFilters}
-                >
-                  {<FormattedMessage id="apply" />}
-                </Button>
-              </PopoverClose>
-            </div>
           </CommandList>
         </Command>
+        <div className="p-2">
+          <PopoverClose asChild>
+            <Button
+              variant="default"
+              className="bg-blue-600 text-white w-full"
+              type="submit"
+              onClick={handleApplyFilters}
+            >
+              {<FormattedMessage id="apply" />}
+            </Button>
+          </PopoverClose>
+        </div>
       </PopoverContent>
     </Popover>
   )
