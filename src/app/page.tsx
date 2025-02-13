@@ -35,7 +35,7 @@ export default function Page() {
     setLoading(true)
     try {
       await login(token)
-      router.push("/dashboard")
+      router.push("/dashboard/movements")
     } catch (e) {
       setIsOpen(true)
     }

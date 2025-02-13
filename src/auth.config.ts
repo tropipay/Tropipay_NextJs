@@ -14,7 +14,7 @@ export default {
         let user = null
         try {
           const res = await fetch(
-            `${process.env.REACT_APP_API_URL}/users/profile`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,
             {
               method: "GET",
               headers: {
@@ -31,6 +31,7 @@ export default {
           }
 
           user = await res.json()
+          user = { ...user, token }
         } catch (error) {
           if (error instanceof Error) {
             throw new Error(`Authorization failed: ${error.message}`)
