@@ -1,6 +1,5 @@
 "use client"
 
-import { CustomColumnDef } from "@/app/queryDefinitions/movements/movementColumns"
 import { Input } from "@/components/ui/input"
 import { Table } from "@tanstack/react-table"
 import { useTranslation } from "../intl/useTranslation"
@@ -12,13 +11,12 @@ import { DataTableViewOptions } from "./dataTableViewOptions"
 import { Button } from "../ui/button"
 import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
 import { useState, useEffect } from "react"
-import { Cross2Icon } from "@radix-ui/react-icons"
 import { useSearchParams } from "next/navigation" // Importa useSearchParams
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
-  columns: CustomColumnDef<TData, TValue>[]
-  filter: any
+  columns: any
+  filters: any
 }
 
 export function DataTableToolbar<TData, TValue>({
@@ -115,9 +113,7 @@ export function DataTableToolbar<TData, TValue>({
           <Button variant="outline">
             <Download />
           </Button>
-          <Button variant="outline" className="m-0">
-            <Ellipsis />
-          </Button>
+          <DataTableViewOptions table={table} />
         </div>
       </div>
       <div className="flex w-full items-center justify-between">
@@ -170,18 +166,16 @@ export function DataTableToolbar<TData, TValue>({
                 )
             }
           })}
-
-          {isFiltered && (
-            <Button
-              variant="active"
-              onClick={() => table.resetColumnFilters()}
-              className="h-8 px-2 lg:px-3"
-            >
-              {t("clean_filters")}
-            </Button>
-          )}
         </div>
-        <DataTableViewOptions table={table} />
+
+        <Button
+          disabled={!isFiltered}
+          variant={isFiltered ? "active" : "inactive"}
+          onClick={() => table.resetColumnFilters()}
+          className="h-8 px-2"
+        >
+          {t("clean_filters")}
+        </Button>
       </div>
     </>
   )
