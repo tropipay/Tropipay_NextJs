@@ -20,13 +20,13 @@ export const usersStatus = [
 ]
 export const movementsState = [
   {
-    value: "pendingIn",
-    label: "pendingIn",
+    value: "new",
+    label: "new",
     icon: Clock4,
   },
   {
-    value: "processing",
-    label: "processing",
+    value: "charged",
+    label: "charged",
     icon: LoaderCircle,
   },
   {
@@ -35,26 +35,66 @@ export const movementsState = [
     icon: Check,
   },
   {
-    value: "refund",
-    label: "refund",
+    value: "error",
+    label: "error",
     icon: CornerUpLeft,
   },
   {
-    value: "failed",
-    label: "failed",
+    value: "pendingIn",
+    label: "pendingIn",
     icon: CrossCircledIcon,
+  },
+  {
+    value: "cancelled",
+    label: "cancelled",
+    icon: CrossCircledIcon,
+  },
+  {
+    value: "preauthorized",
+    label: "preauthorized",
+    icon: Check,
+  },
+  {
+    value: "blocked",
+    label: "blocked",
+    icon: Check,
+  },
+  {
+    value: "guarded",
+    label: "guarded",
+    icon: Check,
+  },
+  {
+    value: "guardedSend",
+    label: "guardedSend",
+    icon: Check,
+  },
+  {
+    value: "guardedMediation",
+    label: "guardedMediation",
+    icon: Check,
   },
   {
     value: "onReview",
     label: "onReview",
-    icon: CrossCircledIcon,
+    icon: Check,
   },
   {
-    value: "charged",
-    label: "charged",
+    value: "processing",
+    label: "processing",
+    icon: Clock4,
+  },
+  {
+    value: "annulated",
+    label: "annulated",
     icon: Check,
   },
 ]
+export const movementsStateGroups = {
+  completedStates: ["charged", "paid"],
+  processingStates: ["pendingIn", "processing", "onReview"],
+  anotherStates: ["error"],
+}
 export const movementTypes = [
   {
     value: "chargeUserCards",

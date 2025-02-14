@@ -171,7 +171,9 @@ export function DataTableToolbar<TData, TValue>({
         <Button
           disabled={!isFiltered}
           variant={isFiltered ? "active" : "inactive"}
-          onClick={() => table.resetColumnFilters()}
+          onClick={() => {
+            table.resetColumnFilters()
+          }}
           className="h-8 px-2"
         >
           {t("clean_filters")}

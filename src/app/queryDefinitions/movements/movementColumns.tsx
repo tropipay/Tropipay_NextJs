@@ -2,11 +2,12 @@
 
 import {
   movementsState,
+  movementsStateGroups,
   movementTypes,
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
-import { Badge } from "@/components/ui/badge"
+import FacetedBadge from "@/components/table/facetedBadge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { formatAmount } from "@/lib/utils"
 import { format } from "date-fns"
@@ -69,37 +70,12 @@ export const movementColumns: CustomColumnDef<Movement>[] = [
       <DataTableColumnHeader column={column} title={"state"} />
     ),
     cell: ({ row }) => {
-      const state = movementsState.find(
-        (thisState) => thisState.value === row.getValue("state")
-      )
-
-      if (!state) {
-        return row.getValue("state")
-      }
-
-      const stateGroups = {
-        completedStates: ["charged", "paid"],
-        processingStates: ["pendingIn", "processing", "onReview"],
-        anotherStates: ["error"],
-      }
-
-      const getStateGroup = (state: string) => {
-        for (const group in stateGroups) {
-          if (stateGroups[group].includes(state)) {
-            return group
-          }
-        }
-        return null
-      }
-
-      const stateVariant = getStateGroup(row.getValue("state"))
-      const Icon = state.icon
-
       return (
-        <Badge variant={stateVariant}>
-          <Icon className="ml-0 h-4 w-4 mr-2" />
-          <span className="mr-0">{state.label}</span>
-        </Badge>
+        <FacetedBadge
+          value={row.getValue("state")}
+          states={movementsState}
+          stateGroups={movementsStateGroups}
+        />
       )
     },
     enableHiding: false,
