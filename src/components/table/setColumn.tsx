@@ -32,6 +32,7 @@ type ColumnOptions<TData> = {
   optionListGroups?: FacetedOptionGroup[] // Grupos de opciones para el tipo "facetedBadge"
   format?: string // Formato de fecha para el tipo "date"
   component?: React.ReactNode // Componente personalizado para el tipo "free"
+  addSign?: boolean // Agregar signo (+) al monto (valor por defecto: true)
   enableSorting?: boolean // Habilitar ordenamiento (valor por defecto: true)
   enableHiding?: boolean // Habilitar ocultamiento (valor por defecto: true)
 }
@@ -48,6 +49,7 @@ export function setColumn<TData>(
     optionListGroups,
     format: dateFormat,
     component,
+    addSign = true,
     enableSorting = true,
     enableHiding = true,
   } = options
@@ -124,7 +126,7 @@ export function setColumn<TData>(
         return (
           <div className="text-right">
             <span className="font-bold">
-              {value > 0 ? "+" : ""}
+              {addSign && (value > 0 ? "+" : "")}
               {formatAmount(value)}
             </span>{" "}
             <span className="text-grayFont">{currency}</span>
