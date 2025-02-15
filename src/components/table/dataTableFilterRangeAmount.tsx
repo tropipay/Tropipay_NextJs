@@ -22,8 +22,8 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   column,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const filterValue = column?.getFilterValue() as string | undefined
-
   const [error, setError] = React.useState<string | null>(null)
+  const { filterLabel } = column?.config || {}
 
   const handleApplyFilter = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -47,11 +47,43 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     setError(null)
     const serializedValue = [minValue, maxValue].join(",")
     column?.setFilterValue(serializedValue)
+
+    // Cerrar el Popover solo si no hay errores
+    if (!error) {
+      document.getElementById("close-popover")?.click()
+    }
   }
 
   const handleClearFilter = () => {
     column?.setFilterValue(undefined)
     setError(null)
+  }
+
+  const renderFilterValue = () => {
+    if (!filterValue) return null
+
+    const [min, max] = filterValue.split(",").map((value) => {
+      const parsedValue = parseFloat(value)
+      return isNaN(parsedValue) ? undefined : parsedValue
+    })
+
+    return (
+      <>
+        {min !== undefined && max !== undefined
+          ? `${formatAmount(min * 100, "EUR", "right")} - ${formatAmount(
+              max * 100,
+              "EUR",
+              "right"
+            )}`
+          : null}
+        {min !== undefined && max === undefined
+          ? `Desde ${formatAmount(min * 100, "EUR", "right")}`
+          : null}
+        {min === undefined && max !== undefined
+          ? `Hasta ${formatAmount(max * 100, "EUR", "right")}`
+          : null}
+      </>
+    )
   }
 
   return (
@@ -62,37 +94,14 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {column?.config?.filter?.label || "Filtrar por monto"}
+          {filterLabel}
           {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
-              {(() => {
-                const [min, max] = filterValue.split(",").map((value) => {
-                  const parsedValue = parseFloat(value)
-                  return isNaN(parsedValue) ? undefined : parsedValue
-                })
-
-                return (
-                  <>
-                    {min !== undefined && max !== undefined
-                      ? `${formatAmount(
-                          min * 100,
-                          "EUR",
-                          "right"
-                        )} - ${formatAmount(max * 100, "EUR", "right")}`
-                      : null}
-                    {min !== undefined && max === undefined
-                      ? `Desde ${formatAmount(min * 100, "EUR", "right")}`
-                      : null}
-                    {min === undefined && max !== undefined
-                      ? `Hasta ${formatAmount(max * 100, "EUR", "right")}`
-                      : null}
-                  </>
-                )
-              })()}
+              {renderFilterValue()}
               <div
-                onClick={(event) => {
-                  event.stopPropagation()
+                onClick={(e) => {
+                  e.stopPropagation()
                   handleClearFilter()
                 }}
               >
@@ -103,41 +112,10 @@ export function DataTableFilterRangeAmount<TData, TValue>({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-
-            const formData = new FormData(e.currentTarget)
-            const min = formData.get("min") as string
-            const max = formData.get("max") as string
-
-            const minValue = min ? parseFloat(min) : undefined
-            const maxValue = max ? parseFloat(max) : undefined
-
-            if (
-              minValue !== undefined &&
-              maxValue !== undefined &&
-              minValue > maxValue
-            ) {
-              setError(
-                "El valor mínimo no puede ser mayor que el valor máximo."
-              )
-              return
-            }
-
-            setError(null)
-            const serializedValue = [minValue, maxValue].join(",")
-            column?.setFilterValue(serializedValue)
-
-            // Cerrar el Popover solo si no hay errores
-            if (!error) {
-              document.getElementById("close-popover")?.click()
-            }
-          }}
-        >
+        <form onSubmit={handleApplyFilter}>
           <div className="pb-4">
             <Label htmlFor="width" className="font-bold">
-              {column?.config?.filter?.label || "Filtrar por monto"}
+              {filterLabel}
             </Label>
           </div>
           <Label htmlFor="width">
@@ -158,7 +136,6 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             placeholder="Máximo"
             value={filterValue ? filterValue.split(",")[1] * 100 || "" : ""}
           />
-          <PopoverClose id="close-popover" />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
           <div className="py-2">

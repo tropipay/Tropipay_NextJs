@@ -43,40 +43,36 @@ export function DataTableFilterDate<TData, TValue>({
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
   const [error, setError] = React.useState<string | null>(null)
 
-  const { label } = column?.config?.filter || { label: "Filtrar por fecha" }
+  const { filterLabel } = column?.config || {}
 
-  // Función para verificar si las fechas corresponden a un período
+  const today = startOfDay(new Date())
+  const todayFormatted = format(today, "dd/MM/yyyy")
+
   const checkPeriod = (
     from: string | undefined,
     to: string | undefined
   ): string | undefined => {
-    const today = startOfDay(new Date())
-    const todayFormatted = format(today, "dd/MM/yyyy")
-
     if (from && to) {
-      if (from === todayFormatted && to === todayFormatted) {
-        return "1" // Hoy
-      } else if (
+      if (from === todayFormatted && to === todayFormatted) return "1" // Hoy
+      if (
         from === format(addDays(today, -7), "dd/MM/yyyy") &&
         to === todayFormatted
-      ) {
+      )
         return "2" // Última semana
-      } else if (
+      if (
         from === format(addMonths(today, -1), "dd/MM/yyyy") &&
         to === todayFormatted
-      ) {
+      )
         return "3" // Último mes
-      } else if (
+      if (
         from === format(addMonths(today, -6), "dd/MM/yyyy") &&
         to === todayFormatted
-      ) {
+      )
         return "4" // Últimos 6 meses
-      }
     }
-    return undefined // No coincide con ningún período
+    return undefined
   }
 
-  // Efecto para actualizar el período seleccionado cuando las fechas cambien
   useEffect(() => {
     const period = checkPeriod(fromDate, toDate)
     setSelectedValue(period || "")
@@ -86,38 +82,30 @@ export function DataTableFilterDate<TData, TValue>({
     key: "from" | "to",
     selectedDate: Date | undefined
   ) => {
-    if (selectedDate) {
-      const formattedDate = format(selectedDate, "dd/MM/yyyy")
+    if (!selectedDate) {
+      key === "from" ? setFromDate(undefined) : setToDate(undefined)
+      return
+    }
 
-      if (key === "from") {
-        if (
-          toDate &&
-          isAfter(selectedDate, parse(toDate, "dd/MM/yyyy", new Date()))
-        ) {
-          setError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.")
-          setFromDate(toDate)
-        } else {
-          setError(null)
-          setFromDate(formattedDate)
-        }
-      } else if (key === "to") {
-        if (
-          fromDate &&
-          isBefore(selectedDate, parse(fromDate, "dd/MM/yyyy", new Date()))
-        ) {
-          setError("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.")
-          setToDate(fromDate)
-        } else {
-          setError(null)
-          setToDate(formattedDate)
-        }
-      }
+    const formattedDate = format(selectedDate, "dd/MM/yyyy")
+    const fromDateParsed = fromDate
+      ? parse(fromDate, "dd/MM/yyyy", new Date())
+      : null
+    const toDateParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : null
+
+    if (key === "from" && toDateParsed && isAfter(selectedDate, toDateParsed)) {
+      setError("La fecha 'Desde' no puede ser mayor que la fecha 'Hasta'.")
+      setFromDate(toDate)
+    } else if (
+      key === "to" &&
+      fromDateParsed &&
+      isBefore(selectedDate, fromDateParsed)
+    ) {
+      setError("La fecha 'Hasta' no puede ser menor que la fecha 'Desde'.")
+      setToDate(fromDate)
     } else {
-      if (key === "from") {
-        setFromDate(undefined)
-      } else if (key === "to") {
-        setToDate(undefined)
-      }
+      setError(null)
+      key === "from" ? setFromDate(formattedDate) : setToDate(formattedDate)
     }
   }
 
@@ -134,14 +122,10 @@ export function DataTableFilterDate<TData, TValue>({
       return
     }
     setError(null)
-
-    // Pasar las fechas formateadas al filtro
-    const serializedValue = [fromDate, toDate].join(",")
-    column?.setFilterValue(serializedValue)
+    column?.setFilterValue([fromDate, toDate].join(","))
   }
 
   const handleClearFilter = () => {
-    // Limpiar el filtro en el estado
     column?.setFilterValue(undefined)
     setFromDate(undefined)
     setToDate(undefined)
@@ -149,46 +133,30 @@ export function DataTableFilterDate<TData, TValue>({
     setSelectedValue("")
   }
 
-  // Función para deshabilitar fechas futuras
-  const disableFutureDates = (date: Date) => {
-    return isAfter(date, new Date())
-  }
+  const disableFutureDates = (date: Date) => isAfter(date, new Date())
+  const disableBeforeFromDate = (date: Date) =>
+    fromDate ? isBefore(date, parse(fromDate, "dd/MM/yyyy", new Date())) : false
+  const disableAfterToDate = (date: Date) =>
+    toDate ? isAfter(date, parse(toDate, "dd/MM/yyyy", new Date())) : false
 
-  // Función para deshabilitar fechas anteriores a `from` en el calendario de `to`
-  const disableBeforeFromDate = (date: Date) => {
-    return fromDate
-      ? isBefore(date, parse(fromDate, "dd/MM/yyyy", new Date()))
-      : false
-  }
-
-  // Función para deshabilitar fechas posteriores a `to` en el calendario de `from`
-  const disableAfterToDate = (date: Date) => {
-    return toDate
-      ? isAfter(date, parse(toDate, "dd/MM/yyyy", new Date()))
-      : false
-  }
-
-  // Función para manejar el cambio de período
   const handlePeriodChange = (value: string) => {
     setSelectedValue(value)
-    const today = startOfDay(new Date())
-
     switch (value) {
       case "1": // Hoy
-        setFromDate(format(today, "dd/MM/yyyy"))
-        setToDate(format(today, "dd/MM/yyyy"))
+        setFromDate(todayFormatted)
+        setToDate(todayFormatted)
         break
       case "2": // Última semana
         setFromDate(format(addDays(today, -7), "dd/MM/yyyy"))
-        setToDate(format(today, "dd/MM/yyyy"))
+        setToDate(todayFormatted)
         break
       case "3": // Último mes
         setFromDate(format(addMonths(today, -1), "dd/MM/yyyy"))
-        setToDate(format(today, "dd/MM/yyyy"))
+        setToDate(todayFormatted)
         break
       case "4": // Últimos 6 meses
         setFromDate(format(addMonths(today, -6), "dd/MM/yyyy"))
-        setToDate(format(today, "dd/MM/yyyy"))
+        setToDate(todayFormatted)
         break
       default:
         setFromDate(undefined)
@@ -197,7 +165,8 @@ export function DataTableFilterDate<TData, TValue>({
     }
   }
 
-  const filterValue = column?.getFilterValue()
+  const filterValue = column?.getFilterValue() as string | undefined
+  const [from, to] = filterValue?.split(",") || []
 
   return (
     <Popover>
@@ -207,23 +176,20 @@ export function DataTableFilterDate<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {label}
+          {filterLabel}
           {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
-              {(() => {
-                const [from, to] = filterValue.split(",")
-                return (
-                  <>
-                    {from && to ? `${from} - ${to}` : null}
-                    {from && !to ? `Desde ${from}` : null}
-                    {!from && to ? `Hasta ${to}` : null}
-                  </>
-                )
-              })()}
+              {from && to
+                ? `${from} - ${to}`
+                : from
+                ? `Desde ${from}`
+                : to
+                ? `Hasta ${to}`
+                : null}
               <div
-                onClick={(event) => {
-                  event.stopPropagation()
+                onClick={(e) => {
+                  e.stopPropagation()
                   handleClearFilter()
                 }}
               >
@@ -232,7 +198,7 @@ export function DataTableFilterDate<TData, TValue>({
             </>
           )}
         </Button>
-      </PopoverTrigger>{" "}
+      </PopoverTrigger>
       <PopoverContent className="w-[200px] p-2" align="start">
         <form
           onSubmit={(e) => {
@@ -261,7 +227,7 @@ export function DataTableFilterDate<TData, TValue>({
               <PopoverTrigger asChild>
                 <Button
                   id="date-from"
-                  variant={"outline"}
+                  variant="outline"
                   className={cn(
                     "justify-start text-left font-normal w-full mt-3 mb-3 p-3",
                     !fromDate && "text-muted-foreground"
@@ -272,8 +238,8 @@ export function DataTableFilterDate<TData, TValue>({
                     <div className="flex justify-between w-full">
                       {fromDate}
                       <span
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           handleDateChange("from", undefined)
                         }}
                       >
@@ -311,17 +277,17 @@ export function DataTableFilterDate<TData, TValue>({
                 />
                 <PopoverClose id="close-popover-from" className="hidden" />
               </PopoverContent>
-            </Popover>{" "}
+            </Popover>
           </div>
           <Label htmlFor="width" className="my-3">
             <FormattedMessage id="to" />
           </Label>
-          <div className="">
+          <div>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   id="date-to"
-                  variant={"outline"}
+                  variant="outline"
                   className={cn(
                     "justify-start text-left font-normal w-full mt-3 mb-3 p-3",
                     !toDate && "text-muted-foreground"
@@ -332,8 +298,8 @@ export function DataTableFilterDate<TData, TValue>({
                     <div className="flex justify-between w-full">
                       {toDate}
                       <span
-                        onClick={(event) => {
-                          event.stopPropagation()
+                        onClick={(e) => {
+                          e.stopPropagation()
                           handleDateChange("to", undefined)
                         }}
                       >
@@ -377,7 +343,7 @@ export function DataTableFilterDate<TData, TValue>({
                 className="bg-blue-600 text-white w-full"
                 type="submit"
               >
-                {<FormattedMessage id="apply" />}
+                <FormattedMessage id="apply" />
               </Button>
             </PopoverClose>
           </div>

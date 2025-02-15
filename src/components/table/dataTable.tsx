@@ -74,7 +74,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export default function DataTable<TData, TValue>({
-  columns,
+  columns: columnsConfig,
   filters,
   data,
   enableColumnOrder = false,
@@ -162,7 +162,7 @@ export default function DataTable<TData, TValue>({
 
   const [columnOrder, setColumnOrder] = useState<string[]>(
     defaultColumnOrder ??
-      columns.filter(({ id }) => !!id).map(({ id }) => id ?? "")
+      columnsConfig.filter(({ id }) => !!id).map(({ id }) => id ?? "")
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -271,7 +271,7 @@ export default function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
-    columns,
+    columns: columnsConfig,
     pageCount: Math.ceil(rowCount / pagination.pageSize) ?? -1,
     state: {
       sorting,
@@ -302,7 +302,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} columns={columns} filters={filters} />
+      <DataTableToolbar table={table} columns={columnsConfig} />
       <div className="rounded-md border">
         <DndContext
           collisionDetection={closestCenter}
@@ -359,7 +359,7 @@ export default function DataTable<TData, TValue>({
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columnsConfig.length}
                     className="h-24 text-center"
                   >
                     {"No data results"}

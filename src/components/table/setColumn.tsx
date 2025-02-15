@@ -35,6 +35,9 @@ type ColumnOptions<TData> = {
   addSign?: boolean // Agregar signo (+) al monto (valor por defecto: true)
   enableSorting?: boolean // Habilitar ordenamiento (valor por defecto: true)
   enableHiding?: boolean // Habilitar ocultamiento (valor por defecto: true)
+  filterType?: "list" | "date" | "amount" | "uniqueValue" | null // Tipo de filtro
+  filterLabel?: string // Etiqueta del filtro (valor por defecto: title o id)
+  filterPlaceholder?: string // Placeholder del filtro (valor por defecto: title o id)
 }
 
 // Función setColumn con TypeScript
@@ -52,6 +55,9 @@ export function setColumn<TData>(
     addSign = true,
     enableSorting = true,
     enableHiding = true,
+    filterType = null,
+    filterLabel = title || id,
+    filterPlaceholder = title || id,
   } = options
 
   const baseConfig: ColumnDef<TData> = {
@@ -60,8 +66,12 @@ export function setColumn<TData>(
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title || id} /> // Usamos title o id como fallback
     ),
+    optionList,
     enableSorting: enableSorting,
     enableHiding: enableHiding,
+    filterType, // Tipo de filtro
+    filterLabel, // Etiqueta del filtro
+    filterPlaceholder, // Placeholder del filtro
   }
 
   // Lógica para el contenido de la celda según el tipo

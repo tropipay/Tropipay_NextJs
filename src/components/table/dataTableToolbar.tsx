@@ -16,13 +16,11 @@ import { useSearchParams } from "next/navigation"
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
   columns: any
-  filters: any
 }
 
 export function DataTableToolbar<TData, TValue>({
   table,
   columns,
-  filters,
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
   const searchParams = useSearchParams()
@@ -113,54 +111,52 @@ export function DataTableToolbar<TData, TValue>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          {filters.map((filter) => {
-            const column = {
-              ...columns.filter((col) => col.column === filter.column),
-              filter: filter,
-            }
-            switch (filter.type) {
-              case "list":
-                return (
-                  <DataTableFilterFaceted
-                    key={filter.column}
-                    column={{
-                      ...table.getColumn(filter.column),
-                      config: column,
-                    }}
-                  />
-                )
-              case "date":
-                return (
-                  <DataTableFilterDate
-                    key={filter.column}
-                    column={{
-                      ...table.getColumn(filter.column),
-                      config: column,
-                    }}
-                  />
-                )
-              case "amount":
-                return (
-                  <DataTableFilterRangeAmount
-                    key={filter.column}
-                    column={{
-                      ...table.getColumn(filter.column),
-                      config: column,
-                    }}
-                  />
-                )
-              case "uniqueValue":
-                return (
-                  <DataTableFilterSingleValue
-                    key={filter.column}
-                    column={{
-                      ...table.getColumn(filter.column),
-                      config: column,
-                    }}
-                  />
-                )
-            }
-          })}
+          {columns
+            .filter((column) => !!column.filterType)
+            .map((column) => {
+              switch (column.filterType) {
+                case "list":
+                  return (
+                    <DataTableFilterFaceted
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+                case "date":
+                  return (
+                    <DataTableFilterDate
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+                case "amount":
+                  return (
+                    <DataTableFilterRangeAmount
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+                case "uniqueValue":
+                  return (
+                    <DataTableFilterSingleValue
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+              }
+            })}
         </div>
 
         <Button
