@@ -8,4 +8,5 @@ export interface FetchDataConfig {
     variables?: Record<string, any>
     [key: string]: any
   }
+  filters?: any
 }

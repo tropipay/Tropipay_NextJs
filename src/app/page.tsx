@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import CookiesManager from "@/lib/cookiesManager"
 import { getTokenFromSession } from "@/lib/utilsUser"
-import Cookies from "js-cookie"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -23,7 +23,10 @@ export default function Page() {
   const router = useRouter()
   const { t } = useTranslation()
 
-  const getToken = (): string => getTokenFromSession(Cookies.get("session"))
+  const getToken = (): string =>
+    getTokenFromSession(
+      CookiesManager.getInstance().get("session", "fill_with_session_info")
+    )
 
   const onLogin = async () => {
     const token = getToken()
@@ -48,13 +51,7 @@ export default function Page() {
   }
 
   useEffect(() => {
-    const token = getToken()
-    if (!token) {
-      Cookies.set("session", "fill_with_session_info")
-      setIsOpen(true)
-    } else {
-      onLogin()
-    }
+    onLogin()
   }, [])
 
   return (

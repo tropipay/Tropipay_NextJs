@@ -52,7 +52,6 @@ export default {
       // Aseguramos que el token esté disponible en la sesión
       if (token) {
         session.user = {
-          ...session.user,
           ...token,
         }
       }

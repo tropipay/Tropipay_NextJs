@@ -1,4 +1,4 @@
-export const movements: MovementsResponse = {
+export const movements: ApiDataResponse<Movement> = {
   items: [
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043ef",

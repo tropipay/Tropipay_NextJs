@@ -5,14 +5,13 @@ import { processQueryParameters } from "@/lib/utils"
 import { dehydrate, QueryClient } from "@tanstack/react-query"
 import PageClient from "./pageClient"
 
-export default async function Page({
-  searchParams,
-}: {
+interface Props {
   searchParams: { [key: string]: string }
-}) {
+}
+
+export default async function Page({ searchParams }: Props) {
   const queryClient = new QueryClient()
   const queryConfig = apiConfig.movements
-
   const urlParams = await processQueryParameters(searchParams)
 
   await fetchData(queryClient, queryConfig, urlParams)

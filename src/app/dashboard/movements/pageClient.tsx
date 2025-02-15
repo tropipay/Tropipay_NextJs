@@ -1,9 +1,6 @@
 "use client"
 
-import {
-  getUserTableSettings,
-  updateUserTableSettings,
-} from "@/app/actions/userActions"
+import { updateUserTableSettings } from "@/app/actions/userActions"
 import DataTable from "@/components/table/dataTable"
 import { TableColumnsSettings } from "@/types/tableColumnsSettings"
 import { VisibilityState } from "@tanstack/react-table"
@@ -17,17 +14,7 @@ interface Props {
   data?: GetMovementsResponse
 }
 
-const PageClient = ({
-  columns,
-  filters,
-  data: {
-    data: {
-      movements: { items, totalCount: rowCount },
-    },
-  } = {
-    data: { movements: { items: [], totalCount: 0 } },
-  },
-}: Props) => {
+const PageClient = ({ columns, filters, data }: Props) => {
   const { data: session } = useSession()
   const user = session?.user
   const userId = user?.id
@@ -70,7 +57,7 @@ const PageClient = ({
       <DataTable
         enableColumnOrder
         {...{
-          data: items,
+          data: data?.data?.movements?.items ?? [],
           columns,
           filters,
           defaultColumnVisibility: {
@@ -78,7 +65,7 @@ const PageClient = ({
             otherInformation: false,
           },
           onChangeColumnOrder,
-          rowCount: rowCount,
+          rowCount: data?.data?.movements?.totalCount ?? 0,
         }}
         rowClickChildren={MovementDetail}
       />

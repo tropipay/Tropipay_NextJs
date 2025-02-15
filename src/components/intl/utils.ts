@@ -1,4 +1,4 @@
-import Cookies from "js-cookie"
+import CookiesManager from "@/lib/cookiesManager"
 import English from "./messages/en.json"
 import Spanish from "./messages/es.json"
 import Portuguese from "./messages/pt.json"
@@ -17,13 +17,8 @@ export const getLocaleStored = () => {
   return "es"
 }
 
-export const setLocaleStored = (locale: string) => {
-  Cookies.set(LOCALE_STORAGE_VAR, locale, {
-    expires: 7,
-    path: "/",
-    sameSite: "strict",
-  })
-}
+export const setLocaleStored = (locale: string) =>
+  CookiesManager.getInstance().set(LOCALE_STORAGE_VAR, locale)
 
 export const getLocaleI18nResource = (
   locale: string

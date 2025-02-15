@@ -1,7 +1,13 @@
 import { movementsFilters } from "./movements/filters"
 import { movementColumns } from "./movements/movementColumns"
+import { FetchDataConfig } from "./types"
 
-export const apiConfig = {
+export const apiConfig: Record<string, FetchDataConfig> = {
+  accounts: {
+    key: "",
+    url: "/api/v3/accounts",
+    method: "GET",
+  },
   movements: {
     key: "generalMovements",
     url: `/api/v3/movements/business`,
