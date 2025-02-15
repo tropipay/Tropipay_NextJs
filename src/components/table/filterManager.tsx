@@ -26,15 +26,18 @@ import { Separator } from "@/components/ui/separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/lib/utils"
+import { set } from "date-fns"
 
 // Interfaces
 interface FilterManagerProps<TData, TValue> {
   columns: Column<TData, TValue>[]
+  setActiveFilters: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 // Componente principal
 export function FilterManager<TData, TValue>({
   columns,
+  setActiveFilters,
 }: FilterManagerProps<TData, TValue>) {
   // Hooks
   const searchParams = useSearchParams()
@@ -46,40 +49,29 @@ export function FilterManager<TData, TValue>({
 
   // Estado local para los filtros seleccionados
   const [selectedFilters, setSelectedFilters] = React.useState<Set<string>>(
-    new Set()
+    new Set(
+      filters.filter((column) => column.showFilter).map((column) => column.id)
+    )
   )
 
   // Funciones
   const handleSelectOption = (columnId: string) => {
     const newSelectedFilters = new Set(selectedFilters)
-    const filterKey = columnId
 
-    if (newSelectedFilters.has(filterKey)) {
-      newSelectedFilters.delete(filterKey)
+    if (newSelectedFilters.has(columnId)) {
+      newSelectedFilters.delete(columnId)
     } else {
-      newSelectedFilters.add(filterKey)
+      newSelectedFilters.add(columnId)
     }
     setSelectedFilters(newSelectedFilters)
   }
 
   const handleApplyFilters = () => {
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-
-    // Aplicar los filtros seleccionados a los parámetros de búsqueda
-    filters.forEach((column) => {
-      const filterValues = Array.from(selectedFilters)
-        .filter((key) => key.startsWith(`${column.id}:`))
-        .map((key) => key.split(":")[1])
-
-      if (filterValues.length > 0) {
-        newSearchParams.set(column.id, filterValues.join(","))
-      } else {
-        newSearchParams.delete(column.id)
-      }
+    const newFilters = []
+    selectedFilters.forEach((column) => {
+      newFilters.push(columns.find((f) => f.id === column))
     })
-
-    // Actualizar la URL con los nuevos parámetros de búsqueda
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
+    setActiveFilters(newFilters)
   }
 
   const handleClearFilters = () => {
@@ -103,7 +95,7 @@ export function FilterManager<TData, TValue>({
           <CommandList>
             <CommandEmpty>No se encontraron resultados</CommandEmpty>
             <CommandGroup heading="Filtros">
-              {columns.map((column) => {
+              {filters.map((column) => {
                 const isSelected = selectedFilters.has(column.id)
                 return (
                   <CommandItem

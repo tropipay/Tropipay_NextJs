@@ -18,8 +18,6 @@ export async function makeApiRequest({
     ...variables,
   }
 
-  console.log("variables:", variables.variables.filter)
-
   const endpointURL = `${process.env.NEXT_PUBLIC_API_URL}${queryConfig.url}`
   const response = await fetch(endpointURL, {
     method: queryConfig.method,

@@ -27,6 +27,9 @@ export function DataTableToolbar<TData, TValue>({
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const [searchValue, setSearchValue] = useState(searchParamValue)
+  const [activeFilters, setActiveFilters] = useState(
+    columns.filter((column) => column.showFilter)
+  )
 
   useEffect(() => {
     if (searchParamValue) {
@@ -67,8 +70,6 @@ export function DataTableToolbar<TData, TValue>({
       table.resetColumnFilters() // Reinicia los filtros de la tabla
     }
   }, [searchParams])
-
-  console.log("------- columns:", columns)
 
   return (
     <>
@@ -114,53 +115,54 @@ export function DataTableToolbar<TData, TValue>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          <FilterManager columns={columns} />
-          {columns
-            .filter((column) => column.filter !== false)
-            .map((column) => {
-              switch (column.filterType) {
-                case "list":
-                  return (
-                    <DataTableFilterFaceted
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-                case "date":
-                  return (
-                    <DataTableFilterDate
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-                case "amount":
-                  return (
-                    <DataTableFilterRangeAmount
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-                case "uniqueValue":
-                  return (
-                    <DataTableFilterSingleValue
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-              }
-            })}
+          <FilterManager
+            columns={columns}
+            setActiveFilters={setActiveFilters}
+          />
+          {activeFilters.map((column) => {
+            switch (column.filterType) {
+              case "list":
+                return (
+                  <DataTableFilterFaceted
+                    key={column.id}
+                    column={{
+                      ...table.getColumn(column.id),
+                      config: column,
+                    }}
+                  />
+                )
+              case "date":
+                return (
+                  <DataTableFilterDate
+                    key={column.id}
+                    column={{
+                      ...table.getColumn(column.id),
+                      config: column,
+                    }}
+                  />
+                )
+              case "amount":
+                return (
+                  <DataTableFilterRangeAmount
+                    key={column.id}
+                    column={{
+                      ...table.getColumn(column.id),
+                      config: column,
+                    }}
+                  />
+                )
+              case "uniqueValue":
+                return (
+                  <DataTableFilterSingleValue
+                    key={column.id}
+                    column={{
+                      ...table.getColumn(column.id),
+                      config: column,
+                    }}
+                  />
+                )
+            }
+          })}
         </div>
 
         <Button

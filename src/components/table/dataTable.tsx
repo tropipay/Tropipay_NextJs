@@ -58,11 +58,9 @@ import {
 interface DataTableProps<TData, TValue> {
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
-  filters: any
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
-  defaultColumnVisibility?: VisibilityState
   onChangeColumnOrder?: (_: string[]) => void
   onChangeColumnVisibility?: (_: Updater<VisibilityState>) => void
   onChangeSorting?: (_: SortingState) => void
@@ -75,12 +73,10 @@ interface DataTableProps<TData, TValue> {
 
 export default function DataTable<TData, TValue>({
   columns: columnsConfig,
-  filters,
   data,
   enableColumnOrder = false,
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
-  defaultColumnVisibility = {},
   onChangeColumnOrder,
   onChangeColumnVisibility,
   manualPagination = true,
@@ -166,7 +162,10 @@ export default function DataTable<TData, TValue>({
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    defaultColumnVisibility
+    columnsConfig.reduce((acc, column) => {
+      acc[column.id] = column.hidden === true ? false : true
+      return acc
+    }, {})
   )
 
   const sensors = useSensors(
@@ -343,8 +342,8 @@ export default function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={() => handleRowClick(row.original)} // Manejar el clic en la fila
-                    className="cursor-pointer hover:bg-gray-100" // Cambiar el cursor y el color al pasar el mouse
+                    onClick={() => handleRowClick(row.original)}
+                    className="cursor-pointer hover:bg-gray-100"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

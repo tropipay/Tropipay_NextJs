@@ -40,6 +40,7 @@ type ColumnOptions<TData> = {
   filterLabel?: string // Etiqueta del filtro (valor por defecto: title o id)
   filterPlaceholder?: string // Placeholder del filtro (valor por defecto: title o id)
   showFilter?: boolean // Mostrar el filtro (valor por defecto: false)
+  hidden?: boolean // Ocultar la columna (valor por defecto: true)
 }
 
 const setFilterType = (filter: any, type: any): string | null => {
@@ -75,6 +76,7 @@ export function setColumn<TData>(
     filterLabel = title || id,
     filterPlaceholder = title || id,
     showFilter = false,
+    hidden = true,
   } = options
 
   const baseConfig: ColumnDef<TData> = {
@@ -86,11 +88,12 @@ export function setColumn<TData>(
     optionList,
     enableSorting: enableSorting,
     enableHiding: enableHiding,
-    filterType, // Tipo de filtro
-    filterLabel, // Etiqueta del filtro
-    filterPlaceholder, // Placeholder del filtro
+    filterType,
+    filterLabel,
+    filterPlaceholder,
     filter,
     showFilter,
+    hidden,
   }
 
   // Lógica para el contenido de la celda según el tipo

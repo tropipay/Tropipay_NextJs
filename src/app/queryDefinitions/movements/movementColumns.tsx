@@ -22,13 +22,13 @@ export const movementColumns: any = [
   setColumn("amount", {
     type: "amount",
     enableHiding: false,
+    showFilter: true,
   }),
   setColumn("destinationAmount", {
     type: "amount",
   }),
   setColumn("commission", {
     type: "amount",
-    enableHiding: false,
     addSign: false,
     filter: false,
   }),
@@ -37,6 +37,7 @@ export const movementColumns: any = [
     optionList: movementsState,
     optionListGroups: movementsStateGroups,
     enableHiding: false,
+    showFilter: true,
   }),
   setColumn("valueDate", {
     type: "date",
