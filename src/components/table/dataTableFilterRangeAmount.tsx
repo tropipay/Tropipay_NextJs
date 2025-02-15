@@ -58,17 +58,12 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={selStyle(
-            filterValue, // Verificar si hay un valor en el filtro
-            "active",
-            "inactive",
-            ""
-          )}
+          variant={selStyle(filterValue, "active", "inactive", "")}
           size="sm"
           className="px-2 h-8"
         >
           {column?.config?.filter?.label || "Filtrar por monto"}
-          {filterValue && ( // Si hay un valor en el filtro
+          {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               {(() => {
@@ -110,7 +105,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       <PopoverContent className="w-[200px] p-2" align="start">
         <form
           onSubmit={(e) => {
-            e.preventDefault() // Evitar el envío del formulario por defecto
+            e.preventDefault()
 
             const formData = new FormData(e.currentTarget)
             const min = formData.get("min") as string
@@ -127,7 +122,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
               setError(
                 "El valor mínimo no puede ser mayor que el valor máximo."
               )
-              return // Detener la ejecución si hay un error
+              return
             }
 
             setError(null)
@@ -152,7 +147,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             name="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder="Mínimo"
-            defaultValue={filterValue ? filterValue.split(",")[0] || "" : ""}
+            value={filterValue ? filterValue.split(",")[0] * 100 || "" : ""}
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
@@ -161,7 +156,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             name="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder="Máximo"
-            defaultValue={filterValue ? filterValue.split(",")[1] || "" : ""}
+            value={filterValue ? filterValue.split(",")[1] * 100 || "" : ""}
           />
           <PopoverClose id="close-popover" />
           <PopoverClose id="close-popover" className="hidden" />

@@ -17,7 +17,6 @@ export default async function Page({
 
   await fetchData(queryClient, queryConfig, urlParams)
   const dehydratedState = dehydrate(queryClient)
-
   return (
     <>
       {dehydratedState && (

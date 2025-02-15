@@ -1,12 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Copy } from "lucide-react"
 import { Section } from "@/components/sectionComponents/section"
 import { Info } from "@/components/sectionComponents/info"
-import { format } from "path"
+import { format } from "date-fns"
 import { formatAmount } from "@/lib/utils"
 import CopyToClipboard from "@/components/copyToClipboard"
+import FacetedBadge from "@/components/table/facetedBadge"
+import {
+  movementsState,
+  movementsStateGroups,
+} from "@/app/filterDefinitions/definitions"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row = props.row
@@ -18,13 +21,17 @@ export default function MovementDetail(props: any): JSX.Element {
           {row.amount.value > 0 ? "+" : ""}
           {formatAmount(row.amount.value, row.amount.currency, "right")}
         </div>
-        <Badge variant="outline" className="bg-green-100 text-green-600">
-          Completado
-        </Badge>
+        <FacetedBadge
+          value={row.state}
+          optionList={movementsState}
+          optionListGroups={movementsStateGroups}
+        />
       </div>
       <div className="flex justify-between items-center mb-4 pb-1">
         <p className="text-xs text-gray-500">Enviado a Franco Cantarini</p>
-        <p className="text-xs text-gray-500">27/09/24, 23:50</p>
+        <p className="text-xs text-gray-500">
+          {format(new Date(row.valueDate), "dd/MM/yy HH:mm")}
+        </p>
       </div>
       <Card>
         <CardContent className="p-4 space-y-4">
@@ -34,10 +41,10 @@ export default function MovementDetail(props: any): JSX.Element {
             <Info label="Detalles" value="*2588" />
             <Info
               label="Código de referencia"
-              value="TX25777898911"
+              value={row.reference}
               icon={
                 <CopyToClipboard
-                  text="TX25777898911"
+                  text={row.reference}
                   message="El código fue copiado"
                 />
               }
@@ -62,8 +69,14 @@ export default function MovementDetail(props: any): JSX.Element {
           </Section>
 
           <Section title="Cronograma">
-            <Info label="Fecha de creación" value="27/09/2024" />
-            <Info label="Fecha valor" value="27/09/2024" />
+            <Info
+              label="Fecha de creación"
+              value={format(new Date(row.creationDate), "dd/MM/yy")}
+            />
+            <Info
+              label="Fecha valor"
+              value={format(new Date(row.valueDate), "dd/MM/yy")}
+            />
           </Section>
         </CardContent>
       </Card>

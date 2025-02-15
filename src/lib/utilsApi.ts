@@ -1,6 +1,6 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { fetchHeaders } from "./utils"
-import { getTokenFromSession } from "./utilsUser"
+import { parse, format } from "date-fns"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
@@ -17,6 +17,8 @@ export async function makeApiRequest({
     ...queryConfig.body,
     ...variables,
   }
+
+  console.log("variables:", variables.variables.filter)
 
   const endpointURL = `${process.env.NEXT_PUBLIC_API_URL}${queryConfig.url}`
   const response = await fetch(endpointURL, {
@@ -129,14 +131,22 @@ export function buildGraphQLVariables(
           break
 
         case "list":
-          variables.filter[column.column] = filterValue
+          variables.filter[column.column] = filterValue?.split(",")
           break
 
         case "date":
           const [dateFrom, dateTo] = filterValue?.split(",") ?? []
-          if (dateFrom) variables.filter[`${column.column}From`] = dateFrom
+          if (dateFrom) {
+            const fecha = parse(dateFrom, "dd/MM/yyyy", new Date())
+            const fechaISO = format(fecha, "yyyy-MM-dd")
+            variables.filter[`${column.column}From`] = fechaISO
+          }
 
-          if (dateTo) variables.filter[`${column.column}To`] = dateTo
+          if (dateTo) {
+            const fecha = parse(dateTo, "dd/MM/yyyy", new Date())
+            const fechaISO = format(fecha, "yyyy-MM-dd")
+            variables.filter[`${column.column}To`] = fechaISO
+          }
           break
 
         case "uniqueValue":
@@ -151,9 +161,9 @@ export function buildGraphQLVariables(
 
   // Dejar espacio para sort y order (a implementar en el futuro)
   if (sort || order) {
-    variables.sort = {
-      field: sort ?? "",
-      direction: order ?? "asc",
+    variables.filter = {
+      orderBy: sort ?? "",
+      orderDirection: order?.toUpperCase() ?? "ASC",
     }
   }
 

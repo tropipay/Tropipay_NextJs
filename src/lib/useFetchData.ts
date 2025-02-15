@@ -22,7 +22,7 @@ export function useFetchData<T>({
         variables,
         token,
       }),
-    initialData: dehydratedState.queries.find(
+    initialData: dehydratedState?.queries.find(
       (q) => q.queryKey[0][0] === QueryKey
     )?.state?.data,
     staleTime: 1000 * 60 * 5,

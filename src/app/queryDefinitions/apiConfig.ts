@@ -23,6 +23,41 @@ export const apiConfig = {
               paymentMethod
               reference
               sender
+              bankOrderCode
+              charges {
+                cardBIN
+                cardBrand
+                cardCountry
+                cardExpirationDate
+                cardHolderName
+                cardLast4
+                cardPan
+                cardType
+                clientAddress
+                clientEmail
+                clientIp
+                clientLastName
+                clientName
+                createdAt
+                email
+                errorCode
+                id
+                issuerBank
+                orderCode
+                source
+                state
+              }
+              commission{
+                value
+                currency
+              }
+              destinationAmount{
+                value
+                currency
+              }
+              exchangeRate
+              product
+              recipient
             }
             totalCount
           }
