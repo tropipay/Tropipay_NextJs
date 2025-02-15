@@ -23,7 +23,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   column,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
-  const { label, placeHolder } = column.config.filter ?? {}
+  const { filterLabel, filterPlaceholder } = column?.config ?? {}
 
   // Estado interno para manejar el valor del filtro localmente
   const [localFilterValue, setLocalFilterValue] = useState<string | undefined>(
@@ -47,22 +47,24 @@ export function DataTableFilterSingleValue<TData, TValue>({
     column?.setFilterValue(undefined)
   }
 
+  const filterValue = column?.getFilterValue() as string | undefined
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={selStyle(column?.getFilterValue(), "active", "inactive", "")}
+          variant={selStyle(filterValue, "active", "inactive", "")}
           size="sm"
           className="px-2 h-8"
         >
-          {label}
-          {!!column?.getFilterValue() && (
+          {filterLabel}
+          {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
-              {column?.getFilterValue() as string}
+              {filterValue}
               <div
-                onClick={(event) => {
-                  event.stopPropagation()
+                onClick={(e) => {
+                  e.stopPropagation()
                   handleClearFilter()
                 }}
               >
@@ -76,12 +78,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
       <PopoverContent className="w-[200px] p-2" align="start">
         <form onSubmit={handleApplyFilter}>
           <Label htmlFor="filterValue" className="my-2">
-            {label}
+            {filterLabel}
           </Label>
           <Input
             id="filterValue"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder={placeHolder ? t(placeHolder) : ""}
+            placeholder={filterPlaceholder ? t(filterPlaceholder) : ""}
             value={localFilterValue || ""}
             onChange={handleFilterChange}
           />
@@ -91,7 +93,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
               className="bg-blue-600 text-white w-full mt-3"
               type="submit"
             >
-              {<FormattedMessage id="apply" />}
+              <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>
         </form>

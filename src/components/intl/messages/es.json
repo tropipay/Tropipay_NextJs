@@ -44,5 +44,14 @@
   "today": "Hoy",
   "tomorrow": "Mañana",
   "type": "Tipo",
-  "user": "Usuario"
+  "user": "Usuario",
+  "bankOrderCode": "bankOrderCode",
+  "product": "Producto",
+  "recipient": "Destinatario",
+  "description": "Descripción",
+  "destinationAmount": "Monto Destino",
+  "commission": "Comisión",
+  "Value date": "Fecha valor",
+  "Creaction date": "Fecha de creación",
+  "exchangeRate": "Tasa de cambio"
 }

@@ -22,16 +22,32 @@ export const movementColumns: any = [
   setColumn("amount", {
     type: "amount",
     enableHiding: false,
+    showFilter: true,
+  }),
+  setColumn("destinationAmount", {
+    type: "amount",
+    hidden: true,
+  }),
+  setColumn("commission", {
+    type: "amount",
+    addSign: false,
+    filter: false,
   }),
   setColumn("state", {
     type: "facetedBadge",
     optionList: movementsState,
     optionListGroups: movementsStateGroups,
     enableHiding: false,
+    showFilter: true,
   }),
   setColumn("valueDate", {
     type: "date",
-    title: "date",
+    title: "Value date",
+    enableHiding: false,
+  }),
+  setColumn("creationDate", {
+    type: "date",
+    title: "Creaction date",
     enableHiding: false,
   }),
   setColumn("movementType", {
@@ -50,6 +66,22 @@ export const movementColumns: any = [
     type: "simpleText",
   }),
   setColumn("reference", {
+    type: "simpleText",
+  }),
+  setColumn("bankOrderCode", {
+    type: "simpleText",
+  }),
+  setColumn("exchangeRate", {
+    type: "simpleText",
+    filter: false,
+  }),
+  setColumn("product", {
+    type: "simpleText",
+  }),
+  setColumn("recipient", {
+    type: "simpleText",
+  }),
+  setColumn("description", {
     type: "simpleText",
   }),
 ]

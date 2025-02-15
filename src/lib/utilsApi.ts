@@ -13,7 +13,10 @@ export async function makeApiRequest({
   variables,
   token,
 }: FetchOptions) {
-  console.log("variables:", variables.variables.filter)
+  const newBody = {
+    ...body,
+    ...variables,
+  }
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
