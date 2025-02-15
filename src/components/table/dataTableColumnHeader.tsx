@@ -3,7 +3,7 @@ import {
   ArrowUpIcon,
   CaretSortIcon,
   EyeNoneIcon,
-  Cross2Icon, // Ícono de "X"
+  Cross2Icon,
 } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 
@@ -29,14 +29,6 @@ export function DataTableColumnHeader<TData, TValue>({
   title,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  /* if (!column.getCanSort()) {
-    return (
-      <div className={cn(className)}>
-        <FormattedMessage id={title} />
-      </div>
-    )
-  } */
-
   return (
     <div className={cn("flex items-center space-x-2", className)}>
       <DropdownMenu>
@@ -78,15 +70,14 @@ export function DataTableColumnHeader<TData, TValue>({
                 ) : (
                   <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                 )}
-                <FormattedMessage id="asc" /> {/* Texto siempre fijo */}
+                <FormattedMessage id="asc" />
               </DropdownMenuItem>
-              {/* Opción de orden descendente o eliminar ordenamiento */}
               <DropdownMenuItem
                 onClick={() => {
                   if (column.getIsSorted() === "desc") {
-                    column.clearSorting() // Si ya está ordenado desc, elimina el ordenamiento
+                    column.clearSorting()
                   } else {
-                    column.toggleSorting(true) // Si no, ordena desc
+                    column.toggleSorting(true)
                   }
                 }}
               >
@@ -95,7 +86,7 @@ export function DataTableColumnHeader<TData, TValue>({
                 ) : (
                   <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                 )}
-                <FormattedMessage id="desc" /> {/* Texto siempre fijo */}
+                <FormattedMessage id="desc" />
               </DropdownMenuItem>
             </>
           )}

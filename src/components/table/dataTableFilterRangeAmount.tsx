@@ -58,17 +58,12 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={selStyle(
-            filterValue, // Verificar si hay un valor en el filtro
-            "active",
-            "inactive",
-            ""
-          )}
+          variant={selStyle(filterValue, "active", "inactive", "")}
           size="sm"
           className="px-2 h-8"
         >
           {column?.config?.filter?.label || "Filtrar por monto"}
-          {filterValue && ( // Si hay un valor en el filtro
+          {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               {(() => {
@@ -110,7 +105,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       <PopoverContent className="w-[200px] p-2" align="start">
         <form
           onSubmit={(e) => {
-            e.preventDefault() // Evitar el envío del formulario por defecto
+            e.preventDefault()
 
             const formData = new FormData(e.currentTarget)
             const min = formData.get("min") as string
@@ -127,7 +122,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
               setError(
                 "El valor mínimo no puede ser mayor que el valor máximo."
               )
-              return // Detener la ejecución si hay un error
+              return
             }
 
             setError(null)

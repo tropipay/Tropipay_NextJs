@@ -7,15 +7,13 @@ import {
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
 import { setColumn } from "@/components/table/setColumn"
-import { Checkbox } from "@/components/ui/checkbox"
-import React from "react"
 
 function capitalizeText(text: string) {
   if (!text) return ""
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-export const movementColumns: CustomColumnDef<Movement>[] = [
+export const movementColumns: any = [
   setColumn("select", {
     type: "select",
     enableHiding: false,

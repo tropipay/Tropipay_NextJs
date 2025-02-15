@@ -11,7 +11,7 @@ import { DataTableViewOptions } from "./dataTableViewOptions"
 import { Button } from "../ui/button"
 import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation" // Importa useSearchParams
+import { useSearchParams } from "next/navigation"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
@@ -25,11 +25,10 @@ export function DataTableToolbar<TData, TValue>({
   filters,
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
-  const searchParams = useSearchParams() // Obtén los searchParams de la URL
-  const searchParamValue = searchParams.get("search") || "" // Obtén el valor del parámetro "search"
-  const [searchValue, setSearchValue] = useState(searchParamValue) // Inicializa el estado con el valor de searchParams
+  const searchParams = useSearchParams()
+  const searchParamValue = searchParams.get("search") || ""
+  const [searchValue, setSearchValue] = useState(searchParamValue)
 
-  // Efecto para sincronizar el valor del input con el filtro de la tabla al montar el componente
   useEffect(() => {
     if (searchParamValue) {
       table.setColumnFilters((prev) => {
@@ -44,14 +43,12 @@ export function DataTableToolbar<TData, TValue>({
         return [...prev, { id: "search", value: searchParamValue }]
       })
     }
-  }, []) // Solo se ejecuta al montar el componente
+  }, [])
 
-  // Manejar cambios en el input de búsqueda
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setSearchValue(value)
 
-    // Actualizar el filtro de búsqueda en la tabla
     table.setColumnFilters((prev) => {
       const searchFilter = prev.find((filter) => filter.id === "search")
       if (searchFilter) {
@@ -63,16 +60,14 @@ export function DataTableToolbar<TData, TValue>({
     })
   }
 
-  // Verificar si hay filtros aplicados
   const isFiltered = table.getState().columnFilters.length > 0
 
-  // Efecto para detectar cuando la URL quede sin searchParams
   useEffect(() => {
     if (!searchParams || searchParams.toString() === "") {
       setSearchValue("") // Limpia el input de búsqueda
       table.resetColumnFilters() // Reinicia los filtros de la tabla
     }
-  }, [searchParams]) // Dependencia: searchParams
+  }, [searchParams])
 
   return (
     <>
