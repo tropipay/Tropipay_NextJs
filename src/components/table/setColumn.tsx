@@ -76,7 +76,7 @@ export function setColumn<TData>(
     filterLabel = title || id,
     filterPlaceholder = title || id,
     showFilter = false,
-    hidden = true,
+    hidden = false,
   } = options
 
   const baseConfig: ColumnDef<TData> = {
@@ -182,14 +182,19 @@ export function setColumn<TData>(
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value)
+          }}
           aria-label="Select all"
         />
       )
       baseConfig.cell = ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value, e) => {
+            e.stopPropagation() // Detiene la propagación del evento
+            row.toggleSelected(!!value)
+          }}
           aria-label="Select row"
         />
       )

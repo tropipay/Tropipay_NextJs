@@ -26,6 +26,7 @@ export const movementColumns: any = [
   }),
   setColumn("destinationAmount", {
     type: "amount",
+    hidden: true,
   }),
   setColumn("commission", {
     type: "amount",
