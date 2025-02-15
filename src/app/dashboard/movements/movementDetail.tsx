@@ -23,8 +23,8 @@ export default function MovementDetail(props: any): JSX.Element {
         </div>
         <FacetedBadge
           value={row.state}
-          states={movementsState}
-          stateGroups={movementsStateGroups}
+          optionList={movementsState}
+          optionListGroups={movementsStateGroups}
         />
       </div>
       <div className="flex justify-between items-center mb-4 pb-1">

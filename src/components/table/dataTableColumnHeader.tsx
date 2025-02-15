@@ -47,12 +47,16 @@ export function DataTableColumnHeader<TData, TValue>({
             className="-ml-3 h-8 data-[state=open]:bg-accent"
           >
             <FormattedMessage id={title} />
-            {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" />
-            ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" />
+            {column.getCanSort() ? (
+              column.getIsSorted() === "desc" ? (
+                <ArrowDownIcon className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "asc" ? (
+                <ArrowUpIcon className="ml-2 h-4 w-4" />
+              ) : (
+                <CaretSortIcon className="ml-2 h-4 w-4" />
+              )
             ) : (
-              <CaretSortIcon className="ml-2 h-4 w-4" />
+              <EyeNoneIcon className="ml-2 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
@@ -93,14 +97,18 @@ export function DataTableColumnHeader<TData, TValue>({
                 )}
                 <FormattedMessage id="desc" /> {/* Texto siempre fijo */}
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
             </>
           )}
-          {/* Opción para ocultar la columna */}
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <EyeNoneIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            <FormattedMessage id="hide" />
-          </DropdownMenuItem>
+
+          {column.getCanHide() && !!column.getCanSort() && (
+            <DropdownMenuSeparator />
+          )}
+          {column.getCanHide() && (
+            <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+              <EyeNoneIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+              <FormattedMessage id="hide" />
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

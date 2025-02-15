@@ -1,16 +1,16 @@
 import React from "react"
 import { Badge } from "../ui/badge"
 
-const FacetedBadge = ({ value, states, stateGroups }) => {
-  const currentState = states.find((thisState) => thisState.value === value)
+const FacetedBadge = ({ value, optionList, optionListGroups }) => {
+  const currentState = optionList.find((thisState) => thisState.value === value)
 
   if (!currentState) {
     return value
   }
 
   const getStateGroup = (state: string) => {
-    for (const group in stateGroups) {
-      if (stateGroups[group].includes(state)) {
+    for (const group in optionListGroups) {
+      if (optionListGroups[group].includes(state)) {
         return group
       }
     }
