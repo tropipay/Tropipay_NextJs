@@ -25,71 +25,61 @@ export const movementColumns: any = [
   }),
   setColumn("destinationAmount", {
     type: "amount",
-    enableHiding: false,
   }),
   setColumn("commission", {
     type: "amount",
     enableHiding: false,
     addSign: false,
+    filter: false,
   }),
   setColumn("state", {
     type: "facetedBadge",
     optionList: movementsState,
     optionListGroups: movementsStateGroups,
     enableHiding: false,
-    filterType: "list",
   }),
   setColumn("valueDate", {
     type: "date",
     title: "Value date",
     enableHiding: false,
-    filterType: "date",
   }),
   setColumn("creationDate", {
     type: "date",
     title: "Creaction date",
     enableHiding: false,
-    filterType: "date",
   }),
   setColumn("movementType", {
     title: "type",
     type: "faceted",
     optionList: movementTypes,
     enableSorting: false,
-    filterType: "list",
   }),
   setColumn("paymentMethod", {
     title: "method",
     type: "faceted",
     optionList: paymentMethods,
-    filterType: "list",
   }),
   setColumn("sender", {
     title: "user",
     type: "simpleText",
-    filterType: "uniqueValue",
   }),
   setColumn("reference", {
     type: "simpleText",
-    filterType: "uniqueValue",
   }),
   setColumn("bankOrderCode", {
     type: "simpleText",
-    filterType: "uniqueValue",
   }),
   setColumn("exchangeRate", {
     type: "simpleText",
+    filter: false,
   }),
   setColumn("product", {
     type: "simpleText",
-    filterType: "uniqueValue",
   }),
   setColumn("recipient", {
     type: "simpleText",
-    filterType: "uniqueValue",
   }),
   setColumn("description", {
     type: "simpleText",
-    filterType: "uniqueValue",
   }),
 ]

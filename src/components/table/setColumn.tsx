@@ -35,9 +35,24 @@ type ColumnOptions<TData> = {
   addSign?: boolean // Agregar signo (+) al monto (valor por defecto: true)
   enableSorting?: boolean // Habilitar ordenamiento (valor por defecto: true)
   enableHiding?: boolean // Habilitar ocultamiento (valor por defecto: true)
+  filter?: false | true | null // Tipo de filtro
   filterType?: "list" | "date" | "amount" | "uniqueValue" | null // Tipo de filtro
   filterLabel?: string // Etiqueta del filtro (valor por defecto: title o id)
   filterPlaceholder?: string // Placeholder del filtro (valor por defecto: title o id)
+  showFilter?: boolean // Mostrar el filtro (valor por defecto: false)
+}
+
+const setFilterType = (filter: any, type: any): string | null => {
+  const filterTypeResult = {
+    simpleText: "uniqueValue",
+    faceted: "list",
+    date: "date",
+    amount: "amount",
+    facetedBadge: "list",
+    free: "uniqueValue",
+    select: null,
+  }
+  return filterTypeResult[type]
 }
 
 // Función setColumn con TypeScript
@@ -55,9 +70,11 @@ export function setColumn<TData>(
     addSign = true,
     enableSorting = true,
     enableHiding = true,
-    filterType = null,
+    filter = true,
+    filterType = setFilterType(filter, type),
     filterLabel = title || id,
     filterPlaceholder = title || id,
+    showFilter = false,
   } = options
 
   const baseConfig: ColumnDef<TData> = {
@@ -72,6 +89,8 @@ export function setColumn<TData>(
     filterType, // Tipo de filtro
     filterLabel, // Etiqueta del filtro
     filterPlaceholder, // Placeholder del filtro
+    filter,
+    showFilter,
   }
 
   // Lógica para el contenido de la celda según el tipo

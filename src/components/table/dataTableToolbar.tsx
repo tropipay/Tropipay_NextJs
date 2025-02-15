@@ -12,6 +12,7 @@ import { Button } from "../ui/button"
 import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
+import { FilterManager } from "./filterManager"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
@@ -67,6 +68,8 @@ export function DataTableToolbar<TData, TValue>({
     }
   }, [searchParams])
 
+  console.log("------- columns:", columns)
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -111,8 +114,9 @@ export function DataTableToolbar<TData, TValue>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
+          <FilterManager columns={columns} />
           {columns
-            .filter((column) => !!column.filterType)
+            .filter((column) => column.filter !== false)
             .map((column) => {
               switch (column.filterType) {
                 case "list":
