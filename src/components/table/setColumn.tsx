@@ -32,8 +32,28 @@ type ColumnOptions<TData> = {
   optionListGroups?: FacetedOptionGroup[] // Grupos de opciones para el tipo "facetedBadge"
   format?: string // Formato de fecha para el tipo "date"
   component?: React.ReactNode // Componente personalizado para el tipo "free"
+  addSign?: boolean // Agregar signo (+) al monto (valor por defecto: true)
   enableSorting?: boolean // Habilitar ordenamiento (valor por defecto: true)
   enableHiding?: boolean // Habilitar ocultamiento (valor por defecto: true)
+  filter?: false | true | null // Tipo de filtro
+  filterType?: "list" | "date" | "amount" | "uniqueValue" | null // Tipo de filtro
+  filterLabel?: string // Etiqueta del filtro (valor por defecto: title o id)
+  filterPlaceholder?: string // Placeholder del filtro (valor por defecto: title o id)
+  showFilter?: boolean // Mostrar el filtro (valor por defecto: false)
+  hidden?: boolean // Ocultar la columna (valor por defecto: true)
+}
+
+const setFilterType = (filter: any, type: any): string | null => {
+  const filterTypeResult = {
+    simpleText: "uniqueValue",
+    faceted: "list",
+    date: "date",
+    amount: "amount",
+    facetedBadge: "list",
+    free: "uniqueValue",
+    select: null,
+  }
+  return filterTypeResult[type]
 }
 
 // Función setColumn con TypeScript
@@ -48,8 +68,15 @@ export function setColumn<TData>(
     optionListGroups,
     format: dateFormat,
     component,
+    addSign = true,
     enableSorting = true,
     enableHiding = true,
+    filter = true,
+    filterType = setFilterType(filter, type),
+    filterLabel = title || id,
+    filterPlaceholder = title || id,
+    showFilter = false,
+    hidden = false,
   } = options
 
   const baseConfig: ColumnDef<TData> = {
@@ -58,8 +85,15 @@ export function setColumn<TData>(
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={title || id} /> // Usamos title o id como fallback
     ),
+    optionList,
     enableSorting: enableSorting,
     enableHiding: enableHiding,
+    filterType,
+    filterLabel,
+    filterPlaceholder,
+    filter,
+    showFilter,
+    hidden,
   }
 
   // Lógica para el contenido de la celda según el tipo
@@ -124,7 +158,7 @@ export function setColumn<TData>(
         return (
           <div className="text-right">
             <span className="font-bold">
-              {value > 0 ? "+" : ""}
+              {addSign && (value > 0 ? "+" : "")}
               {formatAmount(value)}
             </span>{" "}
             <span className="text-grayFont">{currency}</span>
@@ -148,14 +182,19 @@ export function setColumn<TData>(
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value)
+          }}
           aria-label="Select all"
         />
       )
       baseConfig.cell = ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value, e) => {
+            e.stopPropagation() // Detiene la propagación del evento
+            row.toggleSelected(!!value)
+          }}
           aria-label="Select row"
         />
       )

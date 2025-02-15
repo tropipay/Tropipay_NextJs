@@ -58,11 +58,9 @@ import {
 interface DataTableProps<TData, TValue> {
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
-  filters: any
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
-  defaultColumnVisibility?: VisibilityState
   onChangeColumnOrder?: (_: string[]) => void
   onChangeColumnVisibility?: (_: Updater<VisibilityState>) => void
   onChangeSorting?: (_: SortingState) => void
@@ -74,13 +72,11 @@ interface DataTableProps<TData, TValue> {
 }
 
 export default function DataTable<TData, TValue>({
-  columns,
-  filters,
+  columns: columnsConfig,
   data,
   enableColumnOrder = false,
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
-  defaultColumnVisibility = {},
   onChangeColumnOrder,
   onChangeColumnVisibility,
   manualPagination = true,
@@ -162,11 +158,14 @@ export default function DataTable<TData, TValue>({
 
   const [columnOrder, setColumnOrder] = useState<string[]>(
     defaultColumnOrder ??
-      columns.filter(({ id }) => !!id).map(({ id }) => id ?? "")
+      columnsConfig.filter(({ id }) => !!id).map(({ id }) => id ?? "")
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    defaultColumnVisibility
+    columnsConfig.reduce((acc, column) => {
+      acc[column.id] = !column.hidden
+      return acc
+    }, {})
   )
 
   const sensors = useSensors(
@@ -271,7 +270,7 @@ export default function DataTable<TData, TValue>({
 
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
-    columns,
+    columns: columnsConfig,
     pageCount: Math.ceil(rowCount / pagination.pageSize) ?? -1,
     state: {
       sorting,
@@ -302,7 +301,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} columns={columns} filters={filters} />
+      <DataTableToolbar table={table} columns={columnsConfig} />
       <div className="rounded-md border">
         <DndContext
           collisionDetection={closestCenter}
@@ -343,8 +342,8 @@ export default function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={() => handleRowClick(row.original)} // Manejar el clic en la fila
-                    className="cursor-pointer hover:bg-gray-100" // Cambiar el cursor y el color al pasar el mouse
+                    onClick={() => handleRowClick(row.original)}
+                    className="cursor-pointer hover:bg-gray-100"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -359,7 +358,7 @@ export default function DataTable<TData, TValue>({
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columnsConfig.length}
                     className="h-24 text-center"
                   >
                     {"No data results"}

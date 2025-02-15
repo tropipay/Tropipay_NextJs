@@ -12,22 +12,24 @@ import { Button } from "../ui/button"
 import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
+import { FilterManager } from "./filterManager"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
   columns: any
-  filters: any
 }
 
 export function DataTableToolbar<TData, TValue>({
   table,
   columns,
-  filters,
 }: DataTableToolbarProps<TData, TValue>) {
   const { t } = useTranslation()
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const [searchValue, setSearchValue] = useState(searchParamValue)
+  const [activeFilters, setActiveFilters] = useState(
+    columns.filter((column) => column.showFilter)
+  )
 
   useEffect(() => {
     if (searchParamValue) {
@@ -113,18 +115,18 @@ export function DataTableToolbar<TData, TValue>({
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          {filters.map((filter) => {
-            const column = {
-              ...columns.filter((col) => col.column === filter.column),
-              filter: filter,
-            }
-            switch (filter.type) {
+          <FilterManager
+            columns={columns}
+            setActiveFilters={setActiveFilters}
+          />
+          {activeFilters.map((column) => {
+            switch (column.filterType) {
               case "list":
                 return (
                   <DataTableFilterFaceted
-                    key={filter.column}
+                    key={column.id}
                     column={{
-                      ...table.getColumn(filter.column),
+                      ...table.getColumn(column.id),
                       config: column,
                     }}
                   />
@@ -132,9 +134,9 @@ export function DataTableToolbar<TData, TValue>({
               case "date":
                 return (
                   <DataTableFilterDate
-                    key={filter.column}
+                    key={column.id}
                     column={{
-                      ...table.getColumn(filter.column),
+                      ...table.getColumn(column.id),
                       config: column,
                     }}
                   />
@@ -142,9 +144,9 @@ export function DataTableToolbar<TData, TValue>({
               case "amount":
                 return (
                   <DataTableFilterRangeAmount
-                    key={filter.column}
+                    key={column.id}
                     column={{
-                      ...table.getColumn(filter.column),
+                      ...table.getColumn(column.id),
                       config: column,
                     }}
                   />
@@ -152,9 +154,9 @@ export function DataTableToolbar<TData, TValue>({
               case "uniqueValue":
                 return (
                   <DataTableFilterSingleValue
-                    key={filter.column}
+                    key={column.id}
                     column={{
-                      ...table.getColumn(filter.column),
+                      ...table.getColumn(column.id),
                       config: column,
                     }}
                   />
