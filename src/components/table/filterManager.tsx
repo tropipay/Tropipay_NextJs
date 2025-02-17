@@ -85,8 +85,8 @@ export function FilterManager<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="active" size="sm" className="px-2 h-8">
-          ... filtros
+        <Button variant="primary" size="sm" className="px-2 h-8 ">
+          filtros ...
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">
