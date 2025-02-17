@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Column } from "@tanstack/react-table"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
-import { CheckIcon } from "lucide-react"
+import { CheckIcon, Plus } from "lucide-react"
 
 // Componentes UI
 import { Button } from "@/components/ui/button"
@@ -85,8 +85,13 @@ export function FilterManager<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="primary" size="sm" className="px-2 h-8 ">
-          filtros ...
+        <Button
+          variant="primary"
+          size="sm"
+          className="px-2 h-8 bg-grayBackground"
+        >
+          <Plus />
+          <span>filtros</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">
@@ -123,7 +128,7 @@ export function FilterManager<TData, TValue>({
           <PopoverClose asChild>
             <Button
               variant="default"
-              className="bg-blue-600 text-white w-full"
+              className="w-full"
               type="submit"
               onClick={handleApplyFilters}
             >

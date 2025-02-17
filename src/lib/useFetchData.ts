@@ -10,7 +10,7 @@ export function useFetchData<T>({
 }: any): UseQueryResult<T> {
   const QueryKey = generateHashedKey(queryConfig.key, urlParams)
   const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
-
+  console.log("variables:", variables)
   const { data: session } = useSession()
   const token = session?.user.token
 

@@ -139,11 +139,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
           <div className="py-2">
-            <Button
-              variant="default"
-              className="bg-blue-600 text-white w-full"
-              type="submit"
-            >
+            <Button variant="default" className="w-full" type="submit">
               <FormattedMessage id="apply" />
             </Button>
           </div>

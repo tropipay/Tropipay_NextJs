@@ -7,10 +7,7 @@ export default async function Page() {
   return (
     <>
       <DataFull queryConfig={apiConfig.movements}>
-        <PageClient
-          columns={apiConfig.movements.columns}
-          filters={JSON.parse(JSON.stringify(apiConfig.movements.filters))}
-        />
+        <PageClient columns={apiConfig.movements.columns} />
       </DataFull>
     </>
   )

@@ -121,11 +121,13 @@ export function buildGraphQLVariables(
         case "amount":
           const [amountFrom, amountTo] = filterValue?.split(",") ?? []
           if (amountFrom)
-            variables.filter[`${column.column}Gte`] =
-              parseFloat(amountFrom.replace(".", ",")) * 100
+            variables.filter[`${column.column}Gte`] = parseFloat(
+              amountFrom.replace(".", "")
+            )
           if (amountTo)
-            variables.filter[`${column.column}Lte`] =
-              parseFloat(amountTo.replace(".", ",")) * 100
+            variables.filter[`${column.column}Lte`] = parseFloat(
+              amountTo.replace(".", "")
+            )
           break
 
         case "list":
