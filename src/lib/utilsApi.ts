@@ -9,24 +9,28 @@ export interface FetchOptions {
 }
 
 export async function makeApiRequest({
-  queryConfig,
+  queryConfig: { url, method, body },
   variables,
   token,
 }: FetchOptions) {
-  const body = {
-    ...queryConfig.body,
+  const newBody = {
+    ...body,
     ...variables,
   }
 
-  const endpointURL = `${process.env.NEXT_PUBLIC_API_URL}${queryConfig.url}`
-  const response = await fetch(endpointURL, {
-    method: queryConfig.method,
-    body: JSON.stringify(body),
-    cache: "no-store",
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+    method,
     headers: {
       ...fetchHeaders,
       Authorization: `Bearer ${token}`,
     },
+    ...(body && {
+      body: JSON.stringify({
+        ...body,
+        ...variables,
+      }),
+    }),
+    cache: "no-store",
   })
 
   if (!response.ok) {
@@ -116,7 +120,7 @@ export function buildGraphQLVariables(
     return parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
   }
   // Procesar los filtros adicionales
-  columns.forEach((column: any) => {
+  columns?.forEach((column: any) => {
     if (filters[column.column]) {
       const filterType = column.type
       const filterValue = filters[column.column]

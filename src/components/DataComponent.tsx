@@ -9,7 +9,7 @@ import React from "react"
 import { FormattedMessage } from "react-intl"
 
 interface DataComponentProps {
-  dehydratedState: DehydratedState
+  dehydratedState?: DehydratedState
   children: React.ReactElement<{ data: any }>
   queryConfig: FetchDataConfig
 }

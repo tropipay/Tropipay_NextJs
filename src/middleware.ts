@@ -1,8 +1,6 @@
-import { cookies } from "next/headers"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { auth } from "./auth"
-import { getTokenFromSession } from "./lib/utilsUser"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]

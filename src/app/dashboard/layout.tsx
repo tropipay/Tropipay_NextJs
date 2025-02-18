@@ -1,21 +1,13 @@
 "use client"
+
 import { AppSidebar } from "@/components/app-sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+import DynamicBreadcrumb from "@/components/privateLayout/dynamicBreadcrumb"
 import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Providers } from "../providers"
-import DynamicBreadcrumb from "@/components/privateLayout/dynamicBreadcrumb"
 import { SessionProvider } from "next-auth/react"
 
 export default function Page({ children }: ChildrenProps) {
@@ -38,4 +30,3 @@ export default function Page({ children }: ChildrenProps) {
     </SessionProvider>
   )
 }
-

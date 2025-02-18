@@ -16,7 +16,6 @@ type Movement = {
   sender: string
 }
 
-type MovementsResponse = {
-  items: Movement[]
-  totalCount: number
+type GetMovementsResponse = {
+  data: { movements: ApiDataResponse<Movement> }
 }

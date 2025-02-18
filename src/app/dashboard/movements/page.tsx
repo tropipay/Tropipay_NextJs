@@ -5,14 +5,13 @@ import DataComponent from "@/components/DataComponent"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import { processQueryParameters } from "@/lib/utils"
 
-export default async function Page({
-  searchParams,
-}: {
+interface Props {
   searchParams: { [key: string]: string }
-}) {
+}
+
+export default async function Page({ searchParams }: Props) {
   const queryClient = new QueryClient()
   const queryConfig = apiConfig.movements
-
   const urlParams = await processQueryParameters(searchParams)
 
   await fetchData(queryClient, queryConfig, urlParams)
