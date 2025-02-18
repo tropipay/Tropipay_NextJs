@@ -1,7 +1,11 @@
 "use client"
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { useCallback, useState } from "react"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
 import {
   Table,
   TableBody,
@@ -39,21 +43,16 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   Header,
-  OnChangeFn,
   SortingState,
   Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { CSSProperties, useCallback, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
 
 interface DataTableProps<TData, TValue> {
   data: TData[]
@@ -61,29 +60,31 @@ interface DataTableProps<TData, TValue> {
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
-  onChangeColumnOrder?: (_: string[]) => void
-  onChangeColumnVisibility?: (_: Updater<VisibilityState>) => void
-  onChangeSorting?: (_: SortingState) => void
+  defaultColumnVisibility: VisibilityState
   manualPagination?: boolean
   manualSorting?: boolean
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
+  onChangeColumnOrder?: (_: string[]) => void
+  onChangeColumnVisibility?: (_: VisibilityState) => void
+  onChangeSorting?: (_: SortingState) => void
 }
 
 export default function DataTable<TData, TValue>({
-  columns: columnsConfig,
   data,
+  columns: columnsConfig,
   enableColumnOrder = false,
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
-  onChangeColumnOrder,
-  onChangeColumnVisibility,
+  defaultColumnVisibility,
   manualPagination = true,
   manualSorting = true,
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
+  onChangeColumnOrder,
+  onChangeColumnVisibility,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -140,7 +141,7 @@ export default function DataTable<TData, TValue>({
     return filters
   })
 
-  const handleFiltersChange = useCallback(
+  const onColumnFiltersChange = useCallback(
     (updater: Updater<ColumnFiltersState>) => {
       const newFilters =
         typeof updater === "function" ? updater(columnFilters) : updater
@@ -162,10 +163,11 @@ export default function DataTable<TData, TValue>({
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    columnsConfig.reduce((acc, column) => {
-      acc[column.id] = !column.hidden
-      return acc
-    }, {})
+    defaultColumnVisibility ??
+      columnsConfig.reduce((acc, column) => {
+        acc[column.id] = !column.hidden
+        return acc
+      }, {})
   )
 
   const sensors = useSensors(
@@ -189,12 +191,15 @@ export default function DataTable<TData, TValue>({
     }
   }
 
-  const onColumnVisibilityChange: OnChangeFn<VisibilityState> = (
-    visibilityState
-  ) => {
-    setColumnVisibility(visibilityState)
-    onChangeColumnVisibility?.(visibilityState)
-  }
+  const onColumnVisibilityChange = useCallback(
+    (updater: Updater<typeof columnVisibility>) => {
+      const visibilityState =
+        typeof updater === "function" ? updater(columnVisibility) : updater
+      setColumnVisibility(visibilityState)
+      onChangeColumnVisibility?.(visibilityState)
+    },
+    [columnVisibility]
+  )
 
   const DraggableTableHeader = ({
     header,
@@ -231,7 +236,7 @@ export default function DataTable<TData, TValue>({
     )
   }
 
-  const handlePaginationChange = useCallback(
+  const onPaginationChange = useCallback(
     (updater: Updater<typeof pagination>) => {
       const newPagination =
         typeof updater === "function" ? updater(pagination) : updater
@@ -249,7 +254,7 @@ export default function DataTable<TData, TValue>({
     [pagination, manualPagination, router, pathname, createQueryString]
   )
 
-  const handleSortingChange = useCallback(
+  const onSortingChange = useCallback(
     (updater: Updater<SortingState>) => {
       const newSorting =
         typeof updater === "function" ? updater(sorting) : updater
@@ -271,7 +276,7 @@ export default function DataTable<TData, TValue>({
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
     columns: columnsConfig,
-    pageCount: Math.ceil(rowCount / pagination.pageSize) ?? -1,
+    pageCount: Math.ceil(rowCount ?? 0 / pagination.pageSize) ?? -1,
     state: {
       sorting,
       columnVisibility,
@@ -287,9 +292,9 @@ export default function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: handlePaginationChange,
-    onSortingChange: handleSortingChange,
-    onColumnFiltersChange: handleFiltersChange,
+    onPaginationChange,
+    onSortingChange,
+    onColumnFiltersChange,
     onColumnVisibilityChange,
     onColumnOrderChange: setColumnOrder,
   })
@@ -302,7 +307,7 @@ export default function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} columns={columnsConfig} />
-      <div className="rounded-md border">
+      <div>
         <DndContext
           collisionDetection={closestCenter}
           modifiers={[restrictToHorizontalAxis]}

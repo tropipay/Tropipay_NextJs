@@ -1,11 +1,11 @@
 "use client"
 
-import { updateUserTableSettings } from "@/app/actions/userActions"
+import { defaultUserSettings } from "@/app/data/defaultUserSettings"
 import DataTable from "@/components/table/dataTable"
-import { TableColumnsSettings } from "@/types/tableColumnsSettings"
+import CookiesManager from "@/lib/cookiesManager"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
-import React from "react"
+import { useEffect, useState } from "react"
 import MovementDetail from "./movementDetail"
 
 interface Props {
@@ -14,59 +14,79 @@ interface Props {
 }
 
 const PageClient = ({ columns, data }: Props) => {
+  const [columnsSettings, setColumnsSettings] =
+    useState<UserTableColumnsSettings>()
+
   const { data: session } = useSession()
   const user = session?.user
   const userId = user?.id
 
-  const [columnsSettings, setColumnsSettings] =
-    React.useState<TableColumnsSettings>()
-
-  const onChangeColumnOrder = async (columnOrder: string[]) => {
-    if (!userId || !columnsSettings) return
-    await updateUserTableSettings(userId, {
+  const onChangeColumnOrder = (columnOrder: string[]) => {
+    const tableColumnsSettings = {
       ...columnsSettings,
       movements: { ...columnsSettings.movements, columnOrder },
-    })
-  }
-
-  const onChangeColumnVisibility = async (
-    columnVisibility: VisibilityState
-  ) => {
-    if (!userId || !columnsSettings) return
-    await updateUserTableSettings(userId, {
-      ...columnsSettings,
-      movements: { ...columnsSettings.movements, columnVisibility },
-    })
-  }
-
-  const setUserTableColumnsSettings = async () => {
-    if (userId) {
-      /*       const { tableColumnsSettings } = await getUserTableSettings(userId)
-      setColumnsSettings(tableColumnsSettings)
- */
+    }
+    setColumnsSettings(tableColumnsSettings)
+    if (userId || columnsSettings) {
+      CookiesManager.getInstance().set(
+        `userSettings-${userId}`,
+        JSON.stringify({
+          tableColumnsSettings,
+        })
+      )
+      console.log("Columns order saved successfully")
     }
   }
 
-  React.useEffect(() => {
-    void setUserTableColumnsSettings()
-  }, [])
+  const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
+    const tableColumnsSettings = {
+      ...columnsSettings,
+      movements: { ...columnsSettings.movements, columnVisibility },
+    }
+    setColumnsSettings(tableColumnsSettings)
+
+    if (userId && columnsSettings) {
+      CookiesManager.getInstance().set(
+        `userSettings-${userId}`,
+        JSON.stringify({
+          tableColumnsSettings,
+        })
+      )
+      console.log("Columns visibility saved successfully")
+    }
+  }
+
+  const getUserColumnsSettings = () =>
+    setColumnsSettings(
+      JSON.parse(
+        CookiesManager.getInstance().get(
+          `userSettings-${userId}`,
+          JSON.stringify({ ...defaultUserSettings, id: userId })
+        )
+      ).tableColumnsSettings
+    )
+
+  useEffect(() => {
+    !!userId && getUserColumnsSettings()
+  }, [userId])
 
   return (
     <div className="container p-2">
-      <DataTable
-        enableColumnOrder
-        {...{
-          data: data?.data?.movements?.items ?? [],
-          columns,
-          defaultColumnVisibility: {
-            location: false,
-            otherInformation: false,
-          },
-          onChangeColumnOrder,
-          rowCount: data?.data?.movements?.totalCount ?? 0,
-        }}
-        rowClickChildren={MovementDetail}
-      />
+      {columnsSettings && data && (
+        <DataTable
+          enableColumnOrder
+          {...{
+            columns,
+            data: data.data.movements.items,
+            rowCount: data.data.movements.totalCount,
+            defaultColumnVisibility: columnsSettings.movements.columnVisibility,
+            defaultColumnOrder: columnsSettings.movements.columnOrder,
+            onChangeColumnOrder,
+            onChangeColumnVisibility,
+          }}
+          rowClickChildren={MovementDetail}
+        />
+      )}
     </div>
   )
 }

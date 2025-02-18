@@ -2,8 +2,8 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   CaretSortIcon,
-  EyeNoneIcon,
   Cross2Icon,
+  EyeNoneIcon,
 } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
 
@@ -36,7 +36,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 font-semibold data-[state=open]:bg-accent"
           >
             <FormattedMessage id={title} />
             {column.getCanSort() ? (

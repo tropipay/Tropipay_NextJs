@@ -1,10 +1,10 @@
-import { ColumnDef } from "@tanstack/react-table" // Asegúrate de importar el tipo correcto
-import { DataTableColumnHeader } from "./dataTableColumnHeader" // Ruta ajustada
-import FacetedBadge from "./facetedBadge" // Ruta ajustada
-import { format } from "date-fns" // Importamos date-fns para formatear fechas
-import React from "react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { formatAmount } from "@/lib/utils"
+import { ColumnDef } from "@tanstack/react-table" // Asegúrate de importar el tipo correcto
+import { format } from "date-fns" // Importamos date-fns para formatear fechas
+import React from "react"
+import { DataTableColumnHeader } from "./dataTableColumnHeader" // Ruta ajustada
+import FacetedBadge from "./facetedBadge" // Ruta ajustada
 
 // Definimos los tipos para los argumentos de la función
 type FacetedOption = {

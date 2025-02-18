@@ -1,6 +1,5 @@
 "use client"
 
-import { accounts } from "@/app/queryDefinitions/accounts/accounts"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,16 +25,16 @@ interface Props {
 }
 
 export const NavUserBusiness = ({ data }: Props) => {
-  const dataMocked = accounts
+  // const dataMocked = accounts
   const [userBusinessAccountSelectedId, setUserBusinessAccountSelectedId] =
     useState<number>(
       +CookiesManager.getInstance().get(
         "userAccountId",
-        dataMocked?.[0]?.id.toString() ?? "0"
+        data?.[0]?.id.toString() ?? "0"
       )
     )
 
-  const userBusinessAccountSelected = dataMocked.find(
+  const userBusinessAccountSelected = data?.find(
     ({ id }) => id === userBusinessAccountSelectedId
   )
 
@@ -73,7 +72,7 @@ export const NavUserBusiness = ({ data }: Props) => {
               <FormattedMessage id="accounts" />
             </DropdownMenuLabel>
             <DropdownMenuSub>
-              {dataMocked?.map((userBusinessAccount) => (
+              {data?.map((userBusinessAccount) => (
                 <DropdownMenuItem
                   key={userBusinessAccount.id}
                   onClick={() =>
