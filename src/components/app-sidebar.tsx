@@ -1,6 +1,7 @@
 "use client"
 
 import { sideBarOptions } from "@/app/data/sideBarOptions"
+import { accounts } from "@/app/queryDefinitions/accounts/accounts"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -31,6 +32,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <DataComponent
             queryConfig={queryConfig}
             dehydratedState={dehydratedState}
+            mockData={accounts}
           >
             <NavUserBusiness />
           </DataComponent>
