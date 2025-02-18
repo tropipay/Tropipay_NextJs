@@ -168,6 +168,7 @@ export function buildGraphQLVariables(
   // Dejar espacio para sort y order (a implementar en el futuro)
   if (sort || order) {
     variables.filter = {
+      ...variables.filter,
       orderBy: sort ?? "",
       orderDirection: order?.toUpperCase() ?? "ASC",
     }

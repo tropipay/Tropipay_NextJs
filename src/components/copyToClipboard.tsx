@@ -28,7 +28,7 @@ export default function CopyToClipboard({
     <button
       onClick={copyText}
       aria-label="Copiar al portapapeles"
-      className="p-2 rounded hover:bg-gray-100 transition-colors"
+      className="rounded hover:bg-gray-100 transition-colors"
     >
       <Copy
         className={`w-4 h-4 ${copied ? "text-green-500" : "text-gray-500"}`}
