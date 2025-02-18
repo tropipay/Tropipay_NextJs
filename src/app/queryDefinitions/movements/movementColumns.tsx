@@ -32,6 +32,7 @@ export const movementColumns: any = [
     type: "amount",
     addSign: false,
     filter: false,
+    hidden: true,
   }),
   setColumn("state", {
     type: "facetedBadge",
@@ -63,24 +64,31 @@ export const movementColumns: any = [
   setColumn("sender", {
     title: "user",
     type: "simpleText",
+    hidden: true,
   }),
   setColumn("reference", {
     type: "simpleText",
+    hidden: true,
   }),
   setColumn("bankOrderCode", {
     type: "simpleText",
+    hidden: true,
   }),
   setColumn("exchangeRate", {
     type: "simpleText",
     filter: false,
+    hidden: true,
   }),
   setColumn("product", {
     type: "simpleText",
+    hidden: true,
   }),
   setColumn("recipient", {
     type: "simpleText",
+    hidden: true,
   }),
   setColumn("description", {
     type: "simpleText",
+    hidden: true,
   }),
 ]
