@@ -1,11 +1,10 @@
 "use client"
 
-import * as React from "react"
-import { useSearchParams } from "next/navigation"
-import { Column, Table } from "@tanstack/react-table"
-import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column, Table } from "@tanstack/react-table"
 import { CheckIcon, Plus } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import * as React from "react"
 
 // Componentes UI
 import { Button } from "@/components/ui/button"
@@ -22,10 +21,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Separator } from "@/components/ui/separator"
 
 // Utilidades
-import { cn, truncateLabels } from "@/lib/utils"
+import { cn } from "@/lib/utils"
+import { FormattedMessage } from "react-intl"
 
 // Interfaces
 interface FilterManagerProps<TData, TValue> {
@@ -110,7 +109,9 @@ export function FilterManager<TData, TValue>({
           className="px-2 h-8 bg-grayBackground"
         >
           <Plus />
-          <span>filtros</span>
+          <span>
+            <FormattedMessage id="filters" />
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">

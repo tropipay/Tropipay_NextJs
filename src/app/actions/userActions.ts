@@ -1,7 +1,6 @@
 "use server"
 
 import { fetchHeaders } from "@/lib/utils"
-import { TableColumnsSettings } from "@/types/tableColumnsSettings"
 
 /**
  * Getting user table settings by user id.
@@ -31,7 +30,7 @@ export const getUserTableSettings = async (userId: string) => {
  */
 export const updateUserTableSettings = async (
   userId: string,
-  userTableSettings: TableColumnsSettings
+  userTableSettings: UserTableColumnsSettings
 ) => {
   const response = await fetch(`http://localhost:8000/settings/${userId}`, {
     method: "put",

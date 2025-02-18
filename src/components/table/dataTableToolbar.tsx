@@ -2,16 +2,16 @@
 
 import { Input } from "@/components/ui/input"
 import { Table } from "@tanstack/react-table"
+import { ArrowUpDown, Download, Search } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 import { useTranslation } from "../intl/useTranslation"
+import { Button } from "../ui/button"
 import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
 import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableViewOptions } from "./dataTableViewOptions"
-import { Button } from "../ui/button"
-import { Download, Ellipsis, Search, ArrowUpDown } from "lucide-react"
-import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
 import { FilterManager } from "./filterManager"
 
 interface DataTableToolbarProps<TData, TValue> {
@@ -93,7 +93,7 @@ export function DataTableToolbar<TData, TValue>({
             </span>
             <Input
               id="search"
-              placeholder={t("filter")}
+              placeholder={t("search")}
               value={searchValue}
               onChange={handleSearchChange}
               className="pl-10 w-full"
@@ -114,7 +114,7 @@ export function DataTableToolbar<TData, TValue>({
         </div>
       </div>
       <div className="flex w-full items-center justify-between">
-        <div className="flex flex-1 items-center space-x-2">
+        <div className="flex flex-1 items-center space-x-2 py-2 overflow-x-auto">
           <FilterManager
             table={table}
             columns={columns}
