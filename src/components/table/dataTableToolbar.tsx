@@ -13,7 +13,6 @@ import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
 import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
-import { DateFilter } from "@/app/dashboard/movements/dateFilter"
 
 interface DataTableToolbarProps<TData, TValue> {
   table: Table<TData>
@@ -104,7 +103,6 @@ export function DataTableToolbar<TData, TValue>({
 
         {/* Elementos alineados a la derecha */}
         <div className="flex items-center gap-2">
-          <DateFilter table={table} />
           <Button variant="outline">
             <Download />
           </Button>
