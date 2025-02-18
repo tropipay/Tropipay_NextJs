@@ -13,13 +13,11 @@ import MovementDetail from "./movementDetail"
 
 interface Props {
   columns: any
-  filters: any
   data?: GetMovementsResponse
 }
 
 const PageClient = ({
   columns,
-  filters,
   data: {
     data: {
       movements: { items, totalCount: rowCount },
@@ -72,7 +70,6 @@ const PageClient = ({
         {...{
           data: items,
           columns,
-          filters,
           defaultColumnVisibility: {
             location: false,
             otherInformation: false,

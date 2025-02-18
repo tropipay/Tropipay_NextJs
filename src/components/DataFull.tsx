@@ -14,6 +14,7 @@ export default async function DataFull({
   children,
   searchParams = {},
 }: DataFullProps) {
+  console.log("queryConfig:", queryConfig)
   const queryClient = new QueryClient()
   const urlParams = await processQueryParameters(searchParams)
   await fetchData(queryClient, queryConfig, urlParams)
@@ -25,6 +26,7 @@ export default async function DataFull({
         <DataComponent
           dehydratedState={dehydratedState}
           queryConfig={queryConfig}
+          key={queryConfig.key}
         >
           {children}
         </DataComponent>
