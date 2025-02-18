@@ -30,11 +30,9 @@ const InputAmount: React.FC<InputAmountProps> = ({
     }
   }, [value])
 
-  console.log("internalValue:", internalValue)
   // Función para formatear el valor en formato decimal
   function formater(input: string | number) {
     if (input === "") return ""
-    console.log("----------------- input:", input)
     const isNegative = String(input).startsWith("-")
     const absoluteValue = String(input).replace("-", "")
 
@@ -63,7 +61,6 @@ const InputAmount: React.FC<InputAmountProps> = ({
       const formattedValue = formater(
         isNegative ? `-${numericValue}` : numericValue.toString()
       )
-      console.log("formattedValue:", formattedValue)
       setInternalValue(formattedValue)
 
       // Notificar al componente padre con el valor formateado
