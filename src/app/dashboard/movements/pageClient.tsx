@@ -72,15 +72,20 @@ const PageClient = ({ columns, data }: Props) => {
 
   return (
     <div className="container p-2">
-      {columnsSettings && data && (
+      {columnsSettings?.movements && data && (
         <DataTable
           enableColumnOrder
           {...{
             columns,
             data: data.data.movements.items,
             rowCount: data.data.movements.totalCount,
-            defaultColumnVisibility: columnsSettings.movements.columnVisibility,
-            defaultColumnOrder: columnsSettings.movements.columnOrder,
+            ...(columnsSettings.movements.columnOrder && {
+              defaultColumnOrder: columnsSettings.movements.columnOrder,
+            }),
+            ...(columnsSettings.movements.columnVisibility && {
+              defaultColumnVisibility:
+                columnsSettings.movements.columnVisibility,
+            }),
             onChangeColumnOrder,
             onChangeColumnVisibility,
           }}

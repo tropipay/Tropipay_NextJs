@@ -12,13 +12,19 @@ interface DataComponentProps {
   dehydratedState?: DehydratedState
   children: React.ReactElement<{ data: any }>
   queryConfig: FetchDataConfig
+  mockData?: any
 }
 
 export default function DataComponent({
   dehydratedState,
   queryConfig,
+  mockData,
   children,
 }: DataComponentProps) {
+  if (!!mockData) {
+    return React.cloneElement(children, { data: mockData })
+  }
+
   const urlParams = searchParamsToObject(useSearchParams())
   const { data, error, isLoading } = useFetchData({
     queryConfig,

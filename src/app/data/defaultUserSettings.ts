@@ -11,10 +11,6 @@ export const defaultUserSettings: UserSettings = {
         "sender",
         "reference",
       ],
-      columnVisibility: {
-        location: false,
-        otherInformation: false,
-      },
       columnSorting: [],
     },
   },
