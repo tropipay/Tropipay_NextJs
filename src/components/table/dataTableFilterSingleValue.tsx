@@ -88,11 +88,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
             onChange={handleFilterChange}
           />
           <PopoverClose asChild>
-            <Button
-              variant="default"
-              className="bg-blue-600 text-white w-full mt-3"
-              type="submit"
-            >
+            <Button variant="default" className="w-full mt-3" type="submit">
               <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>

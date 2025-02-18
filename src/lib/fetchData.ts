@@ -11,6 +11,7 @@ export async function fetchData<T>(
 ): Promise<T> {
   const queryKey = [generateHashedKey(queryConfig.key ?? "", urlParams)]
   const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
+  console.log("variables:", variables)
   const session = await auth()
   const token = session?.user.token
 

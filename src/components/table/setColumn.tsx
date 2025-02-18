@@ -99,7 +99,7 @@ export function setColumn<TData>(
   // Lógica para el contenido de la celda según el tipo
   switch (type) {
     case "simpleText":
-      baseConfig.cell = ({ row }) => row.getValue(id)
+      baseConfig.cell = ({ row }) => <div>{row.getValue(id)}</div>
       break
     case "faceted":
       if (!optionList) {
@@ -191,8 +191,7 @@ export function setColumn<TData>(
       baseConfig.cell = ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value, e) => {
-            e.stopPropagation() // Detiene la propagación del evento
+          onCheckedChange={(value) => {
             row.toggleSelected(!!value)
           }}
           aria-label="Select row"

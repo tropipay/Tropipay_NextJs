@@ -1,5 +1,5 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
-import { fetchHeaders } from "./utils"
+import { fetchHeaders, formatAmount } from "./utils"
 import { parse, format } from "date-fns"
 
 export interface FetchOptions {
@@ -111,6 +111,10 @@ export function buildGraphQLVariables(
   if (search) {
     variables.filter.generalSearch = search
   }
+
+  const formatNumber = (textNumber) => {
+    return parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
+  }
   // Procesar los filtros adicionales
   columns.forEach((column: any) => {
     if (filters[column.column]) {
@@ -118,16 +122,16 @@ export function buildGraphQLVariables(
       const filterValue = filters[column.column]
 
       switch (filterType) {
-        case "amount":
+        case "amount": {
           const [amountFrom, amountTo] = filterValue?.split(",") ?? []
-          if (amountFrom)
-            variables.filter[`${column.column}Gte`] =
-              parseFloat(amountFrom.replace(".", ",")) * 100
-          if (amountTo)
-            variables.filter[`${column.column}Lte`] =
-              parseFloat(amountTo.replace(".", ",")) * 100
+          if (amountFrom) {
+            variables.filter[`${column.column}Gte`] = formatNumber(amountFrom)
+          }
+          if (amountTo) {
+            variables.filter[`${column.column}Lte`] = formatNumber(amountTo)
+          }
           break
-
+        }
         case "list":
           variables.filter[column.column] = filterValue?.split(",")
           break

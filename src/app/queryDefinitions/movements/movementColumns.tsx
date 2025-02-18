@@ -48,7 +48,6 @@ export const movementColumns: any = [
   setColumn("creationDate", {
     type: "date",
     title: "Creaction date",
-    enableHiding: false,
   }),
   setColumn("movementType", {
     title: "type",

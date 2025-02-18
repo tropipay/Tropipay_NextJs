@@ -116,6 +116,7 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
           <FilterManager
+            table={table}
             columns={columns}
             setActiveFilters={setActiveFilters}
           />
@@ -163,18 +164,19 @@ export function DataTableToolbar<TData, TValue>({
                 )
             }
           })}
+          {isFiltered && (
+            <Button
+              disabled={!isFiltered}
+              variant="primary"
+              onClick={() => {
+                table.resetColumnFilters()
+              }}
+              className="h-8 px-2"
+            >
+              {t("clean_filters")}
+            </Button>
+          )}
         </div>
-
-        <Button
-          disabled={!isFiltered}
-          variant={isFiltered ? "active" : "inactive"}
-          onClick={() => {
-            table.resetColumnFilters()
-          }}
-          className="h-8 px-2"
-        >
-          {t("clean_filters")}
-        </Button>
       </div>
     </>
   )
