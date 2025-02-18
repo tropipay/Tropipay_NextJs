@@ -191,16 +191,10 @@ export function setColumn<TData>(
       baseConfig.cell = ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onClick={(e, value) => {
-            console.log("value:", value)
-            console.log("e.checked:", e)
-            console.log("e.value:", e.target.value)
-          }}
           onCheckedChange={(value) => {
             row.toggleSelected(!!value)
           }}
           aria-label="Select row"
-          defaultPrevented
         />
       )
       baseConfig.enableSorting = false
