@@ -10,11 +10,10 @@ import MovementDetail from "./movementDetail"
 
 interface Props {
   columns: any
-  filters: any
   data?: GetMovementsResponse
 }
 
-const PageClient = ({ columns, filters, data }: Props) => {
+const PageClient = ({ columns, data }: Props) => {
   const { data: session } = useSession()
   const user = session?.user
   const userId = user?.id
@@ -59,7 +58,6 @@ const PageClient = ({ columns, filters, data }: Props) => {
         {...{
           data: data?.data?.movements?.items ?? [],
           columns,
-          filters,
           defaultColumnVisibility: {
             location: false,
             otherInformation: false,

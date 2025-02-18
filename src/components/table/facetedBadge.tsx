@@ -22,8 +22,8 @@ const FacetedBadge = ({ value, optionList, optionListGroups }) => {
 
   return (
     <Badge variant={stateVariant}>
-      <Icon className="ml-0 h-4 w-4 mr-2" />
-      <span className="mr-0">{currentState.label}</span>
+      <span className="mx-1 ">{currentState.label}</span>
+      <Icon className="h-4 w-4 mr-1" />
     </Badge>
   )
 }

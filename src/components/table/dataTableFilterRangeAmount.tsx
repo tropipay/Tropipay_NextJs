@@ -124,7 +124,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <InputAmount
             name="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="Mínimo"
+            placeholder="Mínimo (opcional)"
             value={filterValue ? filterValue.split(",")[0] * 100 || "" : ""}
           />
           <Label htmlFor="width">
@@ -133,17 +133,13 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <InputAmount
             name="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="Máximo"
+            placeholder="Máximo (opcional)"
             value={filterValue ? filterValue.split(",")[1] * 100 || "" : ""}
           />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
           <div className="py-2">
-            <Button
-              variant="default"
-              className="bg-blue-600 text-white w-full"
-              type="submit"
-            >
+            <Button variant="default" className="w-full" type="submit">
               <FormattedMessage id="apply" />
             </Button>
           </div>

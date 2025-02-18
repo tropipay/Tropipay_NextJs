@@ -1,29 +1,34 @@
-import PageClient from "./pageClient"
-import { dehydrate, QueryClient } from "@tanstack/react-query"
-import { fetchData } from "@/lib/fetchData"
+import { QueryClient, dehydrate } from "@tanstack/react-query"
 import DataComponent from "@/components/DataComponent"
-import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import { fetchData } from "@/lib/fetchData"
 import { processQueryParameters } from "@/lib/utils"
 
-interface Props {
-  searchParams: { [key: string]: string }
+interface DataFullProps {
+  queryConfig: any
+  children: React.ReactNode
+  searchParams?: { [key: string]: string }
 }
 
-export default async function Page({ searchParams }: Props) {
+export default async function DataFull({
+  queryConfig,
+  children,
+  searchParams = {},
+}: DataFullProps) {
+  console.log("queryConfig:", queryConfig)
   const queryClient = new QueryClient()
-  const queryConfig = apiConfig.movements
   const urlParams = await processQueryParameters(searchParams)
-
   await fetchData(queryClient, queryConfig, urlParams)
   const dehydratedState = dehydrate(queryClient)
+
   return (
     <>
       {dehydratedState && (
         <DataComponent
           dehydratedState={dehydratedState}
           queryConfig={queryConfig}
+          key={queryConfig.key}
         >
-          <PageClient columns={queryConfig.columns} />
+          {children}
         </DataComponent>
       )}
     </>

@@ -33,58 +33,54 @@ export default function MovementDetail(props: any): JSX.Element {
           {format(new Date(row.valueDate), "dd/MM/yy HH:mm")}
         </p>
       </div>
-      <Card>
-        <CardContent className="p-4 space-y-4">
-          <Section title="Datos de pago">
-            <Info label="Monto autorizado" value="452,53 EUR" />
-            <Info label="Método" value="Visa" />
-            <Info label="Detalles" value="*2588" />
-            <Info
-              label="Código de referencia"
-              value={row.reference}
-              icon={
-                <CopyToClipboard
-                  text={row.reference}
-                  message="El código fue copiado"
-                />
-              }
+      <Section title="Datos de pago">
+        <Info label="Monto autorizado" value="452,53 EUR" />
+        <Info label="Método" value="Visa" />
+        <Info label="Detalles" value="*2588" />
+        <Info
+          label="Código de referencia"
+          value={row.reference}
+          icon={
+            <CopyToClipboard
+              text={row.reference}
+              message="El código fue copiado"
             />
-            <Info label="Código de respuesta" value="10000" />
-          </Section>
+          }
+        />
+        <Info label="Código de respuesta" value="10000" />
+      </Section>
 
-          <Section title="Datos del cliente">
-            <Info label="Nombre" value="Juan" />
-            <Info label="Apellido" value="Gil" />
-            <Info label="Mail" value="JuanGil@gmail.com" />
-            <Info label="Dirección" value="Carrer de l'equador-55, Barcelona" />
-            <Info label="País" value="España" />
-          </Section>
+      <Section title="Datos del cliente">
+        <Info label="Nombre" value="Juan" />
+        <Info label="Apellido" value="Gil" />
+        <Info label="Mail" value="JuanGil@gmail.com" />
+        <Info label="Dirección" value="Carrer de l'equador-55, Barcelona" />
+        <Info label="País" value="España" />
+      </Section>
 
-          <Section title="Métodos de pago">
-            <Info label="Tipo" value="VISA" />
-            <Info label="Pan de la tarjeta" value="1111" />
-            <Info label="Fecha de vencimiento" value="30/11/2024" />
-            <Info label="País de tarjeta" value="Estados Unidos" />
-            <Info label="IP del pago" value="164.23.255.01" />
-          </Section>
+      <Section title="Métodos de pago">
+        <Info label="Tipo" value="VISA" />
+        <Info label="Pan de la tarjeta" value="1111" />
+        <Info label="Fecha de vencimiento" value="30/11/2024" />
+        <Info label="País de tarjeta" value="Estados Unidos" />
+        <Info label="IP del pago" value="164.23.255.01" />
+      </Section>
 
-          <Section title="Cronograma">
-            <Info
-              label="Fecha de creación"
-              value={format(new Date(row.creationDate), "dd/MM/yy")}
-            />
-            <Info
-              label="Fecha valor"
-              value={format(new Date(row.valueDate), "dd/MM/yy")}
-            />
-          </Section>
-        </CardContent>
-      </Card>
+      <Section title="Cronograma">
+        <Info
+          label="Fecha de creación"
+          value={format(new Date(row.creationDate), "dd/MM/yy")}
+        />
+        <Info
+          label="Fecha valor"
+          value={format(new Date(row.valueDate), "dd/MM/yy")}
+        />
+      </Section>
       <div className="flex mt-4 gap-4">
         <Button variant="outline" className="w-1/2">
           Descargar
         </Button>
-        <Button variant="destructive" className="w-1/2">
+        <Button variant="default" className="w-1/2">
           Reembolsar
         </Button>
       </div>
