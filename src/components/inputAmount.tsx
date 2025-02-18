@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input" // Ajusta el path según tu estructura de proyecto
+import { Button } from "@/components/ui/button" // Ajusta el path según tu estructura de proyecto
+import { X } from "lucide-react" // Importa un ícono para el botón de borrar
 
 interface InputAmountProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (value: string) => void // Prop que se ejecutará tras el cambio
@@ -24,15 +26,15 @@ const InputAmount: React.FC<InputAmountProps> = ({
 
   useEffect(() => {
     if (value !== undefined) {
-      setInternalValue(formater(value))
+      setInternalValue(formater(value.toString()))
     }
   }, [value])
 
+  console.log("internalValue:", internalValue)
   // Función para formatear el valor en formato decimal
   function formater(input: string | number) {
     if (input === "") return ""
-
-    // Manejar números negativos
+    console.log("----------------- input:", input)
     const isNegative = String(input).startsWith("-")
     const absoluteValue = String(input).replace("-", "")
 
@@ -59,8 +61,9 @@ const InputAmount: React.FC<InputAmountProps> = ({
 
     if (maxValue < 0 || Math.abs(currentValue) <= currentMax) {
       const formattedValue = formater(
-        isNegative ? `-${numericValue}` : numericValue
+        isNegative ? `-${numericValue}` : numericValue.toString()
       )
+      console.log("formattedValue:", formattedValue)
       setInternalValue(formattedValue)
 
       // Notificar al componente padre con el valor formateado
@@ -70,17 +73,40 @@ const InputAmount: React.FC<InputAmountProps> = ({
     }
   }
 
+  // Manejar el clic en el botón de borrar
+  const handleClear = () => {
+    setInternalValue("") // Borrar el valor
+    if (onChange) {
+      onChange("") // Notificar al componente padre
+    }
+  }
+
   return (
-    <Input
-      type="text"
-      id={id} // Asigna el id si se proporciona
-      inputMode="numeric"
-      value={internalValue} // Valor controlado
-      onChange={handleChange} // Manejar cambios
-      className={`text-right ${className}`} // Clases personalizadas
-      placeholder={internalValue ? "" : placeholder} // Mostrar placeholder solo si no hay valor
-      {...rest}
-    />
+    <div className="relative">
+      <Input
+        type="text"
+        id={id} // Asigna el id si se proporciona
+        inputMode="numeric"
+        value={internalValue} // Valor controlado
+        onChange={handleChange} // Manejar cambios
+        className={`text-right ${className} ${
+          internalValue ? "pr-[62px]" : ""
+        }`} // Agregar padding-right cuando hay un valor
+        placeholder={internalValue ? "" : placeholder} // Mostrar placeholder solo si no hay valor
+        {...rest}
+      />
+      {internalValue && ( // Mostrar el botón solo si hay un valor
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="absolute right-2 top-1/2 -translate-y-1/2 h-6 pb-[2px] w-[50px]"
+          onClick={handleClear}
+        >
+          Borrar
+        </Button>
+      )}
+    </div>
   )
 }
 

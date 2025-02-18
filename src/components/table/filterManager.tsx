@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
-import { Column } from "@tanstack/react-table"
+import { Column, Table } from "@tanstack/react-table"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { CheckIcon, Plus } from "lucide-react"
@@ -26,24 +26,25 @@ import { Separator } from "@/components/ui/separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/lib/utils"
-import { set } from "date-fns"
 
 // Interfaces
 interface FilterManagerProps<TData, TValue> {
   columns: Column<TData, TValue>[]
+  table: Table<TData>
   setActiveFilters: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 // Componente principal
 export function FilterManager<TData, TValue>({
   columns,
+  table,
   setActiveFilters,
 }: FilterManagerProps<TData, TValue>) {
   // Hooks
   const searchParams = useSearchParams()
 
   // Obtener los filtros de las columnas
-  const filters: FilterItem[] = columns.filter(
+  const filters = columns.filter(
     (column) => !!column.filter && !!column.filterType
   )
 
@@ -67,9 +68,27 @@ export function FilterManager<TData, TValue>({
   }
 
   const handleApplyFilters = () => {
+    // Crear un nuevo objeto URLSearchParams con los parámetros actuales
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+
+    // Recorrer todos los filtros disponibles
+    filters.forEach((column) => {
+      if (!selectedFilters.has(column.id)) {
+        // Si el filtro no está seleccionado, eliminarlo de la URL
+        newSearchParams.delete(column.id)
+      }
+    })
+
+    // Actualizar la URL con los parámetros limpios
+    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
+
+    // Actualizar los filtros activos
     const newFilters = []
-    selectedFilters.forEach((column) => {
-      newFilters.push(columns.find((f) => f.id === column))
+    selectedFilters.forEach((columnId) => {
+      const column = columns.find((col) => col.id === columnId)
+      if (column) {
+        newFilters.push(column)
+      }
     })
     setActiveFilters(newFilters)
   }
@@ -99,7 +118,7 @@ export function FilterManager<TData, TValue>({
           <CommandInput placeholder="Buscar filtros..." />
           <CommandList>
             <CommandEmpty>No se encontraron resultados</CommandEmpty>
-            <CommandGroup heading="Filtros">
+            <CommandGroup heading="">
               {filters.map((column) => {
                 const isSelected = selectedFilters.has(column.id)
                 return (

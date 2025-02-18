@@ -124,7 +124,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <InputAmount
             name="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="Mínimo"
+            placeholder="Mínimo (opcional)"
             value={filterValue ? filterValue.split(",")[0] * 100 || "" : ""}
           />
           <Label htmlFor="width">
@@ -133,7 +133,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <InputAmount
             name="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="Máximo"
+            placeholder="Máximo (opcional)"
             value={filterValue ? filterValue.split(",")[1] * 100 || "" : ""}
           />
           <PopoverClose id="close-popover" className="hidden" />

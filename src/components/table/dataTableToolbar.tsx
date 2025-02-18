@@ -116,6 +116,7 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
           <FilterManager
+            table={table}
             columns={columns}
             setActiveFilters={setActiveFilters}
           />
