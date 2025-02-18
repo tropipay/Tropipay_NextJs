@@ -1,11 +1,10 @@
 "use client"
 
-import { defaultUserSettings } from "@/app/data/defaultUserSettings"
 import DataTable from "@/components/table/dataTable"
 import CookiesManager from "@/lib/cookiesManager"
+import { getUserSettings } from "@/lib/utilsUser"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
 import MovementDetail from "./movementDetail"
 
 interface Props {
@@ -14,61 +13,42 @@ interface Props {
 }
 
 const PageClient = ({ columns, data }: Props) => {
-  const [columnsSettings, setColumnsSettings] =
-    useState<UserTableColumnsSettings>()
-
   const { data: session } = useSession()
   const user = session?.user
   const userId = user?.id
+  const columnsSettings = userId
+    ? getUserSettings(userId).tableColumnsSettings
+    : null
 
   const onChangeColumnOrder = (columnOrder: string[]) => {
+    if (!userId) return
+    const columnsSettings = getUserSettings(userId).tableColumnsSettings
+
     const tableColumnsSettings = {
       ...columnsSettings,
       movements: { ...columnsSettings.movements, columnOrder },
     }
-    setColumnsSettings(tableColumnsSettings)
-    if (userId || columnsSettings) {
-      CookiesManager.getInstance().set(
-        `userSettings-${userId}`,
-        JSON.stringify({
-          tableColumnsSettings,
-        })
-      )
-      console.log("Columns order saved successfully")
-    }
+
+    CookiesManager.getInstance().set(`userSettings-${userId}`, {
+      tableColumnsSettings,
+    })
+    console.log("Columns order saved successfully")
   }
 
   const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
+    if (!userId) return
+    const columnsSettings = getUserSettings(userId).tableColumnsSettings
+
     const tableColumnsSettings = {
       ...columnsSettings,
       movements: { ...columnsSettings.movements, columnVisibility },
     }
-    setColumnsSettings(tableColumnsSettings)
 
-    if (userId && columnsSettings) {
-      CookiesManager.getInstance().set(
-        `userSettings-${userId}`,
-        JSON.stringify({
-          tableColumnsSettings,
-        })
-      )
-      console.log("Columns visibility saved successfully")
-    }
+    CookiesManager.getInstance().set(`userSettings-${userId}`, {
+      tableColumnsSettings,
+    })
+    console.log("Columns visibility saved successfully")
   }
-
-  const getUserColumnsSettings = () =>
-    setColumnsSettings(
-      JSON.parse(
-        CookiesManager.getInstance().get(
-          `userSettings-${userId}`,
-          JSON.stringify({ ...defaultUserSettings, id: userId })
-        )
-      ).tableColumnsSettings
-    )
-
-  useEffect(() => {
-    !!userId && getUserColumnsSettings()
-  }, [userId])
 
   return (
     <div className="container p-2">

@@ -1,4 +1,6 @@
+import { defaultUserSettings } from "@/app/data/defaultUserSettings"
 import { getSession } from "next-auth/react"
+import CookiesManager from "./cookiesManager"
 
 export const getUser = async () => {
   const session = getSession()
@@ -19,3 +21,9 @@ export const getTokenFromSession = (session?: string): string => {
   const { token } = decodeSession(session)
   return token ?? ""
 }
+
+export const getUserSettings = (userId: string): UserSettings =>
+  CookiesManager.getInstance().get(
+    `userSettings-${userId}`,
+    defaultUserSettings
+  )

@@ -10,16 +10,24 @@ class CookiesManager {
     return CookiesManager.instance
   }
 
-  get = (id: string, defaultValue: string = "") => {
-    const value = Cookies.get(id)
+  get = (id: string, defaultValue: any = "") => {
+    const cookieValue = Cookies.get(id) ?? ""
+    let value
+    try {
+      value = JSON.parse(cookieValue)
+    } catch (e) {
+      value = cookieValue
+    }
+
     if (!value) {
-      Cookies.set(id, defaultValue)
+      this.set(id, defaultValue)
       return defaultValue
     }
 
     return value
   }
 
-  set = (id: string, value: string = "") => Cookies.set(id, value)
+  set = (id: string, value: any = "") =>
+    Cookies.set(id, typeof value === "string" ? value : JSON.stringify(value))
 }
 export default CookiesManager
