@@ -41,28 +41,23 @@ export const movementColumns: any = [
     enableHiding: false,
     showFilter: true,
   }),
-  setColumn("valueDate", {
+  setColumn("completedAt", {
     type: "date",
-    title: "Value date",
     enableHiding: false,
   }),
-  setColumn("creationDate", {
+  setColumn("createdAt", {
     type: "date",
-    title: "Creaction date",
   }),
   setColumn("movementType", {
-    title: "type",
     type: "faceted",
     optionList: movementTypes,
     enableSorting: false,
   }),
   setColumn("paymentMethod", {
-    title: "method",
     type: "faceted",
     optionList: paymentMethods,
   }),
   setColumn("sender", {
-    title: "user",
     type: "simpleText",
     hidden: true,
   }),
@@ -79,15 +74,7 @@ export const movementColumns: any = [
     filter: false,
     hidden: true,
   }),
-  setColumn("product", {
-    type: "simpleText",
-    hidden: true,
-  }),
   setColumn("recipient", {
-    type: "simpleText",
-    hidden: true,
-  }),
-  setColumn("description", {
     type: "simpleText",
     hidden: true,
   }),

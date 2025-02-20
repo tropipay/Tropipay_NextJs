@@ -118,7 +118,9 @@ export function FilterManager<TData, TValue>({
         <Command>
           <CommandInput placeholder="Buscar filtros..." />
           <CommandList>
-            <CommandEmpty>No se encontraron resultados</CommandEmpty>
+            <CommandEmpty>
+              <FormattedMessage id="no_results_found" />
+            </CommandEmpty>
             <CommandGroup heading="">
               {filters.map((column) => {
                 const isSelected = selectedFilters.has(column.id)
@@ -137,7 +139,9 @@ export function FilterManager<TData, TValue>({
                     >
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
-                    <span>{column.filterLabel}</span>
+                    <span>
+                      <FormattedMessage id={column.filterLabel} />
+                    </span>
                   </CommandItem>
                 )
               })}
@@ -152,7 +156,7 @@ export function FilterManager<TData, TValue>({
               type="submit"
               onClick={handleApplyFilters}
             >
-              Aplicar
+              <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>
         </div>

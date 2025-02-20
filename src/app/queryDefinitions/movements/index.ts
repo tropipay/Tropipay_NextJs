@@ -1,6 +1,6 @@
 export const defaultColumnOrder: string[] = [
   "select",
-  "valueDate",
+  "completedAt",
   "status",
   "amount",
   "movementType",

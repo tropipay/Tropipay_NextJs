@@ -17,53 +17,48 @@ export const apiConfig: Record<string, FetchDataConfig> = {
         movements(filter: $filter, pagination: $pagination) {
           items {
               id
+              reference
               state
-              creationDate
-              valueDate
-              description
+              bankOrderCode
+              createdAt
+              completedAt
               amount {
                 value
                 currency
               }
-              movementType
-              paymentMethod
-              reference
-              sender
-              bankOrderCode
-              charges {
-                cardBIN
-                cardBrand
-                cardCountry
-                cardExpirationDate
-                cardHolderName
-                cardLast4
-                cardPan
-                cardType
-                clientAddress
-                clientEmail
-                clientIp
-                clientLastName
-                clientName
-                createdAt
-                email
-                errorCode
-                id
-                issuerBank
-                orderCode
-                source
-                state
-              }
-              commission{
+              destinationAmount {
                 value
                 currency
               }
-              destinationAmount{
+              commission {
                 value
                 currency
               }
               exchangeRate
-              product
+              movementType
+              paymentMethod
+              sender
               recipient
+              charges {
+                  state
+                  orderCode
+                  email
+                  cardHolderName
+                  issuerBank
+                  cardType
+                  createdAt
+                  errorCode
+                  cardPan
+                  clientName
+                  clientLastName
+                  cardBrand
+                  cardExpirationDate
+                  cardCountry
+                  clientIp
+                  clientEmail
+                  clientAddress
+                  source
+              }
             }
             totalCount
           }

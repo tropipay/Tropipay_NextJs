@@ -16,12 +16,13 @@ import {
   format,
   isAfter,
   isBefore,
-  startOfDay,
   parse,
+  startOfDay,
 } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import React, { useEffect } from "react"
 import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 import { Label } from "../ui/label"
 import {
   Select,
@@ -38,6 +39,7 @@ interface DataTableFilterDateProps<TData, TValue> {
 export function DataTableFilterDate<TData, TValue>({
   column,
 }: DataTableFilterDateProps<TData, TValue>) {
+  const { t } = useTranslation()
   const [selectedValue, setSelectedValue] = React.useState("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
@@ -176,16 +178,16 @@ export function DataTableFilterDate<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {filterLabel}
+          <FormattedMessage id={filterLabel} />
           {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               {from && to
                 ? `${from} - ${to}`
                 : from
-                ? `Desde ${from}`
+                ? `${t("from")} ${from}`
                 : to
-                ? `Hasta ${to}`
+                ? `${t("to")}  ${to}`
                 : null}
               <div
                 onClick={(e) => {
@@ -209,13 +211,21 @@ export function DataTableFilterDate<TData, TValue>({
           <div className="mb-2">
             <Select value={selectedValue} onValueChange={handlePeriodChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Seleccione el periodo" />
+                <SelectValue placeholder={t("select_period")} />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="1">Hoy</SelectItem>
-                <SelectItem value="2">Última semana</SelectItem>
-                <SelectItem value="3">Último mes</SelectItem>
-                <SelectItem value="4">Últimos 6 meses</SelectItem>
+                <SelectItem value="1">
+                  <FormattedMessage id="today" />
+                </SelectItem>
+                <SelectItem value="2">
+                  <FormattedMessage id="last_week" />
+                </SelectItem>
+                <SelectItem value="3">
+                  <FormattedMessage id="last_month" />
+                </SelectItem>
+                <SelectItem value="4">
+                  <FormattedMessage id="last_six_months" />
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -243,7 +253,7 @@ export function DataTableFilterDate<TData, TValue>({
                           handleDateChange("from", undefined)
                         }}
                       >
-                        Borrar
+                        <FormattedMessage id="clear" />
                       </span>
                     </div>
                   ) : (
@@ -303,7 +313,7 @@ export function DataTableFilterDate<TData, TValue>({
                           handleDateChange("to", undefined)
                         }}
                       >
-                        Borrar
+                        <FormattedMessage id="clear" />
                       </span>
                     </div>
                   ) : (

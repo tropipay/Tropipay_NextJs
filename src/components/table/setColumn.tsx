@@ -133,7 +133,6 @@ export function setColumn<TData>(
           )
           return formattedDate
         } catch (error) {
-          console.error("Error formateando la fecha:", error)
           return "Fecha inválida"
         }
       }
@@ -156,7 +155,7 @@ export function setColumn<TData>(
       baseConfig.cell = ({ row }) => {
         const { value, currency } = row.getValue(id)
         return (
-          <div className="text-right">
+          <div>
             <span className="font-bold">
               {addSign && (value > 0 ? "+" : "")}
               {formatAmount(value)}
