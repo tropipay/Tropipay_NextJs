@@ -1,17 +1,18 @@
 "use client"
 
-import { usePathname } from "next/navigation"
-import React from "react"
+import { sideBarOptions } from "@/app/data/sideBarOptions"
 import {
   Breadcrumb,
-  BreadcrumbList,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  BreadcrumbList,
   BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { SidebarOption } from "@/types/SidebarOption"
-import { sideBarOptions } from "@/app/data/sideBarOptions"
+import { usePathname } from "next/navigation"
+import React from "react"
+import { FormattedMessage } from "react-intl"
 
 const getBreadcrumbItems = (
   path: string,
@@ -52,11 +53,11 @@ const DynamicBreadcrumb: React.FC = () => {
                   href={item.url}
                   className="font-poppins font-semibold text-2xl text-foreground capitalize"
                 >
-                  {item.title}
+                  <FormattedMessage id={item.title} />
                 </BreadcrumbLink>
               ) : (
                 <BreadcrumbPage className="font-poppins font-semibold text-2xl text-foreground capitalize">
-                  {item.title}
+                  <FormattedMessage id={item.title} />
                 </BreadcrumbPage>
               )}
             </BreadcrumbItem>

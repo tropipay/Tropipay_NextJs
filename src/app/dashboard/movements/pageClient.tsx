@@ -57,8 +57,8 @@ const PageClient = ({ columns, data }: Props) => {
           enableColumnOrder
           {...{
             columns,
-            data: data.data.movements.items,
-            rowCount: data.data.movements.totalCount,
+            data: data?.data?.movements?.items ?? [],
+            rowCount: data?.data?.movements?.totalCount ?? 0,
             ...(columnsSettings.movements.columnOrder && {
               defaultColumnOrder: columnsSettings.movements.columnOrder,
             }),

@@ -1,12 +1,12 @@
 "use client"
 
-import * as React from "react"
-import { useSearchParams } from "next/navigation"
-import { FormattedMessage } from "react-intl"
-import { Column } from "@tanstack/react-table"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column } from "@tanstack/react-table"
 import { CheckIcon } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import * as React from "react"
+import { FormattedMessage } from "react-intl"
 
 // Componentes UI
 import { Button } from "@/components/ui/button"
@@ -27,6 +27,7 @@ import { Separator } from "@/components/ui/separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/lib/utils"
+import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
 interface DataTableFilterFacetedProps<TData, TValue> {
@@ -38,6 +39,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   column,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
+  const { t } = useTranslation()
   const searchParams = useSearchParams()
   const { filterLabel, optionList } = column?.config ?? {}
 
@@ -97,8 +99,7 @@ export function DataTableFilterFaceted<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {filterLabel}
-
+          <FormattedMessage id={filterLabel} />
           {selectedValues.size > 0 && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
@@ -127,7 +128,7 @@ export function DataTableFilterFaceted<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={filterLabel} />
+          <CommandInput placeholder={t(filterLabel)} />
           <CommandList>
             <CommandEmpty>{"No Filter results"}</CommandEmpty>
             <CommandGroup>

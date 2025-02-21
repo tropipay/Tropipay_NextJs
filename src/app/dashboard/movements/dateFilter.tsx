@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
@@ -6,7 +7,6 @@ import {
 } from "@/components/ui/popover"
 import { Table } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronUp } from "lucide-react"
-import { Label } from "@/components/ui/label"
 import { useState } from "react" // Importar useState para controlar el estado del Popover
 
 interface DateFilterProps<TData, TValue> {
@@ -17,18 +17,18 @@ export function DateFilter<TData, TValue>({
   table,
 }: DateFilterProps<TData, TValue>) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false) // Estado para controlar el Popover
-  const valueDate = table.getColumn("valueDate")
-  const creationDate = table.getColumn("creationDate")
+  const completedAt = table.getColumn("completedAt")
+  const createdAt = table.getColumn("createdAt")
 
   // Determinar el ícono basado en el orden actual
   const Icon =
-    valueDate?.getIsSorted() === "asc" || creationDate?.getIsSorted() === "asc"
+    completedAt?.getIsSorted() === "asc" || createdAt?.getIsSorted() === "asc"
       ? ChevronUp
       : ArrowUpDown
 
   // Función para manejar el ordenamiento y cerrar el Popover
   const handleSort = (
-    column: typeof valueDate | typeof creationDate,
+    column: typeof completedAt | typeof createdAt,
     ascending: boolean
   ) => {
     column?.toggleSorting(ascending)
@@ -55,14 +55,14 @@ export function DateFilter<TData, TValue>({
           {/* Opción para ordenar por fecha de creación */}
           <button
             className="mb-2 mt-2 flex w-full text-left"
-            onClick={() => handleSort(creationDate, false)}
+            onClick={() => handleSort(createdAt, false)}
           >
             <span>Fecha de creación</span>
           </button>
           {/* Opción para ordenar por fecha valor */}
           <button
             className="mb-2 flex w-full text-left"
-            onClick={() => handleSort(valueDate, false)}
+            onClick={() => handleSort(completedAt, false)}
           >
             <span>Fecha valor</span>
           </button>

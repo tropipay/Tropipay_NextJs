@@ -26,6 +26,6 @@ export function useFetchData<T>({
       (q: any) => q.queryKey[0][0] === QueryKey
     )?.state?.data,
     staleTime: 4000 * 60 * 5,
-    enabled: true,
+    enabled: !!token,
   })
 }
