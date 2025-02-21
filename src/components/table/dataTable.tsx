@@ -93,6 +93,10 @@ export default function DataTable<TData, TValue>({
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
 
+  const columnsId = columnsConfig
+    .filter(({ id }) => !!id)
+    .map(({ id }) => id ?? "")
+
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
       const params = new URLSearchParams(searchParams)
@@ -158,8 +162,12 @@ export default function DataTable<TData, TValue>({
   )
 
   const [columnOrder, setColumnOrder] = useState<string[]>(
-    defaultColumnOrder ??
-      columnsConfig.filter(({ id }) => !!id).map(({ id }) => id ?? "")
+    defaultColumnOrder
+      ? [
+          ...defaultColumnOrder,
+          ...columnsId.filter((v) => !defaultColumnOrder.includes(v)),
+        ]
+      : columnsId
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -206,7 +214,7 @@ export default function DataTable<TData, TValue>({
   }: {
     header: Header<TData, unknown>
   }) => {
-    const { attributes, isDragging, listeners, setNodeRef, transform } =
+    const { attributes, isDragging, listeners, transform, setNodeRef } =
       useSortable({
         id: header.column.id,
       })
@@ -318,7 +326,7 @@ export default function DataTable<TData, TValue>({
           <Table>
             <TableHeader>
               <SortableContext
-                items={columnOrder}
+                items={columnsId}
                 strategy={horizontalListSortingStrategy}
               >
                 {table.getHeaderGroups().map(({ id, headers }) => (
