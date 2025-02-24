@@ -90,6 +90,7 @@ export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
 ): { variables: GraphQLVariables } {
+  console.log("-------- columns:", columns)
   const {
     page = "0",
     size = "50",
