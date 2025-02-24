@@ -30,67 +30,87 @@ import { cn, truncateLabels } from "@/lib/utils"
 import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
-interface DataTableFilterFacetedProps<TData, TValue> {
-  column?: Column<TData, TValue>
+interface Option {
+  value: string
+  label: string
+  icon?: React.ComponentType<{ className?: string }>
 }
 
-// Componente principal
+interface ColumnConfig {
+  filterLabel?: string
+  optionList: Option[]
+}
+
+interface DataTableFilterFacetedProps<TData, TValue> {
+  column?: Column<TData, TValue> & { config?: ColumnConfig }
+}
+
 export function DataTableFilterFaceted<TData, TValue>({
   column,
 }: DataTableFilterFacetedProps<TData, TValue>) {
-  // Hooks
   const { t } = useTranslation()
   const searchParams = useSearchParams()
-  const { filterLabel, optionList } = column?.config ?? {}
 
-  // Estados y memoización
+  // Valores seleccionados desde el filtro de la columna
   const selectedValues = React.useMemo(() => {
     const filterValue = column?.getFilterValue() as string[] | undefined
-    return new Set(filterValue?.split(",") || [])
-  }, [column?.getFilterValue()])
+    return new Set(filterValue?.length ? filterValue[0].split(",") : [])
+  }, [column])
 
   const [localSelectedValues, setLocalSelectedValues] =
     React.useState<Set<string>>(selectedValues)
-
   const facets = column?.getFacetedUniqueValues()
 
-  // Efectos
+  // Configuración de la columna
+  const { filterLabel = "filter", optionList = [] } = column?.config ?? {}
+
+  // Sincronizar con searchParams al montar o cambiar
   React.useEffect(() => {
-    const statusParam = searchParams.get(column?.id || "")
+    const statusParam = searchParams.get(column?.id ?? "")
     const searchParamsValues = statusParam
       ? new Set(statusParam.split(","))
       : new Set<string>()
     setLocalSelectedValues(searchParamsValues)
   }, [searchParams, column?.id])
 
-  // Funciones
-  const handleSelectOption = (value: string) => {
-    const newSelectedValues = new Set(localSelectedValues)
-    if (newSelectedValues.has(value)) {
-      newSelectedValues.delete(value)
-    } else {
-      newSelectedValues.add(value)
-    }
-    setLocalSelectedValues(newSelectedValues)
-  }
+  // Funciones de manejo de filtros
+  const handleSelectOption = React.useCallback((value: string) => {
+    setLocalSelectedValues((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(value)) {
+        newSet.delete(value)
+      } else {
+        newSet.add(value)
+      }
+      return newSet
+    })
+  }, [])
 
-  const handleApplyFilters = () => {
+  const handleApplyFilters = React.useCallback(() => {
     const filterValues = Array.from(localSelectedValues)
     const serializedValue = filterValues.join(",")
     column?.setFilterValue(
       filterValues.length > 0 ? serializedValue : undefined
     )
-  }
+  }, [column, localSelectedValues])
 
-  const handleClearFilters = () => {
+  const handleClearFilters = React.useCallback(() => {
     setLocalSelectedValues(new Set())
     column?.setFilterValue(undefined)
+  }, [column])
 
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.delete(column?.id || "")
-  }
+  // Renderizado de etiquetas seleccionadas
+  const selectedLabels = React.useMemo(() => {
+    return truncateLabels(
+      Array.from(selectedValues).map((value) => {
+        const option = optionList.find((opt) => opt.value === value)
+        return option ? t(option.label) : value
+      })
+    )
+  }, [selectedValues, optionList, t])
 
-  // Renderizado
+  if (!column) return null
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -98,42 +118,33 @@ export function DataTableFilterFaceted<TData, TValue>({
           variant={selectedValues.size > 0 ? "active" : "inactive"}
           size="sm"
           className="px-2 h-8"
+          aria-label={t(filterLabel)}
         >
           <FormattedMessage id={filterLabel} />
           {selectedValues.size > 0 && (
             <>
-              <Separator orientation="vertical" className="h-4 separator" />
-              <div className="space-x-1 lg:flex">
-                {truncateLabels(
-                  Array.from(selectedValues)
-                    .map(
-                      (value) =>
-                        optionList.find((option: any) => option.value === value)
-                          ?.label || value
-                    )
-                    .map((label) => t(label))
-                )}
+              <Separator orientation="vertical" className="h-4 mx-2" />
+              <div className="space-x-1 lg:flex">{selectedLabels}</div>
+              <div
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleClearFilters()
+                }}
+                className="ml-2 cursor-pointer"
+                aria-label="Clear filters"
+              >
+                <CrossCircledIcon className="h-4 w-4" />
               </div>
             </>
           )}
-          {selectedValues.size > 0 ? (
-            <div
-              onClick={(event) => {
-                event.stopPropagation()
-                handleClearFilters()
-              }}
-            >
-              <CrossCircledIcon className="h-4 w-4" />
-            </div>
-          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
           <CommandInput placeholder={t(filterLabel)} />
           <CommandList>
-            <CommandEmpty>{"No Filter results"}</CommandEmpty>
-            <CommandGroup className="px-3 pt-3 ">
+            <CommandEmpty>No Filter results</CommandEmpty>
+            <CommandGroup className="px-3 pt-3">
               {optionList.map((option) => {
                 const Icon = option.icon
                 const isSelected = localSelectedValues.has(option.value)
@@ -141,6 +152,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                   <CommandItem
                     key={option.value}
                     onSelect={() => handleSelectOption(option.value)}
+                    aria-selected={isSelected}
                   >
                     <div
                       className={cn(
@@ -149,10 +161,12 @@ export function DataTableFilterFaceted<TData, TValue>({
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible"
                       )}
+                      aria-checked={isSelected}
+                      role="checkbox"
                     >
-                      <CheckIcon className={cn("h-4 w-4")} />
+                      <CheckIcon className="h-4 w-4" />
                     </div>
-                    {Icon && <Icon className="ml-0 h-4 w-4" />}
+                    {Icon && <Icon className="mr-2 h-4 w-4" />}
                     <span>
                       <FormattedMessage id={option.label} />
                     </span>
@@ -167,17 +181,22 @@ export function DataTableFilterFaceted<TData, TValue>({
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className="p-3">
+        <div className="p-3 flex gap-2">
           <PopoverClose asChild>
             <Button
               variant="default"
-              className="w-full p-3 pt-0"
-              type="submit"
+              className="w-full"
               onClick={handleApplyFilters}
             >
-              {<FormattedMessage id="apply" />}
+              <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>
+          {/* Opcional: Botón Cancelar */}
+          {/* <PopoverClose asChild>
+            <Button variant="outline" className="w-full">
+              <FormattedMessage id="cancel" />
+            </Button>
+          </PopoverClose> */}
         </div>
       </PopoverContent>
     </Popover>

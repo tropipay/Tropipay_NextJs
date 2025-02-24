@@ -54,6 +54,33 @@ export function FilterManager<TData, TValue>({
     )
   )
 
+  // Estado para almacenar los filtros ordenados
+  const [sortedFilters, setSortedFilters] = React.useState<
+    Column<TData, TValue>[]
+  >([])
+
+  const sortingFilters = () => {
+    const sorted = filters
+      .slice() // Copia del array para no mutar el original
+      .sort((a, b) => {
+        // Primero ordenar por estado de selección
+        const aSelected = selectedFilters.has(a.id)
+        const bSelected = selectedFilters.has(b.id)
+
+        if (aSelected && !bSelected) return -1
+        if (!aSelected && bSelected) return 1
+
+        // Si ambos están seleccionados o no seleccionados, ordenar alfabéticamente
+        return a.filterLabel.localeCompare(b.filterLabel)
+      })
+
+    setSortedFilters(sorted)
+  }
+  // Ordenar los filtros solo al cargar el listado
+  React.useEffect(() => {
+    sortingFilters()
+  }, [])
+
   // Funciones
   const handleSelectOption = (columnId: string) => {
     const newSelectedFilters = new Set(selectedFilters)
@@ -107,6 +134,7 @@ export function FilterManager<TData, TValue>({
           variant="primary"
           size="sm"
           className="px-2 h-8 bg-grayBackground"
+          onClick={sortingFilters}
         >
           <Plus />
           <span>
@@ -122,7 +150,7 @@ export function FilterManager<TData, TValue>({
               <FormattedMessage id="no_results_found" />
             </CommandEmpty>
             <CommandGroup heading="">
-              {filters.map((column) => {
+              {sortedFilters.map((column) => {
                 const isSelected = selectedFilters.has(column.id)
                 return (
                   <CommandItem
