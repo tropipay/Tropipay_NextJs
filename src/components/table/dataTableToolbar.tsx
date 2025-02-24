@@ -2,9 +2,10 @@
 
 import { Input } from "@/components/ui/input"
 import { Table } from "@tanstack/react-table"
-import { ArrowUpDown, Download, Search } from "lucide-react"
+import { Download, Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Button } from "../ui/button"
 import { DataTableFilterDate } from "./dataTableFilterDate"
@@ -78,13 +79,13 @@ export function DataTableToolbar<TData, TValue>({
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 bg-grayBackground p-1 rounded-md">
             <Button variant="filterActive" className="px-2 h-8">
-              Todos
+              <FormattedMessage id="all" />
             </Button>
             <Button variant="filterInactive" className="px-2 h-8">
-              Entrada
+              <FormattedMessage id="entry" />
             </Button>
             <Button variant="filterInactive" className="px-2 h-8">
-              Salida
+              <FormattedMessage id="exit" />
             </Button>
           </div>
           <div className="relative flex items-center w-full">
@@ -116,63 +117,67 @@ export function DataTableToolbar<TData, TValue>({
             columns={columns}
             setActiveFilters={setActiveFilters}
           />
-          {activeFilters.map((column) => {
-            switch (column.filterType) {
-              case "list":
-                return (
-                  <DataTableFilterFaceted
-                    key={column.id}
-                    column={{
-                      ...table.getColumn(column.id),
-                      config: column,
-                    }}
-                  />
-                )
-              case "date":
-                return (
-                  <DataTableFilterDate
-                    key={column.id}
-                    column={{
-                      ...table.getColumn(column.id),
-                      config: column,
-                    }}
-                  />
-                )
-              case "amount":
-                return (
-                  <DataTableFilterRangeAmount
-                    key={column.id}
-                    column={{
-                      ...table.getColumn(column.id),
-                      config: column,
-                    }}
-                  />
-                )
-              case "uniqueValue":
-                return (
-                  <DataTableFilterSingleValue
-                    key={column.id}
-                    column={{
-                      ...table.getColumn(column.id),
-                      config: column,
-                    }}
-                  />
-                )
-            }
-          })}
-          {isFiltered && (
-            <Button
-              disabled={!isFiltered}
-              variant="primary"
-              onClick={() => {
-                table.resetColumnFilters()
-              }}
-              className="h-8 px-2"
-            >
-              {t("clean_filters")}
-            </Button>
-          )}
+          {activeFilters
+            .sort(({ id }) =>
+              !table.getState().columnFilters.find((c) => c.id === id) ? 1 : -1
+            )
+            .map((column) => {
+              switch (column.filterType) {
+                case "list":
+                  return (
+                    <DataTableFilterFaceted
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+                case "date":
+                  return (
+                    <DataTableFilterDate
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+                case "amount":
+                  return (
+                    <DataTableFilterRangeAmount
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+                case "uniqueValue":
+                  return (
+                    <DataTableFilterSingleValue
+                      key={column.id}
+                      column={{
+                        ...table.getColumn(column.id),
+                        config: column,
+                      }}
+                    />
+                  )
+              }
+            })}
         </div>
+        {isFiltered && (
+          <Button
+            disabled={!isFiltered}
+            variant="primary"
+            onClick={() => {
+              table.resetColumnFilters()
+            }}
+            className="h-8 px-2"
+          >
+            <FormattedMessage id="clean_filters" />
+          </Button>
+        )}
       </div>
     </>
   )

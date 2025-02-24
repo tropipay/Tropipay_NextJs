@@ -18,7 +18,7 @@ export const movementsFilters = [
   },
   {
     type: "date",
-    column: "valueDate",
+    column: "completedAt",
     label: "date",
   },
   {
@@ -36,8 +36,8 @@ export const movementsFilters = [
   {
     type: "uniqueValue",
     column: "sender",
-    label: "user",
-    placeHolder: "user",
+    label: "sender",
+    placeHolder: "sender",
   },
   {
     type: "uniqueValue",

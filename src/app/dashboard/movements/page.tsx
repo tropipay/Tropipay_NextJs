@@ -1,9 +1,9 @@
-import PageClient from "./pageClient"
-import { dehydrate, QueryClient } from "@tanstack/react-query"
-import { fetchData } from "@/lib/fetchData"
-import DataComponent from "@/components/DataComponent"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import DataComponent from "@/components/DataComponent"
+import { fetchData } from "@/lib/fetchData"
 import { processQueryParameters } from "@/lib/utils"
+import { dehydrate, QueryClient } from "@tanstack/react-query"
+import PageClient from "./pageClient"
 
 interface Props {
   searchParams: { [key: string]: string }

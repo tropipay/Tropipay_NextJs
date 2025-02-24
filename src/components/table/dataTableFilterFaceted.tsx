@@ -1,12 +1,12 @@
 "use client"
 
-import * as React from "react"
-import { useSearchParams } from "next/navigation"
-import { FormattedMessage } from "react-intl"
-import { Column } from "@tanstack/react-table"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
+import { Column } from "@tanstack/react-table"
 import { CheckIcon } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import * as React from "react"
+import { FormattedMessage } from "react-intl"
 
 // Componentes UI
 import { Button } from "@/components/ui/button"
@@ -27,6 +27,7 @@ import { Separator } from "@/components/ui/separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/lib/utils"
+import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
 interface DataTableFilterFacetedProps<TData, TValue> {
@@ -38,6 +39,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   column,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
+  const { t } = useTranslation()
   const searchParams = useSearchParams()
   const { filterLabel, optionList } = column?.config ?? {}
 
@@ -97,18 +99,19 @@ export function DataTableFilterFaceted<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {filterLabel}
-
+          <FormattedMessage id={filterLabel} />
           {selectedValues.size > 0 && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               <div className="space-x-1 lg:flex">
                 {truncateLabels(
-                  Array.from(selectedValues).map(
-                    (value) =>
-                      optionList.find((option: any) => option.value === value)
-                        ?.label || value
-                  )
+                  Array.from(selectedValues)
+                    .map(
+                      (value) =>
+                        optionList.find((option: any) => option.value === value)
+                          ?.label || value
+                    )
+                    .map((label) => t(label))
                 )}
               </div>
             </>
@@ -125,9 +128,9 @@ export function DataTableFilterFaceted<TData, TValue>({
           ) : null}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+      <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={filterLabel} />
+          <CommandInput placeholder={t(filterLabel)} />
           <CommandList>
             <CommandEmpty>{"No Filter results"}</CommandEmpty>
             <CommandGroup>
@@ -150,7 +153,9 @@ export function DataTableFilterFaceted<TData, TValue>({
                       <CheckIcon className={cn("h-4 w-4")} />
                     </div>
                     {Icon && <Icon className="ml-0 h-4 w-4" />}
-                    <span>{option.label}</span>
+                    <span>
+                      <FormattedMessage id={option.label} />
+                    </span>
                     {facets?.get(option.value) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
                         {facets.get(option.value)}

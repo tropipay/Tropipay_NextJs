@@ -1,7 +1,6 @@
 "use client"
 
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import { MixerHorizontalIcon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
@@ -13,6 +12,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Ellipsis } from "lucide-react"
+import { FormattedMessage } from "react-intl"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -29,8 +29,10 @@ export function DataTableViewOptions<TData>({
           {/* {"See Columns"} */}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuLabel>{"Edit Columns"}</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-[250px]">
+        <DropdownMenuLabel>
+          <FormattedMessage id="edit_columns" />
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
@@ -46,7 +48,7 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                <FormattedMessage id={column.id} />
               </DropdownMenuCheckboxItem>
             )
           })}

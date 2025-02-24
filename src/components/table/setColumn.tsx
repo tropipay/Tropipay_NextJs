@@ -1,10 +1,11 @@
 import { Checkbox } from "@/components/ui/checkbox"
 import { formatAmount } from "@/lib/utils"
-import { ColumnDef } from "@tanstack/react-table" // Asegúrate de importar el tipo correcto
-import { format } from "date-fns" // Importamos date-fns para formatear fechas
+import { ColumnDef } from "@tanstack/react-table"; // Asegúrate de importar el tipo correcto
+import { format } from "date-fns"; // Importamos date-fns para formatear fechas
 import React from "react"
-import { DataTableColumnHeader } from "./dataTableColumnHeader" // Ruta ajustada
-import FacetedBadge from "./facetedBadge" // Ruta ajustada
+import { FormattedMessage } from "react-intl"
+import { DataTableColumnHeader } from "./dataTableColumnHeader"; // Ruta ajustada
+import FacetedBadge from "./facetedBadge"; // Ruta ajustada
 
 // Definimos los tipos para los argumentos de la función
 type FacetedOption = {
@@ -116,9 +117,7 @@ export function setColumn<TData>(
         return (
           <div className="flex items-center">
             {Icon && <Icon className="mr-2 h-5 w-5" />}
-            <span className="ml-1">
-              {selectedOption.label} <b>OK</b>
-            </span>
+            <span className="ml-1"><FormattedMessage id={selectedOption.label} /></span>
           </div>
         )
       }
@@ -133,7 +132,6 @@ export function setColumn<TData>(
           )
           return formattedDate
         } catch (error) {
-          console.error("Error formateando la fecha:", error)
           return "Fecha inválida"
         }
       }
@@ -156,7 +154,7 @@ export function setColumn<TData>(
       baseConfig.cell = ({ row }) => {
         const { value, currency } = row.getValue(id)
         return (
-          <div className="text-right">
+          <div>
             <span className="font-bold">
               {addSign && (value > 0 ? "+" : "")}
               {formatAmount(value)}

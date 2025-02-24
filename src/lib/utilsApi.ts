@@ -1,6 +1,6 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
-import { fetchHeaders, formatAmount } from "./utils"
-import { parse, format } from "date-fns"
+import { format, parse } from "date-fns"
+import { fetchHeaders } from "./utils"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
@@ -13,11 +13,6 @@ export async function makeApiRequest({
   variables,
   token,
 }: FetchOptions) {
-  const newBody = {
-    ...body,
-    ...variables,
-  }
-
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {

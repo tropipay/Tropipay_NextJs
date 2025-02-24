@@ -9,10 +9,11 @@ import { formatAmount, selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
-import { FormattedMessage } from "react-intl"
-import { Label } from "../ui/label"
-import InputAmount from "../inputAmount"
 import React from "react"
+import { FormattedMessage } from "react-intl"
+import InputAmount from "../inputAmount"
+import { useTranslation } from "../intl/useTranslation"
+import { Label } from "../ui/label"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -21,6 +22,7 @@ interface DataTableFilterRangeAmountProps<TData, TValue> {
 export function DataTableFilterRangeAmount<TData, TValue>({
   column,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
+  const { t } = useTranslation()
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
   const { filterLabel } = column?.config || {}
@@ -94,7 +96,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           size="sm"
           className="px-2 h-8"
         >
-          {filterLabel}
+          <FormattedMessage id={filterLabel} />
           {filterValue && (
             <>
               <Separator orientation="vertical" className="h-4 separator" />
@@ -115,7 +117,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
         <form onSubmit={handleApplyFilter}>
           <div className="pb-4">
             <Label htmlFor="width" className="font-bold">
-              {filterLabel}
+              <FormattedMessage id={filterLabel} />
             </Label>
           </div>
           <Label htmlFor="width">
@@ -124,7 +126,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <InputAmount
             name="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="Mínimo (opcional)"
+            placeholder={t("minimum_opt")}
             value={filterValue ? filterValue.split(",")[0] * 100 || "" : ""}
           />
           <Label htmlFor="width">
@@ -133,7 +135,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           <InputAmount
             name="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="Máximo (opcional)"
+            placeholder={t("maximum_opt")}
             value={filterValue ? filterValue.split(",")[1] * 100 || "" : ""}
           />
           <PopoverClose id="close-popover" className="hidden" />

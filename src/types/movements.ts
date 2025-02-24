@@ -6,9 +6,8 @@ type Amount = {
 type Movement = {
   id: string
   status: string
-  creationDate: string
-  valueDate: string
-  description: string
+  createdAt: string
+  completedAt: string
   amount: Amount
   movementType: string
   paymentMethod: string

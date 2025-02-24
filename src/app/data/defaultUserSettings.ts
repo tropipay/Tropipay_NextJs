@@ -3,7 +3,7 @@ export const defaultUserSettings: UserSettings = {
     movements: {
       columnOrder: [
         "select",
-        "valueDate",
+        "completedAt",
         "status",
         "amount",
         "movementType",
