@@ -201,7 +201,7 @@ export function DataTableFilterDate<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-2" align="start">
+      <PopoverContent className="w-[200px] p-3" align="start">
         <form
           onSubmit={(e) => {
             e.preventDefault()
@@ -346,7 +346,7 @@ export function DataTableFilterDate<TData, TValue>({
             </Popover>
           </div>
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
-          <div className="py-2">
+          <div>
             <PopoverClose asChild>
               <Button variant="default" className="w-full" type="submit">
                 <FormattedMessage id="apply" />
