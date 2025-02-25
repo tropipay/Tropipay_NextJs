@@ -1,7 +1,7 @@
 "use client"
 
 import { PopoverClose } from "@radix-ui/react-popover"
-import { Column, Table } from "@tanstack/react-table"
+import { Column } from "@tanstack/react-table"
 import { CheckIcon, Plus } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import * as React from "react"
@@ -25,33 +25,31 @@ import {
 // Utilidades
 import { cn } from "@/lib/utils"
 import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
 interface FilterManagerProps<TData, TValue> {
   columns: Column<TData, TValue>[]
-  table: Table<TData>
   setActiveFilters: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 // Componente principal
 export function FilterManager<TData, TValue>({
   columns,
-  table,
   setActiveFilters,
 }: FilterManagerProps<TData, TValue>) {
   // Hooks
+  const { t } = useTranslation()
   const searchParams = useSearchParams()
 
   // Obtener los filtros de las columnas
   const filters = columns.filter(
-    (column) => !!column.filter && !!column.filterType
+    ({ filter, filterType }) => !!filter && !!filterType
   )
 
   // Estado local para los filtros seleccionados
   const [selectedFilters, setSelectedFilters] = React.useState<Set<string>>(
-    new Set(
-      filters.filter((column) => column.showFilter).map((column) => column.id)
-    )
+    new Set(filters.filter(({ showFilter }) => showFilter).map(({ id }) => id))
   )
 
   // Funciones
@@ -82,9 +80,9 @@ export function FilterManager<TData, TValue>({
     window.history.pushState(null, "", `?${newSearchParams.toString()}`)
 
     // Actualizar los filtros activos
-    const newFilters = []
+    const newFilters: Column<TData, TValue>[] = []
     selectedFilters.forEach((columnId) => {
-      const column = columns.find((col) => col.id === columnId)
+      const column = columns.find(({ id }) => id === columnId)
       if (column) {
         newFilters.push(column)
       }
@@ -116,7 +114,7 @@ export function FilterManager<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Buscar filtros..." />
+          <CommandInput placeholder={t("search_filters")} />
           <CommandList>
             <CommandEmpty>
               <FormattedMessage id="no_results_found" />

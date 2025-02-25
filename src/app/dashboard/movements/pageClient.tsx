@@ -13,9 +13,9 @@ interface Props {
 }
 
 const PageClient = ({ columns, data }: Props) => {
+  const tableId = "movements"
   const { data: session } = useSession()
-  const user = session?.user
-  const userId = user?.id
+  const userId = session?.user?.id
   const columnsSettings = userId
     ? getUserSettings(userId).tableColumnsSettings
     : null
@@ -56,6 +56,7 @@ const PageClient = ({ columns, data }: Props) => {
         <DataTable
           enableColumnOrder
           {...{
+            tableId,
             columns,
             data: data?.data?.movements?.items ?? [],
             rowCount: data?.data?.movements?.totalCount ?? 0,

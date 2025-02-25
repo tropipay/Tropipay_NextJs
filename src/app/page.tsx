@@ -15,7 +15,6 @@ import { getTokenFromSession } from "@/lib/utilsUser"
 import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false)
@@ -58,10 +57,7 @@ export default function Page() {
     <>
       <div className="flex items-center justify-center gap-2 h-screen">
         {loading && (
-          <>
-            <Loader2 className="animate-spin" />
-            <FormattedMessage id="loading" />
-          </>
+          <Loader2 className="animate-spin text-[#041266]" size={72} />
         )}
       </div>
 
