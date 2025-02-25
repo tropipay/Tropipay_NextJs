@@ -112,9 +112,9 @@ export function buildGraphQLVariables(
     variables.filter.generalSearch = search
   }
 
-  const formatNumber = (textNumber) => {
-    return parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
-  }
+  const formatNumber = (textNumber: string) =>
+    parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
+
   // Procesar los filtros adicionales
   columns?.forEach((column: any) => {
     if (filters[column.column]) {

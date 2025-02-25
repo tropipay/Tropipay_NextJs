@@ -1,8 +1,10 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
+import CookiesManager from "@/lib/cookiesManager"
 import { Table } from "@tanstack/react-table"
 import { Download, Search } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
@@ -16,26 +18,36 @@ import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
 
 interface DataTableToolbarProps<TData, TValue> {
+  tableId: string
   table: Table<TData>
   columns: any
 }
 
 export function DataTableToolbar<TData, TValue>({
+  tableId,
   table,
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
+  const { data: session } = useSession()
+  const userId = session?.user?.id
+  const defaultActiveFilters = userId
+    ? CookiesManager.getInstance().get(`userFilters-${tableId}-${userId}`, [])
+    : []
+
   const { t } = useTranslation()
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const [searchValue, setSearchValue] = useState(searchParamValue)
   const [activeFilters, setActiveFilters] = useState(
-    columns.filter((column) => column.showFilter)
+    columns.filter(
+      ({ id, showFilter }) => showFilter && defaultActiveFilters.includes(id)
+    )
   )
 
   useEffect(() => {
     if (searchParamValue) {
       table.setColumnFilters((prev) => {
-        const searchFilter = prev.find((filter) => filter.id === "search")
+        const searchFilter = prev.find(({ id }) => id === "search")
         if (searchFilter) {
           return prev.map((filter) =>
             filter.id === "search"
@@ -53,7 +65,7 @@ export function DataTableToolbar<TData, TValue>({
     setSearchValue(value)
 
     table.setColumnFilters((prev) => {
-      const searchFilter = prev.find((filter) => filter.id === "search")
+      const searchFilter = prev.find(({ id }) => id === "search")
       if (searchFilter) {
         return prev.map((filter) =>
           filter.id === "search" ? { ...filter, value } : filter
@@ -71,6 +83,14 @@ export function DataTableToolbar<TData, TValue>({
       table.resetColumnFilters() // Reinicia los filtros de la tabla
     }
   }, [searchParams])
+
+  useEffect(() => {
+    userId &&
+      CookiesManager.getInstance().set(
+        `userFilters-${tableId}-${userId}`,
+        activeFilters.map(({ id }) => id)
+      )
+  }, [userId, activeFilters])
 
   return (
     <>
@@ -113,13 +133,16 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-1 items-center space-x-2 py-2 overflow-x-auto">
           <FilterManager
-            table={table}
             columns={columns}
             setActiveFilters={setActiveFilters}
           />
           {activeFilters
             .sort(({ id }) =>
-              !table.getState().columnFilters.find((c) => c.id === id) ? 1 : -1
+              !table
+                .getState()
+                .columnFilters.find(({ id: columnId }) => columnId === id)
+                ? 1
+                : -1
             )
             .map((column) => {
               switch (column.filterType) {

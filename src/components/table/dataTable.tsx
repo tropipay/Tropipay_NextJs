@@ -55,12 +55,13 @@ import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
 
 interface DataTableProps<TData, TValue> {
+  tableId: string
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
-  defaultColumnVisibility: VisibilityState
+  defaultColumnVisibility?: VisibilityState
   manualPagination?: boolean
   manualSorting?: boolean
   manualFiltering?: boolean
@@ -72,6 +73,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export default function DataTable<TData, TValue>({
+  tableId,
   data,
   columns: columnsConfig,
   enableColumnOrder = false,
@@ -314,7 +316,11 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} columns={columnsConfig} />
+      <DataTableToolbar
+        tableId={tableId}
+        table={table}
+        columns={columnsConfig}
+      />
       <div>
         <DndContext
           collisionDetection={closestCenter}
