@@ -75,6 +75,5 @@ export const apiConfig: Record<string, FetchDataConfig> = {
       },
     },
     columns: movementColumns,
-    filters: JSON.parse(JSON.stringify(movementsFilters)),
   },
 }
