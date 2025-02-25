@@ -12,7 +12,6 @@ import { format } from "date-fns"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row = props.row
-  console.log("row:", row)
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="flex justify-between items-center mb-3">

@@ -90,7 +90,6 @@ export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
 ): { variables: GraphQLVariables } {
-  console.log("-------- columns:", columns)
   const {
     page = "0",
     size = "50",
@@ -117,23 +116,23 @@ export function buildGraphQLVariables(
   }
   // Procesar los filtros adicionales
   columns?.forEach((column: any) => {
-    if (filters[column.column]) {
-      const filterType = column.type
-      const filterValue = filters[column.column]
+    if (filters[column.id]) {
+      const filterType = column.filterType
+      const filterValue = filters[column.id]
 
       switch (filterType) {
         case "amount": {
           const [amountFrom, amountTo] = filterValue?.split(",") ?? []
           if (amountFrom) {
-            variables.filter[`${column.column}Gte`] = formatNumber(amountFrom)
+            variables.filter[`${column.id}Gte`] = formatNumber(amountFrom)
           }
           if (amountTo) {
-            variables.filter[`${column.column}Lte`] = formatNumber(amountTo)
+            variables.filter[`${column.id}Lte`] = formatNumber(amountTo)
           }
           break
         }
         case "list":
-          variables.filter[column.column] = filterValue?.split(",")
+          variables.filter[column.id] = filterValue?.split(",")
           break
 
         case "date":
@@ -141,18 +140,18 @@ export function buildGraphQLVariables(
           if (dateFrom) {
             const fecha = parse(dateFrom, "dd/MM/yyyy", new Date())
             const fechaISO = format(fecha, "yyyy-MM-dd")
-            variables.filter[`${column.column}From`] = fechaISO
+            variables.filter[`${column.id}From`] = fechaISO
           }
 
           if (dateTo) {
             const fecha = parse(dateTo, "dd/MM/yyyy", new Date())
             const fechaISO = format(fecha, "yyyy-MM-dd")
-            variables.filter[`${column.column}To`] = fechaISO
+            variables.filter[`${column.id}To`] = fechaISO
           }
           break
 
         case "uniqueValue":
-          variables.filter[column.column] = filterValue
+          variables.filter[column.id] = filterValue
           break
 
         default:
