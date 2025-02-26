@@ -178,3 +178,27 @@ export const truncateLabels = (
 
   return concatenated.substring(0, maxLength - 3) + "..."
 }
+
+type Primitive = string | number | boolean | null | undefined | bigint | symbol
+
+export function primitiveObject<T extends Record<string, any>>(
+  obj: T
+): Partial<T> {
+  const nuevoObjeto: Partial<T> = {}
+  for (const [clave, valor] of Object.entries(obj)) {
+    // Verificar si el valor es primitivo
+    if (
+      valor === null ||
+      (typeof valor !== "object" && typeof valor !== "function")
+    ) {
+      nuevoObjeto[clave as keyof T] = valor
+    }
+  }
+  return nuevoObjeto
+}
+
+export function primitiveArray<T extends Record<string, any>>(
+  arr: T[]
+): Partial<T>[] {
+  return arr?.length ? arr.map((objeto) => primitiveObject(objeto)) : []
+}

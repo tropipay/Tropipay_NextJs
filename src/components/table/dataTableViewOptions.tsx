@@ -1,4 +1,5 @@
 "use client"
+
 import { Table } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Ellipsis, CheckIcon } from "lucide-react"
@@ -12,7 +13,7 @@ import {
   CommandList,
 } from "../ui/command"
 import { PopoverClose } from "@radix-ui/react-popover"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface DataTableViewOptionsProps<TData> {
@@ -29,6 +30,27 @@ export function DataTableViewOptions<TData>({
     Record<string, boolean>
   >({})
 
+  // Ordenar columnas usando initialVisibility para mantener el orden estático
+  const sortedColumns = useMemo(() => {
+    return table
+      .getAllColumns()
+      .filter(
+        (column) =>
+          typeof column.accessorFn !== "undefined" && column.getCanHide()
+      )
+      .sort((a, b) => {
+        const isVisibleA = initialVisibility[a.id] ?? a.getIsVisible() ?? false
+        const isVisibleB = initialVisibility[b.id] ?? b.getIsVisible() ?? false
+
+        // Ordenar primero por visibilidad (visibles primero)
+        if (isVisibleA !== isVisibleB) {
+          return isVisibleA ? -1 : 1
+        }
+        // Si la visibilidad es igual, ordenar alfabéticamente por id
+        return a.id.localeCompare(b.id)
+      })
+  }, [table, initialVisibility])
+
   const handleToggleColumn = (columnId: string) => {
     setPendingVisibility((prev) => ({
       ...prev,
@@ -37,22 +59,14 @@ export function DataTableViewOptions<TData>({
   }
 
   const handleApply = () => {
-    // 1. Aplicar cambios de visibilidad
     table.setColumnVisibility(pendingVisibility)
-
-    // 2. Determinar columnas recién visibles
-    const newlyVisible = table
-      .getAllColumns()
+    const newlyVisible = sortedColumns
       .filter(
         (column) =>
-          typeof column.accessorFn !== "undefined" &&
-          column.getCanHide() &&
-          pendingVisibility[column.id] &&
-          !initialVisibility[column.id]
+          pendingVisibility[column.id] && !initialVisibility[column.id]
       )
       .map((c) => c.id)
 
-    // 3. Actualizar orden solo si hay nuevas columnas visibles
     if (newlyVisible.length > 0) {
       const currentOrder = table.getState().columnOrder
       const cleanOrder = currentOrder.filter((id) => !newlyVisible.includes(id))
@@ -60,21 +74,12 @@ export function DataTableViewOptions<TData>({
     }
   }
 
-  const sortedColumns = table
-    .getAllColumns()
-    .filter(
-      (column) =>
-        typeof column.accessorFn !== "undefined" && column.getCanHide()
-    )
-    .sort((a, b) => a.id.localeCompare(b.id))
-
   return (
     <Popover
       onOpenChange={(isOpen) => {
         if (isOpen) {
-          // Inicializar estados con visibilidad actual
           const visibilitySnapshot = Object.fromEntries(
-            table.getAllColumns().map((c) => [c.id, c.getIsVisible()])
+            table.getAllColumns().map((c) => [c.id, c.getIsVisible() ?? false])
           )
           setInitialVisibility(visibilitySnapshot)
           setPendingVisibility(visibilitySnapshot)
@@ -82,7 +87,7 @@ export function DataTableViewOptions<TData>({
       }}
     >
       <PopoverTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" aria-label="Opciones de columnas">
           <Ellipsis className="mr-0 h-4 w-4" />
         </Button>
       </PopoverTrigger>
@@ -91,13 +96,15 @@ export function DataTableViewOptions<TData>({
           <CommandInput placeholder="Buscar columnas..." />
           <CommandList>
             <CommandEmpty>No se encontraron resultados</CommandEmpty>
-            <CommandGroup heading="Columnas">
+            <CommandGroup heading="Columnas" className="px-3 pt-3 ">
               {sortedColumns.map((column) => {
-                const isVisible = pendingVisibility[column.id]
+                const isVisible =
+                  pendingVisibility[column.id] ?? column.getIsVisible() ?? false
                 return (
                   <CommandItem
                     key={column.id}
                     onSelect={() => handleToggleColumn(column.id)}
+                    aria-selected={isVisible}
                   >
                     <div
                       className={cn(
@@ -106,8 +113,10 @@ export function DataTableViewOptions<TData>({
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible"
                       )}
+                      aria-checked={isVisible}
+                      role="checkbox"
                     >
-                      <CheckIcon className={cn("h-4 w-4")} />
+                      <CheckIcon className="h-4 w-4" />
                     </div>
                     <span>{column.id}</span>
                   </CommandItem>
@@ -116,7 +125,7 @@ export function DataTableViewOptions<TData>({
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className="p-2">
+        <div className="p-3 flex gap-2">
           <PopoverClose asChild>
             <Button variant="default" className="w-full" onClick={handleApply}>
               Aplicar
