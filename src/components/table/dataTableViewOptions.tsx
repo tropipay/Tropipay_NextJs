@@ -96,7 +96,7 @@ export function DataTableViewOptions<TData>({
           <CommandInput placeholder="Buscar columnas..." />
           <CommandList>
             <CommandEmpty>No se encontraron resultados</CommandEmpty>
-            <CommandGroup heading="Columnas">
+            <CommandGroup heading="Columnas" className="px-3 pt-3 ">
               {sortedColumns.map((column) => {
                 const isVisible =
                   pendingVisibility[column.id] ?? column.getIsVisible() ?? false
@@ -125,15 +125,10 @@ export function DataTableViewOptions<TData>({
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className="p-2 flex gap-2">
+        <div className="p-3 flex gap-2">
           <PopoverClose asChild>
             <Button variant="default" className="w-full" onClick={handleApply}>
               Aplicar
-            </Button>
-          </PopoverClose>
-          <PopoverClose asChild>
-            <Button variant="outline" className="w-full">
-              Cancelar
             </Button>
           </PopoverClose>
         </div>

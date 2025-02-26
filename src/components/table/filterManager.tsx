@@ -82,9 +82,6 @@ export function FilterManager<TData, TValue>({
     })
     setSortedFilters(sorted)
   }
-  React.useEffect(() => {
-    sortingFilters()
-  }, [selectedFilters])
 
   // Persistencia en cookies
   React.useEffect(() => {
@@ -157,7 +154,7 @@ export function FilterManager<TData, TValue>({
                 <CommandEmpty>
                   <FormattedMessage id="no_results_found" />
                 </CommandEmpty>
-                <CommandGroup heading="">
+                <CommandGroup heading="" className="px-3 pt-3 ">
                   {sortedFilters.map((column) => {
                     const isSelected = selectedFilters.has(column.id)
                     return (
@@ -184,7 +181,7 @@ export function FilterManager<TData, TValue>({
                 </CommandGroup>
               </CommandList>
             </Command>
-            <div className="p-2">
+            <div className="p-3">
               <PopoverClose asChild>
                 <Button
                   variant="default"
