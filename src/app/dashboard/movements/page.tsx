@@ -8,7 +8,6 @@ interface Props {
 
 export default async function Page({ searchParams }: Props) {
   const queryConfig = apiConfig.movements
-  console.log("queryConfig.columns:", queryConfig.columns)
 
   return (
     <DataFull queryConfig={queryConfig} searchParams={searchParams}>

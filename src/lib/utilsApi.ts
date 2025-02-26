@@ -90,6 +90,7 @@ export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
 ): { variables: GraphQLVariables } {
+  console.log("-------- columns:", columns)
   const {
     page = "0",
     size = "50",
@@ -111,9 +112,9 @@ export function buildGraphQLVariables(
     variables.filter.generalSearch = search
   }
 
-  const formatNumber = (textNumber) => {
-    return parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
-  }
+  const formatNumber = (textNumber: string) =>
+    parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
+
   // Procesar los filtros adicionales
   columns?.forEach((column: any) => {
     if (filters[column.id]) {

@@ -49,7 +49,7 @@ export function DataTableViewOptions<TData>({
         // Si la visibilidad es igual, ordenar alfabéticamente por id
         return a.id.localeCompare(b.id)
       })
-  }, [table, initialVisibility]) // Dependencia en initialVisibility en lugar de pendingVisibility
+  }, [table, initialVisibility])
 
   const handleToggleColumn = (columnId: string) => {
     setPendingVisibility((prev) => ({
@@ -66,6 +66,7 @@ export function DataTableViewOptions<TData>({
           pendingVisibility[column.id] && !initialVisibility[column.id]
       )
       .map((c) => c.id)
+
     if (newlyVisible.length > 0) {
       const currentOrder = table.getState().columnOrder
       const cleanOrder = currentOrder.filter((id) => !newlyVisible.includes(id))

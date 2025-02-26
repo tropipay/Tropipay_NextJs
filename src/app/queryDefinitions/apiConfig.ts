@@ -1,4 +1,3 @@
-import { movementsFilters } from "./movements/filters"
 import { movementColumns } from "./movements/movementColumns"
 import { FetchDataConfig } from "./types"
 

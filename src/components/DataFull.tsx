@@ -1,7 +1,7 @@
-import { QueryClient, dehydrate } from "@tanstack/react-query"
 import DataComponent from "@/components/DataComponent"
 import { fetchData } from "@/lib/fetchData"
 import { processQueryParameters } from "@/lib/utils"
+import { QueryClient, dehydrate } from "@tanstack/react-query"
 
 interface DataFullProps {
   queryConfig: any

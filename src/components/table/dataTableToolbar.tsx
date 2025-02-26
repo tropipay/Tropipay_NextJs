@@ -1,41 +1,40 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
+import CookiesManager from "@/lib/cookiesManager"
 import { Table } from "@tanstack/react-table"
 import { Download, Search } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Button } from "../ui/button"
-import { DataTableFilterDate } from "./dataTableFilterDate"
-import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
-import { DataTableFilterRangeAmount } from "./dataTableFilterRangeAmount"
-import { DataTableFilterSingleValue } from "./dataTableFilterSingleValue"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
 
 interface DataTableToolbarProps<TData, TValue> {
+  tableId: string
   table: Table<TData>
   columns: any
 }
 
 export function DataTableToolbar<TData, TValue>({
+  tableId,
   table,
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
+  const { data: session } = useSession()
+  const userId = session?.user?.id
   const { t } = useTranslation()
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const [searchValue, setSearchValue] = useState(searchParamValue)
-  const [activeFilters, setActiveFilters] = useState(
-    columns.filter((column) => column.showFilter)
-  )
 
   useEffect(() => {
     if (searchParamValue) {
       table.setColumnFilters((prev) => {
-        const searchFilter = prev.find((filter) => filter.id === "search")
+        const searchFilter = prev.find(({ id }) => id === "search")
         if (searchFilter) {
           return prev.map((filter) =>
             filter.id === "search"
@@ -46,14 +45,13 @@ export function DataTableToolbar<TData, TValue>({
         return [...prev, { id: "search", value: searchParamValue }]
       })
     }
-  }, [])
+  }, [searchParamValue, table])
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
     setSearchValue(value)
-
     table.setColumnFilters((prev) => {
-      const searchFilter = prev.find((filter) => filter.id === "search")
+      const searchFilter = prev.find(({ id }) => id === "search")
       if (searchFilter) {
         return prev.map((filter) =>
           filter.id === "search" ? { ...filter, value } : filter
@@ -63,14 +61,12 @@ export function DataTableToolbar<TData, TValue>({
     })
   }
 
-  const isFiltered = table.getState().columnFilters.length > 0
-
   useEffect(() => {
     if (!searchParams || searchParams.toString() === "") {
-      setSearchValue("") // Limpia el input de búsqueda
-      table.resetColumnFilters() // Reinicia los filtros de la tabla
+      setSearchValue("")
+      table.resetColumnFilters()
     }
-  }, [searchParams])
+  }, [searchParams, table])
 
   return (
     <>
@@ -110,75 +106,8 @@ export function DataTableToolbar<TData, TValue>({
           <DataTableViewOptions table={table} />
         </div>
       </div>
-      <div className="flex w-full items-center justify-between">
-        <div className="flex flex-1 items-center space-x-2 py-2 overflow-x-auto">
-          <FilterManager
-            table={table}
-            columns={columns}
-            setActiveFilters={setActiveFilters}
-          />
-          {activeFilters
-            .sort(({ id }) =>
-              !table.getState().columnFilters.find((c) => c.id === id) ? 1 : -1
-            )
-            .map((column) => {
-              switch (column.filterType) {
-                case "list":
-                  return (
-                    <DataTableFilterFaceted
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-                case "date":
-                  return (
-                    <DataTableFilterDate
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-                case "amount":
-                  return (
-                    <DataTableFilterRangeAmount
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-                case "uniqueValue":
-                  return (
-                    <DataTableFilterSingleValue
-                      key={column.id}
-                      column={{
-                        ...table.getColumn(column.id),
-                        config: column,
-                      }}
-                    />
-                  )
-              }
-            })}
-        </div>
-        {isFiltered && (
-          <Button
-            disabled={!isFiltered}
-            variant="primary"
-            onClick={() => {
-              table.resetColumnFilters()
-            }}
-            className="h-8 px-2"
-          >
-            <FormattedMessage id="clean_filters" />
-          </Button>
-        )}
-      </div>
+      {/* Delegamos la visualización de filtros a FilterManager */}
+      <FilterManager tableId={tableId} table={table} columns={columns} />
     </>
   )
 }
