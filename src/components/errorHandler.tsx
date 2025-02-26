@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { FormattedMessage } from "react-intl"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,13 +12,13 @@ import {
 
 interface ErrorHandlerProps {
   errors: Array<string | Error | { message: string }>
+  onOk?: () => void
 }
 
-const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors }) => {
+const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors, onOk }) => {
   const [isOpen, setIsOpen] = useState(true)
 
   const formatErrors = (errors: ErrorHandlerProps["errors"]) => {
-    console.log("...............")
     return errors
       .map((error) => {
         if (typeof error === "string") return error
@@ -27,20 +28,35 @@ const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors }) => {
       .join("\n• ")
   }
 
+  const handlerOk = () => {
+    setIsOpen(false)
+    onOk?.()
+  }
+
+  useEffect(() => {
+    errors.length > 0 && setIsOpen(true)
+  }, [errors])
+
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+    <AlertDialog open={isOpen && errors.length > 0} onOpenChange={setIsOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Se han detectado errores</AlertDialogTitle>
+          <AlertDialogTitle>
+            <FormattedMessage
+              id={
+                errors.length === 1
+                  ? "error_detected"
+                  : "errors_have_been_detected"
+              }
+            />
+          </AlertDialogTitle>
           <AlertDialogDescription className="whitespace-pre-line">
-            Se encontraron los siguientes errores:
-            {"\n\n• "}
             {formatErrors(errors)}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogAction onClick={() => setIsOpen(false)}>
-            Entendido
+          <AlertDialogAction onClick={handlerOk}>
+            <FormattedMessage id="got_it" />
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

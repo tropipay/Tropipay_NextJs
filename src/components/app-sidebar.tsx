@@ -12,7 +12,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { dehydrate, QueryClient } from "@tanstack/react-query"
+import { dehydrate, useQueryClient } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import * as React from "react"
 import DataComponent from "./DataComponent"
@@ -20,7 +20,7 @@ import { NavUserBusiness } from "./nav-user-bussiness"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession()
-  const queryClient = new QueryClient()
+  const queryClient = useQueryClient()
   const queryConfig = apiConfig.accounts
   const dehydratedState = dehydrate(queryClient)
   const user = session?.user

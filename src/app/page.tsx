@@ -1,15 +1,8 @@
 "use client"
 
 import { login } from "@/app/actions/sessionActions"
+import ErrorHandler from "@/components/errorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import CookiesManager from "@/lib/cookiesManager"
 import { getTokenFromSession } from "@/lib/utilsUser"
 import { Loader2 } from "lucide-react"
@@ -18,7 +11,10 @@ import { useEffect, useState } from "react"
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false)
-  const [isOpen, setIsOpen] = useState(false)
+  const [errors, setErrors] = useState<
+    Array<string | Error | { message: string }>
+  >([])
+
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -30,7 +26,7 @@ export default function Page() {
   const onLogin = async () => {
     const token = getToken()
     if (!token) {
-      setIsOpen(true)
+      setErrors([t("error_login_dialog_title")])
       return
     }
 
@@ -39,14 +35,13 @@ export default function Page() {
       await login(token)
       router.push("/dashboard/movements")
     } catch (e) {
-      setIsOpen(true)
+      setErrors([t("error_login_dialog_title")])
     }
     setLoading(false)
   }
 
-  const onBack = () => {
+  const onOk = () => {
     // Implement back to Tropipay page ...
-    setIsOpen(false)
   }
 
   useEffect(() => {
@@ -61,19 +56,7 @@ export default function Page() {
         )}
       </div>
 
-      <Dialog {...{ open: isOpen }}>
-        <DialogContent>
-          <DialogHeader className="text-start">
-            <DialogTitle>{t("authentication_error")}</DialogTitle>
-            <DialogDescription>
-              {t("error_login_dialog_title")}
-              <br />
-              {t("error_login_dialog_description")}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogClose onClick={onBack}>{t("back")}</DialogClose>
-        </DialogContent>
-      </Dialog>
+      <ErrorHandler {...{ errors, onOk }} />
     </>
   )
 }

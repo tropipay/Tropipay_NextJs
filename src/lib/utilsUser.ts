@@ -8,11 +8,15 @@ export const getUser = async () => {
 }
 
 export const getTokenFromSession = (session?: any): string => {
-  const {
-    sessionData: { token },
-  } = session
+  try {
+    const {
+      sessionData: { token },
+    } = session
 
-  return token ?? ""
+    return token ?? ""
+  } catch (e) {
+    return ""
+  }
 }
 
 export const getUserSettings = (userId: string): UserSettings =>

@@ -26,7 +26,6 @@ export function useFetchData<T>({
     initialData: dehydratedState?.queries.find(
       (q: any) => q.queryKey[0][0] === QueryKey
     )?.state?.data,
-    staleTime: 4000 * 60 * 5,
     enabled: !!token,
   })
 }

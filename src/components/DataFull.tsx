@@ -1,7 +1,8 @@
 import DataComponent from "@/components/DataComponent"
 import { fetchData } from "@/lib/fetchData"
 import { processQueryParameters } from "@/lib/utils"
-import { QueryClient, dehydrate } from "@tanstack/react-query"
+import { dehydrate } from "@tanstack/react-query"
+import getQueryClient from "./getQueryClient"
 
 interface DataFullProps {
   queryConfig: any
@@ -14,7 +15,7 @@ export default async function DataFull({
   children,
   searchParams = {},
 }: DataFullProps) {
-  const queryClient = new QueryClient()
+  const queryClient = getQueryClient()
   const urlParams = await processQueryParameters(searchParams)
   await fetchData(queryClient, queryConfig, urlParams)
   const dehydratedState = dehydrate(queryClient)
@@ -27,7 +28,7 @@ export default async function DataFull({
           queryConfig={queryConfig}
           key={queryConfig.key}
         >
-          {children}
+          <>{children}</>
         </DataComponent>
       )}
     </>
