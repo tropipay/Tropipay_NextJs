@@ -28,13 +28,7 @@ export async function makeApiRequest({
     cache: "no-store",
   })
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.message ||
-        `Error fetching data: ${response.status} ${response.statusText}`
-    )
-  }
+  if (!response.ok) throw new Error(response.statusText)
 
   return response.json()
 }
@@ -90,7 +84,7 @@ export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
 ): { variables: GraphQLVariables } {
-  console.log("-------- columns:", columns)
+  // console.log("-------- columns:", columns)
   const {
     page = "0",
     size = "50",

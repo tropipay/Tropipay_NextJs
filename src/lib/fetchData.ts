@@ -1,8 +1,8 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
+import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
 import { generateHashedKey, primitiveArray } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
-import { auth } from "@/auth"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
