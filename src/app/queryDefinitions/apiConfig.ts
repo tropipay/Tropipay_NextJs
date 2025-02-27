@@ -1,4 +1,6 @@
+import { setFilters } from "@/lib/utils"
 import { movementColumns } from "./movements/movementColumns"
+import { movementColumnsDef } from "./movements/movementsColumnsDef"
 import { FetchDataConfig } from "./types"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
@@ -74,5 +76,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
       },
     },
     columns: movementColumns,
+    filters: setFilters(movementColumnsDef),
+    columnsDef: JSON.parse(JSON.stringify(movementColumnsDef)),
   },
 }
