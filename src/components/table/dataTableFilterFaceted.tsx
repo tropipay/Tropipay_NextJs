@@ -171,7 +171,7 @@ export function DataTableFilterFaceted<TData, TValue>({
           <PopoverClose asChild>
             <Button
               variant="default"
-              className="w-full p-3 pt-0"
+              className="w-full p-2"
               type="submit"
               onClick={handleApplyFilters}
             >

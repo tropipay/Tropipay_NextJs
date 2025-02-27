@@ -179,26 +179,54 @@ export const truncateLabels = (
   return concatenated.substring(0, maxLength - 3) + "..."
 }
 
-type Primitive = string | number | boolean | null | undefined | bigint | symbol
+/* ---------------------------- */
 
-export function primitiveObject<T extends Record<string, any>>(
-  obj: T
-): Partial<T> {
-  const nuevoObjeto: Partial<T> = {}
-  for (const [clave, valor] of Object.entries(obj)) {
-    // Verificar si el valor es primitivo
-    if (
-      valor === null ||
-      (typeof valor !== "object" && typeof valor !== "function")
-    ) {
-      nuevoObjeto[clave as keyof T] = valor
-    }
+export const setFilterType = (filter: any, type: any): string | null => {
+  const filterTypeResult = {
+    simpleText: "uniqueValue",
+    faceted: "list",
+    date: "date",
+    amount: "amount",
+    facetedBadge: "list",
+    free: "uniqueValue",
+    select: null,
   }
-  return nuevoObjeto
+  return filterTypeResult[type]
 }
 
-export function primitiveArray<T extends Record<string, any>>(
-  arr: T[]
-): Partial<T>[] {
-  return arr?.length ? arr.map((objeto) => primitiveObject(objeto)) : []
+export function setFilters<TData>(
+  columnsConfig: Record<string, ColumnOptions<TData>>
+): ColumnDef<TData>[] {
+  return Object.entries(columnsConfig).map(([id, options]) => {
+    const {
+      type,
+      title,
+      format: dateFormat,
+      component,
+      addSign = true,
+      enableSorting = true,
+      enableHiding = true,
+      filter = true,
+      filterType = setFilterType(filter, type),
+      filterLabel = title || id,
+      filterPlaceholder = title || id,
+      showFilter = false,
+      hidden = false,
+    } = options
+
+    const baseConfig: any = {
+      id: id,
+      accessorKey: id,
+      enableSorting: enableSorting,
+      enableHiding: enableHiding,
+      filterType,
+      filterLabel,
+      filterPlaceholder,
+      filter,
+      showFilter,
+      hidden,
+    }
+
+    return baseConfig
+  })
 }

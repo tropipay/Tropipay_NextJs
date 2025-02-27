@@ -1,7 +1,7 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
-import { generateHashedKey, primitiveArray } from "./utils"
+import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 
 export async function fetchData<T>(
@@ -10,9 +10,7 @@ export async function fetchData<T>(
   urlParams: any
 ): Promise<T> {
   const queryKey = [generateHashedKey(queryConfig.key ?? "", urlParams)]
-  const filters = primitiveArray(queryConfig.columns)
-  const variables = buildGraphQLVariables(urlParams, filters)
-  console.log("variables server:", variables)
+  const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
   const session = await auth()
   const token = session?.user.token
 

@@ -12,6 +12,7 @@ import { useTranslation } from "../intl/useTranslation"
 import { Button } from "../ui/button"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
+import MovementsAllInOut from "@/app/dashboard/movements/movementsAllInOut"
 
 interface DataTableToolbarProps<TData, TValue> {
   tableId: string
@@ -73,17 +74,7 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex items-center justify-between">
         {/* Elementos alineados a la izquierda */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1 bg-grayBackground p-1 rounded-md">
-            <Button variant="filterActive" className="px-2 h-8">
-              <FormattedMessage id="all" />
-            </Button>
-            <Button variant="filterInactive" className="px-2 h-8">
-              <FormattedMessage id="entry" />
-            </Button>
-            <Button variant="filterInactive" className="px-2 h-8">
-              <FormattedMessage id="exit" />
-            </Button>
-          </div>
+          <MovementsAllInOut table={table} />
           <div className="relative flex items-center w-full">
             <span className="absolute left-3 flex items-center text-gray-500">
               <Search className="h-5 w-5" aria-hidden="true" />

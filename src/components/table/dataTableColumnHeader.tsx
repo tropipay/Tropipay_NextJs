@@ -39,16 +39,12 @@ export function DataTableColumnHeader<TData, TValue>({
             className="-ml-3 h-8 font-semibold data-[state=open]:bg-accent"
           >
             <FormattedMessage id={title} />
-            {column.getCanSort() ? (
-              column.getIsSorted() === "desc" ? (
-                <ArrowDownIcon className="ml-2 h-4 w-4" />
-              ) : column.getIsSorted() === "asc" ? (
-                <ArrowUpIcon className="ml-2 h-4 w-4" />
-              ) : (
-                <CaretSortIcon className="ml-2 h-4 w-4" />
-              )
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDownIcon className="ml-2 h-4 w-4" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUpIcon className="ml-2 h-4 w-4" />
             ) : (
-              <EyeNoneIcon className="ml-2 h-4 w-4" />
+              <CaretSortIcon className="ml-2 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
