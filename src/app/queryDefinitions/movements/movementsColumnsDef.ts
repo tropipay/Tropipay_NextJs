@@ -6,12 +6,12 @@ import {
 } from "@/app/filterDefinitions/definitions"
 
 export const movementColumnsDef: any = {
-  select: {
+  /*   select: {
     type: "select",
     enableHiding: false,
     enableSorting: false,
   },
-  amount: {
+ */ amount: {
     type: "amount",
     enableHiding: false,
     showFilter: true,
