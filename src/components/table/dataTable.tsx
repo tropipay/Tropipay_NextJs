@@ -174,7 +174,7 @@ export default function DataTable<TData, TValue>({
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     defaultColumnVisibility ??
-      columnsConfig.reduce((acc, column) => {
+      columnsConfig.reduce((acc, column: any) => {
         acc[column.id] = !column.hidden
         return acc
       }, {})

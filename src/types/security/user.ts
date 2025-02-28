@@ -1,6 +1,6 @@
 import { SortingState } from "@tanstack/react-table"
 
-type User = {
+export type User = {
   id: string
   userName: string
   phone: string
@@ -15,18 +15,18 @@ type User = {
   updatedAt?: Date
 }
 
-type UserStatus = "active" | "inactive"
+export type UserStatus = "active" | "inactive"
 
-type UserRole = "client" | "provider"
+export type UserRole = "client" | "provider"
 
-type UserTableColumnsSettings = Record<string, UserColumnsSettings>
+export type UserTableColumnsSettings = Record<string, UserColumnsSettings>
 
-type UserColumnsSettings = {
+export type UserColumnsSettings = {
   columnOrder: string[]
-  columnVisibility: Record<string, boolean>
   columnSorting: SortingState
+  columnVisibility?: Record<string, boolean>
 }
 
-type UserSettings = {
+export type UserSettings = {
   tableColumnsSettings: UserTableColumnsSettings
 }

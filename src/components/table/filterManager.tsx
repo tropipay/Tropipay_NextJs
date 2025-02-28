@@ -1,12 +1,12 @@
 "use client"
 
+import CookiesManager from "@/lib/cookiesManager"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column, Table } from "@tanstack/react-table"
 import { CheckIcon, Plus } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import * as React from "react"
-import CookiesManager from "@/lib/cookiesManager"
-import { useSession } from "next-auth/react"
 
 // Componentes UI
 import { Button } from "@/components/ui/button"
@@ -49,7 +49,7 @@ export function FilterManager<TData, TValue>({
 
   // Filtros disponibles
   const filters = columns.filter(
-    ({ filter, filterType }) => !!filter && !!filterType
+    ({ filter, filterType }: any) => !!filter && !!filterType
   )
 
   // Estado para filtros seleccionados y activos
@@ -58,13 +58,14 @@ export function FilterManager<TData, TValue>({
     : ""
   const defaultActiveFilters = initialActiveFilters
     ? initialActiveFilters
-    : columns.filter(({ showFilter }) => showFilter).map(({ id }) => id)
+    : columns.filter(({ showFilter }: any) => showFilter).map(({ id }) => id)
   const [selectedFilters, setSelectedFilters] = React.useState<Set<string>>(
     new Set(defaultActiveFilters)
   )
   const [activeFilters, setActiveFilters] = React.useState(
     columns.filter(
-      ({ id, showFilter }) => showFilter && defaultActiveFilters.includes(id)
+      ({ id, showFilter }: any) =>
+        showFilter && defaultActiveFilters.includes(id)
     )
   )
 
@@ -73,7 +74,7 @@ export function FilterManager<TData, TValue>({
     Column<TData, TValue>[]
   >([])
   const sortingFilters = () => {
-    const sorted = filters.slice().sort((a, b) => {
+    const sorted = filters.slice().sort((a: any, b: any) => {
       const aSelected = selectedFilters.has(a.id)
       const bSelected = selectedFilters.has(b.id)
       if (aSelected && !bSelected) return -1
@@ -136,7 +137,7 @@ export function FilterManager<TData, TValue>({
         <Popover>
           <PopoverTrigger asChild>
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
               className="px-2 h-8 bg-grayBackground"
               onClick={sortingFilters}
@@ -155,12 +156,12 @@ export function FilterManager<TData, TValue>({
                   <FormattedMessage id="no_results_found" />
                 </CommandEmpty>
                 <CommandGroup heading="" className="px-3 pt-3 ">
-                  {sortedFilters.map((column) => {
-                    const isSelected = selectedFilters.has(column.id)
+                  {sortedFilters.map(({ id, filterLabel }: any) => {
+                    const isSelected = selectedFilters.has(id)
                     return (
                       <CommandItem
-                        key={column.id}
-                        onSelect={() => handleSelectOption(column.id)}
+                        key={id}
+                        onSelect={() => handleSelectOption(id)}
                       >
                         <div
                           className={cn(
@@ -173,7 +174,7 @@ export function FilterManager<TData, TValue>({
                           <CheckIcon className={cn("h-4 w-4")} />
                         </div>
                         <span>
-                          <FormattedMessage id={column.filterLabel} />
+                          <FormattedMessage id={filterLabel} />
                         </span>
                       </CommandItem>
                     )
@@ -204,7 +205,7 @@ export function FilterManager<TData, TValue>({
               ? 1
               : -1
           )
-          .map((column) => {
+          .map((column: any) => {
             switch (column.filterType) {
               case "list":
                 return (
@@ -212,6 +213,7 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
+                      // @ts-ignore
                       config: column,
                     }}
                   />
@@ -220,6 +222,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterDate
                     key={column.id}
+                    // @ts-ignore
                     column={{
                       ...table.getColumn(column.id),
                       config: column,
@@ -232,6 +235,7 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
+                      // @ts-ignore
                       config: column,
                     }}
                   />
@@ -242,6 +246,7 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
+                      // @ts-ignore
                       config: column,
                     }}
                   />
@@ -254,7 +259,7 @@ export function FilterManager<TData, TValue>({
       {isFiltered && (
         <Button
           disabled={!isFiltered}
-          variant="primary"
+          variant="active"
           onClick={handleClearFilters}
           className="h-8 px-2"
         >

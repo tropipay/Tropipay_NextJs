@@ -1,9 +1,13 @@
 "use client"
 
-import { Table } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
-import { Ellipsis, CheckIcon } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { cn } from "@/lib/utils"
+import { PopoverClose } from "@radix-ui/react-popover"
+import { Table } from "@tanstack/react-table"
+import { CheckIcon, Ellipsis } from "lucide-react"
+import { useMemo, useState } from "react"
+import { FormattedMessage } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 import {
   Command,
   CommandEmpty,
@@ -12,9 +16,7 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command"
-import { PopoverClose } from "@radix-ui/react-popover"
-import { useMemo, useState } from "react"
-import { cn } from "@/lib/utils"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -23,6 +25,7 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
+  const { t } = useTranslation()
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>
   >({})
@@ -93,10 +96,12 @@ export function DataTableViewOptions<TData>({
       </PopoverTrigger>
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Buscar columnas..." />
+          <CommandInput placeholder={t("search_columns")} />
           <CommandList>
-            <CommandEmpty>No se encontraron resultados</CommandEmpty>
-            <CommandGroup heading="Columnas" className="px-3 pt-3 ">
+            <CommandEmpty>
+              <FormattedMessage id="no_results_found" />
+            </CommandEmpty>
+            <CommandGroup heading={t("columns")} className="px-3 pt-3 ">
               {sortedColumns.map((column) => {
                 const isVisible =
                   pendingVisibility[column.id] ?? column.getIsVisible() ?? false
@@ -118,7 +123,9 @@ export function DataTableViewOptions<TData>({
                     >
                       <CheckIcon className="h-4 w-4" />
                     </div>
-                    <span>{column.id}</span>
+                    <span>
+                      <FormattedMessage id={column.id} />
+                    </span>
                   </CommandItem>
                 )
               })}
@@ -128,7 +135,7 @@ export function DataTableViewOptions<TData>({
         <div className="p-3 flex gap-2">
           <PopoverClose asChild>
             <Button variant="default" className="w-full" onClick={handleApply}>
-              Aplicar
+              <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>
         </div>

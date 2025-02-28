@@ -73,6 +73,7 @@ export function setColumns<TData>(
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={title || id} />
       ),
+      // @ts-ignore
       optionList,
       enableSorting: enableSorting,
       enableHiding: enableHiding,
@@ -115,6 +116,7 @@ export function setColumns<TData>(
           try {
             const isoDate = row.getValue(id)
             const formattedDate = format(
+              // @ts-ignore
               new Date(isoDate),
               dateFormat || "dd/MM/yy HH:mm"
             )
@@ -140,7 +142,7 @@ export function setColumns<TData>(
         break
       case "amount":
         baseConfig.cell = ({ row }) => {
-          const { value, currency } = row.getValue(id)
+          const { value, currency } = row.getValue(id) as any
           return (
             <div>
               <span className="font-bold">

@@ -1,6 +1,7 @@
 "use server"
 
 import { fetchHeaders } from "@/lib/utils"
+import { UserTableColumnsSettings } from "@/types/security/user"
 
 /**
  * Getting user table settings by user id.
@@ -13,11 +14,7 @@ export const getUserTableSettings = async (userId: string) => {
     headers: fetchHeaders,
   })
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch user settings: ${response.status} ${response.statusText}`
-    )
-  }
+  if (!response.ok) throw new Error(response.statusText)
 
   return await response.json()
 }
@@ -38,11 +35,7 @@ export const updateUserTableSettings = async (
     body: JSON.stringify({ tableColumnsSettings: userTableSettings }),
   })
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to save user settings: ${response.status} ${response.statusText}`
-    )
-  }
+  if (!response.ok) throw new Error(response.statusText)
 
   return await response.json()
 }

@@ -84,7 +84,7 @@ const TableTPP = ({ data, columns }: { data: dataType[]; columns: any }) => {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
-          value={table.getColumn("email")?.getFilterValue() ?? ""}
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
@@ -93,6 +93,7 @@ const TableTPP = ({ data, columns }: { data: dataType[]; columns: any }) => {
         <DropdownMenuTPP
           key={0}
           text="opciones"
+          // @ts-ignore
           icon={ChevronDown}
           items={itemsDropDown}
           className="ml-2"
@@ -100,6 +101,7 @@ const TableTPP = ({ data, columns }: { data: dataType[]; columns: any }) => {
         <DropdownMenuTPP
           key={1}
           text="Columnas"
+          // @ts-ignore
           icon={ChevronDown}
           items={table.getAllColumns().filter((column) => column.getCanHide())}
           checkbox={checkboxDropDown}

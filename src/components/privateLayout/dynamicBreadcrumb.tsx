@@ -9,7 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { SidebarOption } from "@/types/SidebarOption"
+import { SidebarOption } from "@/types/sidebarOption"
 import { usePathname } from "next/navigation"
 import React from "react"
 import { FormattedMessage } from "react-intl"
