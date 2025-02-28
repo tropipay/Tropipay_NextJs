@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input" // Ajusta el path según tu estructura de proyecto
 import { Button } from "@/components/ui/button" // Ajusta el path según tu estructura de proyecto
-import { X } from "lucide-react" // Importa un ícono para el botón de borrar
+import { Input } from "@/components/ui/input" // Ajusta el path según tu estructura de proyecto
+import React, { useEffect, useState } from "react"
 
+// @ts-ignore
 interface InputAmountProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onChange?: (value: string) => void // Prop que se ejecutará tras el cambio
   maxValue?: number // Máximo permitido en centavos
@@ -21,17 +21,17 @@ const InputAmount: React.FC<InputAmountProps> = ({
   ...rest // Captura cualquier otra prop del input
 }) => {
   const [internalValue, setInternalValue] = useState(
-    formater(amount || value || "")
+    formatter(amount ?? (value as string | number) ?? "")
   )
 
   useEffect(() => {
     if (value !== undefined) {
-      setInternalValue(formater(value.toString()))
+      setInternalValue(formatter(value.toString()))
     }
   }, [value])
 
   // Función para formatear el valor en formato decimal
-  function formater(input: string | number) {
+  function formatter(input: string | number) {
     if (input === "") return ""
     const isNegative = String(input).startsWith("-")
     const absoluteValue = String(input).replace("-", "")
@@ -58,7 +58,7 @@ const InputAmount: React.FC<InputAmountProps> = ({
     const currentMax = Math.round(maxValue)
 
     if (maxValue < 0 || Math.abs(currentValue) <= currentMax) {
-      const formattedValue = formater(
+      const formattedValue = formatter(
         isNegative ? `-${numericValue}` : numericValue.toString()
       )
       setInternalValue(formattedValue)

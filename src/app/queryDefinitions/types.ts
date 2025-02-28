@@ -8,4 +8,7 @@ export interface FetchDataConfig {
     variables?: Record<string, any>
     [key: string]: any
   }
+  staleTime?: number
+  filters?: any
+  columnsDef?: any
 }

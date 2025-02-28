@@ -25,6 +25,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   const { t } = useTranslation()
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
+  // @ts-ignore
   const { filterLabel } = column?.config || {}
 
   const handleApplyFilter = (e: React.FormEvent<HTMLFormElement>) => {
@@ -92,7 +93,8 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={selStyle(filterValue, "active", "inactive", "")}
+          // @ts-ignore
+          variant={selStyle(!!filterValue, "active", "inactive", "")}
           size="sm"
           className="px-2 h-8"
         >
@@ -127,7 +129,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             name="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={t("minimum_opt")}
-            value={filterValue ? filterValue.split(",")[0] * 100 || "" : ""}
+            value={filterValue ? +filterValue.split(",")[0] * 100 || "" : ""}
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
@@ -136,7 +138,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             name="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={t("maximum_opt")}
-            value={filterValue ? filterValue.split(",")[1] * 100 || "" : ""}
+            value={filterValue ? +filterValue.split(",")[1] * 100 || "" : ""}
           />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}

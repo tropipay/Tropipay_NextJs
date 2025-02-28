@@ -9,11 +9,11 @@ import { selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
+import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
-import { useState } from "react"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -23,6 +23,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   column,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
+  // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
 
   // Estado interno para manejar el valor del filtro localmente
@@ -53,6 +54,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          // @ts-ignore
           variant={selStyle(filterValue, "active", "inactive", "")}
           size="sm"
           className="px-2 h-8"

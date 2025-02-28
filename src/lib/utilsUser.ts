@@ -1,4 +1,5 @@
 import { defaultUserSettings } from "@/app/data/defaultUserSettings"
+import { UserSettings } from "@/types/security/user"
 import { getSession } from "next-auth/react"
 import CookiesManager from "./cookiesManager"
 

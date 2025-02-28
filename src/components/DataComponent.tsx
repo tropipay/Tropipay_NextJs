@@ -42,12 +42,8 @@ export default function DataComponent({
         <FormattedMessage id={"loading"} />
       </p>
     )
-  if (isError) {
-    let errorMessage = error.message
-    if (errorMessage === "Failed to fetch") {
-      errorMessage = t("error_failed_to_fetch")
-    }
-    return <ErrorHandler {...{ errors: [errorMessage], onOk }} />
+  if (isError || !data) {
+    return <ErrorHandler {...{ errors: [t("error_failed_to_fetch")], onOk }} />
   }
 
   return React.cloneElement(children, { data })

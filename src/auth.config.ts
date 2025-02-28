@@ -11,7 +11,7 @@ export default {
         token: {},
       },
       async authorize({ token }) {
-        let user = null
+        let user: object | null = null
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,

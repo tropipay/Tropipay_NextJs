@@ -1,4 +1,5 @@
 import { QueryKey } from "@tanstack/react-query"
+import { ColumnDef } from "@tanstack/react-table"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
@@ -46,7 +47,7 @@ export const fetchHeaders: Record<string, string> = {
 
 // Función para hacer un fetch GET con triggers
 export const fetchGetWithTriggers = async (
-  fetchGetData: FetchGetData,
+  { endpoint, isPublic, filter }: FetchGetData,
   headerData: HeaderData = {}
 ): Promise<any> => {
   try {
@@ -68,17 +69,12 @@ export const fetchGetWithTriggers = async (
       headers[key] = headerData[key]
     }
 
-    /*     let endpoint = `${process.env.REACT_APP_APP_URL || ""}${
-      fetchGetData.endpoint
-    }`
- */ let endpoint = `${fetchGetData.endpoint}`
-
-    if (!fetchGetData.isPublic) {
+    if (!isPublic) {
       headers.Authorization = `Bearer ${user?.token || ""}`
     }
 
-    if (fetchGetData.filter) {
-      endpoint += "?" + queryParams(fetchGetData.filter)
+    if (filter) {
+      endpoint += `?${queryParams(filter)}`
     }
 
     const deviceId = "010101" // Simulado, reemplazar con fingerprint si es necesario
@@ -87,9 +83,7 @@ export const fetchGetWithTriggers = async (
       headers: { ...headers, "X-DEVICE-ID": deviceId },
     })
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`)
-    }
+    if (!response.ok) throw new Error(response.statusText)
 
     return response.json()
   } catch (err) {
@@ -195,15 +189,13 @@ export const setFilterType = (filter: any, type: any): string | null => {
 }
 
 export function setFilters<TData>(
+  // @ts-ignore
   columnsConfig: Record<string, ColumnOptions<TData>>
 ): ColumnDef<TData>[] {
   return Object.entries(columnsConfig).map(([id, options]) => {
     const {
       type,
       title,
-      format: dateFormat,
-      component,
-      addSign = true,
       enableSorting = true,
       enableHiding = true,
       filter = true,
@@ -215,10 +207,10 @@ export function setFilters<TData>(
     } = options
 
     const baseConfig: any = {
-      id: id,
+      id,
       accessorKey: id,
-      enableSorting: enableSorting,
-      enableHiding: enableHiding,
+      enableSorting,
+      enableHiding,
       filterType,
       filterLabel,
       filterPlaceholder,

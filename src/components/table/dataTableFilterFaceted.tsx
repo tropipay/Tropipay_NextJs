@@ -41,11 +41,12 @@ export function DataTableFilterFaceted<TData, TValue>({
   // Hooks
   const { t } = useTranslation()
   const searchParams = useSearchParams()
+  // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}
 
   // Estados y memoización
   const selectedValues = React.useMemo(() => {
-    const filterValue = column?.getFilterValue() as string[] | undefined
+    const filterValue = column?.getFilterValue() as string | undefined
     return new Set(filterValue?.split(",") || [])
   }, [column?.getFilterValue()])
 

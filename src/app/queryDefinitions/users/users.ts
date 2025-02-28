@@ -1,3 +1,5 @@
+import { User } from "@/types/security/user";
+
 export const users: User[] = [
   {
     id: "9953ed85-31a0-4db9-acc8-e25b76176443",

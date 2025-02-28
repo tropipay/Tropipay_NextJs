@@ -118,7 +118,7 @@ const MyPage: React.FC = () => {
     submitText: "Guardar",
   }
 
-  const handleSubmit = (data: Record<string, string | boolean>) => {
+  const handleSubmit = (data: FormData) => {
     console.log("Datos del formulario:", data)
   }
 

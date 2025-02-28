@@ -1,12 +1,12 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
-import clsx from "clsx"
-
+import { usersStatus } from "@/app/filterDefinitions/definitions"
 import { usersRole } from "@/app/queryDefinitions/users/definitions"
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { DataTableRowActions } from "@/components/table/dataTableRowActions"
-import { usersStatus } from "@/app/filterDefinitions/definitions"
+import { User } from "@/types/security/user"
+import { ColumnDef } from "@tanstack/react-table"
+import clsx from "clsx"
 
 export const userColumns: ColumnDef<User>[] = [
   {
