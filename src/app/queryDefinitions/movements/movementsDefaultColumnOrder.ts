@@ -1,12 +1,11 @@
-export const defaultColumnOrder: string[] = [
-  "select",
-  "completedAt",
-  "status",
+export const movementsDefaultColumnOrder: string[] = [
+  "createdAt",
   "amount",
+  "state",
+  "sender",
   "movementType",
   "paymentMethod",
-  "sender",
-  "reference",
+  "bankOrderCode",
 ]
 
 export const defaultColumnVisibility = {

@@ -12,7 +12,7 @@ export async function fetchData<T>(
   const queryKey = [generateHashedKey(queryConfig.key ?? "", urlParams)]
   const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
   const session = await auth()
-  const token = session?.user.token
+  const { token, id: userId } = session?.user
 
   await queryClient.prefetchQuery({
     queryKey: [queryKey],
@@ -21,6 +21,7 @@ export async function fetchData<T>(
         queryConfig,
         variables,
         token,
+        userId,
       }),
   })
 

@@ -3,7 +3,6 @@ import { fetchData } from "@/lib/fetchData"
 import { processQueryParameters } from "@/lib/utils"
 import { dehydrate } from "@tanstack/react-query"
 import getQueryClient from "./getQueryClient"
-
 interface DataFullProps {
   queryConfig: any
   children: React.ReactNode
@@ -19,7 +18,7 @@ export default async function DataFull({
   const urlParams = await processQueryParameters(searchParams)
   await fetchData(queryClient, queryConfig, urlParams)
   const dehydratedState = dehydrate(queryClient)
-
+  console.log("dehydratedState:", dehydratedState)
   return (
     <>
       {dehydratedState && (

@@ -11,4 +11,5 @@ export interface FetchDataConfig {
   staleTime?: number
   filters?: any
   columnsDef?: any
+  defaultColumnOrder?: any
 }

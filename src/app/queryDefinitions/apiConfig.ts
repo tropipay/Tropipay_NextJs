@@ -1,7 +1,8 @@
 import { setFilters } from "@/lib/utils"
-import { movementColumns } from "./movements/movementColumns"
-import { movementColumnsDef } from "./movements/movementsColumnsDef"
+import { movementsColumns } from "./movements/movementsColumns"
+import { movementsColumnsDef } from "./movements/movementsColumnsDef"
 import { FetchDataConfig } from "./types"
+import { movementsDefaultColumnOrder } from "./movements/movementsDefaultColumnOrder"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
   accounts: {
@@ -16,51 +17,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     body: {
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {
         movements(filter: $filter, pagination: $pagination) {
-          items {
-              id
-              reference
-              state
-              bankOrderCode
-              createdAt
-              completedAt
-              amount {
-                value
-                currency
-              }
-              destinationAmount {
-                value
-                currency
-              }
-              commission {
-                value
-                currency
-              }
-              exchangeRate
-              movementType
-              paymentMethod
-              sender
-              recipient
-              charges {
-                  state
-                  orderCode
-                  email
-                  cardHolderName
-                  issuerBank
-                  cardType
-                  createdAt
-                  errorCode
-                  cardPan
-                  clientName
-                  clientLastName
-                  cardBrand
-                  cardExpirationDate
-                  cardCountry
-                  clientIp
-                  clientEmail
-                  clientAddress
-                  source
-              }
-            }
+          items { $FIELDS }
             totalCount
           }
         }`,
@@ -75,9 +32,10 @@ export const apiConfig: Record<string, FetchDataConfig> = {
         },
       },
     },
-    columns: movementColumns,
-    filters: setFilters(movementColumnsDef),
-    columnsDef: JSON.parse(JSON.stringify(movementColumnsDef)),
-    staleTime: 5,
+    columns: movementsColumns,
+    columnsDef: JSON.parse(JSON.stringify(movementsColumnsDef)),
+    defaultColumnOrder: movementsDefaultColumnOrder,
+    filters: setFilters(movementsColumnsDef),
+    staleTime: 5 * 60 * 1000,
   },
 }

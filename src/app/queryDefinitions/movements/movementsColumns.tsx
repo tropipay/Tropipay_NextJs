@@ -1,6 +1,6 @@
 "use client"
 
-import { movementColumnsDef } from "./movementsColumnsDef"
+import { movementsColumnsDef } from "./movementsColumnsDef"
 import { setColumns } from "@/components/table/setColumn"
 
 function capitalizeText(text: string) {
@@ -8,4 +8,4 @@ function capitalizeText(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
-export const movementColumns = setColumns(movementColumnsDef)
+export const movementsColumns = setColumns(movementsColumnsDef)

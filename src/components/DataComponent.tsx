@@ -9,6 +9,7 @@ import React from "react"
 import { FormattedMessage } from "react-intl"
 import ErrorHandler from "./errorHandler"
 import { useTranslation } from "./intl/useTranslation"
+import { toastMessage } from "@/lib/utilsUI"
 
 interface DataComponentProps {
   dehydratedState?: DehydratedState
@@ -43,7 +44,12 @@ export default function DataComponent({
       </p>
     )
   if (isError || !data) {
-    return <ErrorHandler {...{ errors: [t("error_failed_to_fetch")], onOk }} />
+    toastMessage(
+      <FormattedMessage id="we_cant_load_movements" />,
+      <FormattedMessage id="try_again_later" />,
+      "error"
+    )
+    return
   }
 
   return React.cloneElement(children, { data })

@@ -1,18 +1,34 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { format, parse } from "date-fns"
 import { fetchHeaders } from "./utils"
+import { getUserSettings } from "./utilsUser"
+import CookiesManager from "./cookiesManager"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
   variables: { variables: GraphQLVariables }
   token?: string
+  userId: string
 }
 
 export async function makeApiRequest({
-  queryConfig: { url, method, body },
+  queryConfig,
   variables,
   token,
+  userId,
 }: FetchOptions) {
+  const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
+    (key) => !queryConfig.columnsDef[key].hidden
+  )
+  const activeColumns = CookiesManager.getInstance().get(
+    `userSettings-${userId}`,
+    visibleColumns
+  )
+
+  const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
+  const { url, method, body } = queryConfig
+
+  body.query = body.query.replace("$FIELDS", fields)
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
@@ -165,4 +181,20 @@ export function buildGraphQLVariables(
   }
 
   return { variables }
+}
+
+export const generateQueryFields = (
+  columns: Record<string, any>,
+  activeColumns: string[]
+): string => {
+  return activeColumns
+    .map((columnKey) => {
+      const column = columns[columnKey]
+      if (column && column.field) {
+        return column.field
+      }
+      return null
+    })
+    .filter(Boolean) // Filtra los valores nulos
+    .join("\n") // Une los campos con un salto de línea
 }

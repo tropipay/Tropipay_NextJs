@@ -129,10 +129,10 @@ export function DataTableFilterFaceted<TData, TValue>({
           ) : null}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0" align="start">
+      <PopoverContent className="w-[325px] p-0" align="start">
         <Command>
           <CommandInput placeholder={t(filterLabel)} />
-          <CommandList>
+          <CommandList className="px-2 pt-2">
             <CommandEmpty>{"No Filter results"}</CommandEmpty>
             <CommandGroup className="px-3 pt-3 ">
               {optionList.map((option) => {
@@ -168,7 +168,7 @@ export function DataTableFilterFaceted<TData, TValue>({
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className="p-3">
+        <div className="p-6">
           <PopoverClose asChild>
             <Button
               variant="default"

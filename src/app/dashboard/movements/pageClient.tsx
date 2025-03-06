@@ -6,20 +6,21 @@ import { getUserSettings } from "@/lib/utilsUser"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
 import MovementDetail from "./movementDetail"
+import { toastMessage } from "@/lib/utilsUI"
+import { FormattedMessage } from "react-intl"
 
 interface Props {
+  tableId: string
   columns: any
   data?: GetMovementsResponse
 }
 
-const PageClient = ({ columns, data }: Props) => {
-  const tableId = "movements"
+const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
   const columnsSettings = userId
     ? getUserSettings(userId).tableColumnsSettings
     : null
-
   const onChangeColumnOrder = (columnOrder: string[]) => {
     if (!userId) return
     const columnsSettings = getUserSettings(userId).tableColumnsSettings
@@ -50,29 +51,37 @@ const PageClient = ({ columns, data }: Props) => {
     console.log("Columns visibility saved successfully")
   }
 
+  if (!data?.data?.movements?.items.length) {
+    toastMessage(
+      <FormattedMessage id="no_movements" />,
+      <FormattedMessage id="no_movements_display" />
+    )
+  }
+
   return (
     <div className="container p-2">
-      {columnsSettings?.movements && data && (
-        <DataTable
-          enableColumnOrder
-          {...{
-            tableId,
-            columns,
-            data: data?.data?.movements?.items ?? [],
-            rowCount: data?.data?.movements?.totalCount ?? 0,
-            ...(columnsSettings.movements.columnOrder && {
+      {
+        /* columnsSettings?.movements && */ data && (
+          <DataTable
+            {...{
+              tableId,
+              columns,
+              data: data?.data?.movements?.items ?? [],
+              rowCount: data?.data?.movements?.totalCount ?? 0,
+              /*             ...(columnsSettings.movements.columnOrder && {
               defaultColumnOrder: columnsSettings.movements.columnOrder,
             }),
             ...(columnsSettings.movements.columnVisibility && {
               defaultColumnVisibility:
                 columnsSettings.movements.columnVisibility,
             }),
-            onChangeColumnOrder,
-            onChangeColumnVisibility,
-          }}
-          rowClickChildren={MovementDetail}
-        />
-      )}
+ */ onChangeColumnOrder,
+              onChangeColumnVisibility,
+            }}
+            rowClickChildren={MovementDetail}
+          />
+        )
+      }
     </div>
   )
 }
