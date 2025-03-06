@@ -1,5 +1,6 @@
 import IntlWrapper from "@/components/intl/wrapper"
 import TanstackProvider from "@/components/TanstackProvider"
+import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
 import "./globals.css"
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: ChildrenProps) {
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
         <IntlWrapper>
+          <Toaster />
           <TanstackProvider>{children}</TanstackProvider>
         </IntlWrapper>
       </body>

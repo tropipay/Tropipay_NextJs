@@ -5,13 +5,13 @@ export const defaultUserSettings: UserSettings = {
     movements: {
       columnOrder: [
         "select",
-        "completedAt",
-        "status",
+        "createdAt",
         "amount",
+        "state",
+        "sender",
         "movementType",
         "paymentMethod",
-        "sender",
-        "reference",
+        "bankOrderCode",
       ],
       columnSorting: [],
     },

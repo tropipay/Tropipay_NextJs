@@ -36,18 +36,24 @@ export const movementColumnsDef: any = {
   completedAt: {
     type: "date",
     enableHiding: false,
+    hidden: true,
   },
   createdAt: {
     type: "date",
+    showFilter: true,
+    size: 120,
   },
   movementType: {
     type: "faceted",
+    showFilter: true,
     optionList: movementTypes,
     enableSorting: false,
+    size: 200,
   },
   paymentMethod: {
     type: "faceted",
     optionList: paymentMethods,
+    size: 220,
   },
   sender: {
     type: "simpleText",
@@ -59,7 +65,6 @@ export const movementColumnsDef: any = {
   },
   bankOrderCode: {
     type: "simpleText",
-    hidden: true,
   },
   exchangeRate: {
     type: "simpleText",

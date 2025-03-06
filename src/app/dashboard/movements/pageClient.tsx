@@ -2,9 +2,11 @@
 
 import DataTable from "@/components/table/dataTable"
 import CookiesManager from "@/lib/cookiesManager"
+import { toastMessage } from "@/lib/uiUtils"
 import { getUserSettings } from "@/lib/utilsUser"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
+import { FormattedMessage } from "react-intl"
 import MovementDetail from "./movementDetail"
 
 interface Props {
@@ -48,6 +50,13 @@ const PageClient = ({ columns, data }: Props) => {
       tableColumnsSettings,
     })
     console.log("Columns visibility saved successfully")
+  }
+
+  if (!data?.data?.movements?.items.length) {
+    toastMessage(
+      <FormattedMessage id="no_movements" />,
+      <FormattedMessage id="no_movements_display" />
+    )
   }
 
   return (

@@ -29,15 +29,15 @@ export const usersStatus = [
 ]
 export const movementsState = [
   {
-    value: "charged",
+    value: "processing",
     icon: LoaderCircle,
   },
   {
-    value: "paid",
+    value: "completed",
     icon: Check,
   },
   {
-    value: "pendingIn",
+    value: "pending",
     icon: Clock4,
   },
   {
@@ -47,8 +47,8 @@ export const movementsState = [
 ].map((option) => ({ ...option, label: `ms_${option.value}` }))
 
 export const movementsStateGroups = {
-  completedStates: ["charged", "paid"],
-  processingStates: ["pendingIn", "processing", "onReview"],
+  completedStates: ["completed"],
+  processingStates: ["pending", "processing"],
   anotherStates: ["error"],
 }
 export const movementTypes = [

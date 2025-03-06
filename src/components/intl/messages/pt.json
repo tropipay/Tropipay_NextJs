@@ -49,9 +49,11 @@
   "movementType": "Tipo",
   "movements": "Movimentos",
   "ms_cancelled": "Cancelado",
-  "ms_charged": "Cobrado",
-  "ms_paid": "Pago",
-  "ms_pendingIn": "Pendente",
+  "ms_completed": "Concluído",
+  "ms_error": "Erro",
+  "ms_other": "Outro",
+  "ms_pending": "Pendente",
+  "ms_processing": "A processar",
   "mt_add": "Fundo adicionado",
   "mt_charge": "Cartão de pagamento",
   "mt_giftcard": "Cartão presente",
@@ -62,6 +64,8 @@
   "mt_refund": "Reembolso",
   "mt_remittance": "Remessa",
   "mt_transfer": "Transferência",
+  "no_movements": "Sem movimentos",
+  "no_movements_display": "Ainda não há movimentos para exibir",
   "no_results_found": "Nenhum resultado encontrado",
   "of": "de",
   "page": "Página",
@@ -100,5 +104,7 @@
   "terminal": "Terminal",
   "to": "Até",
   "today": "Hoje",
-  "tomorrow": "Amanhã"
+  "tomorrow": "Amanhã",
+  "try_again_later": "Tente novamente mais tarde",
+  "we_cant_load_movements": "Não podemos carregar os movimentos"
 }

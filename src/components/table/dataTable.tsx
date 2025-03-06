@@ -222,16 +222,20 @@ export default function DataTable<TData, TValue>({
       })
 
     const style: CSSProperties = {
-      position: "relative",
       transform: CSS.Translate.toString(transform),
       transition: "width transform 0.2s ease-in-out",
-      whiteSpace: "nowrap",
       ...(isDragging && { opacity: 0.8, zIndex: 1 }),
+      ...(header.getSize() && { width: `${header.getSize()}px` }),
     }
 
     return (
-      <TableHead key={header.id} ref={setNodeRef} style={style}>
-        <div className="flex gap-1 items-center">
+      <TableHead
+        key={header.id}
+        ref={setNodeRef}
+        style={style}
+        className={"relative whitespace-nowrap"}
+      >
+        <div className={"flex gap-1 items-center"}>
           {header.isPlaceholder
             ? null
             : flexRender(header.column.columnDef.header, header.getContext())}
@@ -338,10 +342,13 @@ export default function DataTable<TData, TValue>({
                 {table.getHeaderGroups().map(({ id, headers }) => (
                   <TableRow key={id}>
                     {headers.map((header) =>
-                      enableColumnOrder ? (
+                      enableColumnOrder && header.id !== "select" ? (
                         <DraggableTableHeader key={header.id} header={header} />
                       ) : (
-                        <TableHead key={header.id}>
+                        <TableHead
+                          key={header.id}
+                          className={`relative whitespace-nowrap w-[${header.getSize()}px]`}
+                        >
                           {header.isPlaceholder
                             ? null
                             : flexRender(

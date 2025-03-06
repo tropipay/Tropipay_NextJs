@@ -78,6 +78,6 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     columns: movementColumns,
     filters: setFilters(movementColumnsDef),
     columnsDef: JSON.parse(JSON.stringify(movementColumnsDef)),
-    staleTime: 5,
+    staleTime: 5 * 60 * 1000,
   },
 }

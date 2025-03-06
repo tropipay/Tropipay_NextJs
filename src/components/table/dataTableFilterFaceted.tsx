@@ -129,12 +129,12 @@ export function DataTableFilterFaceted<TData, TValue>({
           ) : null}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0" align="start">
+      <PopoverContent className="w-[325px] p-0 px-6" align="start">
         <Command>
-          <CommandInput placeholder={t(filterLabel)} />
+          <CommandInput placeholder={t(filterLabel)} className="px-0" />
           <CommandList>
             <CommandEmpty>{"No Filter results"}</CommandEmpty>
-            <CommandGroup className="px-3 pt-3 ">
+            <CommandGroup className="px-0 pt-3 ">
               {optionList.map((option) => {
                 const Icon = option.icon
                 const isSelected = localSelectedValues.has(option.value)
@@ -142,6 +142,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                   <CommandItem
                     key={option.value}
                     onSelect={() => handleSelectOption(option.value)}
+                    className="!px-0"
                   >
                     <div
                       className={cn(
@@ -168,7 +169,7 @@ export function DataTableFilterFaceted<TData, TValue>({
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className="p-3">
+        <div className="pt-3 pb-6">
           <PopoverClose asChild>
             <Button
               variant="default"
