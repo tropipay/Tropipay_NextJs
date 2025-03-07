@@ -6,7 +6,6 @@ import { searchParamsToObject } from "@/lib/utils"
 import { DehydratedState } from "@tanstack/react-query"
 import { redirect, useSearchParams } from "next/navigation"
 import React from "react"
-import { FormattedMessage } from "react-intl"
 import ErrorHandler from "./errorHandler"
 import { useTranslation } from "./intl/useTranslation"
 import { toastMessage } from "@/lib/utilsUI"
@@ -37,12 +36,6 @@ export default function DataComponent({
 
   const onOk = () => redirect("/")
 
-  if (isLoading)
-    return (
-      <p>
-        <FormattedMessage id={"loading"} />
-      </p>
-    )
   if (isError || !data) {
     toastMessage(
       <FormattedMessage id="we_cant_load_movements" />,
@@ -52,5 +45,11 @@ export default function DataComponent({
     return
   }
 
-  return React.cloneElement(children, { data })
+  return (
+    <div
+      className={`relative ${isLoading && "animate-pulse pointer-events-none"}`}
+    >
+      {React.cloneElement(children, { data })}
+    </div>
+  )
 }

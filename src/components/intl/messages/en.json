@@ -22,6 +22,7 @@
   "description": "Description",
   "destinationAmount": "Destination Amount",
   "disputes": "Disputes",
+  "download": "Download",
   "entry": "Entry",
   "error_detected": "Error detected",
   "error_failed_to_fetch": "An error was detected while fetching data from our services, your session may have expired. You will need to log in to the Tropipay site.",
@@ -89,6 +90,7 @@
   "product": "Product",
   "recipient": "Recipient",
   "reference": "Identifier",
+  "refound": "Refund",
   "reports": "Reports",
   "rows_per_page": "Rows per page",
   "rows_selected": "row(s) selected",
@@ -102,5 +104,8 @@
   "state": "State",
   "to": "Until",
   "today": "Today",
-  "tomorrow": "Tomorrow"
+  "tomorrow": "Tomorrow",
+  "try_again_later": "Try it again later",
+  "we_cant_get_invoice_file": "We can't get the file",
+  "we_cant_load_movements": "We can't load the movements"
 }
