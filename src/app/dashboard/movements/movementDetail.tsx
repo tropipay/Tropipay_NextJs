@@ -7,11 +7,40 @@ import { Info } from "@/components/sectionComponents/info"
 import { Section } from "@/components/sectionComponents/section"
 import FacetedBadge from "@/components/table/facetedBadge"
 import { Button } from "@/components/ui/button"
-import { formatAmount } from "@/lib/utils"
+import { fetchHeaders, formatAmount } from "@/lib/utils"
 import { format } from "date-fns"
+import { useSession } from "next-auth/react"
+import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row = props.row
+  const { data: session } = useSession()
+  const token = session?.user.token
+
+  const onDownloadInvoiceFile = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        {
+          method: "POST",
+          headers: {
+            ...fetchHeaders,
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            bookingId: row.id,
+            label: row.state,
+          }),
+        }
+      )
+      const blob = await response.blob()
+      const link = document.createElement("a")
+      link.href = window.URL.createObjectURL(blob)
+      link.download = "invoice.pdf"
+      link.click()
+    } catch (e) {}
+  }
+
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="flex justify-between items-center mb-3">
@@ -75,11 +104,15 @@ export default function MovementDetail(props: any): JSX.Element {
         />
       </Section>
       <div className="flex mt-4 gap-4">
-        <Button variant="outline" className="w-1/2">
-          Descargar
+        <Button
+          variant="outline"
+          className="w-1/2"
+          onClick={onDownloadInvoiceFile}
+        >
+          <FormattedMessage id="download" />
         </Button>
         <Button variant="default" className="w-1/2">
-          Reembolsar
+          <FormattedMessage id="refound" />
         </Button>
       </div>
     </div>

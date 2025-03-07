@@ -12,7 +12,7 @@ export function useFetchData<T>({
   const filters = queryConfig.filters
   const variables = buildGraphQLVariables(urlParams, filters)
   const { data: session } = useSession()
-  const token = session?.user.token
+  const { token, id: userId } = session?.user || []
 
   return useQuery({
     queryKey: [QueryKey],
@@ -21,11 +21,12 @@ export function useFetchData<T>({
         queryConfig,
         variables,
         token,
+        userId,
       }),
     initialData: dehydratedState?.queries.find(
       (q: any) => q.queryKey[0][0] === QueryKey
     )?.state?.data,
-    staleTime: (queryConfig.staleTime ?? 20) * 60 * 1000,
+    staleTime: queryConfig.staleTime ?? 20 * 60 * 1000,
     enabled: !!token,
   })
 }

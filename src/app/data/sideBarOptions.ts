@@ -1,15 +1,5 @@
 import { SidebarOption } from "@/types/sidebarOption"
-import {
-  ArrowLeftRight,
-  BadgeDollarSign,
-  CreditCard,
-  HandCoins,
-  PackagePlus,
-  ScrollText,
-  SquareTerminal,
-  Store,
-  UsersRound,
-} from "lucide-react"
+import { ArrowLeftRight, ScrollText, Banknote } from "lucide-react"
 
 export const sideBarOptions: SidebarOption[] = [
   {
@@ -33,43 +23,13 @@ export const sideBarOptions: SidebarOption[] = [
     ],
   },
   {
-    title: "bills",
+    title: "payments",
     url: "#",
-    icon: BadgeDollarSign,
-  },
-  {
-    title: "benefits",
-    url: "#",
-    icon: UsersRound,
+    icon: Banknote,
   },
   {
     title: "reports",
     url: "#",
     icon: ScrollText,
-  },
-  {
-    title: "providers",
-    url: "#",
-    icon: PackagePlus,
-  },
-  {
-    title: "payroll",
-    url: "#",
-    icon: HandCoins,
-  },
-  {
-    title: "market_sheet",
-    url: "#",
-    icon: Store,
-  },
-  {
-    title: "terminal",
-    url: "#",
-    icon: CreditCard,
-  },
-  {
-    title: "api",
-    url: "#",
-    icon: SquareTerminal,
   },
 ]

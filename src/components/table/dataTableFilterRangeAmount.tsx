@@ -115,7 +115,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-3" align="start">
+      <PopoverContent className="w-[325px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <div className="pb-4">
             <Label htmlFor="width" className="font-bold">
@@ -142,11 +142,9 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
-          <div className="pt-3">
-            <Button variant="default" className="w-full" type="submit">
-              <FormattedMessage id="apply" />
-            </Button>
-          </div>
+          <Button variant="default" className="w-full mt-6" type="submit">
+            <FormattedMessage id="apply" />
+          </Button>
         </form>
       </PopoverContent>
     </Popover>

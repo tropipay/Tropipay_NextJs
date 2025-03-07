@@ -1,4 +1,3 @@
-import { defaultUserSettings } from "@/app/data/defaultUserSettings"
 import { UserSettings } from "@/types/security/user"
 import { getSession } from "next-auth/react"
 import CookiesManager from "./cookiesManager"
@@ -20,8 +19,6 @@ export const getTokenFromSession = (session?: any): string => {
   }
 }
 
-export const getUserSettings = (userId: string): UserSettings =>
-  CookiesManager.getInstance().get(
-    `userSettings-${userId}`,
-    defaultUserSettings
-  )
+export const getUserSettings = (userId: string): UserSettings => {
+  return CookiesManager.getInstance().get(`userSettings-${userId}`, null)
+}

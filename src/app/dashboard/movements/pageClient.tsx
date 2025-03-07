@@ -6,24 +6,42 @@ import { getUserSettings } from "@/lib/utilsUser"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
 import MovementDetail from "./movementDetail"
+import { toastMessage } from "@/lib/utilsUI"
+import { FormattedMessage } from "react-intl"
 
 interface Props {
+  tableId: string
   columns: any
   data?: GetMovementsResponse
 }
 
-const PageClient = ({ columns, data }: Props) => {
-  const tableId = "movements"
+const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
+
+  const defaultUserSettings = {
+    tableColumnsSettings: {
+      ["movements"]: {
+        columnOrder: [
+          "select",
+          "completedAt",
+          "status",
+          "amount",
+          "movementType",
+          "paymentMethod",
+          "sender",
+          "reference",
+        ],
+        columnSorting: [],
+      },
+    },
+  }
+
   const userId = session?.user?.id
-  const columnsSettings = userId
-    ? getUserSettings(userId).tableColumnsSettings
-    : null
+  const columnsSettings = defaultUserSettings.tableColumnsSettings
 
   const onChangeColumnOrder = (columnOrder: string[]) => {
     if (!userId) return
     const columnsSettings = getUserSettings(userId).tableColumnsSettings
-
     const tableColumnsSettings = {
       ...columnsSettings,
       movements: { ...columnsSettings.movements, columnOrder },
@@ -32,7 +50,6 @@ const PageClient = ({ columns, data }: Props) => {
     CookiesManager.getInstance().set(`userSettings-${userId}`, {
       tableColumnsSettings,
     })
-    console.log("Columns order saved successfully")
   }
 
   const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
@@ -50,11 +67,18 @@ const PageClient = ({ columns, data }: Props) => {
     console.log("Columns visibility saved successfully")
   }
 
+  if (!data?.data?.movements?.items.length) {
+    toastMessage(
+      <FormattedMessage id="no_movements" />,
+      <FormattedMessage id="no_movements_display" />
+    )
+  }
+
+  console.log("columnsSettings:", columnsSettings)
   return (
     <div className="container p-2">
       {columnsSettings?.movements && data && (
         <DataTable
-          enableColumnOrder
           {...{
             tableId,
             columns,
