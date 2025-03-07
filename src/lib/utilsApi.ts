@@ -28,6 +28,7 @@ export async function makeApiRequest({
   const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
   const { url, method, body } = queryConfig
 
+  body.query = body.query.replace("$FIELDS", fields)
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
@@ -36,7 +37,7 @@ export async function makeApiRequest({
     },
     ...(body && {
       body: JSON.stringify({
-        ...(body.query = body.query.replace("$FIELDS", fields)),
+        ...body,
         ...variables,
       }),
     }),

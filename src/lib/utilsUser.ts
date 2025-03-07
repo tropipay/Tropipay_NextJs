@@ -19,5 +19,6 @@ export const getTokenFromSession = (session?: any): string => {
   }
 }
 
-export const getUserSettings = (userId: string): UserSettings =>
-  CookiesManager.getInstance().get(`userSettings-${userId}`, null)
+export const getUserSettings = (userId: string): UserSettings => {
+  return CookiesManager.getInstance().get(`userSettings-${userId}`, null)
+}

@@ -24,7 +24,6 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const onChangeColumnOrder = (columnOrder: string[]) => {
     if (!userId) return
     const columnsSettings = getUserSettings(userId).tableColumnsSettings
-
     const tableColumnsSettings = {
       ...columnsSettings,
       movements: { ...columnsSettings.movements, columnOrder },
@@ -33,7 +32,6 @@ const PageClient = ({ tableId, columns, data }: Props) => {
     CookiesManager.getInstance().set(`userSettings-${userId}`, {
       tableColumnsSettings,
     })
-    console.log("Columns order saved successfully")
   }
 
   const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
@@ -60,28 +58,26 @@ const PageClient = ({ tableId, columns, data }: Props) => {
 
   return (
     <div className="container p-2">
-      {
-        /* columnsSettings?.movements && */ data && (
-          <DataTable
-            {...{
-              tableId,
-              columns,
-              data: data?.data?.movements?.items ?? [],
-              rowCount: data?.data?.movements?.totalCount ?? 0,
-              /*             ...(columnsSettings.movements.columnOrder && {
+      {columnsSettings?.movements && data && (
+        <DataTable
+          {...{
+            tableId,
+            columns,
+            data: data?.data?.movements?.items ?? [],
+            rowCount: data?.data?.movements?.totalCount ?? 0,
+            ...(columnsSettings.movements.columnOrder && {
               defaultColumnOrder: columnsSettings.movements.columnOrder,
             }),
             ...(columnsSettings.movements.columnVisibility && {
               defaultColumnVisibility:
                 columnsSettings.movements.columnVisibility,
             }),
- */ onChangeColumnOrder,
-              onChangeColumnVisibility,
-            }}
-            rowClickChildren={MovementDetail}
-          />
-        )
-      }
+            onChangeColumnOrder,
+            onChangeColumnVisibility,
+          }}
+          rowClickChildren={MovementDetail}
+        />
+      )}
     </div>
   )
 }
