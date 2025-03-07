@@ -17,10 +17,28 @@ interface Props {
 
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
+
+  const defaultUserSettings = {
+    tableColumnsSettings: {
+      ["movements"]: {
+        columnOrder: [
+          "select",
+          "completedAt",
+          "status",
+          "amount",
+          "movementType",
+          "paymentMethod",
+          "sender",
+          "reference",
+        ],
+        columnSorting: [],
+      },
+    },
+  }
+
   const userId = session?.user?.id
-  const columnsSettings = userId
-    ? getUserSettings(userId).tableColumnsSettings
-    : null
+  const columnsSettings = defaultUserSettings.tableColumnsSettings
+
   const onChangeColumnOrder = (columnOrder: string[]) => {
     if (!userId) return
     const columnsSettings = getUserSettings(userId).tableColumnsSettings
@@ -56,6 +74,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
     )
   }
 
+  console.log("columnsSettings:", columnsSettings)
   return (
     <div className="container p-2">
       {columnsSettings?.movements && data && (
