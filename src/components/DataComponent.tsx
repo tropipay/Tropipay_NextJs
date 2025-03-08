@@ -3,12 +3,12 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useFetchData } from "@/lib/useFetchData"
 import { searchParamsToObject } from "@/lib/utils"
+import { toastMessage } from "@/lib/utilsUI"
 import { DehydratedState } from "@tanstack/react-query"
 import { redirect, useSearchParams } from "next/navigation"
 import React from "react"
-import ErrorHandler from "./errorHandler"
+import { FormattedMessage } from "react-intl"
 import { useTranslation } from "./intl/useTranslation"
-import { toastMessage } from "@/lib/utilsUI"
 
 interface DataComponentProps {
   dehydratedState?: DehydratedState

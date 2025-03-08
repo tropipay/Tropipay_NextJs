@@ -244,7 +244,7 @@ export function DataTableFilterDate<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[324px] p-6" align="start">
+      <PopoverContent className="w-[264px] p-6" align="start">
         <form
           onSubmit={(e) => {
             e.preventDefault()

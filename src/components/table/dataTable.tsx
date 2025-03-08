@@ -76,7 +76,7 @@ export default function DataTable<TData, TValue>({
   tableId,
   data,
   columns: columnsConfig,
-  enableColumnOrder = false,
+  enableColumnOrder = true,
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
   defaultColumnVisibility,
@@ -128,12 +128,7 @@ export default function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(() => {
     const filters: ColumnFiltersState = []
     searchParams.forEach((value, key) => {
-      if (
-        key !== "sort" &&
-        key !== "order" &&
-        key !== "page" &&
-        key !== "size"
-      ) {
+      if (!["sort", "order", "page", "size"].includes(key)) {
         try {
           filters.push({
             id: key,
@@ -222,15 +217,18 @@ export default function DataTable<TData, TValue>({
       })
 
     const style: CSSProperties = {
-      position: "relative",
       transform: CSS.Translate.toString(transform),
       transition: "width transform 0.2s ease-in-out",
-      whiteSpace: "nowrap",
       ...(isDragging && { opacity: 0.8, zIndex: 1 }),
     }
 
     return (
-      <TableHead key={header.id} ref={setNodeRef} style={style}>
+      <TableHead
+        key={header.id}
+        ref={setNodeRef}
+        className="relative whitespace-nowrap"
+        style={style}
+      >
         <div className="flex gap-1 items-center">
           {header.isPlaceholder
             ? null

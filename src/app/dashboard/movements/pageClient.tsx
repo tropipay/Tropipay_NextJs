@@ -2,12 +2,12 @@
 
 import DataTable from "@/components/table/dataTable"
 import CookiesManager from "@/lib/cookiesManager"
+import { toastMessage } from "@/lib/utilsUI"
 import { getUserSettings } from "@/lib/utilsUser"
 import { VisibilityState } from "@tanstack/react-table"
 import { useSession } from "next-auth/react"
-import MovementDetail from "./movementDetail"
-import { toastMessage } from "@/lib/utilsUI"
 import { FormattedMessage } from "react-intl"
+import MovementDetail from "./movementDetail"
 
 interface Props {
   tableId: string
@@ -18,26 +18,10 @@ interface Props {
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
 
-  const defaultUserSettings = {
-    tableColumnsSettings: {
-      ["movements"]: {
-        columnOrder: [
-          "select",
-          "completedAt",
-          "status",
-          "amount",
-          "movementType",
-          "paymentMethod",
-          "sender",
-          "reference",
-        ],
-        columnSorting: [],
-      },
-    },
-  }
-
   const userId = session?.user?.id
-  const columnsSettings = defaultUserSettings.tableColumnsSettings
+  const columnsSettings = userId
+    ? getUserSettings(userId).tableColumnsSettings
+    : {}
 
   const onChangeColumnOrder = (columnOrder: string[]) => {
     if (!userId) return

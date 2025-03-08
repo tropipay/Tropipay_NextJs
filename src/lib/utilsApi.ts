@@ -2,7 +2,6 @@ import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { format, parse } from "date-fns"
 import { fetchHeaders } from "./utils"
 import { getUserSettings } from "./utilsUser"
-import CookiesManager from "./cookiesManager"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
@@ -20,15 +19,16 @@ export async function makeApiRequest({
   const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
     (key) => !queryConfig.columnsDef[key].hidden
   )
-  const activeColumns = CookiesManager.getInstance().get(
-    `userSettings-${userId}`,
-    visibleColumns
-  )
+  const columnsSettings = getUserSettings(userId).tableColumnsSettings
+  const columnVisibility = columnsSettings.columnVisibility ?? {}
+  const activeColumns: string[] =
+    Object.keys(columnVisibility).length > 0
+      ? Object.keys(columnVisibility).filter((key) => columnVisibility[key])
+      : visibleColumns
 
   const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
   const { url, method, body } = queryConfig
 
-  body.query = body.query.replace("$FIELDS", fields)
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
@@ -37,7 +37,10 @@ export async function makeApiRequest({
     },
     ...(body && {
       body: JSON.stringify({
-        ...body,
+        ...{
+          body,
+          query: body.query.replace("$FIELDS", fields),
+        },
         ...variables,
       }),
     }),
@@ -100,7 +103,6 @@ export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
 ): { variables: GraphQLVariables } {
-  // console.log("-------- columns:", columns)
   const {
     page = "0",
     size = "50",

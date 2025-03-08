@@ -115,7 +115,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[325px] p-6" align="start">
+      <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <div className="pb-4">
             <Label htmlFor="width" className="font-bold">

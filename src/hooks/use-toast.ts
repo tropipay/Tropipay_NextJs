@@ -133,7 +133,9 @@ let memoryState: State = { toasts: [] }
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action)
   listeners.forEach((listener) => {
-    listener(memoryState)
+    try {
+      listener(memoryState)
+    } catch (e) {}
   })
 }
 

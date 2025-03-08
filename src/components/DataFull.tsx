@@ -18,7 +18,7 @@ export default async function DataFull({
   const urlParams = await processQueryParameters(searchParams)
   await fetchData(queryClient, queryConfig, urlParams)
   const dehydratedState = dehydrate(queryClient)
-  console.log("dehydratedState:", dehydratedState)
+  // console.log("dehydratedState:", dehydratedState)
   return (
     <>
       {dehydratedState && (
