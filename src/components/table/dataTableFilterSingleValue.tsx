@@ -77,7 +77,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[325px] p-6" align="start">
+      <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <Label htmlFor="filterValue" className="my-2">
             <FormattedMessage id={filterLabel} />
