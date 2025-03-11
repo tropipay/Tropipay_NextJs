@@ -14,13 +14,12 @@ export function useFetchData<T>({
   const variables = buildGraphQLVariables(urlParams, filters)
   const { data: session } = useSession()
   const { token, id: userId } = session?.user || []
-
-  const userSettingsServer = getUserSettings(userId)
-  const tableColumnsSettings = userSettingsServer
-    ? userSettingsServer.tableColumnsSettings
-    : []
-  const columnVisibility =
-    tableColumnsSettings[queryConfig.key]?.columnVisibility ?? {}
+  const columnVisibility = getUserSettings(
+    userId,
+    {},
+    queryConfig.key,
+    "columnVisibility"
+  )
 
   return useQuery({
     queryKey: [QueryKey],

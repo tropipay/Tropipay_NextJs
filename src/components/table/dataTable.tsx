@@ -55,9 +55,8 @@ import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
 import CookiesManager from "@/lib/cookiesManager"
 // import { objToHash } from "@/lib/utils"
-import { toastMessage } from "@/lib/utilsUI"
-import { FormattedMessage } from "react-intl"
 import { objToHash } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -72,7 +71,6 @@ interface DataTableProps<TData, TValue> {
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
-  userId?: string
 }
 
 export default function DataTable<TData, TValue>({
@@ -88,15 +86,14 @@ export default function DataTable<TData, TValue>({
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
-  userId,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
-
+  const { data: session } = useSession()
+  const userId = session?.user?.id
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
@@ -351,7 +348,7 @@ export default function DataTable<TData, TValue>({
     setIsSheetOpen(true)
   }
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (data.length === 0) {
       toastMessage(
         <FormattedMessage id="no_movements" />,
@@ -359,7 +356,7 @@ export default function DataTable<TData, TValue>({
       )
     }
   }, [data])
-
+ */
   return (
     <div className="space-y-4">
       <DataTableToolbar

@@ -14,13 +14,13 @@ export async function fetchData<T>(
   const variables = buildGraphQLVariables(urlParams, queryConfig.filters)
   const session = await auth()
   const { token, id: userId } = session?.user
-  const userSettingsServer = await getUserSettingsServer(userId)
-  const tableColumnsSettings = userSettingsServer
-    ? userSettingsServer?.tableColumnsSettings
-    : []
 
-  const columnVisibility =
-    tableColumnsSettings[queryConfig.key]?.columnVisibility ?? {}
+  const columnVisibility = await getUserSettingsServer(
+    userId,
+    {},
+    queryConfig.key,
+    "columnVisibility"
+  )
 
   await queryClient.prefetchQuery({
     queryKey: [queryKey],
