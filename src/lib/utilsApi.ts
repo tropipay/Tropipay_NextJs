@@ -1,26 +1,24 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { format, parse } from "date-fns"
 import { fetchHeaders } from "./utils"
-import { getUserSettings } from "./utilsUser"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
   variables: { variables: GraphQLVariables }
   token?: string
-  userId: string
+  columnVisibility: any
 }
 
 export async function makeApiRequest({
   queryConfig,
   variables,
   token,
-  userId,
+  columnVisibility,
 }: FetchOptions) {
   const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
     (key) => !queryConfig.columnsDef[key].hidden
   )
-  const columnsSettings = getUserSettings(userId).tableColumnsSettings
-  const columnVisibility = columnsSettings.columnVisibility ?? {}
+
   const activeColumns: string[] =
     Object.keys(columnVisibility).length > 0
       ? Object.keys(columnVisibility).filter((key) => columnVisibility[key])

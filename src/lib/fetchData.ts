@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
 import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
+import { getUserSettingsServer } from "./utilsServer"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
@@ -14,6 +15,13 @@ export async function fetchData<T>(
   const session = await auth()
   const { token, id: userId } = session?.user
 
+  const columnVisibility = await getUserSettingsServer(
+    userId,
+    {},
+    queryConfig.key,
+    "columnVisibility"
+  )
+
   await queryClient.prefetchQuery({
     queryKey: [queryKey],
     queryFn: () =>
@@ -21,7 +29,7 @@ export async function fetchData<T>(
         queryConfig,
         variables,
         token,
-        userId,
+        columnVisibility,
       }),
   })
 

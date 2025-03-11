@@ -11,7 +11,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     method: "GET",
   },
   movements: {
-    key: "generalMovements",
+    key: "movements",
     url: `/api/v3/movements/business`,
     method: "POST",
     body: {
@@ -23,9 +23,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
         }`,
       operationName: "GetMovements",
       variables: {
-        filter: {
-          amountGte: 1000,
-        },
+        filter: {},
         pagination: {
           limit: 50,
           offset: 0,

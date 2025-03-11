@@ -222,3 +222,18 @@ export function setFilters<TData>(
     return baseConfig
   })
 }
+
+export function objToHash(obj) {
+  const keys = Object.keys(obj)
+    .filter((key) => obj[key] === true)
+    .sort()
+    .join(",")
+
+  let hash = 2166136261
+  for (let i = 0; i < keys.length; i++) {
+    hash ^= keys.charCodeAt(i)
+    hash *= 16777619
+  }
+
+  return (hash >>> 0).toString(16)
+}

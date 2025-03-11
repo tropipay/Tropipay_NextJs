@@ -50,9 +50,13 @@ import {
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useState } from "react"
+import { CSSProperties, useCallback, useEffect, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import CookiesManager from "@/lib/cookiesManager"
+// import { objToHash } from "@/lib/utils"
+import { objToHash } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -67,9 +71,6 @@ interface DataTableProps<TData, TValue> {
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
-  onChangeColumnOrder?: (_: string[]) => void
-  onChangeColumnVisibility?: (_: VisibilityState) => void
-  onChangeSorting?: (_: SortingState) => void
 }
 
 export default function DataTable<TData, TValue>({
@@ -85,16 +86,14 @@ export default function DataTable<TData, TValue>({
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
-  onChangeColumnOrder,
-  onChangeColumnVisibility,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
-
+  const { data: session } = useSession()
+  const userId = session?.user?.id
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
@@ -190,9 +189,46 @@ export default function DataTable<TData, TValue>({
         const oldIndex = columnOrder.indexOf(active.id as string)
         const newIndex = columnOrder.indexOf(over.id as string)
         const newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex)
-        onChangeColumnOrder?.(newColumnOrder)
+        onChangeColumnOrder(newColumnOrder)
         return newColumnOrder
       })
+    }
+  }
+
+  const onChangeColumnOrder = (columnOrder: string[]) => {
+    if (!userId) return
+    const columnsSettings =
+      CookiesManager.getInstance().get(`userSettings-${userId}`)
+        ?.tableColumnsSettings || {}
+    const tableColumnsSettings = {
+      ...columnsSettings,
+      [tableId]: { ...columnsSettings[tableId], columnOrder },
+    }
+    CookiesManager.getInstance().set(`userSettings-${userId}`, {
+      tableColumnsSettings,
+    })
+  }
+
+  const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
+    if (!userId) return
+    const columnsSettings =
+      CookiesManager.getInstance().get(`userSettings-${userId}`)
+        ?.tableColumnsSettings || {}
+    const tableColumnsSettings = {
+      ...columnsSettings,
+      [tableId]: { ...columnsSettings[tableId], columnVisibility },
+    }
+    CookiesManager.getInstance().set(`userSettings-${userId}`, {
+      tableColumnsSettings,
+    })
+    if (Object.keys(columnVisibility).length !== 0) {
+      const columnHash = objToHash(columnVisibility)
+      router.push(
+        `${pathname}?${createQueryString({
+          columnHash: columnHash,
+        })}`,
+        { scroll: false }
+      )
     }
   }
 
@@ -201,7 +237,7 @@ export default function DataTable<TData, TValue>({
       const visibilityState =
         typeof updater === "function" ? updater(columnVisibility) : updater
       setColumnVisibility(visibilityState)
-      onChangeColumnVisibility?.(visibilityState)
+      onChangeColumnVisibility(visibilityState)
     },
     [columnVisibility]
   )
@@ -312,6 +348,15 @@ export default function DataTable<TData, TValue>({
     setIsSheetOpen(true)
   }
 
+  /*   useEffect(() => {
+    if (data.length === 0) {
+      toastMessage(
+        <FormattedMessage id="no_movements" />,
+        <FormattedMessage id="no_movements_display" />
+      )
+    }
+  }, [data])
+ */
   return (
     <div className="space-y-4">
       <DataTableToolbar
@@ -394,7 +439,7 @@ export default function DataTable<TData, TValue>({
         <SheetContent className="min-w-[500px]">
           <div className="mt-6">
             {selectedRow && RowClickChildren && (
-              <RowClickChildren row={selectedRow} /> // Renderizar el componente con la prop `row`
+              <RowClickChildren row={selectedRow} />
             )}
           </div>
         </SheetContent>
