@@ -2,6 +2,7 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
+import { getUserSettings } from "./utilsUser"
 
 export function useFetchData<T>({
   queryConfig,
@@ -14,6 +15,13 @@ export function useFetchData<T>({
   const { data: session } = useSession()
   const { token, id: userId } = session?.user || []
 
+  const userSettingsServer = getUserSettings(userId)
+  const tableColumnsSettings = userSettingsServer
+    ? userSettingsServer.tableColumnsSettings
+    : []
+  const columnVisibility =
+    tableColumnsSettings[queryConfig.key]?.columnVisibility ?? {}
+
   return useQuery({
     queryKey: [QueryKey],
     queryFn: () =>
@@ -21,7 +29,7 @@ export function useFetchData<T>({
         queryConfig,
         variables,
         token,
-        userId,
+        columnVisibility,
       }),
     initialData: dehydratedState?.queries.find(
       (q: any) => q.queryKey[0][0] === QueryKey

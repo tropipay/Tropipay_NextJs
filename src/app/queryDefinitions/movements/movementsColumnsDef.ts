@@ -4,6 +4,7 @@ import {
   movementTypes,
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
+import { hi } from "date-fns/locale"
 
 export const movementsColumnsDef: any = {
   /* select: {
@@ -11,32 +12,19 @@ export const movementsColumnsDef: any = {
     enableHiding: false,
     enableSorting: false,
   }, */
-  amount: {
-    type: "amount",
-    enableHiding: false,
-    showFilter: true,
-    field: `amount {
-              value
-              currency
-            }`,
-  },
-  destinationAmount: {
-    type: "amount",
+  reference: {
+    type: "simpleText",
     hidden: true,
-    field: `destinationAmount {
-              value
-              currency
-            }`,
+    field: "reference",
   },
-  commission: {
-    type: "amount",
-    addSign: false,
-    filter: false,
+  bankOrderCode: {
+    type: "simpleText",
+    field: "bankOrderCode",
+  },
+  concept: {
+    type: "simpleText",
     hidden: true,
-    field: `commission {
-              value
-              currency
-            }`,
+    field: `concept`,
   },
   state: {
     type: "facetedBadge",
@@ -46,17 +34,52 @@ export const movementsColumnsDef: any = {
     showFilter: true,
     field: "state",
   },
-  completedAt: {
-    type: "date",
-    enableHiding: false,
+  email: {
+    type: "simpleText",
     hidden: true,
-    field: "completedAt",
+    field: `email`,
   },
   createdAt: {
     type: "date",
     showFilter: true,
     size: 120,
     field: "createdAt",
+  },
+  completedAt: {
+    type: "date",
+    enableHiding: false,
+    hidden: true,
+    field: "completedAt",
+  },
+  amount: {
+    type: "amount",
+    enableHiding: false,
+    showFilter: true,
+    field: `amount {
+              value
+              currency
+            }`,
+  },
+  amountCharged: {
+    type: "amount",
+    hidden: true,
+    field: `amountCharged {
+              value
+              currency
+            }`,
+  },
+  fee: {
+    type: "amount",
+    hidden: true,
+    field: `fee {
+              value
+              currency
+            }`,
+  },
+  conversionRate: {
+    type: "simpleText",
+    hidden: true,
+    field: `conversionRate`,
   },
   movementType: {
     type: "faceted",
@@ -76,25 +99,26 @@ export const movementsColumnsDef: any = {
     type: "simpleText",
     field: "sender",
   },
-  reference: {
+  recipient: {
     type: "simpleText",
+    field: "recipient",
     hidden: true,
-    field: "reference",
   },
-  bankOrderCode: {
+  summary: {
     type: "simpleText",
-    field: "bankOrderCode",
+    field: "summary",
+    hidden: true,
+  },
+  cardPan: {
+    type: "simpleText",
+    field: "cardPan",
+    hidden: true,
   },
   exchangeRate: {
     type: "simpleText",
     filter: false,
     hidden: true,
     field: "exchangeRate",
-  },
-  recipient: {
-    type: "simpleText",
-    hidden: true,
-    field: "recipient",
   },
   movementDirection: {
     type: "simpleText",
