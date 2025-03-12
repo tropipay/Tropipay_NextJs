@@ -57,6 +57,7 @@ import CookiesManager from "@/lib/cookiesManager"
 // import { objToHash } from "@/lib/utils"
 import { objToHash } from "@/lib/utils"
 import { useSession } from "next-auth/react"
+import { getUserSettings, setUserSettings } from "@/lib/utilsUser"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -71,6 +72,7 @@ interface DataTableProps<TData, TValue> {
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
+  userId: string
 }
 
 export default function DataTable<TData, TValue>({
@@ -86,14 +88,13 @@ export default function DataTable<TData, TValue>({
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
+  userId,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
-  const { data: session } = useSession()
-  const userId = session?.user?.id
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
@@ -158,22 +159,19 @@ export default function DataTable<TData, TValue>({
   )
 
   const [columnOrder, setColumnOrder] = useState<string[]>(
-    defaultColumnOrder
-      ? [
-          ...defaultColumnOrder,
-          ...columnsId.filter((v) => !defaultColumnOrder.includes(v)),
-        ]
-      : columnsId
+    defaultColumnOrder ||
+      getUserSettings(userId, null, tableId, "columnOrder") ||
+      columnsId
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    defaultColumnVisibility ??
+    defaultColumnVisibility ||
+      getUserSettings(userId, null, tableId, "columnVisibility") ||
       columnsConfig.reduce((acc, column: any) => {
         acc[column.id] = !column.hidden
         return acc
       }, {})
   )
-
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
@@ -189,46 +187,9 @@ export default function DataTable<TData, TValue>({
         const oldIndex = columnOrder.indexOf(active.id as string)
         const newIndex = columnOrder.indexOf(over.id as string)
         const newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex)
-        onChangeColumnOrder(newColumnOrder)
+        setUserSettings(userId, newColumnOrder, tableId, "columnOrder")
         return newColumnOrder
       })
-    }
-  }
-
-  const onChangeColumnOrder = (columnOrder: string[]) => {
-    if (!userId) return
-    const columnsSettings =
-      CookiesManager.getInstance().get(`userSettings-${userId}`)
-        ?.tableColumnsSettings || {}
-    const tableColumnsSettings = {
-      ...columnsSettings,
-      [tableId]: { ...columnsSettings[tableId], columnOrder },
-    }
-    CookiesManager.getInstance().set(`userSettings-${userId}`, {
-      tableColumnsSettings,
-    })
-  }
-
-  const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
-    if (!userId) return
-    const columnsSettings =
-      CookiesManager.getInstance().get(`userSettings-${userId}`)
-        ?.tableColumnsSettings || {}
-    const tableColumnsSettings = {
-      ...columnsSettings,
-      [tableId]: { ...columnsSettings[tableId], columnVisibility },
-    }
-    CookiesManager.getInstance().set(`userSettings-${userId}`, {
-      tableColumnsSettings,
-    })
-    if (Object.keys(columnVisibility).length !== 0) {
-      const columnHash = objToHash(columnVisibility)
-      router.push(
-        `${pathname}?${createQueryString({
-          columnHash: columnHash,
-        })}`,
-        { scroll: false }
-      )
     }
   }
 
@@ -237,9 +198,18 @@ export default function DataTable<TData, TValue>({
       const visibilityState =
         typeof updater === "function" ? updater(columnVisibility) : updater
       setColumnVisibility(visibilityState)
-      onChangeColumnVisibility(visibilityState)
+      setUserSettings(userId, visibilityState, tableId, "columnVisibility")
+      if (Object.keys(columnVisibility).length !== 0) {
+        const columnHash = objToHash(columnVisibility)
+        router.push(
+          `${pathname}?${createQueryString({
+            columnHash: columnHash,
+          })}`,
+          { scroll: false }
+        )
+      }
     },
-    [columnVisibility]
+    [columnVisibility, userId]
   )
 
   const DraggableTableHeader = ({
@@ -316,7 +286,6 @@ export default function DataTable<TData, TValue>({
     },
     [sorting, manualSorting, router, pathname, createQueryString]
   )
-
   const table = useReactTable({
     data: Array.isArray(data) ? data : [],
     columns: columnsConfig,
@@ -357,93 +326,97 @@ export default function DataTable<TData, TValue>({
     }
   }, [data])
  */
-  return (
-    <div className="space-y-4">
-      <DataTableToolbar
-        tableId={tableId}
-        table={table}
-        columns={columnsConfig}
-      />
-      <div>
-        <DndContext
-          collisionDetection={closestCenter}
-          modifiers={[restrictToHorizontalAxis]}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          sensors={sensors}
-        >
-          <Table>
-            <TableHeader>
-              <SortableContext
-                items={columnsId}
-                strategy={horizontalListSortingStrategy}
-              >
-                {table.getHeaderGroups().map(({ id, headers }) => (
-                  <TableRow key={id}>
-                    {headers.map((header) =>
-                      enableColumnOrder ? (
-                        <DraggableTableHeader key={header.id} header={header} />
-                      ) : (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      )
-                    )}
+  if (userId)
+    return (
+      <div className="space-y-4">
+        <DataTableToolbar
+          tableId={tableId}
+          table={table}
+          columns={columnsConfig}
+        />
+        <div>
+          <DndContext
+            collisionDetection={closestCenter}
+            modifiers={[restrictToHorizontalAxis]}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            sensors={sensors}
+          >
+            <Table>
+              <TableHeader>
+                <SortableContext
+                  items={columnsId}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  {table.getHeaderGroups().map(({ id, headers }) => (
+                    <TableRow key={id}>
+                      {headers.map((header) =>
+                        enableColumnOrder ? (
+                          <DraggableTableHeader
+                            key={header.id}
+                            header={header}
+                          />
+                        ) : (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        )
+                      )}
+                    </TableRow>
+                  ))}
+                </SortableContext>
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() => handleRowClick(row.original)}
+                      className="cursor-pointer hover:bg-gray-100"
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columnsConfig.length}
+                      className="h-24 text-center"
+                    >
+                      {"No data results"}
+                    </TableCell>
                   </TableRow>
-                ))}
-              </SortableContext>
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    onClick={() => handleRowClick(row.original)}
-                    className="cursor-pointer hover:bg-gray-100"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columnsConfig.length}
-                    className="h-24 text-center"
-                  >
-                    {"No data results"}
-                  </TableCell>
-                </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </DndContext>
+        </div>
+        <DataTablePagination table={table} />
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetHeader>
+            <SheetTitle></SheetTitle>
+          </SheetHeader>
+          <SheetContent className="min-w-[500px]">
+            <div className="mt-6">
+              {selectedRow && RowClickChildren && (
+                <RowClickChildren row={selectedRow} />
               )}
-            </TableBody>
-          </Table>
-        </DndContext>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
-      <DataTablePagination table={table} />
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetHeader>
-          <SheetTitle></SheetTitle>
-        </SheetHeader>
-        <SheetContent className="min-w-[500px]">
-          <div className="mt-6">
-            {selectedRow && RowClickChildren && (
-              <RowClickChildren row={selectedRow} />
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
-    </div>
-  )
+    )
 }

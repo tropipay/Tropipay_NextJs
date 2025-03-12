@@ -9,10 +9,9 @@ export async function getUserSettingsServer(
   const cookieStore = await cookies()
   const cookie = cookieStore.get(`userSettings-${userId}`)?.value
 
-  if (!cookie) {
+  if (!cookie || cookie === "{}") {
     return defaultValue
   }
-
   const jsonCookies = JSON.parse(cookie)
   const settings = jsonCookies.tableColumnsSettings
 

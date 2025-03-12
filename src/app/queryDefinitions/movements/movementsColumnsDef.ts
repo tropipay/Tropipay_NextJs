@@ -20,6 +20,7 @@ export const movementsColumnsDef: any = {
   bankOrderCode: {
     type: "simpleText",
     field: "bankOrderCode",
+    hidden: true,
   },
   concept: {
     type: "simpleText",

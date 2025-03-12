@@ -30,10 +30,12 @@ export const getUserSettings = (
     return defaultValue
   }
 
-  const settings = CookiesManager.getInstance().get(
+  const cookies = CookiesManager.getInstance().get(
     `userSettings-${userId}`,
     defaultValue
   )
+  const settings = cookies.tableColumnsSettings
+  if (!settings) return defaultValue
 
   if (!tableId) {
     return settings
@@ -52,31 +54,30 @@ export const getUserSettings = (
 
 export const setUserSettings = (
   userId: string,
-  value: any, // Valor a almacenar o actualizar
-  tableId?: string, // Identificador de la tabla (opcional)
-  sectionId?: string // Identificador de la sección (opcional)
+  value: any,
+  tableId?: string,
+  sectionId?: string
 ): void => {
   if (userId === undefined) {
     throw new Error("UserId is required to set user settings.")
   }
 
-  // Obtener la configuración actual del usuario usando getUserSettings
   const currentSettings = getUserSettings(userId, {})
 
-  let updatedSettings
+  let updatedSettings = {}
 
   if (!tableId) {
     // Si no se proporciona tableId, se reemplaza toda la configuración
-    updatedSettings = value
+    updatedSettings["tableColumnsSettings"] = value
   } else if (!sectionId) {
     // Si no se proporciona sectionId, se actualiza la tabla completa
-    updatedSettings = {
+    updatedSettings["tableColumnsSettings"] = {
       ...currentSettings,
       [tableId]: value,
     }
   } else {
     // Si se proporcionan tableId y sectionId, se actualiza solo la sección específica
-    updatedSettings = {
+    updatedSettings["tableColumnsSettings"] = {
       ...currentSettings,
       [tableId]: {
         ...currentSettings[tableId],
