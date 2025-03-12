@@ -4,7 +4,6 @@ import {
   movementTypes,
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
-import { hi } from "date-fns/locale"
 
 export const movementsColumnsDef: any = {
   /* select: {
@@ -12,21 +11,21 @@ export const movementsColumnsDef: any = {
     enableHiding: false,
     enableSorting: false,
   }, */
-  reference: {
-    type: "simpleText",
-    hidden: true,
-    field: "reference",
-  },
-  bankOrderCode: {
-    type: "simpleText",
-    field: "bankOrderCode",
-    order: 6,
-  },
-  concept: {
-    type: "simpleText",
+  createdAt: {
+    type: "date",
     showFilter: true,
-    field: `concept`,
-    order: 5,
+    size: 120,
+    field: "createdAt",
+    order: 0,
+  },
+  amountCharged: {
+    type: "amount",
+    showFilter: true,
+    field: `amountCharged {
+              value
+              currency
+            }`,
+    order: 1,
   },
   state: {
     type: "facetedBadge",
@@ -37,17 +36,40 @@ export const movementsColumnsDef: any = {
     field: "state",
     order: 2,
   },
+  sender: {
+    type: "simpleText",
+    order: 3,
+    field: "sender",
+  },
+  movementType: {
+    type: "faceted",
+    showFilter: true,
+    optionList: movementTypes,
+    enableSorting: false,
+    size: 200,
+    field: "movementType",
+    order: 4,
+  },
+  concept: {
+    type: "simpleText",
+    showFilter: true,
+    field: `concept`,
+    order: 5,
+  },
+  bankOrderCode: {
+    type: "simpleText",
+    field: "bankOrderCode",
+    order: 6,
+  },
+  reference: {
+    type: "simpleText",
+    hidden: true,
+    field: "reference",
+  },
   email: {
     type: "simpleText",
     hidden: true,
     field: `email`,
-  },
-  createdAt: {
-    type: "date",
-    showFilter: true,
-    size: 120,
-    field: "createdAt",
-    order: 0,
   },
   completedAt: {
     type: "date",
@@ -59,20 +81,11 @@ export const movementsColumnsDef: any = {
     type: "amount",
     enableHiding: false,
     showFilter: true,
+    hidden: true,
     field: `amount {
               value
               currency
             }`,
-  },
-  amountCharged: {
-    type: "amount",
-    hidden: true,
-    showFilter: true,
-    field: `amountCharged {
-              value
-              currency
-            }`,
-    order: 1,
   },
   fee: {
     type: "amount",
@@ -87,26 +100,12 @@ export const movementsColumnsDef: any = {
     hidden: true,
     field: `conversionRate`,
   },
-  movementType: {
-    type: "faceted",
-    showFilter: true,
-    optionList: movementTypes,
-    enableSorting: false,
-    size: 200,
-    field: "movementType",
-    order: 4,
-  },
   paymentMethod: {
     type: "faceted",
     optionList: paymentMethods,
     size: 220,
     hidden: true,
     field: "paymentMethod",
-  },
-  sender: {
-    type: "simpleText",
-    order: 3,
-    field: "sender",
   },
   recipient: {
     type: "simpleText",
