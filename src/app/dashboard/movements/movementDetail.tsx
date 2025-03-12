@@ -57,7 +57,8 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="flex justify-between items-center mb-4 pb-1">
         <p className="text-xs text-gray-500">Enviado a Franco Cantarini</p>
         <p className="text-xs text-gray-500">
-          {format(new Date(row.completedAt), "dd/MM/yy HH:mm")}
+          {row.completedAt &&
+            format(new Date(row.completedAt), "dd/MM/yy HH:mm")}
         </p>
       </div>
       <Section title="Datos de pago">
@@ -96,11 +97,13 @@ export default function MovementDetail(props: any): JSX.Element {
       <Section title="Cronograma">
         <Info
           label="Fecha de creación"
-          value={format(new Date(row.createdAt), "dd/MM/yy")}
+          value={row.createdAt && format(new Date(row.createdAt), "dd/MM/yy")}
         />
         <Info
           label="Fecha valor"
-          value={format(new Date(row.completedAt), "dd/MM/yy")}
+          value={
+            row.completedAt && format(new Date(row.completedAt), "dd/MM/yy")
+          }
         />
       </Section>
       <div className="flex mt-4 gap-4">

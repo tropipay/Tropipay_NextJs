@@ -14,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { objToHash } from "@/lib/utils"
+import { getUserTableSettings, setUserTableSettings } from "@/lib/utilsUser"
 import {
   closestCenter,
   DndContext,
@@ -49,14 +51,11 @@ import {
   VisibilityState,
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
+import { useSession } from "next-auth/react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useEffect, useState } from "react"
+import { CSSProperties, useCallback, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
-import CookiesManager from "@/lib/cookiesManager"
-// import { objToHash } from "@/lib/utils"
-import { objToHash } from "@/lib/utils"
-import { useSession } from "next-auth/react"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -64,7 +63,6 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
-  defaultColumnOrder?: string[]
   defaultColumnVisibility?: VisibilityState
   manualPagination?: boolean
   manualSorting?: boolean
@@ -79,7 +77,6 @@ export default function DataTable<TData, TValue>({
   columns: columnsConfig,
   enableColumnOrder = true,
   blockedColumnOrder = ["select"],
-  defaultColumnOrder,
   defaultColumnVisibility,
   manualPagination = true,
   manualSorting = true,
@@ -97,6 +94,18 @@ export default function DataTable<TData, TValue>({
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
+  const defaultColumnOrderConfig = columnsConfig
+    .filter(({ id }) => !!id)
+    // @ts-ignore
+    .sort((a: any, b: any) => ((a.order ?? 1000) > (b.order ?? 1000) ? 1 : -1))
+    .map(({ id }) => id ?? "")
+
+  const defaultColumnOrder = getUserTableSettings(
+    userId,
+    defaultColumnOrderConfig,
+    tableId,
+    "columnOrder"
+  )
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -158,12 +167,7 @@ export default function DataTable<TData, TValue>({
   )
 
   const [columnOrder, setColumnOrder] = useState<string[]>(
-    defaultColumnOrder
-      ? [
-          ...defaultColumnOrder,
-          ...columnsId.filter((v) => !defaultColumnOrder.includes(v)),
-        ]
-      : columnsId
+    defaultColumnOrder ?? columnsId
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -197,30 +201,14 @@ export default function DataTable<TData, TValue>({
 
   const onChangeColumnOrder = (columnOrder: string[]) => {
     if (!userId) return
-    const columnsSettings =
-      CookiesManager.getInstance().get(`userSettings-${userId}`)
-        ?.tableColumnsSettings || {}
-    const tableColumnsSettings = {
-      ...columnsSettings,
-      [tableId]: { ...columnsSettings[tableId], columnOrder },
-    }
-    CookiesManager.getInstance().set(`userSettings-${userId}`, {
-      tableColumnsSettings,
-    })
+
+    setUserTableSettings(userId, tableId, "columnOrder", columnOrder)
   }
 
   const onChangeColumnVisibility = (columnVisibility: VisibilityState) => {
     if (!userId) return
-    const columnsSettings =
-      CookiesManager.getInstance().get(`userSettings-${userId}`)
-        ?.tableColumnsSettings || {}
-    const tableColumnsSettings = {
-      ...columnsSettings,
-      [tableId]: { ...columnsSettings[tableId], columnVisibility },
-    }
-    CookiesManager.getInstance().set(`userSettings-${userId}`, {
-      tableColumnsSettings,
-    })
+
+    setUserTableSettings(userId, tableId, "columnVisibility", columnVisibility)
     if (Object.keys(columnVisibility).length !== 0) {
       const columnHash = objToHash(columnVisibility)
       router.push(
@@ -348,15 +336,6 @@ export default function DataTable<TData, TValue>({
     setIsSheetOpen(true)
   }
 
-  /*   useEffect(() => {
-    if (data.length === 0) {
-      toastMessage(
-        <FormattedMessage id="no_movements" />,
-        <FormattedMessage id="no_movements_display" />
-      )
-    }
-  }, [data])
- */
   return (
     <div className="space-y-4">
       <DataTableToolbar

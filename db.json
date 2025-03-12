@@ -7,7 +7,7 @@
           "columnOrder": [
             "select",
             "valueDate",
-            "status",
+            "state",
             "amount",
             "movementType",
             "paymentMethod",

@@ -3,11 +3,19 @@ import { UserSettings } from "@/types/security/user"
 import { getSession } from "next-auth/react"
 import CookiesManager from "./cookiesManager"
 
+/**
+ * Get user session.
+ */
 export const getUser = async () => {
   const session = getSession()
   return await JSON.stringify(session)
 }
 
+/**
+ * Get the session token.
+ * @param session User session.
+ * @returns Authentication token.
+ */
 export const getTokenFromSession = (session?: any): string => {
   try {
     const {
@@ -20,9 +28,36 @@ export const getTokenFromSession = (session?: any): string => {
   }
 }
 
+/**
+ * Get the user settings stored in a cookie.
+ * @param userId User identifier.
+ * @param defaultValue Default value.
+ */
 export const getUserSettings = (
   userId: string,
-  defaultValue: any = defaultUserSettings,
+  defaultValue: any = defaultUserSettings
+): UserSettings | any => {
+  if (userId === undefined) {
+    throw new Error("UserId is required to set user settings.")
+  }
+
+  return CookiesManager.getInstance().get(
+    `userSettings-${userId}`,
+    defaultValue
+  )
+}
+
+/**
+ * Get a configuration from a user table settings stored in a cookie.
+ * @param userId User identifier.
+ * @param defaultValue Default value.
+ * @param tableId table identifier.
+ * @param sectionId section identifier inside table identifier settings.
+ * @returns
+ */
+export const getUserTableSettings = (
+  userId: string,
+  defaultValue: any = null,
   tableId?: string,
   sectionId?: string
 ): UserSettings | any => {
@@ -30,57 +65,62 @@ export const getUserSettings = (
     return defaultValue
   }
 
-  const settings = CookiesManager.getInstance().get(
-    `userSettings-${userId}`,
-    defaultValue
-  )
+  const { tableColumnsSettings: settings } = getUserSettings(userId)
 
+  let result = {}
   if (!tableId) {
-    return settings
+    return result
   }
 
-  if (!settings[tableId]) {
-    return defaultValue
-  }
-
+  result = settings[tableId]
   if (!sectionId) {
-    return settings[tableId]
+    return result
   }
 
-  return settings[tableId][sectionId] || defaultValue
+  return result[sectionId] ?? defaultValue
 }
 
-export const setUserSettings = (
+/**
+ * Set a configuration from a user table settings stored in a cookie.
+ * @param userId User identifier.
+ * @param tableId Table identifier.
+ * @param sectionId Configuration section identifier.
+ * @param value value for storage.
+ */
+export const setUserTableSettings = (
   userId: string,
-  value: any, // Valor a almacenar o actualizar
-  tableId?: string, // Identificador de la tabla (opcional)
-  sectionId?: string // Identificador de la sección (opcional)
+  tableId: string,
+  sectionId: string,
+  value: any
 ): void => {
   if (userId === undefined) {
     throw new Error("UserId is required to set user settings.")
   }
 
   // Obtener la configuración actual del usuario usando getUserSettings
-  const currentSettings = getUserSettings(userId, {})
+  const userSettings = getUserSettings(userId)
 
   let updatedSettings
-
-  if (!tableId) {
-    // Si no se proporciona tableId, se reemplaza toda la configuración
-    updatedSettings = value
-  } else if (!sectionId) {
-    // Si no se proporciona sectionId, se actualiza la tabla completa
+  if (!sectionId) {
+    // If sectionId is not provided, the entire table settings is updated.
     updatedSettings = {
-      ...currentSettings,
-      [tableId]: value,
+      ...userSettings,
+      tableColumnsSettings: {
+        ...userSettings.tableColumnsSettings,
+        [tableId]: value,
+      },
     }
   } else {
-    // Si se proporcionan tableId y sectionId, se actualiza solo la sección específica
+    // If tableId and sectionId are provided, only the specific section is updated.
+    console.log(updatedSettings)
     updatedSettings = {
-      ...currentSettings,
-      [tableId]: {
-        ...currentSettings[tableId],
-        [sectionId]: value,
+      ...userSettings,
+      tableColumnsSettings: {
+        ...userSettings.tableColumnsSettings,
+        [tableId]: {
+          ...userSettings.tableColumnsSettings[tableId],
+          [sectionId]: value,
+        },
       },
     }
   }
