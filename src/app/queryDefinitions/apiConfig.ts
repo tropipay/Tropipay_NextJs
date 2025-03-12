@@ -2,7 +2,6 @@ import { setFilters } from "@/lib/utils"
 import { movementsColumns } from "./movements/movementsColumns"
 import { movementsColumnsDef } from "./movements/movementsColumnsDef"
 import { FetchDataConfig } from "./types"
-import { movementsDefaultColumnOrder } from "./movements/movementsDefaultColumnOrder"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
   accounts: {
@@ -32,7 +31,6 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     },
     columns: movementsColumns,
     columnsDef: JSON.parse(JSON.stringify(movementsColumnsDef)),
-    defaultColumnOrder: movementsDefaultColumnOrder,
     filters: setFilters(movementsColumnsDef),
     staleTime: 5 * 60 * 1000,
   },

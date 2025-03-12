@@ -3,7 +3,7 @@ import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
 import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
-import { getUserSettingsServer } from "./utilsServer"
+import { getUserTableSettingsServer } from "./utilsServer"
 
 export async function fetchData<T>(
   queryClient: QueryClient,
@@ -15,7 +15,7 @@ export async function fetchData<T>(
   const session = await auth()
   const { token, id: userId } = session?.user
 
-  const columnVisibility = await getUserSettingsServer(
+  const columnVisibility = await getUserTableSettingsServer(
     userId,
     {},
     queryConfig.key,
