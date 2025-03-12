@@ -32,9 +32,9 @@ export function DataTablePagination<TData>({
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">
+          <span className="text-sm font-medium">
             <FormattedMessage id="rows_per_page" />
-          </p>
+          </span>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {

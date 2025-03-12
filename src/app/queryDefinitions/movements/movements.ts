@@ -2,7 +2,7 @@ export const movements: ApiDataResponse<Movement> = {
   items: [
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043ef",
-      status: "paid",
+      state: "paid",
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-13T23:33:41.446Z",
       amount: {
@@ -16,7 +16,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "c393a043-ef0d-4ec9-b706-ecdede5607ee",
-      status: "pendingIn",
+      state: "pendingIn",
       createdAt: "2024-05-02T00:13:04.449Z",
       completedAt: "2025-01-14T02:44:08.067Z",
       amount: {
@@ -30,7 +30,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "c2746351-2247-4221-ab78-d4781d35335a",
-      status: "pendingIn",
+      state: "pendingIn",
       createdAt: "2024-05-18T18:18:30.806Z",
       completedAt: "2025-01-14T02:11:57.562Z",
       amount: {
@@ -44,7 +44,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "0f5532ff-2566-4869-93d9-66a661a438ee",
-      status: "pendingIn",
+      state: "pendingIn",
       createdAt: "2024-07-15T14:53:56.376Z",
       completedAt: "2025-01-14T10:31:43.977Z",
       amount: {
@@ -58,7 +58,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "337b0d5a-2bd0-4f98-a73d-e554575959ea",
-      status: "paid",
+      state: "paid",
       createdAt: "2024-12-22T15:07:29.319Z",
       completedAt: "2025-01-14T06:18:29.648Z",
       amount: {
@@ -72,7 +72,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "9f8bc7d1-59d0-4d54-bcc7-514e0bc6ee35",
-      status: "pendingIn",
+      state: "pendingIn",
       createdAt: "2024-04-30T06:11:53.921Z",
       completedAt: "2025-01-13T13:16:19.583Z",
       amount: {
@@ -86,7 +86,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "386469cb-89b3-4365-8463-124022cc6dca",
-      status: "pendingIn",
+      state: "pendingIn",
       createdAt: "2024-04-26T07:54:27.119Z",
       completedAt: "2025-01-14T06:27:58.595Z",
       amount: {
@@ -100,7 +100,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "0486eb51-c545-4c13-bb59-2c1698fd143c",
-      status: "pendingIn",
+      state: "pendingIn",
       createdAt: "2024-11-12T01:53:52.836Z",
       completedAt: "2025-01-14T05:25:47.006Z",
       amount: {
@@ -114,7 +114,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "3f5dd9fa-9213-46d6-b6e6-b7a28a71484c",
-      status: "paid",
+      state: "paid",
       createdAt: "2024-07-28T14:39:41.445Z",
       completedAt: "2025-01-14T11:04:24.422Z",
       amount: {
@@ -128,7 +128,7 @@ export const movements: ApiDataResponse<Movement> = {
     },
     {
       id: "8094814c-fa05-489a-bb61-4725d0e3ee22",
-      status: "paid",
+      state: "paid",
       createdAt: "2024-03-20T23:05:37.664Z",
       completedAt: "2025-01-14T10:56:05.922Z",
       amount: {

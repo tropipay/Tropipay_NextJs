@@ -237,3 +237,75 @@ export function objToHash(obj) {
 
   return (hash >>> 0).toString(16)
 }
+
+type ColumnConfig = {
+  id: string
+  [key: string]: any // Permite otras propiedades dinámicas
+}
+
+export function toArrayId(
+  arr: ColumnConfig[],
+  propertyName: string,
+  value: any | ((itemValue: any) => boolean),
+  sortBy: string | null = null
+): string[] {
+  // Crear una copia del array para no modificar el original
+  const processedArray: ColumnConfig[] = [...arr]
+
+  // Ordenar el array si se especifica un campo para ordenar
+  if (sortBy) {
+    processedArray.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) return -1
+      if (a[sortBy] > b[sortBy]) return 1
+      return 0
+    })
+  }
+
+  // Filtrar el array según la condición
+  const filteredArray = processedArray.filter((item) => {
+    if (typeof value === "function") {
+      return value(item[propertyName])
+    } else {
+      return item[propertyName] === value
+    }
+  })
+
+  // Extraer solo los 'id' de los objetos filtrados
+  return filteredArray.map((item) => item.id)
+}
+
+type ColumnConfig = {
+  id: string
+  [key: string]: any // Permite otras propiedades dinámicas
+}
+
+export function toActiveObject(
+  arr: ColumnConfig[],
+  propertyName: string,
+  value: any | ((itemValue: any) => boolean),
+  sortBy: string | null = null
+): Record<string, boolean> {
+  // Crear una copia del array para no modificar el original
+  let processedArray: ColumnConfig[] = [...arr]
+
+  // Ordenar el array si se especifica un campo para ordenar
+  if (sortBy) {
+    processedArray.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) return -1
+      if (a[sortBy] > b[sortBy]) return 1
+      return 0
+    })
+  }
+
+  // Crear un objeto con los id como claves y valores booleanos basados en la condición
+  const result: Record<string, boolean> = {}
+  processedArray.forEach((item) => {
+    if (typeof value === "function") {
+      result[item.id] = value(item[propertyName])
+    } else {
+      result[item.id] = item[propertyName] === value
+    }
+  })
+
+  return result
+}

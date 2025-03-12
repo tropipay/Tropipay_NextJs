@@ -9,6 +9,7 @@ import { redirect, useSearchParams } from "next/navigation"
 import React from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "./intl/useTranslation"
+import { useSession } from "next-auth/react"
 
 interface DataComponentProps {
   dehydratedState?: DehydratedState
@@ -33,6 +34,8 @@ export default function DataComponent({
     dehydratedState,
     urlParams,
   })
+  const { data: session } = useSession()
+  const userId = session?.user?.id
 
   const onOk = () => redirect("/")
 
@@ -44,12 +47,14 @@ export default function DataComponent({
     )
     return
   }
-
-  return (
-    <div
-      className={`relative ${isLoading && "animate-pulse pointer-events-none"}`}
-    >
-      {React.cloneElement(children, { data })}
-    </div>
-  )
+  if (userId)
+    return (
+      <div
+        className={`relative ${
+          isLoading && "animate-pulse pointer-events-none"
+        }`}
+      >
+        {React.cloneElement(children, { data, userId })}
+      </div>
+    )
 }

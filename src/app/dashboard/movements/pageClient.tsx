@@ -7,9 +7,10 @@ interface Props {
   tableId: string
   columns: any
   data?: GetMovementsResponse
+  userId: string
 }
 
-const PageClient = ({ tableId, columns, data }: Props) => {
+const PageClient = ({ tableId, columns, data, userId }: Props) => {
   return (
     <div className="container p-2">
       <DataTable
@@ -18,6 +19,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
         data={data?.data?.movements?.items ?? []}
         rowCount={data?.data?.movements?.totalCount ?? 0}
         rowClickChildren={MovementDetail}
+        userId={userId}
       />
     </div>
   )

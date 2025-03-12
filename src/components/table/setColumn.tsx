@@ -45,6 +45,7 @@ type ColumnOptions<TData> = {
   field: string
   size?: number
   enableResizing?: boolean
+  order?: number
 }
 
 // Función unificada setColumns
@@ -71,18 +72,19 @@ export function setColumns<TData>(
       hidden = false,
       size,
       enableResizing = false,
+      order,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
-      id: id,
+      id,
       accessorKey: id,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={title || id} />
       ),
       // @ts-ignore
       optionList,
-      enableSorting: enableSorting,
-      enableHiding: enableHiding,
+      enableSorting,
+      enableHiding,
       filterType,
       filterLabel,
       filterPlaceholder,
@@ -92,6 +94,7 @@ export function setColumns<TData>(
       field,
       size,
       enableResizing,
+      order,
     }
 
     switch (type) {

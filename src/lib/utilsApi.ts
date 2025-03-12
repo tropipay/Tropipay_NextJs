@@ -25,6 +25,8 @@ export async function makeApiRequest({
       : visibleColumns
 
   const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
+  // console.log("fields:", fields)
+
   const { url, method, body } = queryConfig
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
@@ -44,6 +46,7 @@ export async function makeApiRequest({
     }),
     cache: "no-store",
   })
+  // console.log("response:", await response.json())
 
   if (!response.ok) throw new Error(response.statusText)
 

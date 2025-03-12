@@ -20,11 +20,13 @@ export const movementsColumnsDef: any = {
   bankOrderCode: {
     type: "simpleText",
     field: "bankOrderCode",
+    order: 6,
   },
   concept: {
     type: "simpleText",
-    hidden: true,
+    showFilter: true,
     field: `concept`,
+    order: 5,
   },
   state: {
     type: "facetedBadge",
@@ -33,6 +35,7 @@ export const movementsColumnsDef: any = {
     enableHiding: false,
     showFilter: true,
     field: "state",
+    order: 2,
   },
   email: {
     type: "simpleText",
@@ -44,6 +47,7 @@ export const movementsColumnsDef: any = {
     showFilter: true,
     size: 120,
     field: "createdAt",
+    order: 0,
   },
   completedAt: {
     type: "date",
@@ -63,10 +67,12 @@ export const movementsColumnsDef: any = {
   amountCharged: {
     type: "amount",
     hidden: true,
+    showFilter: true,
     field: `amountCharged {
               value
               currency
             }`,
+    order: 1,
   },
   fee: {
     type: "amount",
@@ -88,15 +94,18 @@ export const movementsColumnsDef: any = {
     enableSorting: false,
     size: 200,
     field: "movementType",
+    order: 4,
   },
   paymentMethod: {
     type: "faceted",
     optionList: paymentMethods,
     size: 220,
+    hidden: true,
     field: "paymentMethod",
   },
   sender: {
     type: "simpleText",
+    order: 3,
     field: "sender",
   },
   recipient: {
