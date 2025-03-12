@@ -2,7 +2,6 @@
 
 import DataTable from "@/components/table/dataTable"
 import MovementDetail from "./movementDetail"
-import { useSession } from "next-auth/react"
 
 interface Props {
   tableId: string
