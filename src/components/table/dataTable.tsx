@@ -55,7 +55,7 @@ import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
 import CookiesManager from "@/lib/cookiesManager"
 // import { objToHash } from "@/lib/utils"
-import { objToHash } from "@/lib/utils"
+import { objToHash, toArrayId, toActiveObject } from "@/lib/utils"
 import { useSession } from "next-auth/react"
 import { getUserSettings, setUserSettings } from "@/lib/utilsUser"
 
@@ -161,17 +161,20 @@ export default function DataTable<TData, TValue>({
   const [columnOrder, setColumnOrder] = useState<string[]>(
     defaultColumnOrder ||
       getUserSettings(userId, null, tableId, "columnOrder") ||
-      columnsId
+      toArrayId(columnsConfig, "hidden", (hiddenValue) => !hiddenValue, "order")
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     defaultColumnVisibility ||
       getUserSettings(userId, null, tableId, "columnVisibility") ||
-      columnsConfig.reduce((acc, column: any) => {
-        acc[column.id] = !column.hidden
-        return acc
-      }, {})
+      toActiveObject(
+        columnsConfig,
+        "hidden",
+        (hiddenValue) => !hiddenValue,
+        "order"
+      )
   )
+
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
