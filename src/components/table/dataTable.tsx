@@ -144,18 +144,30 @@ export default function DataTable<TData, TValue>({
 
   const onColumnFiltersChange = useCallback(
     (updater: Updater<ColumnFiltersState>) => {
+      const columnsFilters = columnsConfig.filter((item) => item.filter)
       const newFilters =
         typeof updater === "function" ? updater(columnFilters) : updater
       setColumnFilters(newFilters)
-      const queryString = newFilters
-        .map(
-          (filter) =>
-            `${filter.id}=${JSON.stringify(filter.value).replace(/"/g, "")}`
-        )
-        .join("&")
-      router.push(`${pathname}?${queryString}`, { scroll: false })
+
+      // Crear un nuevo objeto URLSearchParams basado en los searchParams actuales
+      const params = new URLSearchParams(searchParams)
+
+      // Eliminar solo los parámetros de búsqueda que corresponden a los filtros
+      columnsFilters.forEach((filter) => {
+        params.delete(filter.id)
+      })
+
+      // Agregar los nuevos filtros al objeto URLSearchParams
+      newFilters.forEach((filter) => {
+        if (filter.value !== null && filter.value !== undefined) {
+          params.set(filter.id, JSON.stringify(filter.value).replace(/"/g, ""))
+        }
+      })
+
+      // Actualizar la URL sin afectar otros parámetros como paginación u orden
+      router.push(`${pathname}?${params.toString()}`, { scroll: false })
     },
-    [columnFilters, router, pathname]
+    [columnFilters, columnsConfig, router, pathname, searchParams]
   )
 
   const [columnOrder, setColumnOrder] = useState<string[]>(

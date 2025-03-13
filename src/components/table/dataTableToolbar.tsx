@@ -3,7 +3,6 @@
 import { Input } from "@/components/ui/input"
 import { Table } from "@tanstack/react-table"
 import { Download, Search } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useTranslation } from "../intl/useTranslation"
@@ -11,6 +10,7 @@ import { Button } from "../ui/button"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
 import MovementsAllInOut from "@/app/dashboard/movements/movementsAllInOut"
+import { useDebouncedCallback } from "use-debounce"
 
 interface DataTableToolbarProps<TData, TValue> {
   tableId: string
@@ -23,13 +23,10 @@ export function DataTableToolbar<TData, TValue>({
   table,
   columns,
 }: DataTableToolbarProps<TData, TValue>) {
-  const { data: session } = useSession()
-  const userId = session?.user?.id
   const { t } = useTranslation()
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
-  const [searchValue, setSearchValue] = useState(searchParamValue)
-
+  const searchColumn = table.getColumn("search")
   useEffect(() => {
     if (searchParamValue) {
       table.setColumnFilters((prev) => {
@@ -46,23 +43,29 @@ export function DataTableToolbar<TData, TValue>({
     }
   }, [searchParamValue, table])
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
-    setSearchValue(value)
-    table.setColumnFilters((prev) => {
-      const searchFilter = prev.find(({ id }) => id === "search")
-      if (searchFilter) {
-        return prev.map((filter) =>
-          filter.id === "search" ? { ...filter, value } : filter
-        )
+  const handleSearchChange = useDebouncedCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value
+
+      if (value) {
+        table.setColumnFilters((prev) => {
+          const searchFilter = prev.find(({ id }) => id === "search")
+          if (searchFilter) {
+            return prev.map((filter) =>
+              filter.id === "search" ? { ...filter, value } : filter
+            )
+          }
+          return [...prev, { id: "search", value }]
+        })
+      } else {
+        searchColumn.setFilterValue(undefined)
       }
-      return [...prev, { id: "search", value }]
-    })
-  }
+    },
+    500
+  )
 
   useEffect(() => {
     if (!searchParams || searchParams.toString() === "") {
-      setSearchValue("")
       table.resetColumnFilters()
     }
   }, [searchParams, table])
@@ -80,9 +83,9 @@ export function DataTableToolbar<TData, TValue>({
             <Input
               id="search"
               placeholder={t("search")}
-              value={searchValue}
               onChange={handleSearchChange}
               className="pl-10 w-full"
+              defaultValue={searchParamValue}
             />
           </div>
         </div>
