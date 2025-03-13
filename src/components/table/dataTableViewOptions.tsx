@@ -6,7 +6,7 @@ import { PopoverClose } from "@radix-ui/react-popover"
 import { Table } from "@tanstack/react-table"
 import { CheckIcon, Ellipsis } from "lucide-react"
 import { useMemo, useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import {
   Command,
@@ -26,6 +26,7 @@ export function DataTableViewOptions<TData>({
   table,
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
+  const intl = useIntl() // Usar useIntl para traducir los nombres de las columnas
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>
   >({})
@@ -33,26 +34,35 @@ export function DataTableViewOptions<TData>({
     Record<string, boolean>
   >({})
 
-  // Ordenar columnas usando initialVisibility para mantener el orden estático
+  // Traducir y ordenar columnas
   const sortedColumns = useMemo(() => {
-    return table
+    // Traducir los nombres de las columnas
+    const translatedColumns = table
       .getAllColumns()
       .filter(
         (column) =>
-          typeof column.accessorFn !== "undefined" && column.getCanHide()
+          typeof column.accessorFn !== "undefined" &&
+          column.getCanHide() && // Solo incluir columnas que se pueden ocultar
+          !column.columnDef.meta?.hidden
       )
-      .sort((a, b) => {
-        const isVisibleA = initialVisibility[a.id] ?? a.getIsVisible() ?? false
-        const isVisibleB = initialVisibility[b.id] ?? b.getIsVisible() ?? false
+      .map((column) => ({
+        ...column,
+        translatedHeader: intl.formatMessage({ id: column.id }), // Traducir el nombre de la columna
+      }))
 
-        // Ordenar primero por visibilidad (visibles primero)
-        if (isVisibleA !== isVisibleB) {
-          return isVisibleA ? -1 : 1
-        }
-        // Si la visibilidad es igual, ordenar alfabéticamente por id
-        return a.id.localeCompare(b.id)
-      })
-  }, [table, initialVisibility])
+    // Ordenar las columnas basándose en los nombres traducidos
+    return translatedColumns.sort((a, b) => {
+      const isVisibleA = initialVisibility[a.id] ?? a.getIsVisible() ?? false
+      const isVisibleB = initialVisibility[b.id] ?? b.getIsVisible() ?? false
+
+      // Ordenar primero por visibilidad (visibles primero)
+      if (isVisibleA !== isVisibleB) {
+        return isVisibleA ? -1 : 1
+      }
+      // Si la visibilidad es igual, ordenar alfabéticamente por el nombre traducido
+      return a.translatedHeader.localeCompare(b.translatedHeader)
+    })
+  }, [table, initialVisibility, intl])
 
   const handleToggleColumn = (columnId: string) => {
     setPendingVisibility((prev) => ({
@@ -76,7 +86,6 @@ export function DataTableViewOptions<TData>({
       table.setColumnOrder([...cleanOrder, ...newlyVisible])
     }
   }
-
   return (
     <Popover
       onOpenChange={(isOpen) => {
@@ -123,9 +132,7 @@ export function DataTableViewOptions<TData>({
                     >
                       <CheckIcon className="h-4 w-4" />
                     </div>
-                    <span>
-                      <FormattedMessage id={column.id} />
-                    </span>
+                    <span>{column.translatedHeader}</span>
                   </CommandItem>
                 )
               })}

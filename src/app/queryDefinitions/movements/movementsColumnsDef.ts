@@ -14,12 +14,14 @@ export const movementsColumnsDef: any = {
   createdAt: {
     type: "date",
     showFilter: true,
+    enableHiding: false,
     size: 120,
     field: "createdAt",
     order: 0,
   },
   amountCharged: {
     type: "amount",
+    hidden: true,
     showFilter: true,
     field: `amountCharged {
               value
@@ -38,6 +40,7 @@ export const movementsColumnsDef: any = {
   },
   sender: {
     type: "simpleText",
+    enableHiding: false,
     order: 3,
     field: "sender",
   },
@@ -73,7 +76,6 @@ export const movementsColumnsDef: any = {
   },
   completedAt: {
     type: "date",
-    enableHiding: false,
     hidden: true,
     field: "completedAt",
   },
@@ -83,17 +85,17 @@ export const movementsColumnsDef: any = {
     showFilter: true,
     hidden: true,
     field: `amount {
-              value
-              currency
-            }`,
+      value
+      currency
+      }`,
   },
   fee: {
     type: "amount",
     hidden: true,
     field: `fee {
-              value
-              currency
-            }`,
+        value
+        currency
+        }`,
   },
   conversionRate: {
     type: "simpleText",
@@ -122,15 +124,10 @@ export const movementsColumnsDef: any = {
     field: "cardPan",
     hidden: true,
   },
-  exchangeRate: {
-    type: "simpleText",
-    filter: false,
-    hidden: true,
-    field: "exchangeRate",
-  },
   movementDirection: {
     type: "simpleText",
     hidden: true,
     field: "movementDirection",
+    meta: { hidden: true },
   },
 }

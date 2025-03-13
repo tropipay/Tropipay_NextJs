@@ -46,6 +46,7 @@ type ColumnOptions<TData> = {
   size?: number
   enableResizing?: boolean
   order?: number
+  meta?: boolean
 }
 
 // Función unificada setColumns
@@ -73,6 +74,7 @@ export function setColumns<TData>(
       size,
       enableResizing = false,
       order,
+      meta,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
@@ -95,6 +97,7 @@ export function setColumns<TData>(
       size,
       enableResizing,
       order,
+      meta,
     }
 
     switch (type) {
@@ -138,12 +141,15 @@ export function setColumns<TData>(
           ...baseConfig,
           cell: ({ row }) => {
             try {
-              const isoDate = row.getValue(id)
-              const formattedDate = format(
-                // @ts-ignore
-                new Date(isoDate),
-                dateFormat || "dd/MM/yy HH:mm"
-              )
+              let formattedDate = "-"
+              if (row.getValue(id)) {
+                const isoDate = row.getValue(id)
+                formattedDate = format(
+                  // @ts-ignore
+                  new Date(isoDate),
+                  dateFormat || "dd/MM/yy HH:mm"
+                )
+              }
               return formattedDate
             } catch (error) {
               return "Fecha inválida"
