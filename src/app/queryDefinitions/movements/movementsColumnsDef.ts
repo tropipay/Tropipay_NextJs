@@ -105,6 +105,7 @@ export const movementsColumnsDef: any = {
   },
   sender: {
     type: "simpleText",
+    enableHiding: false,
     order: 3,
     field: "sender",
   },

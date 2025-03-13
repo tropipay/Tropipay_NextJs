@@ -24,7 +24,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./dataTableFilterDate"
 import { DataTableFilterFaceted } from "./dataTableFilterFaceted"
@@ -45,12 +45,18 @@ export function FilterManager<TData, TValue>({
   const { data: session } = useSession()
   const userId = session?.user?.id
   const { t } = useTranslation()
+  const intl = useIntl()
   const searchParams = useSearchParams()
 
   // Filtros disponibles
-  const filters = columns.filter(
-    ({ filter, filterType }: any) => !!filter && !!filterType
-  )
+  const filters = columns
+    .filter(
+      ({ filter, filterType, meta }: any) => !!filter && !!filterType && !meta
+    )
+    .map((filter) => ({
+      ...filter,
+      translatedLabel: intl.formatMessage({ id: filter.filterLabel }),
+    }))
 
   // Estado para filtros seleccionados y activos
   const initialActiveFilters = userId
@@ -79,7 +85,7 @@ export function FilterManager<TData, TValue>({
       const bSelected = selectedFilters.has(b.id)
       if (aSelected && !bSelected) return -1
       if (!aSelected && bSelected) return 1
-      return a.filterLabel.localeCompare(b.filterLabel)
+      return a.translatedLabel.localeCompare(b.translatedLabel)
     })
     setSortedFilters(sorted)
   }
@@ -121,15 +127,35 @@ export function FilterManager<TData, TValue>({
 
   // Limpiar filtros
   const handleClearFilters = () => {
+    // Obtener los filtros aplicados actualmente
+    const appliedFilters = table.getState().columnFilters
+
+    // Crear un nuevo array de filtros excluyendo los que están en `filters`
+    const remainingFilters = appliedFilters.filter(
+      ({ id }) => !filters.some((filter) => filter.id === id)
+    )
+
+    // Aplicar solo los filtros que no están en `filters`
+    table.setColumnFilters(remainingFilters)
+
+    // Limpiar los filtros seleccionados y activos
     setSelectedFilters(new Set())
-    setActiveFilters([])
+
+    // Limpiar los parámetros de búsqueda en la URL solo para los filtros en `filters`
     const newSearchParams = new URLSearchParams(searchParams.toString())
     filters.forEach((column) => newSearchParams.delete(column.id))
     window.history.pushState(null, "", `?${newSearchParams.toString()}`)
-    table.resetColumnFilters()
   }
 
-  const isFiltered = table.getState().columnFilters.length > 0
+  // Verificar si hay filtros aplicados, excluyendo los que tienen meta.hidden
+
+  const isFiltered = React.useMemo(() => {
+    const appliedFilters = table.getState().columnFilters
+    return appliedFilters.some(({ id }) => {
+      const column = filters.find((col) => col.id === id)
+      return column && !column.columnDef?.meta?.hidden
+    })
+  }, [table.getState().columnFilters, columns])
 
   return (
     <div className="flex w-full items-center justify-between">
@@ -156,7 +182,7 @@ export function FilterManager<TData, TValue>({
                   <FormattedMessage id="no_results_found" />
                 </CommandEmpty>
                 <CommandGroup heading="" className="px-3 pt-3 ">
-                  {sortedFilters.map(({ id, filterLabel }: any) => {
+                  {sortedFilters.map(({ id, translatedLabel }: any) => {
                     const isSelected = selectedFilters.has(id)
                     return (
                       <CommandItem
@@ -173,9 +199,7 @@ export function FilterManager<TData, TValue>({
                         >
                           <CheckIcon className={cn("h-4 w-4")} />
                         </div>
-                        <span>
-                          <FormattedMessage id={filterLabel} />
-                        </span>
+                        <span>{translatedLabel}</span>
                       </CommandItem>
                     )
                   })}
@@ -198,13 +222,21 @@ export function FilterManager<TData, TValue>({
 
         {/* Renderizado de filtros activos */}
         {activeFilters
-          .sort(({ id }) =>
-            !table
+          .sort((a, b) => {
+            const isAFiltered = table
               .getState()
-              .columnFilters.find(({ id: columnId }) => columnId === id)
-              ? 1
-              : -1
-          )
+              .columnFilters.some(({ id }) => id === a.id)
+            const isBFiltered = table
+              .getState()
+              .columnFilters.some(({ id }) => id === b.id)
+
+            if (isAFiltered && !isBFiltered) return -1
+            if (!isAFiltered && isBFiltered) return 1
+
+            const aLabel = intl.formatMessage({ id: a.id })
+            const bLabel = intl.formatMessage({ id: b.id })
+            return aLabel.localeCompare(bLabel)
+          })
           .map((column: any) => {
             switch (column.filterType) {
               case "list":
