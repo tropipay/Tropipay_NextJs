@@ -45,13 +45,13 @@ export const movementsColumnsDef: any = {
   createdAt: {
     type: "date",
     showFilter: true,
+    enableHiding: false,
     size: 120,
     field: "createdAt",
     order: 0,
   },
   completedAt: {
     type: "date",
-    enableHiding: false,
     hidden: true,
     field: "completedAt",
   },
@@ -123,15 +123,10 @@ export const movementsColumnsDef: any = {
     field: "cardPan",
     hidden: true,
   },
-  exchangeRate: {
-    type: "simpleText",
-    filter: false,
-    hidden: true,
-    field: "exchangeRate",
-  },
   movementDirection: {
     type: "simpleText",
     hidden: true,
     field: "movementDirection",
+    meta: { hidden: true },
   },
 }

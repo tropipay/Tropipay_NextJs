@@ -1,13 +1,11 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import CookiesManager from "@/lib/cookiesManager"
 import { Table } from "@tanstack/react-table"
 import { Download, Search } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { Button } from "../ui/button"
 import { DataTableViewOptions } from "./dataTableViewOptions"
