@@ -25,9 +25,25 @@ export async function makeApiRequest({
       : visibleColumns
 
   const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
-  // console.log("fields:", fields)
 
   const { url, method, body } = queryConfig
+  /* console.log("body:", {
+    ...{
+      body,
+      query: body.query.replace("$FIELDS", fields),
+    },
+    ...variables,
+  }.body) 
+  console.log(
+    "variables:",
+    {
+      ...{
+        body,
+        query: body.query.replace("$FIELDS", fields),
+      },
+      ...variables,
+    }.variables
+  )*/
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
