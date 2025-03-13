@@ -31,6 +31,7 @@ export default async function DataFull({
           dehydratedState={dehydratedState}
           queryConfig={queryConfig}
           key={queryConfig.key}
+          searchParams={urlParams}
         >
           <>{children}</>
         </DataComponent>

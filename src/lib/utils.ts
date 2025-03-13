@@ -244,11 +244,6 @@ export function objToHash(obj) {
   return (hash >>> 0).toString(16)
 }
 
-type ColumnConfig = {
-  id: string
-  [key: string]: any // Permite otras propiedades dinámicas
-}
-
 export function toArrayId(
   arr: ColumnConfig[],
   propertyName: string,
@@ -292,7 +287,7 @@ export function toActiveObject(
   sortBy: string | null = null
 ): Record<string, boolean> {
   // Crear una copia del array para no modificar el original
-  let processedArray: ColumnConfig[] = [...arr]
+  const processedArray: ColumnConfig[] = [...arr]
 
   // Ordenar el array si se especifica un campo para ordenar
   if (sortBy) {

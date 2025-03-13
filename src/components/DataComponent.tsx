@@ -2,7 +2,6 @@
 
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useFetchData } from "@/lib/useFetchData"
-import { searchParamsToObject } from "@/lib/utils"
 import { toastMessage } from "@/lib/utilsUI"
 import { DehydratedState } from "@tanstack/react-query"
 import { redirect, useSearchParams } from "next/navigation"
@@ -15,12 +14,15 @@ interface DataComponentProps {
   dehydratedState?: DehydratedState
   children: React.ReactElement<{ data: any }>
   queryConfig: FetchDataConfig
+  searchParams?: { [key: string]: string }
+
   mockData?: any
 }
 
 export default function DataComponent({
   dehydratedState,
   queryConfig,
+  searchParams = {},
   mockData,
   children,
 }: DataComponentProps) {
@@ -28,7 +30,7 @@ export default function DataComponent({
     return React.cloneElement(children, { data: mockData })
   }
   const { t } = useTranslation()
-  const urlParams = searchParamsToObject(useSearchParams())
+  const urlParams = searchParams
   const { isLoading, data, isError, error } = useFetchData({
     queryConfig,
     dehydratedState,
@@ -39,7 +41,7 @@ export default function DataComponent({
 
   const onOk = () => redirect("/")
 
-  if (isError || !data) {
+  /*   if (isError || !data) {
     toastMessage(
       <FormattedMessage id="we_cant_load_movements" />,
       <FormattedMessage id="try_again_later" />,
@@ -47,7 +49,7 @@ export default function DataComponent({
     )
     return
   }
-  if (userId)
+ */ if (userId && data)
     return (
       <div
         className={`relative ${
@@ -57,4 +59,7 @@ export default function DataComponent({
         {React.cloneElement(children, { data, userId })}
       </div>
     )
+}
+function awaitprocessQueryParameters(searchParams: { [key: string]: string }) {
+  throw new Error("Function not implemented.")
 }

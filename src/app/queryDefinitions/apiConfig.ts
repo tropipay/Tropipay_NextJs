@@ -18,7 +18,9 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     body: {
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {
         movements(filter: $filter, pagination: $pagination) {
-          items { $FIELDS }
+          items {
+          id
+          $FIELDS }
             totalCount
           }
         }`,
