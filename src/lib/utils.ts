@@ -92,7 +92,13 @@ export const fetchGetWithTriggers = async (
 }
 
 export function generateHashedKey(key: string, obj: any): string {
-  const str = JSON.stringify(obj)
+  const sortedObj = Object.keys(obj)
+    .sort()
+    .reduce((acc, key) => {
+      acc[key] = obj[key]
+      return acc
+    }, {} as Record<string, any>)
+  const str = JSON.stringify(sortedObj)
   return `${key} | ${btoa(str)}`
 }
 
