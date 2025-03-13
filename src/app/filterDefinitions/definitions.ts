@@ -3,16 +3,13 @@ import TropicardIcon from "@/components/images/tropicardIcon"
 import TropipayIcon from "@/components/images/tropipayIcon"
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons"
 import {
-  Banknote,
-  Building2,
+  Bitcoin,
   Check,
-  CircleDollarSign,
+  CircleHelp,
   Clock4,
   CreditCard,
-  HandCoins,
   Landmark,
   LoaderCircle,
-  Store,
 } from "lucide-react"
 
 export const usersStatus = [
@@ -44,6 +41,10 @@ export const movementsState = [
     value: "cancelled",
     icon: CrossCircledIcon,
   },
+  {
+    value: "error",
+    icon: CrossCircledIcon,
+  },
 ].map((option) => ({ ...option, label: `ms_${option.value}` }))
 
 export const movementsStateGroups = {
@@ -52,73 +53,45 @@ export const movementsStateGroups = {
   anotherStates: ["error"],
 }
 export const movementTypes = [
-  "add",
-  "ota",
-  "phoneRecharge",
-  "giftcard",
-  "remittance",
-  "refund",
-  "transfer",
-  "charge",
-  "payment",
-  "other",
+  "ADD",
+  "OTA",
+  "PHONERECHARGE",
+  "GIFTCARD",
+  "REMITTANCE",
+  "REFUND",
+  "TRANSFER",
+  "CHARGE",
+  "PAYMENT",
+  "OTHER",
 ].map((value) => ({ value, label: `mt_${value}` }))
 
 export const paymentMethods = [
   {
-    value: "CHARGE_USER_CARDS",
+    value: "CARD",
     icon: CreditCard,
   },
   {
-    value: "TOKENIZE_CARD",
-    icon: CreditCard,
+    value: "TROPICARD",
+    icon: TropicardIcon,
   },
   {
-    value: "GIFT_CARD",
+    value: "GIFTCARD",
     icon: GiftcardIcon,
   },
   {
-    value: "CONSUME_TROPICARD",
-    icon: TropicardIcon,
-  },
-  {
-    value: "CHARGE_EXTERNAL_CARDS",
-    icon: CreditCard,
-  },
-  {
-    value: "INTERNAL_TRANSFER",
-    icon: Banknote,
-  },
-  {
-    value: "MARKETPLACE",
-    icon: Store,
-  },
-  {
-    value: "REMITTANCE",
-    icon: HandCoins,
-  },
-  {
-    value: "RECHARGE",
-    icon: CircleDollarSign,
-  },
-  {
-    value: "RECHARGE_TROPICARD",
-    icon: TropicardIcon,
-  },
-  {
-    value: "PAY_WITH_TPP",
-    icon: TropicardIcon,
-  },
-  {
-    value: "MEDIATION_PAYOUT_BUSINESS",
-    icon: Building2,
-  },
-  {
-    value: "Tropipay Balance",
+    value: "INTERNAL",
     icon: TropipayIcon,
   },
   {
-    value: "Deposit Bank",
+    value: "CRYPTO",
+    icon: Bitcoin,
+  },
+  {
+    value: "WIRE",
     icon: Landmark,
+  },
+  {
+    value: "OTHER",
+    icon: CircleHelp,
   },
 ].map((option) => ({ ...option, label: `pm_${option.value}` }))

@@ -4,7 +4,6 @@ import {
   movementTypes,
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
-import { hi } from "date-fns/locale"
 
 export const movementsColumnsDef: any = {
   /* select: {
@@ -84,6 +83,7 @@ export const movementsColumnsDef: any = {
     type: "amount",
     enableHiding: false,
     showFilter: true,
+    hidden: true,
     field: `amount {
       value
       currency
