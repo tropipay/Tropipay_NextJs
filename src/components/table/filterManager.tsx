@@ -138,9 +138,6 @@ export function FilterManager<TData, TValue>({
     // Aplicar solo los filtros que no están en `filters`
     table.setColumnFilters(remainingFilters)
 
-    // Limpiar los filtros seleccionados y activos
-    setSelectedFilters(new Set())
-
     // Limpiar los parámetros de búsqueda en la URL solo para los filtros en `filters`
     const newSearchParams = new URLSearchParams(searchParams.toString())
     filters.forEach((column) => newSearchParams.delete(column.id))

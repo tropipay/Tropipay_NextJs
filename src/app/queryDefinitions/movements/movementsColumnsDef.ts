@@ -27,7 +27,6 @@ export const movementsColumnsDef: any = {
               value
               currency
             }`,
-    order: 1,
   },
   state: {
     type: "facetedBadge",
@@ -83,7 +82,7 @@ export const movementsColumnsDef: any = {
     type: "amount",
     enableHiding: false,
     showFilter: true,
-    hidden: true,
+    order: 1,
     field: `amount {
       value
       currency
@@ -125,6 +124,12 @@ export const movementsColumnsDef: any = {
     hidden: true,
   },
   movementDirection: {
+    type: "simpleText",
+    hidden: true,
+    field: "movementDirection",
+    meta: { hidden: true },
+  },
+  search: {
     type: "simpleText",
     hidden: true,
     field: "movementDirection",
