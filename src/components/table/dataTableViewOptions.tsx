@@ -17,6 +17,7 @@ import {
   CommandList,
 } from "../ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -43,6 +44,7 @@ export function DataTableViewOptions<TData>({
         (column) =>
           typeof column.accessorFn !== "undefined" &&
           column.getCanHide() && // Solo incluir columnas que se pueden ocultar
+          // @ts-ignore
           !column.columnDef.meta?.hidden
       )
       .map((column) => ({
@@ -98,11 +100,18 @@ export function DataTableViewOptions<TData>({
         }
       }}
     >
-      <PopoverTrigger asChild>
-        <Button variant="outline" aria-label="Opciones de columnas">
-          <Ellipsis className="mr-0 h-4 w-4" />
-        </Button>
-      </PopoverTrigger>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <PopoverTrigger asChild>
+            <Button variant="outline" aria-label="Opciones de columnas">
+              <Ellipsis className="mr-0 h-4 w-4" />
+            </Button>
+          </PopoverTrigger>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" align="center">
+          <FormattedMessage id="show_columns" />
+        </TooltipContent>
+      </Tooltip>
       <PopoverContent className="w-[250px] p-0" align="start">
         <Command>
           <CommandInput placeholder={t("search_columns")} />

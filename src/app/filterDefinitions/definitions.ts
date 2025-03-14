@@ -1,15 +1,23 @@
+import BankIcon from "@/components/images/bankIcon"
 import GiftcardIcon from "@/components/images/giftcardIcon"
+import OtaIcon from "@/components/images/otaIcon"
+import PhoneRechargeIcon from "@/components/images/phoneRechargeIcon"
+import RefundIcon from "@/components/images/refundIcon"
+import RemittanceIcon from "@/components/images/remittanceIcon"
 import TropicardIcon from "@/components/images/tropicardIcon"
 import TropipayIcon from "@/components/images/tropipayIcon"
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons"
 import {
+  ArrowUpRight,
   Bitcoin,
   Check,
   CircleHelp,
   Clock4,
-  CreditCard,
-  Landmark,
+  CreditCardIcon,
   LoaderCircle,
+  Plus,
+  Tag,
+  Wallet,
 } from "lucide-react"
 
 export const usersStatus = [
@@ -50,25 +58,26 @@ export const movementsState = [
 export const movementsStateGroups = {
   completedStates: ["completed"],
   processingStates: ["pending", "processing"],
-  anotherStates: ["error"],
+  anotherStates: ["cancelled"],
+  destructive: ["error"],
 }
 export const movementTypes = [
-  "ADD",
-  "OTA",
-  "PHONERECHARGE",
-  "GIFTCARD",
-  "REMITTANCE",
-  "REFUND",
-  "TRANSFER",
-  "CHARGE",
-  "PAYMENT",
-  "OTHER",
-].map((value) => ({ value, label: `mt_${value}` }))
+  { value: "ADD", icon: Plus },
+  { value: "OTA", icon: OtaIcon },
+  { value: "PHONERECHARGE", icon: PhoneRechargeIcon },
+  { value: "GIFTCARD", icon: GiftcardIcon },
+  { value: "REMITTANCE", icon: RemittanceIcon },
+  { value: "REFUND", icon: RefundIcon },
+  { value: "TRANSFER", icon: ArrowUpRight },
+  { value: "CHARGE", icon: Tag },
+  { value: "PAYMENT", icon: Wallet },
+  { value: "OTHER", icon: CircleHelp },
+].map((option) => ({ ...option, label: `mt_${option.value}` }))
 
 export const paymentMethods = [
   {
     value: "CARD",
-    icon: CreditCard,
+    icon: CreditCardIcon,
   },
   {
     value: "TROPICARD",
@@ -88,7 +97,7 @@ export const paymentMethods = [
   },
   {
     value: "WIRE",
-    icon: Landmark,
+    icon: BankIcon,
   },
   {
     value: "OTHER",

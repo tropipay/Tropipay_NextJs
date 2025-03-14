@@ -5,7 +5,7 @@ type Amount = {
 
 type Movement = {
   id: string
-  status: string
+  state: string
   createdAt: string
   completedAt: string
   amount: Amount

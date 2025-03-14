@@ -53,7 +53,7 @@ export function FilterManager<TData, TValue>({
     .filter(
       ({ filter, filterType, meta }: any) => !!filter && !!filterType && !meta
     )
-    .map((filter) => ({
+    .map((filter: any) => ({
       ...filter,
       translatedLabel: intl.formatMessage({ id: filter.filterLabel }),
     }))
@@ -287,7 +287,6 @@ export function FilterManager<TData, TValue>({
       {/* Botón de limpieza de filtros */}
       {isFiltered && (
         <Button
-          disabled={!isFiltered}
           variant="active"
           onClick={handleClearFilters}
           className="h-8 px-2"

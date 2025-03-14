@@ -2,13 +2,11 @@
 
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useFetchData } from "@/lib/useFetchData"
-import { toastMessage } from "@/lib/utilsUI"
 import { DehydratedState } from "@tanstack/react-query"
-import { redirect, useSearchParams } from "next/navigation"
-import React from "react"
-import { FormattedMessage } from "react-intl"
-import { useTranslation } from "./intl/useTranslation"
 import { useSession } from "next-auth/react"
+import { redirect } from "next/navigation"
+import React from "react"
+import { useTranslation } from "./intl/useTranslation"
 
 interface DataComponentProps {
   dehydratedState?: DehydratedState
@@ -56,7 +54,10 @@ export default function DataComponent({
           isLoading && "animate-pulse pointer-events-none"
         }`}
       >
-        {React.cloneElement(children, { data, userId })}
+        {
+          // @ts-ignore
+          React.cloneElement(children, { data, userId })
+        }
       </div>
     )
 }

@@ -9,7 +9,12 @@ export default async function Home() {
   // In our example we use local data
   return (
     <div className="container p-2">
-      <DataTable tableId="users" data={users} columns={userColumns} />
+      <DataTable
+        tableId="users"
+        data={users}
+        columns={userColumns}
+        userId="0"
+      />
     </div>
   )
 }
