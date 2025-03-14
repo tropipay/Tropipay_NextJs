@@ -4,11 +4,12 @@ type InfoProps = {
   icon?: React.ReactNode
 }
 
-export function Info({ label, value, icon }: InfoProps): JSX.Element {
+export function Info({ label, value, icon }: InfoProps): any {
+  if (!value) return null
   return (
     <div className="antialiased flex text-sm text-gray-700 font-roboto text-xs leading-5 tracking-tight">
       <span className="font-bold w-48">{label}</span>
-      <span className="flex text-left gap-2">
+      <span className="flex-1 flex justify-end gap-2">
         <span>{value}</span> {icon}
       </span>
     </div>

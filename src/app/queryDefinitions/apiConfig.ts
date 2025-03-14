@@ -47,41 +47,39 @@ export const apiConfig: Record<string, FetchDataConfig> = {
         movements(filter: $filter, pagination: $pagination) {
           items {
             id
-            reference
-            bankOrderCode
-            concept
             state
+            bankOrderCode
+       			fee {
+              value
+              currency
+            }
             email
-            createdAt
-            completedAt
-            amount {
-              value
-              currency
-            }
-            amountCharged {
-              value
-              currency
-            }
-            fee {
-              value
-              currency
-            }
-            conversionRate
-            movementType
-            paymentMethod
-            sender
-            recipient
-            summary
-            cardPan
             movementDetail {
+              amount{
+                currency
+                value
+              }
+              cardCountry
+              cardExpirationDate
+              cardPan
+              cardType
+              chargedAmount{
+                currency
+                value
+              }
+              clientAddress
+              clientIp
+              completedAt
+              concept
+              conversionRate
+              createdAt
               netAmount {
                 value
                 currency
               }
-              concept
-              beneficiaryData {
-                name
+              recipientData{
                 alias
+                name
                 account
               }
               senderData {
@@ -90,16 +88,12 @@ export const apiConfig: Record<string, FetchDataConfig> = {
                 email
               }
               type
-              cardPan
-              cardType
-              cardCountry
-              clientIp
-              cardExpirationDate
-            }
+            }	
+            sender
           }
-            totalCount
-          }
-        }`,
+          totalCount
+        }
+      }`,
       operationName: "GetMovements",
       variables: {
         filter: {},

@@ -2,7 +2,6 @@ import {
   movementsState,
   movementsStateGroups,
 } from "@/app/filterDefinitions/definitions"
-import CopyToClipboard from "@/components/copyToClipboard"
 import { Info } from "@/components/sectionComponents/info"
 import { Section } from "@/components/sectionComponents/section"
 import FacetedBadge from "@/components/table/facetedBadge"
@@ -14,6 +13,7 @@ import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row = props.data.data.movements.items[0]
+  console.log("row:", row)
   const { data: session } = useSession()
   const token = session?.user.token
 
@@ -46,8 +46,12 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="max-w-md mx-auto p-4">
         <div className="flex justify-between items-center mb-3">
           <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {row.amount.value > 0 ? "+" : ""}
-            {formatAmount(row.amount.value, row.amount.currency, "right")}
+            {row.movementDetail.amount.value > 0 ? "+" : ""}
+            {formatAmount(
+              row.movementDetail.amount.value,
+              row.movementDetail.amount.currency,
+              "right"
+            )}
           </div>
           <FacetedBadge
             value={row.state}
@@ -56,57 +60,110 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </div>
         <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500">Enviado a Franco Cantarini</p>
+          <p className="text-xs text-gray-500"> {row.bankOrderCode}</p>
           <p className="text-xs text-gray-500">
-            {row.completedAt &&
-              format(new Date(row.completedAt), "dd/MM/yy HH:mm")}
+            {row.movementDetail.completedAt &&
+              format(
+                new Date(row.movementDetail.completedAt),
+                "dd/MM/yy HH:mm"
+              )}
           </p>
         </div>
-        <Section title="Datos de pago">
-          <Info label="Monto autorizado" value="452,53 EUR" />
-          <Info label="Método" value="Visa" />
-          <Info label="Detalles" value="*2588" />
+        <Section title="Datos del movimiento">
+          <Info label="Tipo" value={row.movementDetail.type} />
+          <Info label="Producto" value="******** FALTA PRODUCTO" />
+          <Info label="Concepto" value={row.movementDetail.concept} />
+        </Section>
+
+        <Section title="Datos del beneficiario">
+          <Info label="Alias" value={row.movementDetail.recipientData.alias} />
+          <Info label="Nombre" value={row.movementDetail.recipientData.name} />
           <Info
-            label="Código de referencia"
-            value={row.reference}
-            icon={
-              <CopyToClipboard
-                text={row.reference}
-                message="El código fue copiado"
-              />
+            label="Cuenta"
+            value={row.movementDetail.recipientData.account}
+          />
+          <Info label="Mail" value={row.email} />
+          <Info label="País destino" value="******** FALTA PAIS" />
+        </Section>
+
+        <Section title="Datos del remitente">
+          <Info label="Nombre" value={row.movementDetail.senderData.name} />
+          <Info label="Mail" value={row.movementDetail.senderData.email} />
+          <Info label="Dirección" value={row.movementDetail.clientAddress} />
+          <Info label="País" value="******** FALTA PAIS" />
+        </Section>
+
+        <Section title="Importes">
+          <Info
+            label="Importe"
+            value={formatAmount(
+              row.movementDetail.amount.value,
+              row.movementDetail.amount.currency,
+              "right"
+            )}
+          />
+          <Info
+            label="Tasa de cambio"
+            value={
+              row.movementDetail.conversionRate &&
+              row.movementDetail.amount.currency !== row.fee.currency &&
+              `1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`
             }
           />
-          <Info label="Código de respuesta" value="10000" />
+          <Info
+            label="Comisión"
+            value={formatAmount(row.fee.value, row.fee.currency, "right")}
+          />
+          <Info
+            label="Neto"
+            value={`${formatAmount(
+              row.movementDetail.netAmount.value,
+              row.movementDetail.netAmount.currency,
+              "right"
+            )}`}
+          />
         </Section>
 
-        <Section title="Datos del cliente">
-          <Info label="Nombre" value="Juan" />
-          <Info label="Apellido" value="Gil" />
-          <Info label="Mail" value="JuanGil@gmail.com" />
-          <Info label="Dirección" value="Carrer de l'equador-55, Barcelona" />
-          <Info label="País" value="España" />
-        </Section>
-
-        <Section title="Métodos de pago">
-          <Info label="Tipo" value="VISA" />
-          <Info label="Pan de la tarjeta" value="1111" />
-          <Info label="Fecha de vencimiento" value="30/11/2024" />
-          <Info label="País de tarjeta" value="Estados Unidos" />
-          <Info label="IP del pago" value="164.23.255.01" />
+        <Section title="Método de pago">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
+          <Info label="Tipo" value={row.movementDetail.cardType} />
+          <Info label="Cuenta" value="******** FALTA CUENTA" />
+          <Info label="Pan de la tarjeta" value={row.movementDetail.cardPan} />
+          <Info
+            label="Fecha de vencimiento"
+            value={
+              row.movementDetail.cardExpirationDate &&
+              format(
+                new Date(row.movementDetail.cardExpirationDate),
+                "dd/MM/yy"
+              )
+            }
+          />
+          <Info
+            label="País de tarjeta"
+            value={row.movementDetail.cardCountry}
+          />
+          <Info label="IP del pago" value={row.movementDetail.clientIp} />
         </Section>
 
         <Section title="Cronograma">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
           <Info
             label="Fecha de creación"
-            value={row.createdAt && format(new Date(row.createdAt), "dd/MM/yy")}
+            value={
+              row.movementDetail.createdAt &&
+              format(new Date(row.movementDetail.createdAt), "dd/MM/yy")
+            }
           />
           <Info
             label="Fecha valor"
             value={
-              row.completedAt && format(new Date(row.completedAt), "dd/MM/yy")
+              row.movementDetail.completedAt &&
+              format(new Date(row.movementDetail.completedAt), "dd/MM/yy")
             }
           />
         </Section>
+
         <div className="flex mt-4 gap-4">
           <Button
             variant="outline"
