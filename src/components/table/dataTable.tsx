@@ -14,6 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { objToHash, toActiveObject, toArrayId } from "@/lib/utils"
+import { getUserSettings, setUserSettings } from "@/lib/utilsUser"
 import {
   closestCenter,
   DndContext,
@@ -50,14 +52,9 @@ import {
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useEffect, useState } from "react"
+import { CSSProperties, useCallback, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
-import CookiesManager from "@/lib/cookiesManager"
-// import { objToHash } from "@/lib/utils"
-import { objToHash, toArrayId, toActiveObject } from "@/lib/utils"
-import { useSession } from "next-auth/react"
-import { getUserSettings, setUserSettings } from "@/lib/utilsUser"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -144,6 +141,7 @@ export default function DataTable<TData, TValue>({
 
   const onColumnFiltersChange = useCallback(
     (updater: Updater<ColumnFiltersState>) => {
+      // @ts-ignore
       const columnsFilters = columnsConfig.filter((item) => item.filter)
       const newFilters =
         typeof updater === "function" ? updater(columnFilters) : updater
@@ -154,6 +152,7 @@ export default function DataTable<TData, TValue>({
 
       // Eliminar solo los parámetros de búsqueda que corresponden a los filtros
       columnsFilters.forEach((filter) => {
+        // @ts-ignore
         params.delete(filter.id)
       })
 
@@ -173,6 +172,7 @@ export default function DataTable<TData, TValue>({
   const [columnOrder, setColumnOrder] = useState<string[]>(
     defaultColumnOrder ||
       getUserSettings(userId, null, tableId, "columnOrder") ||
+      // @ts-ignore
       toArrayId(columnsConfig, "hidden", (hiddenValue) => !hiddenValue, "order")
   )
 
@@ -180,6 +180,7 @@ export default function DataTable<TData, TValue>({
     defaultColumnVisibility ||
       getUserSettings(userId, null, tableId, "columnVisibility") ||
       toActiveObject(
+        // @ts-ignore
         columnsConfig,
         "hidden",
         (hiddenValue) => !hiddenValue,

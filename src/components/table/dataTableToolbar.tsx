@@ -1,16 +1,15 @@
 "use client"
 
+import MovementsAllInOut from "@/app/dashboard/movements/movementsAllInOut"
 import { Input } from "@/components/ui/input"
 import { Table } from "@tanstack/react-table"
-import { Download, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
-import { Button } from "../ui/button"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
-import MovementsAllInOut from "@/app/dashboard/movements/movementsAllInOut"
-import { useDebouncedCallback } from "use-debounce"
 
 interface DataTableToolbarProps<TData, TValue> {
   tableId: string
@@ -58,7 +57,7 @@ export function DataTableToolbar<TData, TValue>({
           return [...prev, { id: "search", value }]
         })
       } else {
-        searchColumn.setFilterValue(undefined)
+        searchColumn?.setFilterValue(undefined)
       }
     },
     500
@@ -92,9 +91,9 @@ export function DataTableToolbar<TData, TValue>({
 
         {/* Elementos alineados a la derecha */}
         <div className="flex items-center gap-2">
-          <Button variant="outline">
+          {/* <Button variant="outline">
             <Download />
-          </Button>
+          </Button> */}
           <DataTableViewOptions table={table} />
         </div>
       </div>
