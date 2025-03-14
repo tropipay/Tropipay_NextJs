@@ -46,14 +46,6 @@ export const apiConfig: Record<string, FetchDataConfig> = {
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {
         movements(filter: $filter, pagination: $pagination) {
           items {
-            id
-            reference
-            bankOrderCode
-            concept
-            state
-            email
-            createdAt
-            completedAt
             amount {
               value
               currency
@@ -62,26 +54,64 @@ export const apiConfig: Record<string, FetchDataConfig> = {
               value
               currency
             }
+            bankOrderCode
+            cardPan
+            charges {
+              bankOrderCode
+              cardBrand
+              cardCountry
+              cardExpirationDate
+              cardHolderName
+              cardPan
+              cardType
+              clientAddress
+              clientEmail
+              clientIp
+              clientLastName
+              clientName
+              createdAt
+              email
+              errorCode
+              issuerBank
+              source
+              state
+            }
+            completedAt
+            concept
+            conversionRate
+            createdAt
+            email
             fee {
               value
               currency
             }
-            conversionRate
-            movementType
-            paymentMethod
-            sender
-            recipient
-            summary
-            cardPan
+            id
             movementDetail {
+              amount{
+                currency
+                value
+              }
+              cardCountry
+              cardExpirationDate
+              cardPan
+              cardType
+              chargedAmount{
+                currency
+                value
+              }
+              clientAddress
+              clientIp
+              completedAt
+              concept
+              conversionRate
+              createdAt
               netAmount {
                 value
                 currency
               }
-              concept
-              beneficiaryData {
-                name
+              recipientData{
                 alias
+                name
                 account
               }
               senderData {
@@ -90,12 +120,14 @@ export const apiConfig: Record<string, FetchDataConfig> = {
                 email
               }
               type
-              cardPan
-              cardType
-              cardCountry
-              clientIp
-              cardExpirationDate
             }
+            movementType
+            paymentMethod
+            recipient
+            reference
+            sender
+            state
+            summary
           }
             totalCount
           }

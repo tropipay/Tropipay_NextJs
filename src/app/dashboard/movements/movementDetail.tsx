@@ -14,6 +14,7 @@ import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row = props.data.data.movements.items[0]
+  console.log("row:", row)
   const { data: session } = useSession()
   const token = session?.user.token
 
@@ -56,57 +57,104 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </div>
         <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500">Enviado a Franco Cantarini</p>
+          <p className="text-xs text-gray-500">{row.bankOrderCode}</p>
           <p className="text-xs text-gray-500">
             {row.completedAt &&
               format(new Date(row.completedAt), "dd/MM/yy HH:mm")}
           </p>
         </div>
-        <Section title="Datos de pago">
-          <Info label="Monto autorizado" value="452,53 EUR" />
-          <Info label="Método" value="Visa" />
-          <Info label="Detalles" value="*2588" />
+        <Section title="Datos del movimiento">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
+          <Info label="Tipo" value={row.movementDetail.type} />
+          <Info label="Producto" value="******** FALTA PRODUCTO" />
+          <Info label="Concepto" value={row.movementDetail.concept} />
+        </Section>
+
+        <Section title="Datos del beneficiario">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
+          <Info label="Alias" value={row.movementDetail.recipientData.alias} />
+          <Info label="Nombre" value={row.movementDetail.recipientData.name} />
           <Info
-            label="Código de referencia"
-            value={row.reference}
-            icon={
-              <CopyToClipboard
-                text={row.reference}
-                message="El código fue copiado"
-              />
+            label="Cuenta"
+            value={row.movementDetail.recipientData.account}
+          />
+          <Info label="Mail" value="******** FALTA MAIL" />
+          <Info label="País destino" value="******** FALTA PAIS" />
+        </Section>
+
+        <Section title="Datos del remitente">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
+          <Info label="Nombre" value={row.movementDetail.senderData.name} />
+          <Info label="Mail" value={row.movementDetail.senderData.email} />
+          <Info label="Dirección" value={row.movementDetail.clientAddress} />
+          <Info label="País" value="******** FALTA PAIS" />
+        </Section>
+
+        <Section title="Importes">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
+          <Info
+            label="Importe"
+            value={formatAmount(
+              row.movementDetail.amount.value,
+              row.movementDetail.amount.currency,
+              "right"
+            )}
+          />
+          <Info
+            label="Tasa de cambio"
+            value={`******** 1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`}
+          />
+          <Info label="Comisión" value="******** FALTA COMISION" />
+          <Info
+            label="Neto"
+            value={`******** ${formatAmount(
+              row.movementDetail.chargedAmount.value,
+              row.movementDetail.chargedAmount.currency,
+              "right"
+            )}`}
+          />
+        </Section>
+
+        <Section title="Método de pago">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
+          <Info label="Tipo" value={row.movementDetail.cardType} />
+          <Info label="Cuenta" value="******** FALTA CUENTA" />
+          <Info label="Pan de la tarjeta" value={row.movementDetail.cardPan} />
+          <Info
+            label="Fecha de vencimiento"
+            value={
+              row.movementDetail.cardExpirationDate &&
+              format(
+                new Date(row.movementDetail.cardExpirationDate),
+                "dd/MM/yy"
+              )
             }
           />
-          <Info label="Código de respuesta" value="10000" />
-        </Section>
-
-        <Section title="Datos del cliente">
-          <Info label="Nombre" value="Juan" />
-          <Info label="Apellido" value="Gil" />
-          <Info label="Mail" value="JuanGil@gmail.com" />
-          <Info label="Dirección" value="Carrer de l'equador-55, Barcelona" />
-          <Info label="País" value="España" />
-        </Section>
-
-        <Section title="Métodos de pago">
-          <Info label="Tipo" value="VISA" />
-          <Info label="Pan de la tarjeta" value="1111" />
-          <Info label="Fecha de vencimiento" value="30/11/2024" />
-          <Info label="País de tarjeta" value="Estados Unidos" />
-          <Info label="IP del pago" value="164.23.255.01" />
+          <Info
+            label="País de tarjeta"
+            value={row.movementDetail.cardCountry}
+          />
+          <Info label="IP del pago" value={row.movementDetail.clientIp} />
         </Section>
 
         <Section title="Cronograma">
+          {/* LISTOOOOOOOOOOOOOOOOO */}
           <Info
             label="Fecha de creación"
-            value={row.createdAt && format(new Date(row.createdAt), "dd/MM/yy")}
+            value={
+              row.movementDetail.createdAt &&
+              format(new Date(row.movementDetail.createdAt), "dd/MM/yy")
+            }
           />
           <Info
             label="Fecha valor"
             value={
-              row.completedAt && format(new Date(row.completedAt), "dd/MM/yy")
+              row.movementDetail.completedAt &&
+              format(new Date(row.movementDetail.completedAt), "dd/MM/yy")
             }
           />
         </Section>
+
         <div className="flex mt-4 gap-4">
           <Button
             variant="outline"
