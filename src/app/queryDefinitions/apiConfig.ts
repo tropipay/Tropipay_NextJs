@@ -46,46 +46,13 @@ export const apiConfig: Record<string, FetchDataConfig> = {
       query: `query GetMovements($filter: MovementFilter, $pagination: PaginationInput) {
         movements(filter: $filter, pagination: $pagination) {
           items {
-            amount {
-              value
-              currency
-            }
-            amountCharged {
-              value
-              currency
-            }
-            bankOrderCode
-            cardPan
-            charges {
-              bankOrderCode
-              cardBrand
-              cardCountry
-              cardExpirationDate
-              cardHolderName
-              cardPan
-              cardType
-              clientAddress
-              clientEmail
-              clientIp
-              clientLastName
-              clientName
-              createdAt
-              email
-              errorCode
-              issuerBank
-              source
-              state
-            }
-            completedAt
-            concept
-            conversionRate
-            createdAt
-            email
-            fee {
-              value
-              currency
-            }
             id
+            state
+            bankOrderCode
+       			fee {
+              value
+              currency
+            }
             movementDetail {
               amount{
                 currency
@@ -120,18 +87,12 @@ export const apiConfig: Record<string, FetchDataConfig> = {
                 email
               }
               type
-            }
-            movementType
-            paymentMethod
-            recipient
-            reference
+            }	
             sender
-            state
-            summary
           }
-            totalCount
-          }
-        }`,
+          totalCount
+        }
+      }`,
       operationName: "GetMovements",
       variables: {
         filter: {},

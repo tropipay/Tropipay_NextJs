@@ -2,7 +2,6 @@ import {
   movementsState,
   movementsStateGroups,
 } from "@/app/filterDefinitions/definitions"
-import CopyToClipboard from "@/components/copyToClipboard"
 import { Info } from "@/components/sectionComponents/info"
 import { Section } from "@/components/sectionComponents/section"
 import FacetedBadge from "@/components/table/facetedBadge"
@@ -47,9 +46,14 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="max-w-md mx-auto p-4">
         <div className="flex justify-between items-center mb-3">
           <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {row.amount.value > 0 ? "+" : ""}
-            {formatAmount(row.amount.value, row.amount.currency, "right")}
+            {row.movementDetail.amount.value > 0 ? "+" : ""}
+            {formatAmount(
+              row.movementDetail.amount.value,
+              row.movementDetail.amount.currency,
+              "right"
+            )}
           </div>
+          ********
           <FacetedBadge
             value={row.state}
             optionList={movementsState}
@@ -57,21 +61,22 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </div>
         <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500">{row.bankOrderCode}</p>
+          <p className="text-xs text-gray-500">******** {row.bankOrderCode}</p>
           <p className="text-xs text-gray-500">
-            {row.completedAt &&
-              format(new Date(row.completedAt), "dd/MM/yy HH:mm")}
+            {row.movementDetail.completedAt &&
+              format(
+                new Date(row.movementDetail.completedAt),
+                "dd/MM/yy HH:mm"
+              )}
           </p>
         </div>
         <Section title="Datos del movimiento">
-          {/* LISTOOOOOOOOOOOOOOOOO */}
           <Info label="Tipo" value={row.movementDetail.type} />
           <Info label="Producto" value="******** FALTA PRODUCTO" />
           <Info label="Concepto" value={row.movementDetail.concept} />
         </Section>
 
         <Section title="Datos del beneficiario">
-          {/* LISTOOOOOOOOOOOOOOOOO */}
           <Info label="Alias" value={row.movementDetail.recipientData.alias} />
           <Info label="Nombre" value={row.movementDetail.recipientData.name} />
           <Info
@@ -83,7 +88,6 @@ export default function MovementDetail(props: any): JSX.Element {
         </Section>
 
         <Section title="Datos del remitente">
-          {/* LISTOOOOOOOOOOOOOOOOO */}
           <Info label="Nombre" value={row.movementDetail.senderData.name} />
           <Info label="Mail" value={row.movementDetail.senderData.email} />
           <Info label="Dirección" value={row.movementDetail.clientAddress} />
@@ -91,7 +95,6 @@ export default function MovementDetail(props: any): JSX.Element {
         </Section>
 
         <Section title="Importes">
-          {/* LISTOOOOOOOOOOOOOOOOO */}
           <Info
             label="Importe"
             value={formatAmount(
@@ -102,7 +105,10 @@ export default function MovementDetail(props: any): JSX.Element {
           />
           <Info
             label="Tasa de cambio"
-            value={`******** 1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`}
+            value={
+              row.movementDetail.conversionRate &&
+              `******** 1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`
+            }
           />
           <Info label="Comisión" value="******** FALTA COMISION" />
           <Info
