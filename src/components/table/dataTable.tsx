@@ -215,17 +215,20 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(columnVisibility) : updater
       setColumnVisibility(visibilityState)
       setUserSettings(userId, visibilityState, tableId, "columnVisibility")
+
       if (Object.keys(columnVisibility).length !== 0) {
         const columnHash = objToHash(columnVisibility)
-        router.push(
-          `${pathname}?${createQueryString({
-            columnHash: columnHash,
-          })}`,
-          { scroll: false }
-        )
+        // Obtener los search params actuales
+        const currentSearchParams = new URLSearchParams(window.location.search)
+        // Actualizar solo el columnHash
+        currentSearchParams.set("columnHash", columnHash)
+
+        router.push(`${pathname}?${currentSearchParams.toString()}`, {
+          scroll: false,
+        })
       }
     },
-    [columnVisibility, userId]
+    [columnVisibility, userId, pathname] // Añadí pathname a las dependencias
   )
 
   const DraggableTableHeader = ({
