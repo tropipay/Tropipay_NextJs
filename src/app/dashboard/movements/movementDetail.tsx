@@ -53,7 +53,6 @@ export default function MovementDetail(props: any): JSX.Element {
               "right"
             )}
           </div>
-          ********
           <FacetedBadge
             value={row.state}
             optionList={movementsState}
@@ -61,7 +60,7 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </div>
         <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500">******** {row.bankOrderCode}</p>
+          <p className="text-xs text-gray-500"> {row.bankOrderCode}</p>
           <p className="text-xs text-gray-500">
             {row.movementDetail.completedAt &&
               format(
@@ -83,7 +82,7 @@ export default function MovementDetail(props: any): JSX.Element {
             label="Cuenta"
             value={row.movementDetail.recipientData.account}
           />
-          <Info label="Mail" value="******** FALTA MAIL" />
+          <Info label="Mail" value={row.email} />
           <Info label="País destino" value="******** FALTA PAIS" />
         </Section>
 
@@ -107,15 +106,19 @@ export default function MovementDetail(props: any): JSX.Element {
             label="Tasa de cambio"
             value={
               row.movementDetail.conversionRate &&
-              `******** 1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`
+              row.movementDetail.amount.currency !== row.fee.currency &&
+              `1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`
             }
           />
-          <Info label="Comisión" value="******** FALTA COMISION" />
+          <Info
+            label="Comisión"
+            value={formatAmount(row.fee.value, row.fee.currency, "right")}
+          />
           <Info
             label="Neto"
-            value={`******** ${formatAmount(
-              row.movementDetail.chargedAmount.value,
-              row.movementDetail.chargedAmount.currency,
+            value={`${formatAmount(
+              row.movementDetail.netAmount.value,
+              row.movementDetail.netAmount.currency,
               "right"
             )}`}
           />

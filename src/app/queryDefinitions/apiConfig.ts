@@ -53,6 +53,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
               value
               currency
             }
+            email
             movementDetail {
               amount{
                 currency
