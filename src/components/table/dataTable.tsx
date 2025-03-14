@@ -437,7 +437,7 @@ export default function DataTable<TData, TValue>({
               </div>
             </div>
           </SheetContent>
-        </Sheet>{" "}
+        </Sheet>
       </div>
     )
 }
