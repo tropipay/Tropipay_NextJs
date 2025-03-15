@@ -220,7 +220,7 @@ export function DataTableFilterDate<TData, TValue>({
           <FormattedMessage id={filterLabel} />
           {filterValue && (
             <>
-              <Separator orientation="vertical" className="h-4 mx-2" />
+              <Separator orientation="vertical" className="h-4 separator" />
               <span className="truncate">
                 {initialFrom && initialTo
                   ? `${initialFrom} - ${initialTo}`

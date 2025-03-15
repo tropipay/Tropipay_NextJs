@@ -163,8 +163,8 @@ export function FilterManager<TData, TValue>({
   }, [table.getState().columnFilters, columns])
 
   return (
-    <div className="flex w-full items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2 py-2 overflow-x-auto">
+    <div className="flex w-full items-start justify-between">
+      <div className="flex flex-1 items-start space-x-2 p-0 overflow-x-auto mr-4 pr-2">
         <Popover>
           <PopoverTrigger asChild>
             <Button
