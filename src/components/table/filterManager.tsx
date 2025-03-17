@@ -144,6 +144,20 @@ export function FilterManager<TData, TValue>({
     window.history.pushState(null, "", `?${newSearchParams.toString()}`)
   }
 
+  /**
+   * Clear filter by id.
+   * @param filterId Filter identifier.
+   */
+  const handleClearFilter = (filterId: string) => {
+    console.log("y")
+    setActiveFilters(activeFilters.filter(({ id }) => id !== filterId))
+    const newSelectedFilters = new Set(selectedFilters)
+    if (newSelectedFilters.has(filterId)) {
+      newSelectedFilters.delete(filterId)
+      setSelectedFilters(newSelectedFilters)
+    }
+  }
+
   // Verificar si hay filtros aplicados, excluyendo los que tienen meta.hidden
 
   const isFiltered = React.useMemo(() => {
@@ -245,6 +259,7 @@ export function FilterManager<TData, TValue>({
                       // @ts-ignore
                       config: column,
                     }}
+                    onClear={handleClearFilter}
                   />
                 )
               case "date":
@@ -256,6 +271,7 @@ export function FilterManager<TData, TValue>({
                       ...table.getColumn(column.id),
                       config: column,
                     }}
+                    onClear={handleClearFilter}
                   />
                 )
               case "amount":
@@ -267,6 +283,7 @@ export function FilterManager<TData, TValue>({
                       // @ts-ignore
                       config: column,
                     }}
+                    onClear={handleClearFilter}
                   />
                 )
               case "uniqueValue":
@@ -278,6 +295,7 @@ export function FilterManager<TData, TValue>({
                       // @ts-ignore
                       config: column,
                     }}
+                    onClear={handleClearFilter}
                   />
                 )
             }

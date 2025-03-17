@@ -9,6 +9,7 @@ import { formatAmount, selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
+import { Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
 import InputAmount from "../inputAmount"
@@ -17,10 +18,12 @@ import { Label } from "../ui/label"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
+  onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
   column,
+  onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
   const filterValue = column?.getFilterValue() as string | undefined
@@ -58,8 +61,11 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   }
 
   const handleClearFilter = () => {
-    column?.setFilterValue(undefined)
-    setError(null)
+    if (!column) return
+    if (filterValue) {
+      column.setFilterValue(undefined)
+      setError(null)
+    } else onClear?.(column.id)
   }
 
   const renderFilterValue = () => {
@@ -103,16 +109,20 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               {renderFilterValue()}
-              <div
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleClearFilter()
-                }}
-              >
-                <CrossCircledIcon className="h-4 w-4" />
-              </div>
             </>
           )}
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              handleClearFilter()
+            }}
+          >
+            {filterValue ? (
+              <Eraser className="h-4 w-4" />
+            ) : (
+              <CrossCircledIcon className="h-4 w-4" />
+            )}
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[264px] p-6" align="start">
