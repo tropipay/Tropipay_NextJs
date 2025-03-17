@@ -1,9 +1,10 @@
 import { Checkbox } from "@/components/ui/checkbox"
-import { formatAmount, setFilterType } from "@/lib/utils"
+import { formatAmount, getRowValue, setFilterType } from "@/lib/utils"
 import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { DataTableColumnHeader } from "./dataTableColumnHeader"
 import FacetedBadge from "./facetedBadge"
 
@@ -104,7 +105,16 @@ export function setColumns<TData>(
       case "simpleText":
         baseConfig = {
           ...baseConfig,
-          cell: ({ row }) => <div className="truncate">{row.getValue(id)}</div>,
+          cell: ({ row }) => (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="truncate">{getRowValue(row.getValue(id))}</div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="center">
+                {getRowValue(row.getValue(id))}
+              </TooltipContent>
+            </Tooltip>
+          ),
         }
         break
       case "faceted":
@@ -181,11 +191,11 @@ export function setColumns<TData>(
           cell: ({ row }) => {
             const { value, currency } = (row.getValue(id) as any) || []
             return (
-              <div>
+              <div className="flex items-center gap-1">
                 <span className="font-bold">
                   {addSign && (value > 0 ? "+" : "")}
                   {formatAmount(value)}
-                </span>{" "}
+                </span>
                 <span className="text-grayFont">{currency}</span>
               </div>
             )

@@ -3,7 +3,7 @@
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
-import { CheckIcon } from "lucide-react"
+import { CheckIcon, Eraser } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import * as React from "react"
 import { FormattedMessage } from "react-intl"
@@ -32,11 +32,13 @@ import { useTranslation } from "../intl/useTranslation"
 // Interfaces
 interface DataTableFilterFacetedProps<TData, TValue> {
   column?: Column<TData, TValue>
+  onClear?: (filterId: string) => void
 }
 
 // Componente principal
 export function DataTableFilterFaceted<TData, TValue>({
   column,
+  onClear,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
   const { t } = useTranslation()
@@ -84,11 +86,14 @@ export function DataTableFilterFaceted<TData, TValue>({
   }
 
   const handleClearFilters = () => {
-    setLocalSelectedValues(new Set())
-    column?.setFilterValue(undefined)
+    if (!column) return
+    if (localSelectedValues) {
+      setLocalSelectedValues(new Set())
+      column?.setFilterValue(undefined)
 
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    newSearchParams.delete(column?.id || "")
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.delete(column?.id || "")
+    } else onClear?.(column.id)
   }
 
   // Renderizado
@@ -117,16 +122,18 @@ export function DataTableFilterFaceted<TData, TValue>({
               </div>
             </>
           )}
-          {selectedValues.size > 0 ? (
-            <div
-              onClick={(event) => {
-                event.stopPropagation()
-                handleClearFilters()
-              }}
-            >
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              handleClearFilters()
+            }}
+          >
+            {selectedValues.size > 0 ? (
+              <Eraser className="h-4 w-4" />
+            ) : (
               <CrossCircledIcon className="h-4 w-4" />
-            </div>
-          ) : null}
+            )}
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[264px] p-0" align="start">

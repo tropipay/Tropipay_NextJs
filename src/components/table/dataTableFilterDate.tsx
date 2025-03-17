@@ -21,7 +21,7 @@ import {
   parse,
   startOfDay,
 } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
@@ -40,10 +40,12 @@ interface ColumnConfig {
 
 interface DataTableFilterDateProps<TData, TValue> {
   column?: Column<TData, TValue> & { config?: ColumnConfig }
+  onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterDate<TData, TValue>({
   column,
+  onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
   const [selectedValue, setSelectedValue] = React.useState<string>("")
@@ -150,11 +152,14 @@ export function DataTableFilterDate<TData, TValue>({
   }, [column, fromDate, toDate, t])
 
   const handleClearFilter = React.useCallback(() => {
-    setFromDate(undefined)
-    setToDate(undefined)
-    setSelectedValue("")
-    setError(null)
-    column?.setFilterValue(undefined)
+    if (!column) return
+    if (filterValue) {
+      setFromDate(undefined)
+      setToDate(undefined)
+      setSelectedValue("")
+      setError(null)
+      column?.setFilterValue(undefined)
+    } else onClear?.(column.id)
   }, [column])
 
   // Manejo de períodos predefinidos
@@ -230,18 +235,20 @@ export function DataTableFilterDate<TData, TValue>({
                   ? `${t("to")} ${initialTo}`
                   : null}
               </span>
-              <div
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleClearFilter()
-                }}
-                className="ml-2 cursor-pointer"
-                aria-label="Clear date filter"
-              >
-                <CrossCircledIcon className="h-4 w-4" />
-              </div>
             </>
           )}
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              handleClearFilter()
+            }}
+          >
+            {filterValue ? (
+              <Eraser className="h-4 w-4" />
+            ) : (
+              <CrossCircledIcon className="h-4 w-4" />
+            )}
+          </div>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[264px] p-6" align="start">
