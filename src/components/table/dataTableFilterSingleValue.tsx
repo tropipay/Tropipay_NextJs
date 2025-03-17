@@ -9,6 +9,7 @@ import { selStyle } from "@/lib/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
+import { Eraser } from "lucide-react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
@@ -17,10 +18,12 @@ import { Label } from "../ui/label"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
+  onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
   column,
+  onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
   // @ts-ignore
@@ -44,8 +47,11 @@ export function DataTableFilterSingleValue<TData, TValue>({
 
   // Función para limpiar el filtro
   const handleClearFilter = () => {
-    setLocalFilterValue(undefined)
-    column?.setFilterValue(undefined)
+    if (!column) return
+    if (localFilterValue) {
+      setLocalFilterValue(undefined)
+      column.setFilterValue(undefined)
+    } else onClear?.(column.id)
   }
 
   const filterValue = column?.getFilterValue() as string | undefined
@@ -64,16 +70,20 @@ export function DataTableFilterSingleValue<TData, TValue>({
             <>
               <Separator orientation="vertical" className="h-4 separator" />
               {filterValue}
-              <div
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleClearFilter()
-                }}
-              >
-                <CrossCircledIcon className="h-4 w-4" />
-              </div>
             </>
           )}
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              handleClearFilter()
+            }}
+          >
+            {filterValue ? (
+              <Eraser className="h-4 w-4" />
+            ) : (
+              <CrossCircledIcon className="h-4 w-4" />
+            )}
+          </div>
         </Button>
       </PopoverTrigger>
 

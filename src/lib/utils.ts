@@ -310,3 +310,5 @@ export function toActiveObject(
 
   return result
 }
+
+export const getRowValue = (value: string) => (!!value ? value : "-")
