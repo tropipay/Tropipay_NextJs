@@ -132,7 +132,7 @@ export const movementsColumnsDef: any = {
   search: {
     type: "simpleText",
     hidden: true,
-    field: "movementDirection",
+    field: "search",
     meta: { hidden: true },
   },
 }

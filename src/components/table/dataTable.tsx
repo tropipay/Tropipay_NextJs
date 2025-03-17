@@ -52,7 +52,7 @@ import {
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useState } from "react"
+import { CSSProperties, useCallback, useMemo, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
 
@@ -305,31 +305,37 @@ export default function DataTable<TData, TValue>({
     },
     [sorting, manualSorting, router, pathname, createQueryString]
   )
-  const table = useReactTable({
-    data: Array.isArray(data) ? data : [],
-    columns: columnsConfig,
-    pageCount: Math.ceil(rowCount ?? 0 / pagination.pageSize) ?? -1,
-    state: {
-      sorting,
-      columnVisibility,
-      columnFilters,
-      columnOrder,
-      pagination,
-    },
-    manualPagination,
-    manualSorting,
-    manualFiltering,
-    enableRowSelection: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange,
-    onSortingChange,
-    onColumnFiltersChange,
-    onColumnVisibilityChange,
-    onColumnOrderChange: setColumnOrder,
-  })
+
+  const tableConfig = useMemo(
+    () => ({
+      data: Array.isArray(data) ? data : [],
+      columns: columnsConfig,
+      pageCount: Math.ceil(rowCount ?? 0 / pagination.pageSize) ?? -1,
+      state: {
+        sorting,
+        columnVisibility,
+        columnFilters,
+        columnOrder,
+        pagination,
+      },
+      manualPagination,
+      manualSorting,
+      manualFiltering,
+      enableRowSelection: true,
+      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      onPaginationChange,
+      onSortingChange,
+      onColumnFiltersChange,
+      onColumnVisibilityChange,
+      onColumnOrderChange: setColumnOrder,
+    }),
+    [data]
+  )
+
+  const table = useReactTable(tableConfig)
 
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
