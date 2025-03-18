@@ -1,5 +1,13 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import SwipeAnimation from "../swipeAnimation"
+
+// Definimos una interfaz para RowData (ajústala según tus necesidades)
+interface RowData {
+  id: number
+  name: string
+  // ... otras propiedades
+}
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -9,6 +17,27 @@ const Table = React.forwardRef<
   const [isDragging, setIsDragging] = React.useState(false)
   const [startX, setStartX] = React.useState(0)
   const [scrollLeft, setScrollLeft] = React.useState(0)
+  const [hasHorizontalScroll, setHasHorizontalScroll] = React.useState(false)
+
+  // Función para verificar si hay scroll horizontal
+  const checkHorizontalScroll = () => {
+    if (tableContainerRef.current) {
+      const { scrollWidth, clientWidth } = tableContainerRef.current
+      setHasHorizontalScroll(scrollWidth > clientWidth)
+    }
+  }
+
+  // Verificar el scroll horizontal al montar y al redimensionar
+  React.useEffect(() => {
+    checkHorizontalScroll()
+    window.addEventListener("resize", checkHorizontalScroll)
+    return () => window.removeEventListener("resize", checkHorizontalScroll)
+  }, [])
+
+  // Verificar el scroll horizontal cuando cambie el contenido
+  React.useEffect(() => {
+    checkHorizontalScroll()
+  }, [props.children])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (tableContainerRef.current) {
@@ -30,7 +59,7 @@ const Table = React.forwardRef<
     if (!isDragging || !tableContainerRef.current) return
     e.preventDefault()
     const x = e.pageX - tableContainerRef.current.offsetLeft
-    const walk = (x - startX) * 1 // Puedes ajustar este multiplicador para la velocidad del scroll
+    const walk = (x - startX) * 1 // Velocidad del scroll
     tableContainerRef.current.scrollLeft = scrollLeft - walk
   }
 
@@ -39,7 +68,7 @@ const Table = React.forwardRef<
       ref={tableContainerRef}
       className={cn(
         "relative w-full overflow-auto tableContainer",
-        "select-none", // Evita selección de texto al arrastrar
+        "select-none",
         {
           "cursor-grabbing": isDragging,
           "cursor-grab": !isDragging,
@@ -47,7 +76,7 @@ const Table = React.forwardRef<
       )}
       style={{
         scrollBehavior: "smooth",
-        whiteSpace: "nowrap", // Evita que el contenido se ajuste y fuerce el scroll horizontal
+        whiteSpace: "nowrap",
       }}
       onMouseDown={handleMouseDown}
       onMouseLeave={handleMouseLeave}
@@ -59,9 +88,13 @@ const Table = React.forwardRef<
         className={cn("w-full caption-bottom text-sm", className)}
         {...props}
       />
+      {hasHorizontalScroll && (
+        <SwipeAnimation key={hasHorizontalScroll.toString()} />
+      )}
     </div>
   )
 })
+
 Table.displayName = "Table"
 
 const TableHeader = React.forwardRef<
@@ -101,17 +134,60 @@ TableFooter.displayName = "TableFooter"
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      className
-    )}
-    {...props}
-  />
-))
+  React.HTMLAttributes<HTMLTableRowElement> & {
+    rowData?: any
+    onRowClick?: (rowData: RowData) => void
+  }
+>(({ className, rowData, onRowClick, ...props }, ref) => {
+  const [isDraggingRow, setIsDraggingRow] = React.useState(false)
+  const [startX, setStartX] = React.useState(0)
+  const [moved, setMoved] = React.useState(false)
+
+  const DRAG_THRESHOLD = 5
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    setIsDraggingRow(true)
+    setStartX(e.pageX)
+    setMoved(false)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    if (isDraggingRow) {
+      const distance = Math.abs(e.pageX - startX)
+      if (distance > DRAG_THRESHOLD) {
+        setMoved(true)
+      }
+    }
+  }
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    if (isDraggingRow && !moved && onRowClick && rowData) {
+      onRowClick(rowData)
+    }
+    setIsDraggingRow(false)
+    setMoved(false)
+  }
+
+  const handleMouseLeave = () => {
+    setIsDraggingRow(false)
+    setMoved(false)
+  }
+
+  return (
+    <tr
+      ref={ref}
+      className={cn(
+        "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+        className
+      )}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      {...props}
+    />
+  )
+})
 TableRow.displayName = "TableRow"
 
 const TableHead = React.forwardRef<

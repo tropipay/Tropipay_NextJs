@@ -55,7 +55,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
-import SwipeAnimation from "../swipeAnimation"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -373,7 +372,6 @@ export default function DataTable<TData, TValue>({
             onDragEnd={handleDragEnd}
             sensors={sensors}
           >
-            <SwipeAnimation />
             <Table className="tableComponent" key={tableKey}>
               <TableHeader>
                 <SortableContext
@@ -407,10 +405,12 @@ export default function DataTable<TData, TValue>({
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
+                      rowData={row.original}
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      onClick={() => handleRowClick(row.original)}
                       className="cursor-pointer hover:bg-gray-100"
+                      // @ts-ignore
+                      onRowClick={handleRowClick}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>

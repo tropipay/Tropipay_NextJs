@@ -1,11 +1,9 @@
-"use client"
+"use client" // Indica que este es un componente del lado del cliente
 
 import { useEffect, useState } from "react"
 
-const SwipeAnimation: React.FC = () => {
-  const [isVisible, setIsVisible] = useState<boolean>(true)
-
-  // Efecto para iniciar las animaciones y ocultar el componente después de 3 segundos
+const SwipeAnimation = () => {
+  const [isVisible, setIsVisible] = useState(true)
   useEffect(() => {
     const pathElement = document.querySelector<HTMLDivElement>(".path")
     const handIconElement = document.querySelector<HTMLDivElement>(".hand-icon")
@@ -14,34 +12,38 @@ const SwipeAnimation: React.FC = () => {
       pathElement.style.animation = "swipe-dot 2s 0.5s infinite"
       handIconElement.style.animation = "swipe-hand 2s infinite"
     }
-
-    // Ocultar el componente después de 3 segundos
     const timeout = setTimeout(() => {
       setIsVisible(false)
-    }, 300000)
+    }, 4000)
 
     // Limpiar el timeout al desmontar el componente
     return () => clearTimeout(timeout)
   }, [])
 
-  if (!isVisible) return null // No renderizar si no es visible
-
   return (
     <div
-      className="swipe relative flex items-center justify-center w-full h-full left-[45vw] top-[45vh]"
-      style={{ position: "absolute" }}
+      className={`absolute h-[110px] w-[120px] block left-[calc(50vw-120px)] top-[calc(50vh-120px)] z-10 ${
+        isVisible ? "visible" : "hidden"
+      }`}
     >
       <div
-        className="path w-5 h-5 absolute bg-opacity-50 bg-indigo-300 rounded-full top-7 left-20"
+        className="path w-5 h-5 absolute bg-indigo-300 bg-opacity-50 rounded-full top-7 left-20 invisible"
         style={{ visibility: "hidden" }}
       ></div>
+
+      {/* Icono de la mano */}
       <div
-        className="hand-icon w-24 h-24 relative bg-center bg-no-repeat"
+        className="hand-icon relative bg-center bg-no-repeat w-24 h-24 bg-contain"
         style={{
-          backgroundImage: `url('/images/593527-200.png')`,
+          backgroundImage: "url('/images/hand.png')",
           transformOrigin: "52% 62%",
+          position: "absolute",
+          top: "10px",
+          left: "12px",
+          backgroundSize: "inherit",
         }}
       ></div>
+
       <style jsx>{`
         @keyframes swipe-hand {
           25% {

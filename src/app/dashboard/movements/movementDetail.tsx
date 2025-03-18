@@ -13,7 +13,6 @@ import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row = props.data.data.movements.items[0]
-  console.log("row:", row)
   const { data: session } = useSession()
   const token = session?.user.token
 
