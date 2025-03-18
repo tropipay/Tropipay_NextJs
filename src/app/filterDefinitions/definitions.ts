@@ -59,7 +59,7 @@ export const movementsStateGroups = {
   completedStates: ["completed"],
   processingStates: ["pending", "processing"],
   anotherStates: ["cancelled"],
-  destructive: ["error"],
+  errorStates: ["error"],
 }
 export const movementTypes = [
   { value: "ADD", icon: Plus },
