@@ -48,6 +48,7 @@ type ColumnOptions<TData> = {
   enableResizing?: boolean
   order?: number
   meta?: boolean
+  render?: (value: string) => string
 }
 
 // Función unificada setColumns
@@ -76,6 +77,7 @@ export function setColumns<TData>(
       enableResizing = false,
       order,
       meta,
+      render,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
@@ -105,16 +107,23 @@ export function setColumns<TData>(
       case "simpleText":
         baseConfig = {
           ...baseConfig,
-          cell: ({ row }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="truncate">{getRowValue(row.getValue(id))}</div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="center">
-                {getRowValue(row.getValue(id))}
-              </TooltipContent>
-            </Tooltip>
-          ),
+          cell: ({ row }) => {
+            let value = getRowValue(row.getValue(id))
+            if (render && value !== "-") {
+              value = render(value)
+            }
+
+            return (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="truncate">{value}</div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="center">
+                  {value}
+                </TooltipContent>
+              </Tooltip>
+            )
+          },
         }
         break
       case "faceted":

@@ -122,6 +122,7 @@ export const movementsColumnsDef: any = {
     type: "simpleText",
     field: "cardPan",
     hidden: true,
+    render: (value: string) => `**** ${value}`,
   },
   movementDirection: {
     type: "simpleText",

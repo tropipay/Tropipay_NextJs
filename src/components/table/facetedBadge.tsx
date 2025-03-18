@@ -23,7 +23,7 @@ const FacetedBadge = ({ value, optionList, optionListGroups }) => {
   return (
     // @ts-ignore
     <Badge variant={stateVariant}>
-      <span className="mx-1 ">
+      <span className="mx-1 min-w-[72px] ">
         <FormattedMessage id={currentState.label} />
       </span>
       <Icon className="h-4 w-4 mr-1" />
