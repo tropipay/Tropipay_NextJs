@@ -1,19 +1,67 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
-      {...props}
-    />
-  </div>
-))
+>(({ className, ...props }, ref) => {
+  const tableContainerRef = React.useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = React.useState(false)
+  const [startX, setStartX] = React.useState(0)
+  const [scrollLeft, setScrollLeft] = React.useState(0)
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (tableContainerRef.current) {
+      setIsDragging(true)
+      setStartX(e.pageX - tableContainerRef.current.offsetLeft)
+      setScrollLeft(tableContainerRef.current.scrollLeft)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !tableContainerRef.current) return
+    e.preventDefault()
+    const x = e.pageX - tableContainerRef.current.offsetLeft
+    const walk = (x - startX) * 1 // Puedes ajustar este multiplicador para la velocidad del scroll
+    tableContainerRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  return (
+    <div
+      ref={tableContainerRef}
+      className={cn(
+        "relative w-full overflow-auto tableContainer",
+        "select-none", // Evita selección de texto al arrastrar
+        {
+          "cursor-grabbing": isDragging,
+          "cursor-grab": !isDragging,
+        }
+      )}
+      style={{
+        scrollBehavior: "smooth",
+        whiteSpace: "nowrap", // Evita que el contenido se ajuste y fuerce el scroll horizontal
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseLeave={handleMouseLeave}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+    >
+      <table
+        ref={ref}
+        className={cn("w-full caption-bottom text-sm", className)}
+        {...props}
+      />
+    </div>
+  )
+})
 Table.displayName = "Table"
 
 const TableHeader = React.forwardRef<

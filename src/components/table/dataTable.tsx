@@ -52,9 +52,10 @@ import {
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useMemo, useState } from "react"
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import SwipeAnimation from "../swipeAnimation"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -95,6 +96,11 @@ export default function DataTable<TData, TValue>({
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
+  const [tableKey, setTableKey] = useState(0)
+
+  useEffect(() => {
+    setTableKey(Math.random())
+  }, [data])
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -367,7 +373,8 @@ export default function DataTable<TData, TValue>({
             onDragEnd={handleDragEnd}
             sensors={sensors}
           >
-            <Table>
+            <SwipeAnimation />
+            <Table className="tableComponent" key={tableKey}>
               <TableHeader>
                 <SortableContext
                   items={columnsId}
