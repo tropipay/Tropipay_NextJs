@@ -1,5 +1,5 @@
-import React from "react"
 import Lottie from "lottie-react"
+import React from "react"
 import animationData from "./spinner.json"
 
 const Spinner: React.FC = () => {
@@ -22,8 +22,8 @@ const Spinner: React.FC = () => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           zIndex: 9999,
-          width: "300px",
-          height: "300px",
+          width: "120px",
+          height: "120px",
         }}
       >
         <Lottie animationData={animationData} loop={true} />

@@ -9,16 +9,17 @@ const publicRoutes = ["/"]
 export async function middleware(req: NextRequest) {
   const session = await auth()
   const token = session?.user.token
-  if (isTokenExpired(token)) {
-    return NextResponse.redirect(
-      new URL(`${process.env.REACT_TROPIPAY_HOME}/login`, req.nextUrl)
-    )
-  }
 
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isPublicRoute = publicRoutes.includes(path)
   const isProtectedRoute = !isPublicRoute
+
+  if (isProtectedRoute && isTokenExpired(token)) {
+    return NextResponse.redirect(
+      new URL(`${process.env.REACT_TROPIPAY_HOME}/login`, req.nextUrl)
+    )
+  }
 
   // Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !token) {
