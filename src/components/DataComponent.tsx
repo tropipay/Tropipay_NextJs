@@ -4,16 +4,14 @@ import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useFetchData } from "@/lib/useFetchData"
 import { DehydratedState } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
-import { redirect } from "next/navigation"
 import React from "react"
-import { useTranslation } from "./intl/useTranslation"
+import Spinner from "./spinner"
 
 interface DataComponentProps {
   dehydratedState?: DehydratedState
   children: React.ReactElement<{ data: any }>
   queryConfig: FetchDataConfig
   searchParams?: { [key: string]: string }
-
   mockData?: any
 }
 
@@ -27,39 +25,27 @@ export default function DataComponent({
   if (!!mockData) {
     return React.cloneElement(children, { data: mockData })
   }
-  const { t } = useTranslation()
   const urlParams = searchParams
-  const { isLoading, data, isError, error } = useFetchData({
+  const { isLoading, data, status, isFetching } = useFetchData({
     queryConfig,
     dehydratedState,
     urlParams,
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
+  const loading = isLoading || isFetching
 
-  const onOk = () => redirect("/")
-
-  /*   if (isError || !data) {
-    toastMessage(
-      <FormattedMessage id="we_cant_load_movements" />,
-      <FormattedMessage id="try_again_later" />,
-      "error"
-    )
-    return
-  }
- */ if (userId && data)
-    return (
-      <div
-        className={`relative ${
-          isLoading && "animate-pulse pointer-events-none"
-        }`}
-      >
-        {
-          // @ts-ignore
-          React.cloneElement(children, { data, userId })
-        }
+  return (
+    <div className="relative">
+      <div className="absolute flex items-center justify-center bg-opacity-50 pointer-events-none w-full h-screen z-[9998]">
+        {loading && <Spinner />}
       </div>
-    )
+      {userId &&
+        data &&
+        // @ts-ignore
+        React.cloneElement(children, { data, userId })}
+    </div>
+  )
 }
 function awaitprocessQueryParameters(searchParams: { [key: string]: string }) {
   throw new Error("Function not implemented.")
