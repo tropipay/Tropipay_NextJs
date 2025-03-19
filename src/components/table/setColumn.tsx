@@ -108,7 +108,7 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            let value = getRowValue(row.getValue(id))
+            let value = getRowValue(row.getValue(id)) || "-"
             if (render && value !== "-") {
               value = render(value)
             }
@@ -160,16 +160,19 @@ export function setColumns<TData>(
           ...baseConfig,
           cell: ({ row }) => {
             try {
-              let formattedDate = "-"
+              let value = "-"
               if (row.getValue(id)) {
                 const isoDate = row.getValue(id)
-                formattedDate = format(
+                value = format(
                   // @ts-ignore
                   new Date(isoDate),
                   dateFormat || "dd/MM/yy HH:mm"
                 )
               }
-              return formattedDate
+              if (render && value !== "-") {
+                value = render(value)
+              }
+              return value
             } catch (error) {
               return "Fecha inválida"
             }

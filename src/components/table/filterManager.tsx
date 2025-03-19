@@ -58,20 +58,35 @@ export function FilterManager<TData, TValue>({
       translatedLabel: intl.formatMessage({ id: filter.filterLabel }),
     }))
 
-  // Estado para filtros seleccionados y activos
-  const initialActiveFilters = userId
+  // Obtener filtros aplicados desde searchParams
+  const appliedFiltersFromSearchParams = React.useMemo(() => {
+    const appliedIds = new Set<string>()
+    filters.forEach((filter: any) => {
+      if (searchParams.has(filter.id)) {
+        appliedIds.add(filter.id)
+      }
+    })
+    return appliedIds
+  }, [searchParams, filters])
+
+  // Estado para filtros seleccionados
+  const initialSelectedFilters = userId
     ? CookiesManager.getInstance().get(`userFilters-${tableId}-${userId}`, "")
     : ""
-  const defaultActiveFilters = initialActiveFilters
-    ? initialActiveFilters
+  const defaultSelectedFilters = initialSelectedFilters
+    ? initialSelectedFilters
     : columns.filter(({ showFilter }: any) => showFilter).map(({ id }) => id)
   const [selectedFilters, setSelectedFilters] = React.useState<Set<string>>(
-    new Set(defaultActiveFilters)
+    new Set([...defaultSelectedFilters, ...appliedFiltersFromSearchParams])
   )
-  const [activeFilters, setActiveFilters] = React.useState(
+
+  // Estado para filtros activos
+  const [activeFilters, setActiveFilters] = React.useState<
+    Column<TData, TValue>[]
+  >(
     columns.filter(
-      ({ id, showFilter }: any) =>
-        showFilter && defaultActiveFilters.includes(id)
+      ({ id }: any) =>
+        selectedFilters.has(id) || appliedFiltersFromSearchParams.has(id)
     )
   )
 
@@ -127,18 +142,12 @@ export function FilterManager<TData, TValue>({
 
   // Limpiar filtros
   const handleClearFilters = () => {
-    // Obtener los filtros aplicados actualmente
     const appliedFilters = table.getState().columnFilters
-
-    // Crear un nuevo array de filtros excluyendo los que están en `filters`
     const remainingFilters = appliedFilters.filter(
       ({ id }) => !filters.some((filter) => filter.id === id)
     )
-
-    // Aplicar solo los filtros que no están en `filters`
     table.setColumnFilters(remainingFilters)
 
-    // Limpiar los parámetros de búsqueda en la URL solo para los filtros en `filters`
     const newSearchParams = new URLSearchParams(searchParams.toString())
     filters.forEach((column) => newSearchParams.delete(column.id))
     window.history.pushState(null, "", `?${newSearchParams.toString()}`)
@@ -158,7 +167,7 @@ export function FilterManager<TData, TValue>({
     }
   }
 
-  // Verificar si hay filtros aplicados, excluyendo los que tienen meta.hidden
+  // Verificar si hay filtros aplicados , excluyendo los que tienen meta.hidden
 
   const isFiltered = React.useMemo(() => {
     const appliedFilters = table.getState().columnFilters
@@ -169,8 +178,8 @@ export function FilterManager<TData, TValue>({
   }, [table.getState().columnFilters, columns])
 
   return (
-    <div className="flex w-full items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2 py-2 overflow-x-auto">
+    <div className="flex w-full items-start justify-between">
+      <div className="flex flex-1 items-start space-x-2 p-0 overflow-x-auto mr-4 pr-2">
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -256,7 +265,6 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
-                      // @ts-ignore
                       config: column,
                     }}
                     onClear={handleClearFilter}
@@ -266,7 +274,6 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterDate
                     key={column.id}
-                    // @ts-ignore
                     column={{
                       ...table.getColumn(column.id),
                       config: column,
@@ -280,7 +287,6 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
-                      // @ts-ignore
                       config: column,
                     }}
                     onClear={handleClearFilter}
@@ -292,7 +298,6 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
-                      // @ts-ignore
                       config: column,
                     }}
                     onClear={handleClearFilter}

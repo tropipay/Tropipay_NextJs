@@ -52,9 +52,10 @@ import {
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useState } from "react"
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import Spinner from "../spinner"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -92,9 +93,16 @@ export default function DataTable<TData, TValue>({
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
+  const [tableKey, setTableKey] = useState(0)
+
+  useEffect(() => {
+    setTableKey(Math.random())
+    setIsLoading(false)
+  }, [data])
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -164,6 +172,7 @@ export default function DataTable<TData, TValue>({
       })
 
       // Actualizar la URL sin afectar otros parámetros como paginación u orden
+      setIsLoading(true)
       router.push(`${pathname}?${params.toString()}`, { scroll: false })
     },
     [columnFilters, columnsConfig, router, pathname, searchParams]
@@ -222,7 +231,7 @@ export default function DataTable<TData, TValue>({
         const currentSearchParams = new URLSearchParams(window.location.search)
         // Actualizar solo el columnHash
         currentSearchParams.set("columnHash", columnHash)
-
+        setIsLoading(true)
         router.push(`${pathname}?${currentSearchParams.toString()}`, {
           scroll: false,
         })
@@ -275,6 +284,7 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(pagination) : updater
       setPagination(newPagination)
       if (manualPagination) {
+        setIsLoading(true)
         router.push(
           `${pathname}?${createQueryString({
             page: String(newPagination.pageIndex),
@@ -293,6 +303,7 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(sorting) : updater
       setSorting(newSorting)
       if (manualSorting) {
+        setIsLoading(true)
         router.push(
           `${pathname}?${createQueryString({
             sort: newSorting[0]?.id ?? null,
@@ -305,31 +316,37 @@ export default function DataTable<TData, TValue>({
     },
     [sorting, manualSorting, router, pathname, createQueryString]
   )
-  const table = useReactTable({
-    data: Array.isArray(data) ? data : [],
-    columns: columnsConfig,
-    pageCount: Math.ceil(rowCount ?? 0 / pagination.pageSize) ?? -1,
-    state: {
-      sorting,
-      columnVisibility,
-      columnFilters,
-      columnOrder,
-      pagination,
-    },
-    manualPagination,
-    manualSorting,
-    manualFiltering,
-    enableRowSelection: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange,
-    onSortingChange,
-    onColumnFiltersChange,
-    onColumnVisibilityChange,
-    onColumnOrderChange: setColumnOrder,
-  })
+
+  const tableConfig = useMemo(
+    () => ({
+      data: Array.isArray(data) ? data : [],
+      columns: columnsConfig,
+      pageCount: Math.ceil(rowCount ?? 0 / pagination.pageSize) ?? -1,
+      state: {
+        sorting,
+        columnVisibility,
+        columnFilters,
+        columnOrder,
+        pagination,
+      },
+      manualPagination,
+      manualSorting,
+      manualFiltering,
+      enableRowSelection: true,
+      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: getSortedRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      onPaginationChange,
+      onSortingChange,
+      onColumnFiltersChange,
+      onColumnVisibilityChange,
+      onColumnOrderChange: setColumnOrder,
+    }),
+    [data]
+  )
+
+  const table = useReactTable(tableConfig)
 
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
@@ -348,6 +365,7 @@ export default function DataTable<TData, TValue>({
   if (userId)
     return (
       <div className="space-y-4">
+        {isLoading && <Spinner />}
         <DataTableToolbar
           tableId={tableId}
           table={table}
@@ -361,7 +379,7 @@ export default function DataTable<TData, TValue>({
             onDragEnd={handleDragEnd}
             sensors={sensors}
           >
-            <Table>
+            <Table className="tableComponent" key={tableKey}>
               <TableHeader>
                 <SortableContext
                   items={columnsId}
@@ -394,10 +412,12 @@ export default function DataTable<TData, TValue>({
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow
+                      rowData={row.original}
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      onClick={() => handleRowClick(row.original)}
                       className="cursor-pointer hover:bg-gray-100"
+                      // @ts-ignore
+                      onRowClick={handleRowClick}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>

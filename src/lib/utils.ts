@@ -3,6 +3,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
+import { createHash } from "crypto"
 
 // Definimos un tipo para una función de búsqueda que toma un parámetro `T` y devuelve un endpoint
 type FetchFunction<T extends any[]> = (...args: T) => { endpoint: string }
@@ -235,13 +236,7 @@ export function objToHash(obj) {
     .sort()
     .join(",")
 
-  let hash = 2166136261
-  for (let i = 0; i < keys.length; i++) {
-    hash ^= keys.charCodeAt(i)
-    hash *= 16777619
-  }
-
-  return (hash >>> 0).toString(16)
+  return createHash("sha256").update(keys).digest("hex")
 }
 
 export function toArrayId(

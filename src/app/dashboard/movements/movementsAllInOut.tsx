@@ -13,10 +13,23 @@ const MovementsAllInOut: React.FC<MovementsAllInOutProps> = ({ table }) => {
     .columnFilters.find((filter) => filter.id === "movementDirection")?.value
 
   const handleFilterChange = (direction: "IN" | "OUT" | "ALL") => {
+    // Get the current filters from the table state
+    const currentFilters = table.getState().columnFilters
+
     if (direction === "ALL") {
-      table.setColumnFilters([])
+      // Remove only the "movementDirection" filter
+      const updatedFilters = currentFilters.filter(
+        (filter) => filter.id !== "movementDirection"
+      )
+      table.setColumnFilters(updatedFilters)
     } else {
-      table.setColumnFilters([{ id: "movementDirection", value: direction }])
+      // Filter out any existing "movementDirection" filter to avoid duplicates
+      const updatedFilters = currentFilters.filter(
+        (filter) => filter.id !== "movementDirection"
+      )
+      // Add the new movementDirection filter
+      updatedFilters.push({ id: "movementDirection", value: direction })
+      table.setColumnFilters(updatedFilters)
     }
   }
 
