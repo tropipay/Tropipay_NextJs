@@ -312,3 +312,12 @@ export function toActiveObject(
 }
 
 export const getRowValue = (value: string) => (!!value ? value : "-")
+
+/**
+ * Check if the token expires.
+ * @param token token.
+ */
+export const isTokenExpired = (token: string) => {
+  const decodedJwt = JSON.parse(atob(token.split(".")[1]))
+  return decodedJwt.exp * 1000 < Date.now()
+}

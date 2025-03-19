@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { auth } from "./auth"
+import { isTokenExpired } from "./lib/utils"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]
@@ -8,6 +9,11 @@ const publicRoutes = ["/"]
 export async function middleware(req: NextRequest) {
   const session = await auth()
   const token = session?.user.token
+  if (isTokenExpired(token)) {
+    return NextResponse.redirect(
+      new URL(`${process.env.REACT_TROPIPAY_HOME}/login`, req.nextUrl)
+    )
+  }
 
   // Check if the current route is protected or public
   const path = req.nextUrl.pathname
