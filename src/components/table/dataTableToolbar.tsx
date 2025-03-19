@@ -81,6 +81,7 @@ export function DataTableToolbar<TData, TValue>({
             </span>
             <Input
               id="search"
+              type="search"
               placeholder={t("search")}
               onChange={handleSearchChange}
               className="pl-10 w-full"
