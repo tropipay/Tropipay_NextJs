@@ -55,6 +55,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
+import Spinner from "../spinner"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -92,6 +93,7 @@ export default function DataTable<TData, TValue>({
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
@@ -99,6 +101,7 @@ export default function DataTable<TData, TValue>({
 
   useEffect(() => {
     setTableKey(Math.random())
+    setIsLoading(false)
   }, [data])
 
   const createQueryString = useCallback(
@@ -169,6 +172,7 @@ export default function DataTable<TData, TValue>({
       })
 
       // Actualizar la URL sin afectar otros parámetros como paginación u orden
+      setIsLoading(true)
       router.push(`${pathname}?${params.toString()}`, { scroll: false })
     },
     [columnFilters, columnsConfig, router, pathname, searchParams]
@@ -227,6 +231,7 @@ export default function DataTable<TData, TValue>({
         const currentSearchParams = new URLSearchParams(window.location.search)
         // Actualizar solo el columnHash
         currentSearchParams.set("columnHash", columnHash)
+        setIsLoading(true)
         router.push(`${pathname}?${currentSearchParams.toString()}`, {
           scroll: false,
         })
@@ -279,6 +284,7 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(pagination) : updater
       setPagination(newPagination)
       if (manualPagination) {
+        setIsLoading(true)
         router.push(
           `${pathname}?${createQueryString({
             page: String(newPagination.pageIndex),
@@ -297,6 +303,7 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(sorting) : updater
       setSorting(newSorting)
       if (manualSorting) {
+        setIsLoading(true)
         router.push(
           `${pathname}?${createQueryString({
             sort: newSorting[0]?.id ?? null,
@@ -358,6 +365,7 @@ export default function DataTable<TData, TValue>({
   if (userId)
     return (
       <div className="space-y-4">
+        {isLoading && <Spinner />}
         <DataTableToolbar
           tableId={tableId}
           table={table}
