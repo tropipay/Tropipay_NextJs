@@ -46,52 +46,6 @@ export const fetchHeaders: Record<string, string> = {
   "Content-Type": "application/json",
 }
 
-// Función para hacer un fetch GET con triggers
-export const fetchGetWithTriggers = async (
-  { endpoint, isPublic, filter }: FetchGetData,
-  headerData: HeaderData = {}
-): Promise<any> => {
-  try {
-    // Intenta obtener el usuario; en el servidor puede no estar disponible
-    let user: UserSession
-    try {
-      user = await getUser()
-    } catch (error) {
-      console.warn("No se pudo obtener el usuario en el servidor:", error)
-      user = {} // Default vacío si no se puede obtener en el servidor
-    }
-
-    const headers: Record<string, string> = {
-      ...fetchHeaders,
-      "Accept-Language": user?.lang || "en",
-    }
-
-    for (const key in headerData) {
-      headers[key] = headerData[key]
-    }
-
-    if (!isPublic) {
-      headers.Authorization = `Bearer ${user?.token || ""}`
-    }
-
-    if (filter) {
-      endpoint += `?${queryParams(filter)}`
-    }
-
-    const deviceId = "010101" // Simulado, reemplazar con fingerprint si es necesario
-
-    const response = await fetch(endpoint, {
-      headers: { ...headers, "X-DEVICE-ID": deviceId },
-    })
-
-    if (!response.ok) throw new Error(response.statusText)
-
-    return response.json()
-  } catch (err) {
-    throw err
-  }
-}
-
 export function generateHashedKey(key: string, obj: any): string {
   const sortedObj = Object.keys(obj)
     .sort()
@@ -113,24 +67,6 @@ export async function processQueryParameters(
     console.error("Error processing query parameters:", error)
     return {}
   }
-}
-
-export function searchParamsToObject(searchParams: URLSearchParams): {
-  [key: string]: string | string[]
-} {
-  const obj: { [key: string]: string | string[] } = {}
-  searchParams.forEach((value, key) => {
-    if (obj[key]) {
-      if (Array.isArray(obj[key])) {
-        ;(obj[key] as string[]).push(value)
-      } else {
-        obj[key] = [obj[key] as string, value]
-      }
-    } else {
-      obj[key] = value
-    }
-  })
-  return obj
 }
 
 export function selStyle(

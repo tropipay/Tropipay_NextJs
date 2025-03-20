@@ -7,53 +7,10 @@ import { FormattedMessage } from "react-intl"
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 import { DataTableColumnHeader } from "./dataTableColumnHeader"
 import FacetedBadge from "./facetedBadge"
+import { Columns } from "@/types/table"
 
-// Definimos los tipos para los argumentos de la función
-type FacetedOption = {
-  value: string
-  label: string
-  icon?: React.ComponentType<{ className?: string }>
-}
-
-type FacetedOptionGroup = {
-  group: string
-  options: FacetedOption[]
-}
-
-type ColumnOptions<TData> = {
-  type:
-    | "simpleText"
-    | "faceted"
-    | "date"
-    | "facetedBadge"
-    | "amount"
-    | "free"
-    | "select"
-  title?: string
-  optionList?: FacetedOption[]
-  optionListGroups?: FacetedOptionGroup[]
-  format?: string
-  component?: React.ReactNode
-  addSign?: boolean
-  enableSorting?: boolean
-  enableHiding?: boolean
-  filter?: false | true | null
-  filterType?: "list" | "date" | "amount" | "uniqueValue" | null
-  filterLabel?: string
-  filterPlaceholder?: string
-  showFilter?: boolean
-  hidden?: boolean
-  field: string
-  size?: number
-  enableResizing?: boolean
-  order?: number
-  meta?: boolean
-  render?: (value: string) => string
-}
-
-// Función unificada setColumns
 export function setColumns<TData>(
-  columnsConfig: Record<string, ColumnOptions<TData>>
+  columnsConfig: Record<string, Columns>
 ): ColumnDef<TData>[] {
   return Object.entries(columnsConfig).map(([id, options]) => {
     const {
@@ -61,14 +18,13 @@ export function setColumns<TData>(
       field = null,
       title,
       optionList,
-      optionListGroups,
       format: dateFormat,
       component,
       addSign = true,
       enableSorting = true,
       enableHiding = true,
       filter = true,
-      filterType = setFilterType(filter, type),
+      filterType = setFilterType(filter, type || "simpleText"),
       filterLabel = title || id,
       filterPlaceholder = title || id,
       showFilter = false,
@@ -77,53 +33,33 @@ export function setColumns<TData>(
       enableResizing = false,
       order,
       meta,
-      render,
     } = options
-
     let baseConfig: ColumnDef<TData> = {
       id,
       accessorKey: id,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={title || id} />
       ),
-      // @ts-ignore
-      optionList,
       enableSorting,
       enableHiding,
-      filterType,
-      filterLabel,
-      filterPlaceholder,
-      filter,
-      showFilter,
-      hidden,
-      field,
       size,
       enableResizing,
-      order,
       meta,
     }
-
     switch (type) {
       case "simpleText":
         baseConfig = {
           ...baseConfig,
-          cell: ({ row }) => {
-            let value = getRowValue(row.getValue(id)) || "-"
-            if (render && value !== "-") {
-              value = render(value)
-            }
-
-            return (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="truncate">{value}</div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="center">
-                  {value}
-                </TooltipContent>
-              </Tooltip>
-            )
-          },
+          cell: ({ row }) => (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="truncate">{getRowValue(row.getValue(id))}</div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="center">
+                {getRowValue(row.getValue(id))}
+              </TooltipContent>
+            </Tooltip>
+          ),
         }
         break
       case "faceted":
@@ -144,7 +80,7 @@ export function setColumns<TData>(
               <div className="flex items-center">
                 {Icon && (
                   <div className="w-[19px] mr-2">
-                    <Icon className="h-5" />
+                    {(Icon as any) && <Icon className="h-5" />}
                   </div>
                 )}
                 <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
@@ -160,19 +96,15 @@ export function setColumns<TData>(
           ...baseConfig,
           cell: ({ row }) => {
             try {
-              let value = "-"
+              let formattedDate = "-"
               if (row.getValue(id)) {
-                const isoDate = row.getValue(id)
-                value = format(
-                  // @ts-ignore
+                const isoDate = row.getValue(id) as string
+                formattedDate = format(
                   new Date(isoDate),
                   dateFormat || "dd/MM/yy HH:mm"
                 )
               }
-              if (render && value !== "-") {
-                value = render(value)
-              }
-              return value
+              return formattedDate
             } catch (error) {
               return "Fecha inválida"
             }
@@ -180,7 +112,7 @@ export function setColumns<TData>(
         }
         break
       case "facetedBadge":
-        if (!optionList || !optionListGroups) {
+        if (!optionList || !options.optionListGroups) {
           throw new Error(
             "optionList and optionListGroups are required for facetedBadge type"
           )
@@ -191,21 +123,21 @@ export function setColumns<TData>(
             <FacetedBadge
               value={row.getValue(id)}
               optionList={optionList}
-              optionListGroups={optionListGroups}
+              optionListGroups={options.optionListGroups}
             />
           ),
         }
-
         break
       case "amount":
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const { value, currency } = (row.getValue(id) as any) || []
+            const { value, currency } =
+              (row.getValue(id) as { value: number; currency: string }) || {}
             return (
               <div className="flex items-center gap-1">
                 <span className="font-bold">
-                  {addSign && (value > 0 ? "+" : "")}
+                  {addSign && value > 0 ? "+" : ""}
                   {formatAmount(value)}
                 </span>
                 <span className="text-grayFont">{currency}</span>
@@ -220,12 +152,10 @@ export function setColumns<TData>(
         }
         baseConfig = {
           ...baseConfig,
-          cell: ({ row }) =>
-            React.cloneElement(component as React.ReactElement, { row }),
+          cell: ({ row }) => React.cloneElement(component, { row }),
         }
         break
       case "select":
-        // @ts-ignore
         baseConfig = {
           ...baseConfig,
           header: ({ table }) => (
@@ -234,18 +164,16 @@ export function setColumns<TData>(
                 table.getIsAllPageRowsSelected() ||
                 (table.getIsSomePageRowsSelected() && "indeterminate")
               }
-              onCheckedChange={(value) => {
+              onCheckedChange={(value) =>
                 table.toggleAllPageRowsSelected(!!value)
-              }}
+              }
               aria-label="Select all"
             />
           ),
           cell: ({ row }) => (
             <Checkbox
               checked={row.getIsSelected()}
-              onCheckedChange={(value) => {
-                row.toggleSelected(!!value)
-              }}
+              onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label="Select row"
             />
           ),
@@ -261,7 +189,6 @@ export function setColumns<TData>(
         }
         break
     }
-
     return baseConfig
   })
 }

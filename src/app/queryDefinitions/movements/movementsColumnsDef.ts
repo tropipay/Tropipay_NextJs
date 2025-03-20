@@ -5,12 +5,7 @@ import {
   paymentMethods,
 } from "@/app/filterDefinitions/definitions"
 
-export const movementsColumnsDef: any = {
-  /* select: {
-    type: "select",
-    enableHiding: false,
-    enableSorting: false,
-  }, */
+export const movementsColumnsDef: MovementsColumnsDef = {
   createdAt: {
     type: "date",
     showFilter: true,

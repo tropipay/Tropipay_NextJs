@@ -27,13 +27,8 @@ export async function makeApiRequest({
   const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
 
   const { url, method, body } = queryConfig
-  /* console.log("body:", {
-    ...{
-      body,
-      query: body.query.replace("$FIELDS", fields),
-    },
-    ...variables,
-  }.body) 
+  console.log("--------------------------------------------")
+  console.log(body.query.replace("$FIELDS", fields))
   console.log(
     "variables:",
     {
@@ -43,7 +38,7 @@ export async function makeApiRequest({
       },
       ...variables,
     }.variables
-  )*/
+  )
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
@@ -138,7 +133,7 @@ export function buildGraphQLVariables(
 
   // Procesar el campo de búsqueda general (search)
   if (search) {
-    variables.filter.generalSearch = search
+    variables.filter.search = search
   }
 
   const formatNumber = (textNumber: string) =>
