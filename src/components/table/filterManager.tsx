@@ -158,7 +158,6 @@ export function FilterManager<TData, TValue>({
    * @param filterId Filter identifier.
    */
   const handleClearFilter = (filterId: string) => {
-    console.log("y")
     setActiveFilters(activeFilters.filter(({ id }) => id !== filterId))
     const newSelectedFilters = new Set(selectedFilters)
     if (newSelectedFilters.has(filterId)) {
