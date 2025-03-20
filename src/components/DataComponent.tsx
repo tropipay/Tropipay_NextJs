@@ -3,7 +3,6 @@
 import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useFetchData } from "@/lib/useFetchData"
 import { DehydratedState } from "@tanstack/react-query"
-import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import React from "react"
 
@@ -33,15 +32,17 @@ export default function DataComponent({
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const loading = isLoading || isFetching
+  // const loading = isLoading || isFetching
 
   return (
-    <div className={`relative ${loading && "opacity-70 pointer-events-none"}`}>
-      {loading && (
+    <div>
+      {/* Disable loading */}
+      {/* className={`relative ${loading && "opacity-70 pointer-events-none"}`} */}
+      {/* {loading && (
         <div className="absolute flex items-center justify-center w-full h-screen z-[9998]">
           <Loader2 className="animate-spin text-[#041266]" size={72} />
         </div>
-      )}
+      )} */}
       {userId &&
         data &&
         // @ts-ignore

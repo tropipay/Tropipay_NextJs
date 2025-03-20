@@ -87,7 +87,8 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const handleClearFilters = () => {
     if (!column) return
-    if (localSelectedValues) {
+    const filterValues = Array.from(localSelectedValues)
+    if (filterValues.length > 0) {
       setLocalSelectedValues(new Set())
       column?.setFilterValue(undefined)
 
