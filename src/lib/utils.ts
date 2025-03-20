@@ -1,9 +1,9 @@
 import { QueryKey } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
 import { clsx, type ClassValue } from "clsx"
+import { createHash } from "crypto"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
-import { createHash } from "crypto"
 
 // Definimos un tipo para una función de búsqueda que toma un parámetro `T` y devuelve un endpoint
 type FetchFunction<T extends any[]> = (...args: T) => { endpoint: string }
@@ -313,6 +313,11 @@ export const getRowValue = (value: string) => (!!value ? value : "-")
  * @param token token.
  */
 export const isTokenExpired = (token: string) => {
-  const decodedJwt = JSON.parse(atob(token.split(".")[1]))
-  return decodedJwt.exp * 1000 < Date.now()
+  if (!token) return true
+  try {
+    const decodedJwt = JSON.parse(atob(token.split(".")[1]))
+    return decodedJwt.exp * 1000 < Date.now()
+  } catch (e) {
+    return true
+  }
 }

@@ -113,7 +113,7 @@ export function setColumns<TData>(
               value = render(value)
             }
 
-            return (
+            return value !== "-" ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="truncate">{value}</div>
@@ -122,6 +122,8 @@ export function setColumns<TData>(
                   {value}
                 </TooltipContent>
               </Tooltip>
+            ) : (
+              value
             )
           },
         }
