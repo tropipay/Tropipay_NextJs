@@ -51,6 +51,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/((?!_next/static|_next/image|favicon.png).*)",
+    "/((?!_next/static|_next/image|favicon.png|favicon*.png).*)",
   ],
 }
