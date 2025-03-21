@@ -147,10 +147,6 @@ export function FilterManager<TData, TValue>({
       ({ id }) => !filters.some((filter) => filter.id === id)
     )
     table.setColumnFilters(remainingFilters)
-
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    filters.forEach((column) => newSearchParams.delete(column.id))
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
   }
 
   /**
@@ -158,7 +154,6 @@ export function FilterManager<TData, TValue>({
    * @param filterId Filter identifier.
    */
   const handleClearFilter = (filterId: string) => {
-    console.log("y")
     setActiveFilters(activeFilters.filter(({ id }) => id !== filterId))
     const newSelectedFilters = new Set(selectedFilters)
     if (newSelectedFilters.has(filterId)) {
