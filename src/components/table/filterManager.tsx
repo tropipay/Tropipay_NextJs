@@ -147,10 +147,6 @@ export function FilterManager<TData, TValue>({
       ({ id }) => !filters.some((filter) => filter.id === id)
     )
     table.setColumnFilters(remainingFilters)
-
-    const newSearchParams = new URLSearchParams(searchParams.toString())
-    filters.forEach((column) => newSearchParams.delete(column.id))
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
   }
 
   /**
