@@ -18,5 +18,5 @@ COPY public/ /app/docs
 COPY src/ /app/src
 
 # TODO: We should do a build here
-
+EXPOSE 3000
 CMD ["npm", "run", "dev"]
