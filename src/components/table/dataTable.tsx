@@ -53,9 +53,9 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import Spinner from "../spinner"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
-import Spinner from "../spinner"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -343,7 +343,7 @@ export default function DataTable<TData, TValue>({
       onColumnVisibilityChange,
       onColumnOrderChange: setColumnOrder,
     }),
-    [data]
+    [data, columnOrder]
   )
 
   const table = useReactTable(tableConfig)
@@ -353,15 +353,6 @@ export default function DataTable<TData, TValue>({
     setIsSheetOpen(true)
   }
 
-  /*   useEffect(() => {
-    if (data.length === 0) {
-      toastMessage(
-        <FormattedMessage id="no_movements" />,
-        <FormattedMessage id="no_movements_display" />
-      )
-    }
-  }, [data])
- */
   if (userId)
     return (
       <div className="space-y-4">
