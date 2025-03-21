@@ -19,10 +19,19 @@ export const movementsColumnsDef: any = {
     field: "createdAt",
     order: 0,
   },
+  amount: {
+    type: "amount",
+    enableHiding: false,
+    showFilter: true,
+    order: 1,
+    field: `amount {
+      value
+      currency
+      }`,
+  },
   amountCharged: {
     type: "amount",
     hidden: true,
-    showFilter: true,
     field: `amountCharged {
               value
               currency
@@ -58,6 +67,11 @@ export const movementsColumnsDef: any = {
     field: `concept`,
     order: 5,
   },
+  product: {
+    type: "simpleText",
+    field: `product`,
+    hidden: true,
+  },
   bankOrderCode: {
     type: "simpleText",
     field: "bankOrderCode",
@@ -77,16 +91,6 @@ export const movementsColumnsDef: any = {
     type: "date",
     hidden: true,
     field: "completedAt",
-  },
-  amount: {
-    type: "amount",
-    enableHiding: false,
-    showFilter: true,
-    order: 1,
-    field: `amount {
-      value
-      currency
-      }`,
   },
   fee: {
     type: "amount",

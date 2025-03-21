@@ -14,7 +14,7 @@ const SwipeAnimation = () => {
     }
     const timeout = setTimeout(() => {
       setIsVisible(false)
-    }, 6000)
+    }, 4000)
 
     // Limpiar el timeout al desmontar el componente
     return () => clearTimeout(timeout)
