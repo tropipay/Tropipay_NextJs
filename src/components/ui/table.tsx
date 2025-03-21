@@ -47,13 +47,13 @@ const Table = React.forwardRef<
     }
   }
 
-  const handleMouseLeave = () => {
+  /*   const handleMouseLeave = () => {
     setIsDragging(false)
   }
 
   const handleMouseUp = () => {
     setIsDragging(false)
-  }
+  } */
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !tableContainerRef.current) return
@@ -75,22 +75,24 @@ const Table = React.forwardRef<
         }
       )}
       style={{
-        scrollBehavior: "smooth",
+        scrollBehavior: "auto",
         whiteSpace: "nowrap",
+        maxHeight: "calc(84vh - 100px)",
       }}
       onMouseDown={handleMouseDown}
-      onMouseLeave={handleMouseLeave}
+      /*       onMouseLeave={handleMouseLeave}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
+ */
     >
       <table
         ref={ref}
         className={cn("w-full caption-bottom text-sm", className)}
         {...props}
       />
-      {hasHorizontalScroll && (
+      {/*       {hasHorizontalScroll && (
         <SwipeAnimation key={hasHorizontalScroll.toString()} />
-      )}
+      )} */}
     </div>
   )
 })

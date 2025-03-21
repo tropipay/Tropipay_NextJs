@@ -316,12 +316,11 @@ export default function DataTable<TData, TValue>({
     },
     [sorting, manualSorting, router, pathname, createQueryString]
   )
-
   const tableConfig = useMemo(
     () => ({
       data: Array.isArray(data) ? data : [],
       columns: columnsConfig,
-      pageCount: Math.ceil(rowCount ?? 0 / pagination.pageSize) ?? -1,
+      pageCount: rowCount ? Math.ceil(rowCount / pagination.pageSize) : -1,
       state: {
         sorting,
         columnVisibility,
@@ -399,7 +398,7 @@ export default function DataTable<TData, TValue>({
                   ))}
                 </SortableContext>
               </TableHeader>
-              <TableBody>
+              <TableBody className="tableBody">
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <TableRow

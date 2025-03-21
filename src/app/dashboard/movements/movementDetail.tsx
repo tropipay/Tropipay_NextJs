@@ -15,7 +15,7 @@ export default function MovementDetail(props: any): JSX.Element {
   const row = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
-
+  console.log("row:", row)
   const onDownloadInvoiceFile = async () => {
     try {
       const response = await fetch(
@@ -70,7 +70,7 @@ export default function MovementDetail(props: any): JSX.Element {
         </div>
         <Section title="Datos del movimiento">
           <Info label="Tipo" value={row.movementDetail.type} />
-          <Info label="Producto" value="******** FALTA PRODUCTO" />
+          <Info label="Producto" value={row.product} />
           <Info label="Concepto" value={row.movementDetail.concept} />
         </Section>
 

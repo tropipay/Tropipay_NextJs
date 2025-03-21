@@ -36,7 +36,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     columns: movementsColumns,
     columnsDef: JSON.parse(JSON.stringify(movementsColumnsDef)),
     filters: setFilters(movementsColumnsDef),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5, // * 60 * 1000,
   },
   movementsDetail: {
     key: "movementsDetail",
@@ -90,6 +90,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
               type
             }	
             sender
+            product
           }
           totalCount
         }
