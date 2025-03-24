@@ -1,6 +1,5 @@
-import * as React from "react"
 import { cn } from "@/lib/utils"
-import SwipeAnimation from "../swipeAnimation"
+import * as React from "react"
 
 // Definimos una interfaz para RowData (ajústala según tus necesidades)
 interface RowData {
@@ -87,7 +86,7 @@ const Table = React.forwardRef<
     >
       <table
         ref={ref}
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("relative w-full caption-bottom text-sm", className)}
         {...props}
       />
       {/*       {hasHorizontalScroll && (

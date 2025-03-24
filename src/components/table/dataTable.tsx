@@ -260,7 +260,7 @@ export default function DataTable<TData, TValue>({
       <TableHead
         key={header.id}
         ref={setNodeRef}
-        className="relative whitespace-nowrap"
+        className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
         style={style}
       >
         <div className="flex gap-1 items-center">

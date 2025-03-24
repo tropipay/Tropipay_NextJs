@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
+import { Table } from "@tanstack/react-table"
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { Table } from "@tanstack/react-table"
 
 interface MovementsAllInOutProps {
   table: Table<any>
@@ -62,7 +62,7 @@ const MovementsAllInOut: React.FC<MovementsAllInOutProps> = ({ table }) => {
         className="px-2 h-8"
         onClick={() => handleFilterChange("OUT")}
       >
-        <FormattedMessage id="exit" />
+        <FormattedMessage id="output" />
       </Button>
     </div>
   )

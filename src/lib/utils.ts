@@ -150,14 +150,14 @@ export const formatAmount = (
   let formatter = ""
 
   if (currency === "") {
-    formatter = new Intl.NumberFormat("en-US", {
+    formatter = new Intl.NumberFormat("es-ES", {
       minimumFractionDigits: 2,
     }).format(amount / 100)
   } else {
     formatter =
       position !== "left"
         ? `${(amount / 100).toFixed(2)} ${currency}`
-        : new Intl.NumberFormat("en-US", {
+        : new Intl.NumberFormat("es-ES", {
             style: "currency",
             currency,
             minimumFractionDigits: 2,

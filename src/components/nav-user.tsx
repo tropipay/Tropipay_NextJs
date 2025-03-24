@@ -1,18 +1,10 @@
 "use client"
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
+import { ChevronsUpDown, LogOut } from "lucide-react"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -24,11 +16,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { FormattedMessage } from "react-intl"
 import { NavUserAccount } from "./nav-user-account"
 
 export function NavUser(props: any) {
   const { isMobile } = useSidebar()
   const user = props.user
+  const onExit = () =>
+    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
 
   return (
     <SidebarMenu>
@@ -59,31 +54,9 @@ export function NavUser(props: any) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={onExit}>
               <LogOut />
-              Log out
+              <FormattedMessage id="exit" />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
