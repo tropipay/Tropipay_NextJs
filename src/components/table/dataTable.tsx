@@ -61,6 +61,9 @@ interface DataTableProps<TData, TValue> {
   tableId: string
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
+  userId: string
+  categoryFilterId: string
+  categoryFilters?: string[]
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
@@ -70,13 +73,15 @@ interface DataTableProps<TData, TValue> {
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
-  userId: string
 }
 
 export default function DataTable<TData, TValue>({
   tableId,
   data,
   columns: columnsConfig,
+  userId,
+  categoryFilterId,
+  categoryFilters = [],
   enableColumnOrder = true,
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
@@ -86,7 +91,6 @@ export default function DataTable<TData, TValue>({
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
-  userId,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -357,9 +361,13 @@ export default function DataTable<TData, TValue>({
       <div className="space-y-4">
         {isLoading && <Spinner />}
         <DataTableToolbar
-          tableId={tableId}
-          table={table}
-          columns={columnsConfig}
+          {...{
+            tableId,
+            table,
+            columns: columnsConfig,
+            categoryFilterId,
+            categoryFilters,
+          }}
         />
         <div>
           <DndContext

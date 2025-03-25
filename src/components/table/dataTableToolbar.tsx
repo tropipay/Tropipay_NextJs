@@ -1,6 +1,6 @@
 "use client"
 
-import MovementsAllInOut from "@/app/dashboard/movements/movementsAllInOut"
+import FilterCategories from "@/components/table/filterCategories"
 import { Input } from "@/components/ui/input"
 import { Table } from "@tanstack/react-table"
 import { Search } from "lucide-react"
@@ -11,17 +11,21 @@ import { useTranslation } from "../intl/useTranslation"
 import { DataTableViewOptions } from "./dataTableViewOptions"
 import { FilterManager } from "./filterManager"
 
-interface DataTableToolbarProps<TData, TValue> {
+interface Props<TData, TValue> {
   tableId: string
   table: Table<TData>
   columns: any
+  categoryFilterId: string,
+  categoryFilters?: string[]
 }
 
 export function DataTableToolbar<TData, TValue>({
   tableId,
   table,
   columns,
-}: DataTableToolbarProps<TData, TValue>) {
+  categoryFilterId,
+  categoryFilters
+}: Props<TData, TValue>) {
   const { t } = useTranslation()
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
@@ -74,7 +78,7 @@ export function DataTableToolbar<TData, TValue>({
       <div className="flex items-center justify-between">
         {/* Elementos alineados a la izquierda */}
         <div className="flex items-center gap-2">
-          <MovementsAllInOut table={table} />
+          <FilterCategories {...{ table, categoryFilterId, categoryFilters }} />
           <div className="relative flex items-center w-full">
             <span className="absolute left-3 flex items-center text-gray-500">
               <Search className="h-5 w-5" aria-hidden="true" />

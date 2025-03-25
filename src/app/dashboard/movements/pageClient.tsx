@@ -40,6 +40,8 @@ const PageClient = ({ tableId, columns, data }: Props) => {
           rowCount={data?.data?.movements?.totalCount ?? 0}
           rowClickChildren={Detail}
           userId={userId}
+          categoryFilterId={"movementDirection"}
+          categoryFilters={["ALL", "IN", "OUT"]}
         />
       )}
     </div>
