@@ -25,8 +25,11 @@ export const getUserSettings = (
   tableId?: string,
   sectionId?: string
 ): UserSettings | any => {
-  const cookieRoute = userId ? `userSettings-${userId}` : `userSettings`
-  const cookies = CookiesManager.getInstance().get(cookieRoute, defaultValue)
+  if (!userId) return defaultValue
+  const cookies = CookiesManager.getInstance().get(
+    `userSettings-${userId}`,
+    defaultValue
+  )
   const settings = cookies.tableColumnsSettings
   if (!settings) return defaultValue
 
@@ -75,6 +78,5 @@ export const setUserSettings = (
   }
 
   // Guardar la configuración actualizada en las cookies
-  const cookieRoute = userId ? `userSettings-${userId}` : `userSettings`
-  CookiesManager.getInstance().set(cookieRoute, updatedSettings)
+  CookiesManager.getInstance().set(`userSettings-${userId}`, updatedSettings)
 }

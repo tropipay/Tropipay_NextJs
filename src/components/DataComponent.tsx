@@ -25,24 +25,16 @@ export default function DataComponent({
     return React.cloneElement(children, { data: mockData })
   }
   const urlParams = searchParams
-  const { isLoading, data, status, isFetching } = useFetchData({
+  const { data } = useFetchData({
     queryConfig,
     dehydratedState,
     urlParams,
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
-  // const loading = isLoading || isFetching
 
   return (
     <div>
-      {/* Disable loading */}
-      {/* className={`relative ${loading && "opacity-70 pointer-events-none"}`} */}
-      {/* {loading && (
-        <div className="absolute flex items-center justify-center w-full h-screen z-[9998]">
-          <Loader2 className="animate-spin text-[#041266]" size={72} />
-        </div>
-      )} */}
       {userId &&
         data &&
         // @ts-ignore

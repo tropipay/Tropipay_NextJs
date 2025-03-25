@@ -6,6 +6,7 @@ export async function getUserSettingsServer(
   tableId?: string,
   sectionId?: string
 ) {
+  if (!userId) return defaultValue
   const cookieStore = await cookies()
   const cookie = cookieStore.get(`userSettings-${userId}`)?.value
 

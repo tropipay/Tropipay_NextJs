@@ -17,7 +17,7 @@ export async function middleware(req: NextRequest) {
 
   if (isProtectedRoute && isTokenExpired(token)) {
     return NextResponse.redirect(
-      new URL(`${process.env.REACT_TROPIPAY_HOME}/login`, req.nextUrl)
+      new URL(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`, req.nextUrl)
     )
   }
 

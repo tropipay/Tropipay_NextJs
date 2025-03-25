@@ -45,8 +45,6 @@ export async function makeApiRequest({
     }.variables
   )*/
 
-  console.log(variables)
-
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
