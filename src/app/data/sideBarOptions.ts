@@ -1,5 +1,5 @@
 import { SidebarOption } from "@/types/sidebarOption"
-import { ArrowLeftRight, ScrollText, Banknote } from "lucide-react"
+import { ArrowLeftRight, Banknote, ScrollText } from "lucide-react"
 
 export const sideBarOptions: SidebarOption[] = [
   {
@@ -24,8 +24,15 @@ export const sideBarOptions: SidebarOption[] = [
   },
   {
     title: "payments",
-    url: "#",
+    url: "",
     icon: Banknote,
+    isActive: true,
+    items: [
+      {
+        title: "all",
+        url: "/dashboard/payments",
+      },
+    ],
   },
   {
     title: "reports",

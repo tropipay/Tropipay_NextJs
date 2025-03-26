@@ -49,7 +49,10 @@ export function DataTableViewOptions<TData>({
       )
       .map((column) => ({
         ...column,
-        translatedHeader: intl.formatMessage({ id: column.id }), // Traducir el nombre de la columna
+        translatedHeader: intl.formatMessage({
+          //@ts-ignore
+          id: column?.columnDef?.filterLabel ?? column.id,
+        }), // Traducir el nombre de la columna
       }))
 
     // Ordenar las columnas basándose en los nombres traducidos

@@ -1,9 +1,9 @@
 import {
-  movementsState,
-  movementsStateGroups,
+  movementsPaymentMethods,
+  movementStateGroups,
+  movementStates,
   movementTypes,
-  paymentMethods,
-} from "@/app/filterDefinitions/definitions"
+} from "@/app/filterDefinitions/movements"
 
 export const movementsColumnsDef: any = {
   /* select: {
@@ -39,8 +39,8 @@ export const movementsColumnsDef: any = {
   },
   state: {
     type: "facetedBadge",
-    optionList: movementsState,
-    optionListGroups: movementsStateGroups,
+    optionList: movementStates,
+    optionListGroups: movementStateGroups,
     enableHiding: false,
     showFilter: true,
     field: "state",
@@ -54,6 +54,7 @@ export const movementsColumnsDef: any = {
   },
   movementType: {
     type: "faceted",
+    title: "type",
     showFilter: true,
     optionList: movementTypes,
     enableSorting: false,
@@ -107,7 +108,7 @@ export const movementsColumnsDef: any = {
   },
   paymentMethod: {
     type: "faceted",
-    optionList: paymentMethods,
+    optionList: movementsPaymentMethods,
     size: 220,
     hidden: true,
     field: "paymentMethod",

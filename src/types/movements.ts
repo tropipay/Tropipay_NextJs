@@ -1,7 +1,4 @@
-type Amount = {
-  value: number
-  currency: string
-}
+
 
 type Movement = {
   id: string

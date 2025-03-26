@@ -7,26 +7,32 @@ interface DataFullProps {
   queryConfig: any
   children: React.ReactNode
   searchParams?: { [key: string]: string }
+  mockData?: any
 }
 
 export default async function DataFull({
   queryConfig,
   children,
   searchParams = {},
+  mockData,
 }: DataFullProps) {
   const queryClient = getQueryClient()
   const urlParams = await processQueryParameters(searchParams)
   await fetchData(queryClient, queryConfig, urlParams)
+  const { key } = queryConfig
   const dehydratedState = dehydrate(queryClient)
-  console.log("dehydratedState:", dehydratedState)
+  // console.log("dehydratedState:", dehydratedState)
   return (
     <>
       {dehydratedState && (
         <DataComponent
-          dehydratedState={dehydratedState}
-          queryConfig={queryConfig}
-          key={queryConfig.key}
-          searchParams={urlParams}
+          {...{
+            key,
+            queryConfig,
+            dehydratedState,
+            searchParams: urlParams,
+            mockData,
+          }}
         >
           <>{children}</>
         </DataComponent>

@@ -1,6 +1,6 @@
 "use client"
 
-import { usersStatus } from "@/app/filterDefinitions/definitions"
+import { usersStatus } from "@/app/filterDefinitions/users"
 import { usersRole } from "@/app/queryDefinitions/users/definitions"
 import { DataTableColumnHeader } from "@/components/table/dataTableColumnHeader"
 import { DataTableRowActions } from "@/components/table/dataTableRowActions"

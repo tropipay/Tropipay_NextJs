@@ -17,31 +17,31 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const userId = session?.user?.id
   const queryConfig = apiConfig.movementsDetail
 
-  const Detail = ({ row }: { row: any }) => {
-    return (
-      <DataComponent
-        dehydratedState={undefined}
-        queryConfig={queryConfig}
-        key={queryConfig.key}
-        searchParams={{ id: row.id }}
-      >
-        <MovementDetail />
-      </DataComponent>
-    )
-  }
+  const MovementDetailContainer = ({ row }: { row: any }) => (
+    <DataComponent
+      dehydratedState={undefined}
+      queryConfig={queryConfig}
+      key={queryConfig.key}
+      searchParams={{ id: row.id }}
+    >
+      <MovementDetail />
+    </DataComponent>
+  )
 
   return (
     <div className="container p-2">
       {userId && (
         <DataTable
-          tableId={tableId}
-          columns={columns}
-          data={data?.data?.movements?.items ?? []}
-          rowCount={data?.data?.movements?.totalCount ?? 0}
-          rowClickChildren={Detail}
-          userId={userId}
-          categoryFilterId={"movementDirection"}
-          categoryFilters={["ALL", "IN", "OUT"]}
+          {...{
+            tableId,
+            userId,
+            columns,
+            data: data?.data?.movements?.items ?? [],
+            rowCount: data?.data?.movements?.totalCount ?? 0,
+            categoryFilterId: "movementDirection",
+            categoryFilters: ["ALL", "IN", "OUT"],
+            rowClickChildren: MovementDetailContainer,
+          }}
         />
       )}
     </div>

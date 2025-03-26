@@ -6,7 +6,7 @@ import RefundIcon from "@/components/images/refundIcon"
 import RemittanceIcon from "@/components/images/remittanceIcon"
 import TropicardIcon from "@/components/images/tropicardIcon"
 import TropipayIcon from "@/components/images/tropipayIcon"
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons"
+import { CrossCircledIcon } from "@radix-ui/react-icons"
 import {
   ArrowUpRight,
   Bitcoin,
@@ -20,19 +20,7 @@ import {
   Wallet,
 } from "lucide-react"
 
-export const usersStatus = [
-  {
-    value: "active",
-    label: "Active",
-    icon: CheckCircledIcon,
-  },
-  {
-    value: "inactive",
-    label: "Inactive",
-    icon: CrossCircledIcon,
-  },
-]
-export const movementsState = [
+export const movementStates = [
   {
     value: "processing",
     icon: LoaderCircle,
@@ -55,12 +43,13 @@ export const movementsState = [
   },
 ].map((option) => ({ ...option, label: `ms_${option.value}` }))
 
-export const movementsStateGroups = {
+export const movementStateGroups = {
   completedStates: ["completed"],
   processingStates: ["pending", "processing"],
   anotherStates: ["cancelled"],
   errorStates: ["error"],
 }
+
 export const movementTypes = [
   { value: "ADD", icon: Plus },
   { value: "OTA", icon: OtaIcon },
@@ -74,7 +63,7 @@ export const movementTypes = [
   { value: "OTHER", icon: CircleHelp },
 ].map((option) => ({ ...option, label: `mt_${option.value}` }))
 
-export const paymentMethods = [
+export const movementsPaymentMethods = [
   {
     value: "CARD",
     icon: CreditCardIcon,

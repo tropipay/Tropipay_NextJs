@@ -1,4 +1,5 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import { paymentsMock } from "@/app/queryDefinitions/payments/paymentsMock"
 import DataFull from "@/components/DataFull"
 import PageClient from "./pageClient"
 
@@ -7,18 +8,22 @@ interface Props {
 }
 
 export default async function Page({ searchParams }: Props) {
-  const queryConfig = apiConfig.movements
+  const { payments: queryConfig } = apiConfig
+  const { columns, key } = queryConfig
 
   return (
     <DataFull
       {...{
         queryConfig,
         searchParams,
+        mockData: { data: { payments: paymentsMock } },
       }}
     >
       <PageClient
-        columns={queryConfig.columns}
-        tableId={queryConfig.key ?? ""}
+        {...{
+          columns,
+          tableId: key ?? "",
+        }}
       />
     </DataFull>
   )

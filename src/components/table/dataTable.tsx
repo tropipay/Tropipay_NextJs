@@ -53,6 +53,7 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { FormattedMessage } from "react-intl"
 import Spinner from "../spinner"
 import { DataTablePagination } from "./dataTablePagination"
 import { DataTableToolbar } from "./dataTableToolbar"
@@ -433,7 +434,7 @@ export default function DataTable<TData, TValue>({
                       colSpan={columnsConfig.length}
                       className="h-24 text-center"
                     >
-                      {"No data results"}
+                      <FormattedMessage id="no_results_found" />
                     </TableCell>
                   </TableRow>
                 )}

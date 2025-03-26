@@ -1,7 +1,7 @@
 import {
-  movementsState,
-  movementsStateGroups,
-} from "@/app/filterDefinitions/definitions"
+  movementStateGroups,
+  movementStates,
+} from "@/app/filterDefinitions/movements"
 import { Info } from "@/components/sectionComponents/info"
 import { Section } from "@/components/sectionComponents/section"
 import FacetedBadge from "@/components/table/facetedBadge"
@@ -54,8 +54,8 @@ export default function MovementDetail(props: any): JSX.Element {
           </div>
           <FacetedBadge
             value={row.state}
-            optionList={movementsState}
-            optionListGroups={movementsStateGroups}
+            optionList={movementStates}
+            optionListGroups={movementStateGroups}
           />
         </div>
         <div className="flex justify-between items-center mb-4 pb-1">

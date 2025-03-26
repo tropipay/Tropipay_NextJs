@@ -9,8 +9,8 @@ export async function getUserSettingsServer(
   if (!userId) return defaultValue
   const cookieStore = await cookies()
   const cookie = cookieStore.get(`userSettings-${userId}`)?.value
-
-  if (!cookie || cookie === "{}") {
+  console.log(cookie)
+  if (!cookie || cookie === "null" || cookie === "{}") {
     return defaultValue
   }
   const jsonCookies = JSON.parse(cookie)

@@ -30,7 +30,7 @@ export const getUserSettings = (
     `userSettings-${userId}`,
     defaultValue
   )
-  const settings = cookies.tableColumnsSettings
+  const settings = cookies?.tableColumnsSettings
   if (!settings) return defaultValue
 
   if (!tableId) {

@@ -247,9 +247,10 @@ export function FilterManager<TData, TValue>({
 
             if (isAFiltered && !isBFiltered) return -1
             if (!isAFiltered && isBFiltered) return 1
-
-            const aLabel = intl.formatMessage({ id: a.id })
-            const bLabel = intl.formatMessage({ id: b.id })
+            //@ts-ignore
+            const aLabel = intl.formatMessage({ id: a.filterLabel })
+            //@ts-ignore
+            const bLabel = intl.formatMessage({ id: b.filterLabel })
             return aLabel.localeCompare(bLabel)
           })
           .map((column: any) => {
