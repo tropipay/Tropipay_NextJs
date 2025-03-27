@@ -86,7 +86,7 @@ export function setColumns<TData>(
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title={title || id} />
       ),
-      // @ts-ignore
+      // @ts-expect-error
       optionList,
       enableSorting,
       enableHiding,
@@ -227,7 +227,7 @@ export function setColumns<TData>(
         }
         break
       case "select":
-        // @ts-ignore
+        // @ts-expect-error
         baseConfig = {
           ...baseConfig,
           header: ({ table }) => (
