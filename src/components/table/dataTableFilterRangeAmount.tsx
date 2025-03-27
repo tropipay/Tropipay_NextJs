@@ -139,7 +139,11 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             name="min"
             className="my-2 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={t("minimum_opt")}
-            value={filterValue ? +filterValue.split(",")[0] * 100 || "" : ""}
+            value={
+              !!filterValue
+                ? (+filterValue.split(",")[0] * 100).toString() || ""
+                : ""
+            }
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
@@ -148,7 +152,11 @@ export function DataTableFilterRangeAmount<TData, TValue>({
             name="max"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={t("maximum_opt")}
-            value={filterValue ? +filterValue.split(",")[1] * 100 || "" : ""}
+            value={
+              !!filterValue
+                ? (+filterValue.split(",")[1] * 100).toString() || ""
+                : ""
+            }
           />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}

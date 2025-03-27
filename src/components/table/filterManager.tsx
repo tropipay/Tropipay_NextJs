@@ -261,6 +261,7 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
+                      // @ts-ignore
                       config: column,
                     }}
                     onClear={handleClearFilter}
@@ -270,6 +271,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterDate
                     key={column.id}
+                    // @ts-ignore
                     column={{
                       ...table.getColumn(column.id),
                       config: column,
@@ -283,6 +285,7 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
+                      // @ts-ignore
                       config: column,
                     }}
                     onClear={handleClearFilter}
@@ -294,6 +297,7 @@ export function FilterManager<TData, TValue>({
                     key={column.id}
                     column={{
                       ...table.getColumn(column.id),
+                      // @ts-ignore
                       config: column,
                     }}
                     onClear={handleClearFilter}

@@ -55,7 +55,7 @@ export const setUserSettings = (
   sectionId?: string
 ): void => {
   const currentSettings = getUserSettings(userId, {})
-  let updatedSettings = {}
+  const updatedSettings = {}
 
   if (!tableId) {
     // Si no se proporciona tableId, se reemplaza toda la configuración

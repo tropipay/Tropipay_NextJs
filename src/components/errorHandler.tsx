@@ -34,7 +34,9 @@ const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors, onOk }) => {
   }
 
   useEffect(() => {
-    errors.length > 0 && setIsOpen(true)
+    if (errors.length > 0) {
+      setIsOpen(true)
+    }
   }, [errors])
 
   return (

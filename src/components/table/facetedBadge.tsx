@@ -21,7 +21,7 @@ const FacetedBadge = ({ value, optionList, optionListGroups }) => {
   const Icon = currentState.icon
 
   return (
-    // @ts-ignore
+    // @ts-expect-error
     <Badge variant={stateVariant}>
       <span className="mx-1 min-w-[72px] ">
         <FormattedMessage id={currentState.label} />
