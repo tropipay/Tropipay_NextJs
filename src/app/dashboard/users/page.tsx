@@ -14,6 +14,8 @@ export default async function Home() {
         data={users}
         columns={userColumns}
         userId="0"
+        categoryFilterId=""
+        categoryFilters={[]}
       />
     </div>
   )

@@ -21,17 +21,15 @@ export default function DataComponent({
   mockData,
   children,
 }: DataComponentProps) {
-  if (!!mockData) {
-    return React.cloneElement(children, { data: mockData })
-  }
   const urlParams = searchParams
-  const { data } = useFetchData({
+  const { data: fetchData } = useFetchData({
     queryConfig,
     dehydratedState,
     urlParams,
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
+  const data = mockData ?? fetchData
 
   return (
     <div>

@@ -19,7 +19,7 @@ export const toastMessage = (
   type: IconMessageType = "info"
 ) => {
   toast({
-    // @ts-ignore
+    // @ts-expect-error
     title: (
       <div className="w-full flex items-center">
         {getIconMessageByType(type)}

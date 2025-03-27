@@ -107,8 +107,7 @@ export async function processQueryParameters(
   searchParams: Record<string, string>
 ) {
   try {
-    const resolvedParams = await searchParams
-    return resolvedParams
+    return await searchParams
   } catch (error) {
     console.error("Error processing query parameters:", error)
     return {}
@@ -196,7 +195,7 @@ export const setFilterType = (filter: any, type: any): string | null => {
 }
 
 export function setFilters<TData>(
-  // @ts-ignore
+  // @ts-expect-error
   columnsConfig: Record<string, ColumnOptions<TData>>
 ): ColumnDef<TData>[] {
   return Object.entries(columnsConfig).map(([id, options]) => {
