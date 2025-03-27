@@ -1,7 +1,6 @@
 import Link from "next/link"
-import React, { useState } from "react"
+import { useState } from "react"
 import { Button } from "../ui/button"
-import { logout } from "@/app/actions/sessionActions"
 
 const links = [
   { name: "Home", href: "/dashboard" },
@@ -40,9 +39,7 @@ const Aside = () => {
                     </Link>
                   </li>
                 ))}
-                <Button className="w-full" onClick={logout}>
-                  Logout
-                </Button>
+                <Button className="w-full">Logout</Button>
               </ul>
             </div>
           </div>
