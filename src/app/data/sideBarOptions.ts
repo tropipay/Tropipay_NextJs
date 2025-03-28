@@ -1,26 +1,26 @@
 import { SidebarOption } from "@/types/sidebarOption"
-import { ArrowLeftRight, ScrollText, Banknote } from "lucide-react"
+import { ArrowLeftRight, Banknote, ScrollText } from "lucide-react"
 
 export const sideBarOptions: SidebarOption[] = [
   {
     title: "movements",
-    url: "",
+    url: "/dashboard/movements",
     icon: ArrowLeftRight,
     isActive: true,
-    items: [
-      {
-        title: "all",
-        url: "/dashboard/movements",
-      },
-      {
-        title: "scheduled",
-        url: "#",
-      },
-      {
-        title: "disputes",
-        url: "#",
-      },
-    ],
+    // items: [
+    //   {
+    //     title: "all",
+    //     url: "/dashboard/movements",
+    //   },
+    //   {
+    //     title: "scheduled",
+    //     url: "#",
+    //   },
+    //   {
+    //     title: "disputes",
+    //     url: "#",
+    //   },
+    // ],
   },
   {
     title: "payments",

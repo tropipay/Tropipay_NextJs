@@ -1,7 +1,5 @@
 "use client"
 
-import { ChevronRight } from "lucide-react"
-import Link from "next/link" // Importa el componente Link de Next.js
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,12 +15,17 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { SidebarOption } from "@/types/sidebarOption"
+import { ChevronRight } from "lucide-react"
+import Link from "next/link" // Importa el componente Link de Next.js
+import { useRouter } from "next/navigation"
 import React from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "./intl/useTranslation"
 
 export function NavMain({ items }: { items: SidebarOption[] }) {
+  const router = useRouter()
   const { t } = useTranslation()
+  const onItemClick = (url: string) => router.push(url)
 
   return (
     <SidebarGroup>
@@ -61,7 +64,10 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
               </Collapsible>
             ) : (
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip={t(item.title)}>
+                <SidebarMenuButton
+                  tooltip={t(item.title)}
+                  {...(item.url && { onClick: () => onItemClick(item.url) })}
+                >
                   {item.icon && <item.icon />}
                   <FormattedMessage id={item.title} />
                 </SidebarMenuButton>
