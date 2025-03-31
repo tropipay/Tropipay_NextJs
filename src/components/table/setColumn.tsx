@@ -43,7 +43,7 @@ type ColumnOptions<TData> = {
   filterPlaceholder?: string
   showFilter?: boolean
   hidden?: boolean
-  field: string
+  field?: string
   size?: number
   enableResizing?: boolean
   order?: number
@@ -57,8 +57,8 @@ export function setColumns<TData>(
 ): ColumnDef<TData>[] {
   return Object.entries(columnsConfig).map(([id, options]) => {
     const {
-      type,
-      field = null,
+      type = "simpleText",
+      field = id,
       title,
       optionList,
       optionListGroups,
@@ -104,30 +104,6 @@ export function setColumns<TData>(
     }
 
     switch (type) {
-      case "simpleText":
-        baseConfig = {
-          ...baseConfig,
-          cell: ({ row }) => {
-            let value = getRowValue(row.getValue(id)) || "-"
-            if (render && value !== "-") {
-              value = render(value)
-            }
-
-            return value !== "-" ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="truncate">{value}</div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="center">
-                  {value}
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              value
-            )
-          },
-        }
-        break
       case "faceted":
         if (!optionList) {
           throw new Error("optionList is required for faceted type")
@@ -259,9 +235,26 @@ export function setColumns<TData>(
       default:
         baseConfig = {
           ...baseConfig,
-          cell: ({ row }) => row.getValue(id),
+          cell: ({ row }) => {
+            let value = getRowValue(row.getValue(id)) || "-"
+            if (render && value !== "-") {
+              value = render(value)
+            }
+
+            return value !== "-" ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="truncate">{value}</div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="center">
+                  {value}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              value
+            )
+          },
         }
-        break
     }
 
     return baseConfig

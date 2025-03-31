@@ -23,16 +23,16 @@ export const sideBarOptions: SidebarOption[] = [
     // ],
   },
   {
-    title: "payments",
-    url: "",
+    title: "charges",
+    url: "/dashboard/charges",
     icon: Banknote,
     isActive: true,
-    items: [
-      {
-        title: "all",
-        url: "/dashboard/payments",
-      },
-    ],
+    // items: [
+    //   {
+    //     title: "all",
+    //     url: "/dashboard/charges",
+    //   },
+    // ],
   },
   {
     title: "reports",

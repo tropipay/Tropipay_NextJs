@@ -137,11 +137,13 @@ export function DataTableFilterFaceted<TData, TValue>({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[264px] p-0" align="start">
+      <PopoverContent className="w-[280px] p-0" align="start">
         <Command>
           <CommandInput placeholder={t(filterLabel)} />
           <CommandList className="px-2 pt-2">
-            <CommandEmpty>{"No Filter results"}</CommandEmpty>
+            <CommandEmpty>
+              <FormattedMessage id="no_filter_results" />
+            </CommandEmpty>
             <CommandGroup className="px-3 pt-3 ">
               {optionList.map((option) => {
                 const Icon = option.icon

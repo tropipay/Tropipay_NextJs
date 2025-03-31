@@ -1,4 +1,4 @@
-type Payment = {
+type Charge = {
   id: string
   createdAt: string
   completedAt: string
@@ -12,11 +12,14 @@ type Payment = {
   cardPan: string
   cardBin: string
   paymentType: string
-  cardHolderName: string
-  cardIssuerBank: string
+  fullName: string
+  issuerBank: string
   cardType: string
+  address: string
+  country: string
+  currency: string
 }
 
-type GetPaymentsResponse = {
-  data: { payments: ApiDataResponse<Payment> }
+type GetChargesResponse = {
+  data: { charges: ApiDataResponse<Charge> }
 }
