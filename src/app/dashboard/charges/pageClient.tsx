@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react"
 interface Props {
   tableId: string
   columns: any
-  data?: GetPaymentsResponse
+  data?: GetChargesResponse
 }
 
 const PageClient = ({ tableId, columns, data }: Props) => {
@@ -21,8 +21,8 @@ const PageClient = ({ tableId, columns, data }: Props) => {
             tableId,
             userId,
             columns,
-            data: data?.data?.payments?.items ?? [],
-            rowCount: data?.data?.payments?.totalCount ?? 0,
+            data: data?.data?.charges?.items ?? [],
+            rowCount: data?.data?.charges?.totalCount ?? 0,
             categoryFilterId: "chargeDirection",
             categoryFilters: ["ALL", "CAUGHT", "DECLINED"],
           }}
