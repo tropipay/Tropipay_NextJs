@@ -11,12 +11,11 @@ type Charge = {
   email: string
   cardPan: string
   cardBin: string
-  paymentType: string
   fullName: string
   issuerBank: string
   cardType: string
   address: string
-  country: string
+  // country: string
   currency: string
 }
 

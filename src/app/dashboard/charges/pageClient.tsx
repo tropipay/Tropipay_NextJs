@@ -23,8 +23,8 @@ const PageClient = ({ tableId, columns, data }: Props) => {
             columns,
             data: data?.data?.charges?.items ?? [],
             rowCount: data?.data?.charges?.totalCount ?? 0,
-            categoryFilterId: "chargeDirection",
-            categoryFilters: ["ALL", "CAUGHT", "DECLINED"],
+            categoryFilterId: "state",
+            categoryFilters: ["ALL", "caught", "declined"],
           }}
         />
       )}
