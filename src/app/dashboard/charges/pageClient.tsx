@@ -1,7 +1,11 @@
 "use client"
 
+import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import { chargesMock } from "@/app/queryDefinitions/charges/chargesMock"
+import DataComponent from "@/components/DataComponent"
 import DataTable from "@/components/table/dataTable"
 import { useSession } from "next-auth/react"
+import ChargeDetail from "./chargeDetail"
 
 interface Props {
   tableId: string
@@ -12,6 +16,20 @@ interface Props {
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
+  const queryConfig = apiConfig.chargesDetail
+
+  const ChargeDetailContainer = ({ row }: { row: any }) => (
+    <DataComponent
+      key={queryConfig.key}
+      {...{
+        queryConfig,
+        searchParams: { id: row.id },
+        mockData: { data: { charges: chargesMock } },
+      }}
+    >
+      <ChargeDetail />
+    </DataComponent>
+  )
 
   return (
     <div className="container p-2">
@@ -25,6 +43,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
             rowCount: data?.data?.charges?.totalCount ?? 0,
             categoryFilterId: "state",
             categoryFilters: ["ALL", "caught", "declined"],
+            rowClickChildren: ChargeDetailContainer,
           }}
         />
       )}

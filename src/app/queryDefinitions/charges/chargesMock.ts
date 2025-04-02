@@ -21,6 +21,10 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      cardExpirationDate: "2026-01-13T23:33:41.446Z",
+      country: "ES",
+      cardCountry: "US",
+      cardIp: '225.230.230.4'
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e2",

@@ -15,8 +15,11 @@ type Charge = {
   issuerBank: string
   cardType: string
   address: string
-  // country: string
   currency: string
+  country?: string
+  cardCountry?: string
+  cardExpirationDate?: string
+  cardIp?: string
 }
 
 type GetChargesResponse = {
