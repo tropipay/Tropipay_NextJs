@@ -1,5 +1,4 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import { chargesMock } from "@/app/queryDefinitions/charges/chargesMock"
 import DataFull from "@/components/DataFull"
 import PageClient from "./pageClient"
 
@@ -16,7 +15,6 @@ export default async function Page({ searchParams }: Props) {
       {...{
         queryConfig,
         searchParams,
-        mockData: { data: { charges: chargesMock } },
       }}
     >
       <PageClient

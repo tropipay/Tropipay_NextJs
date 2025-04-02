@@ -19,6 +19,10 @@ export const chargeStates = [
     icon: X,
   },
   {
+    value: "other",
+    icon: X,
+  },
+  {
     value: "error",
     icon: CrossCircledIcon,
   },
@@ -26,7 +30,7 @@ export const chargeStates = [
 
 export const chargeStatesGroups = {
   completedStates: ["caught"],
-  anotherStates: ["declined", "refunded", "refunded_partial"],
+  anotherStates: ["declined", "refunded", "refunded_partial", "other"],
   errorStates: ["error"],
 }
 

@@ -2,7 +2,6 @@ import {
   chargeProductTypes,
   chargeStates,
   chargeStatesGroups,
-  chargeTypes,
 } from "@/app/filterDefinitions/charges"
 import { movementsPaymentMethods } from "@/app/filterDefinitions/movements"
 
@@ -32,14 +31,6 @@ export const chargesColumnsDef: any = {
     size: 220,
     order: 3,
   },
-  paymentType: {
-    type: "faceted",
-    title: "type",
-    hidden: true,
-    optionList: chargeTypes,
-    enableSorting: false,
-    size: 200,
-  },
   reference: {
     order: 4,
   },
@@ -56,10 +47,10 @@ export const chargesColumnsDef: any = {
   email: {
     hidden: true,
   },
-  cardBin: {
-    hidden: true,
-    render: (value: string) => `${value} **** `,
-  },
+  // cardBin: {
+  //   hidden: true,
+  //   render: (value: string) => `${value} **** `,
+  // },
   cardPan: {
     hidden: true,
     render: (value: string) => `**** ${value}`,
@@ -81,9 +72,9 @@ export const chargesColumnsDef: any = {
     optionList: chargeProductTypes,
     order: 6,
   },
-  country: {
-    hidden: true,
-  },
+  // country: {
+  //   hidden: true,
+  // },
   address: {
     hidden: true,
   },
