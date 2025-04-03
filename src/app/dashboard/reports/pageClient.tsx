@@ -17,6 +17,7 @@ const pageClient = () => {
           </Button>
         </div>
         <InformationToolbar />
+        xx
         <div>
           <RowData
             label={<FormattedMessage id="balance_summary" />}
