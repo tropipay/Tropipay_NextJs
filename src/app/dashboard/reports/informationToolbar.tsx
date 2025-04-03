@@ -75,7 +75,7 @@ export default function InformationToolbar({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="flex items-center gap-2">
-              <CalendarIcon size={16} />{" "}
+              <CalendarIcon size={16} />
               {date?.from ? (
                 date.to ? (
                   <>
@@ -90,14 +90,14 @@ export default function InformationToolbar({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               initialFocus
               mode="range"
               defaultMonth={date?.from}
               selected={date}
               onSelect={setDate}
-              numberOfMonths={1}
+              numberOfMonths={2}
             />
           </PopoverContent>
         </Popover>
