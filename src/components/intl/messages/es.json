@@ -163,5 +163,7 @@
   "total": "Total",
   "try_again_later": "Inténtalo de nuevo más tarde",
   "type": "Tipo",
-  "we_cant_load_movements": "No podemos cargar los movimientos"
+  "we_cant_load_movements": "No podemos cargar los movimientos",
+  "reports.currentMonth": "Mes actual",
+  "reports.pickDate": "Seleccione un rango de fechas"
 }

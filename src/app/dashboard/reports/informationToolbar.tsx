@@ -7,8 +7,9 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { useState, useRef } from "react" // Añadido useRef
+import { useIntl } from "react-intl" // Import useIntl
 import { DateRange } from "react-day-picker"
-import { format, subMonths, addDays } from "date-fns"
+import { subMonths, addDays } from "date-fns" // Removed format
 import {
   Command,
   CommandGroup,
@@ -23,17 +24,25 @@ interface InformationToolbarProps {
 export default function InformationToolbar({
   handleDownload,
 }: InformationToolbarProps) {
+  const intl = useIntl() // Instantiate useIntl
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7), // Ejemplo: rango inicial de 7 días
   })
-  const [selectedMonth, setSelectedMonth] = useState("Mes actual")
+  // Use translation for initial state
+  const [selectedMonth, setSelectedMonth] = useState(
+    intl.formatMessage({ id: "reports.currentMonth" })
+  )
   const longPressTimer = useRef<NodeJS.Timeout | null>(null) // Ref para el temporizador
 
+  // Use translation and intl.formatDate for month list
   const months = [
-    "Mes actual",
+    intl.formatMessage({ id: "reports.currentMonth" }),
     ...Array.from({ length: 24 }, (_, i) =>
-      format(subMonths(new Date(), i), "MMMM yyyy")
+      intl.formatDate(subMonths(new Date(), i), {
+        month: "long",
+        year: "numeric",
+      })
     ),
   ]
 
@@ -78,15 +87,31 @@ export default function InformationToolbar({
               <CalendarIcon size={16} />
               {date?.from ? (
                 date.to ? (
+                  // Use intl.formatDate for date range display
                   <>
-                    {format(date.from, "LLL dd, y")} -{" "}
-                    {format(date.to, "LLL dd, y")}
+                    {intl.formatDate(date.from, {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}{" "}
+                    -{" "}
+                    {intl.formatDate(date.to, {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </>
                 ) : (
-                  format(date.from, "LLL dd, y")
+                  // Use intl.formatDate for single date display
+                  intl.formatDate(date.from, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })
                 )
               ) : (
-                <span>Pick a date</span>
+                // Use translation for placeholder
+                <span>{intl.formatMessage({ id: "reports.pickDate" })}</span>
               )}
             </Button>
           </PopoverTrigger>
