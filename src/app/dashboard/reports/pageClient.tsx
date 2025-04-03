@@ -74,7 +74,6 @@ const pageClient = () => {
             value="198.042,82 EUR"
             style="resume"
           />
-
           <RowData
             label={<FormattedMessage id="shipments" />}
             value={<FormattedMessage id="amount" />}
@@ -84,6 +83,21 @@ const pageClient = () => {
             label={<FormattedMessage id="shipments" />}
             value="2.704.240,62 EUR"
             style="row"
+          />
+          <RowData
+            label={<FormattedMessage id="total" />}
+            value="2.704.240,62 EUR"
+            style="resume"
+          />
+          <RowData
+            label={<FormattedMessage id="balance" />}
+            value={<FormattedMessage id="amount" />}
+            style="row"
+          />
+          <RowData
+            label={<FormattedMessage id="available_balance" />}
+            value="2.704.240,62 EUR"
+            style="resume"
           />
         </div>
       </div>
