@@ -37,7 +37,6 @@ const FilterCategories: React.FC<Props> = ({
     table.setColumnFilters(updatedFilters)
   }
 
-  console.log("filterCategoryValue:", filterCategoryValue)
   return (
     <div className="flex items-center gap-1 bg-grayBackground p-1 rounded-md">
       {categoryFilters?.map((categoryFilter) => (
