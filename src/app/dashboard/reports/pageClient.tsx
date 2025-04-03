@@ -5,16 +5,33 @@ import React from "react"
 import InformationToolbar from "./informationToolbar"
 import { Button } from "@/components/ui/button"
 import { FormattedMessage } from "react-intl" // Importar FormattedMessage
+import html2pdf from "html2pdf.js" // Importar html2pdf
 
 const pageClient = () => {
+  const handleDownload = () => {
+    console.log("DOWNLOAAAAAAAAAAAAD:")
+    const element = document.querySelector(".report-container")
+    if (element) {
+      const opt = {
+        margin: 1,
+        filename: "reporte_tropipay.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true }, // Aumentar escala para mejor calidad, useCORS si hay imágenes externas
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      }
+      // Generar y descargar el PDF
+      html2pdf().from(element).set(opt).save()
+    } else {
+      console.error("Elemento .report-container no encontrado")
+    }
+  }
+
   return (
     <div>
       <div className="space-y-4">
-        <InformationToolbar />
-        <Button variant="outline" className="w-full">
-          DESCARGAR
-        </Button>
+        <InformationToolbar handleDownload={handleDownload} />
         <div className="report-container">
+          {/* Contenido del reporte que se convertirá a PDF */}
           <RowData
             label={<FormattedMessage id="balance_summary" />}
             value={<FormattedMessage id="amount" />}

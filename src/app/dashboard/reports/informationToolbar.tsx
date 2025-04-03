@@ -6,10 +6,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { useState } from "react"
+import { useState, useRef } from "react" // Añadido useRef
 import { DateRange } from "react-day-picker"
 import { format, subMonths, addDays } from "date-fns"
-import { FormattedMessage } from "react-intl"
 import {
   Command,
   CommandGroup,
@@ -17,12 +16,19 @@ import {
   CommandList,
 } from "@/components/ui/command"
 
-export default function InformationToolbar() {
+interface InformationToolbarProps {
+  handleDownload?: () => void // Propiedad opcional para el long click
+}
+
+export default function InformationToolbar({
+  handleDownload,
+}: InformationToolbarProps) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7), // Ejemplo: rango inicial de 7 días
   })
   const [selectedMonth, setSelectedMonth] = useState("Mes actual")
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null) // Ref para el temporizador
 
   const months = [
     "Mes actual",
@@ -37,7 +43,7 @@ export default function InformationToolbar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="flex items-center gap-2">
-              <span>Mes actual</span>
+              <span>{selectedMonth}</span> {/* Mostrar mes seleccionado */}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[264px] p-0" align="start">
@@ -47,7 +53,10 @@ export default function InformationToolbar() {
                   {months.map((month) => (
                     <CommandItem
                       key={month}
-                      onSelect={() => setSelectedMonth(month)}
+                      onSelect={() => {
+                        setSelectedMonth(month)
+                        // Aquí podrías cerrar el Popover si es necesario
+                      }}
                       className="cursor-pointer" // Añadido para indicar que es clickeable
                     >
                       {selectedMonth === month && (
@@ -94,7 +103,7 @@ export default function InformationToolbar() {
         </Popover>
       </div>
 
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" onClick={handleDownload}>
         <DownloadIcon size={16} />
       </Button>
     </div>
