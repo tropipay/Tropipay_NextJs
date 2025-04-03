@@ -6,18 +6,18 @@ type Charge = {
   paymentMethod: string
   state: string
   reference: string
-  errorCode: string
-  product: string
+  product?: string
   email: string
-  cardPan: string
-  cardBin: string
   fullName: string
-  issuerBank: string
+  issuerBank?: string
   cardType: string
-  address: string
+  cardPan: string | null
+  cardBin: string | null
+  errorCode: string | null
+  address: string | null
+  cardCountry?: string | null
   currency: string
   country?: string
-  cardCountry?: string
   cardExpirationDate?: string
   clientIp?: string
 }

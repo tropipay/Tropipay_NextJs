@@ -1,37 +1,31 @@
-import { CrossCircledIcon } from "@radix-ui/react-icons"
-import { Check, CircleHelp, X } from "lucide-react"
+import { Check, CircleHelp, CornerUpLeft, X } from "lucide-react"
 
 export const chargeStates = [
   {
-    value: "caught",
+    value: "CAPTURED",
     icon: Check,
   },
   {
-    value: "declined",
+    value: "DECLINED",
     icon: X,
   },
   {
-    value: "refunded",
-    icon: X,
+    value: "REFUNDED",
+    icon: CornerUpLeft,
   },
   {
-    value: "refunded_partial",
-    icon: X,
+    value: "PARTIALLY_REFUNDED",
+    icon: CornerUpLeft,
   },
   {
-    value: "other",
+    value: "OTHER",
     icon: X,
-  },
-  {
-    value: "error",
-    icon: CrossCircledIcon,
   },
 ].map((option) => ({ ...option, label: `cs_${option.value}` }))
 
 export const chargeStatesGroups = {
-  completedStates: ["caught"],
-  anotherStates: ["declined", "refunded", "refunded_partial", "other"],
-  errorStates: ["error"],
+  completedStates: ["CAPTURED"],
+  anotherStates: ["DECLINED", "REFUNDED", "PARTIALLY_REFUNDED", "OTHER"],
 }
 
 export const chargeTypes = [{ value: "OTHER", icon: CircleHelp }].map(

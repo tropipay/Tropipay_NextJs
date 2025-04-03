@@ -1,7 +1,6 @@
 "use client"
 
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import { chargesMock } from "@/app/queryDefinitions/charges/chargesMock"
 import DataComponent from "@/components/DataComponent"
 import DataTable from "@/components/table/dataTable"
 import { useSession } from "next-auth/react"
@@ -24,7 +23,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
       {...{
         queryConfig,
         searchParams: { id: row.id },
-        mockData: { data: { charges: chargesMock } },
+        // mockData: { data: { charges: chargesMock } },
       }}
     >
       <ChargeDetail />
