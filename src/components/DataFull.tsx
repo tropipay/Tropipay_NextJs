@@ -26,8 +26,8 @@ export default async function DataFull({
     <>
       {dehydratedState && (
         <DataComponent
+          key={key}
           {...{
-            key,
             queryConfig,
             dehydratedState,
             searchParams: urlParams,
