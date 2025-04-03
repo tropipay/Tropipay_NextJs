@@ -19,7 +19,7 @@ type Charge = {
   country?: string
   cardCountry?: string
   cardExpirationDate?: string
-  cardIp?: string
+  clientIp?: string
 }
 
 type GetChargesResponse = {

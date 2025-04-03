@@ -19,10 +19,11 @@ const PageClient = ({ tableId, columns, data }: Props) => {
 
   const MovementDetailContainer = ({ row }: { row: any }) => (
     <DataComponent
-      dehydratedState={undefined}
-      queryConfig={queryConfig}
       key={queryConfig.key}
-      searchParams={{ id: row.id }}
+      {...{
+        queryConfig,
+        searchParams: { id: row.id },
+      }}
     >
       <MovementDetail />
     </DataComponent>

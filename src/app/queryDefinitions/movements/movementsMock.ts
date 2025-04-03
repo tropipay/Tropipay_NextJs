@@ -1,4 +1,4 @@
-export const movementsMock: ApiDataResponse<Movement> = {
+export const movementsMock: ApiDataResponse<Movement | MovementDetail> = {
   items: [
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043ef",
@@ -13,6 +13,45 @@ export const movementsMock: ApiDataResponse<Movement> = {
       paymentMethod: "GiftCard",
       reference: "84f0bfa8-fdb8-49b7-9c88-f7388cd32908",
       sender: "Daugherty, Brown and Abernathy",
+      email: "alex@tropipay.com",
+      fee: { value: 1.234, currency: "EUR" },
+      movementDetail: {
+        state: "processing",
+        createdAt: "2024-12-23T06:58:23.916Z",
+        completedAt: "2025-01-13T23:33:41.446Z",
+        amount: {
+          value: 561402,
+          currency: "USD",
+        },
+        netAmount: {
+          value: 561502,
+          currency: "USD",
+        },
+        bankOrderCode: "AAIIITRRTKKKFDFIFGFG-0023",
+        type: "PAYMENT",
+        product: "QR",
+        concept: "Sales",
+        clientAddress: "Texas, Apt 4",
+        conversionRate: "1.234",
+        cardType: "Creditcard",
+        cardPan: "1234",
+        cardCountry: "US",
+        cardExpirationDate: "2026-01-13T23:33:41.446Z",
+        clientIp: "225.230.230.4",
+        recipientData: {
+          alias: "Alex",
+          name: "Alex",
+          account: "alex@tropipay.com",
+          country: "US",
+        },
+        senderData: {
+          alias: "Jhon",
+          name: "Jhon",
+          email: "jhon.smith@tropipay.com",
+          account: "jhon.smith",
+          country: "US",
+        },
+      },
     },
     {
       id: "c393a043-ef0d-4ec9-b706-ecdede5607ee",
