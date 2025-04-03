@@ -11,7 +11,10 @@ const pageClient = () => {
     <div>
       <div className="space-y-4">
         <InformationToolbar />
-        <div>
+        <Button variant="outline" className="w-full">
+          DESCARGAR
+        </Button>
+        <div className="report-container">
           <RowData
             label={<FormattedMessage id="balance_summary" />}
             value={<FormattedMessage id="amount" />}

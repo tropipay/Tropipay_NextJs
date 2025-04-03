@@ -37,15 +37,13 @@ export default function InformationToolbar() {
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="flex items-center gap-2">
-              <span>
-                <FormattedMessage id="last_24_months" />
-              </span>
+              <span>Mes actual</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[264px] p-0" align="start">
             <Command>
               <CommandList>
-                <CommandGroup heading="" className="px-3 pt-3">
+                <CommandGroup heading="" className="p-3">
                   {months.map((month) => (
                     <CommandItem
                       key={month}
@@ -90,7 +88,7 @@ export default function InformationToolbar() {
               defaultMonth={date?.from}
               selected={date}
               onSelect={setDate}
-              numberOfMonths={2}
+              numberOfMonths={1}
             />
           </PopoverContent>
         </Popover>
