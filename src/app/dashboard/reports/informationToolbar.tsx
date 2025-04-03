@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, CheckIcon, DownloadIcon } from "lucide-react"
+import {
+  CalendarIcon,
+  CheckIcon,
+  ChevronDown,
+  DownloadIcon,
+} from "lucide-react"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { useState, useRef } from "react" // Añadido useRef
+import { useState, useRef } from "react"
 import { useIntl } from "react-intl" // Import useIntl
 import { DateRange } from "react-day-picker"
-import { subMonths, addDays } from "date-fns" // Removed format
+import { subMonths, addDays } from "date-fns"
 import {
   Command,
   CommandGroup,
@@ -25,17 +30,35 @@ export default function InformationToolbar({
   handleDownload,
 }: InformationToolbarProps) {
   const intl = useIntl() // Instantiate useIntl
+
+  // Helper function to capitalize the first letter
+  const capitalizeFirstLetter = (string: string) => {
+    if (!string) return string
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  // Helper function to format date with capitalized short month
+  const formatShortDateWithCapitalMonth = (dateToFormat: Date) => {
+    const day = intl.formatDate(dateToFormat, { day: "numeric" })
+    // Ensure month is treated as string before capitalization
+    const month = String(intl.formatDate(dateToFormat, { month: "short" }))
+    const year = intl.formatDate(dateToFormat, { year: "numeric" })
+    // Remove potential period added by some locales in short month format (e.g., "ene.")
+    const cleanMonth = month.endsWith(".") ? month.slice(0, -1) : month
+    return `${day} ${capitalizeFirstLetter(cleanMonth)} ${year}`
+  }
+
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7), // Ejemplo: rango inicial de 7 días
   })
-  // Use translation for initial state
+
   const [selectedMonth, setSelectedMonth] = useState(
     intl.formatMessage({ id: "reports.currentMonth" })
   )
+  const [isMonthPopoverOpen, setIsMonthPopoverOpen] = useState(false) // Estado para el popover de mes
   const longPressTimer = useRef<NodeJS.Timeout | null>(null) // Ref para el temporizador
 
-  // Use translation and intl.formatDate for month list
   const months = [
     intl.formatMessage({ id: "reports.currentMonth" }),
     ...Array.from({ length: 24 }, (_, i) =>
@@ -49,10 +72,16 @@ export default function InformationToolbar({
   return (
     <div className="flex items-center justify-between p-4 border-b">
       <div className="flex items-center gap-2">
-        <Popover>
+        <Popover open={isMonthPopoverOpen} onOpenChange={setIsMonthPopoverOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="flex items-center gap-2">
-              <span>{selectedMonth}</span> {/* Mostrar mes seleccionado */}
+            <Button
+              variant="outline"
+              id="periodSelector"
+              className="flex items-center gap-2"
+              onClick={() => setIsMonthPopoverOpen(true)} // Abrir al hacer clic
+            >
+              <span className="capitalize">{selectedMonth}</span>
+              <ChevronDown size={16} />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[264px] p-0" align="start">
@@ -64,14 +93,13 @@ export default function InformationToolbar({
                       key={month}
                       onSelect={() => {
                         setSelectedMonth(month)
-                        // Aquí podrías cerrar el Popover si es necesario
+                        setIsMonthPopoverOpen(false)
                       }}
-                      className="cursor-pointer" // Añadido para indicar que es clickeable
+                      className="cursor-pointer capitalize"
                     >
                       {selectedMonth === month && (
-                        <CheckIcon className="mr-2 h-4 w-4" />
-                      )}{" "}
-                      {/* Opcional: Muestra un check si está seleccionado */}
+                        <CheckIcon className="h-4 w-4" />
+                      )}
                       {month}
                     </CommandItem>
                   ))}
@@ -83,31 +111,22 @@ export default function InformationToolbar({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              id="customPeriodSelector"
+              className="flex items-center gap-2"
+            >
               <CalendarIcon size={16} />
               {date?.from ? (
                 date.to ? (
-                  // Use intl.formatDate for date range display
+                  // Use helper function for date range display
                   <>
-                    {intl.formatDate(date.from, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}{" "}
-                    -{" "}
-                    {intl.formatDate(date.to, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {formatShortDateWithCapitalMonth(date.from)} -{" "}
+                    {formatShortDateWithCapitalMonth(date.to)}
                   </>
                 ) : (
-                  // Use intl.formatDate for single date display
-                  intl.formatDate(date.from, {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })
+                  // Use helper function for single date display
+                  formatShortDateWithCapitalMonth(date.from)
                 )
               ) : (
                 // Use translation for placeholder

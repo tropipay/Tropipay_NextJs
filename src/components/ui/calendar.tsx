@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useIntl } from "react-intl"
+import { format } from "date-fns" // Import format
 import { es, enUS } from "date-fns/locale"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
@@ -31,7 +32,7 @@ function Calendar({
 
   return (
     <DayPicker
-      locale={dateFnsLocale} // Add locale prop
+      locale={dateFnsLocale} // Use original locale
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
@@ -75,6 +76,23 @@ function Calendar({
         IconRight: ({ className, ...props }) => (
           <ChevronRight className={cn("h-4 w-4", className)} {...props} />
         ),
+        // Add custom CaptionLabel component
+        CaptionLabel: ({ displayMonth }) => {
+          // Remove ...options
+          // Use dateFnsLocale from the outer scope
+          const monthName = format(displayMonth, "LLLL", {
+            locale: dateFnsLocale,
+          })
+          const year = format(displayMonth, "yyyy", { locale: dateFnsLocale })
+          // Capitalize the first letter of the month name
+          const capitalizedMonth =
+            monthName.charAt(0).toUpperCase() + monthName.slice(1)
+          return (
+            <div className="text-sm font-medium">
+              {capitalizedMonth} {year}
+            </div>
+          )
+        },
       }}
       {...props}
     />
