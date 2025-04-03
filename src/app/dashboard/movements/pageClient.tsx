@@ -20,6 +20,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const MovementDetailContainer = ({ row }: { row: any }) => (
     <DataComponent
       key={queryConfig.key}
+      showLoading
       {...{
         queryConfig,
         searchParams: { id: row.id },

@@ -1,4 +1,4 @@
-export const accounts: UserBusinessAccount[] = [
+export const accountsMock: UserBusinessAccount[] = [
   {
     id: 562,
     accountNumber: "IJ7V-GHCA-SV3I-01RA-40J2",
