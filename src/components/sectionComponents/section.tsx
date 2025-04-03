@@ -2,7 +2,7 @@ import React from "react"
 import { Card, CardContent } from "../ui/card"
 
 type SectionProps = {
-  title: string
+  title: string | React.ReactNode
   children: React.ReactNode
 }
 
@@ -13,7 +13,11 @@ export function Section({ title, children }: SectionProps): JSX.Element | null {
   // Verificamos si algún Info tiene un value con contenido
   const hasValues = childrenArray.some((child) => {
     if (React.isValidElement(child) && child.props.value) {
-      return child.props.value.trim() !== "" // Chequea si value no está vacío
+      return (
+        (typeof child.props.value === "string" &&
+          child.props.value.trim() !== "") ||
+        !!child.props.value
+      ) // Chequea si value no está vacío
     }
     return false
   })

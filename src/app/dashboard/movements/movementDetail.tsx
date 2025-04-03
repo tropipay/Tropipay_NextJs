@@ -12,10 +12,38 @@ import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
-  const row = props.data.data.movements.items[0]
+  const row: MovementDetail = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
-  console.log("row:", row)
+  const {
+    email,
+    fee,
+    movementDetail: {
+      amount,
+      state,
+      bankOrderCode,
+      createdAt,
+      completedAt,
+      type,
+      product,
+      concept,
+      clientAddress,
+      conversionRate,
+      netAmount,
+      cardType,
+      cardPan,
+      cardExpirationDate,
+      cardCountry,
+      clientIp,
+      recipientData: { alias, name, account, country },
+      senderData: {
+        name: senderName,
+        email: senderEmail,
+        country: senderCountry,
+      },
+    },
+  } = row
+
   const onDownloadInvoiceFile = async () => {
     try {
       const response = await fetch(
@@ -41,142 +69,128 @@ export default function MovementDetail(props: any): JSX.Element {
   }
 
   return (
-    <>
-      <div className="max-w-md mx-auto p-4">
-        <div className="flex justify-between items-center mb-3">
-          <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {row.movementDetail.amount.value > 0 ? "+" : ""}
-            {formatAmount(
-              row.movementDetail.amount.value,
-              row.movementDetail.amount.currency,
-              "right"
-            )}
-          </div>
-          <FacetedBadge
-            value={row.state}
-            optionList={movementStates}
-            optionListGroups={movementStateGroups}
-          />
+    <div className="max-w-md mx-auto p-4">
+      <div className="flex justify-between items-center mb-3">
+        <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
+          {amount.value > 0 ? "+" : ""}
+          {formatAmount(amount.value, amount.currency, "right")}
         </div>
-        <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500"> {row.bankOrderCode}</p>
+        <FacetedBadge
+          value={state}
+          optionList={movementStates}
+          optionListGroups={movementStateGroups}
+        />
+      </div>
+      <div className="flex justify-between items-center mb-4 pb-1">
+        <p className="text-xs text-gray-500"> {bankOrderCode}</p>
+        {completedAt && (
           <p className="text-xs text-gray-500">
-            {row.movementDetail.completedAt &&
-              format(
-                new Date(row.movementDetail.completedAt),
-                "dd/MM/yy HH:mm"
-              )}
+            {format(new Date(completedAt), "dd/MM/yy HH:mm")}
           </p>
-        </div>
-        <Section title="Datos del movimiento">
-          <Info label="Tipo" value={row.movementDetail.type} />
-          <Info label="Producto" value={row.product} />
-          <Info label="Concepto" value={row.movementDetail.concept} />
-        </Section>
+        )}
+      </div>
+      <Section title={<FormattedMessage id="movement_data" />}>
+        <Info
+          label={<FormattedMessage id="type" />}
+          value={<FormattedMessage id={`mt_${type}`} />}
+        />
+        <Info label={<FormattedMessage id="product" />} value={product} />
+        <Info label={<FormattedMessage id="concept" />} value={concept} />
+      </Section>
 
-        <Section title="Datos del beneficiario">
-          <Info label="Alias" value={row.movementDetail.recipientData.alias} />
-          <Info label="Nombre" value={row.movementDetail.recipientData.name} />
-          <Info
-            label="Cuenta"
-            value={row.movementDetail.recipientData.account}
-          />
-          <Info label="Mail" value={row.email} />
-          <Info label="País destino" value="******** FALTA PAIS" />
-        </Section>
+      <Section title={<FormattedMessage id="beneficiary_data" />}>
+        <Info label={<FormattedMessage id="alias" />} value={alias} />
+        <Info label={<FormattedMessage id="name" />} value={name} />
+        <Info label={<FormattedMessage id="account" />} value={account} />
+        <Info label={<FormattedMessage id="email" />} value={email} />
+        <Info label={<FormattedMessage id="country" />} value={country} />
+      </Section>
 
-        <Section title="Datos del remitente">
-          <Info label="Nombre" value={row.movementDetail.senderData.name} />
-          <Info label="Mail" value={row.movementDetail.senderData.email} />
-          <Info label="Dirección" value={row.movementDetail.clientAddress} />
-          <Info label="País" value="******** FALTA PAIS" />
-        </Section>
+      <Section title={<FormattedMessage id="sender_data" />}>
+        <Info label={<FormattedMessage id="name" />} value={senderName} />
+        <Info label={<FormattedMessage id="email" />} value={senderEmail} />
+        <Info label={<FormattedMessage id="address" />} value={clientAddress} />
+        <Info label={<FormattedMessage id="country" />} value={senderCountry} />
+      </Section>
 
-        <Section title="Importes">
+      <Section title={<FormattedMessage id="imports" />}>
+        <Info
+          label={<FormattedMessage id="import" />}
+          value={formatAmount(amount.value, amount.currency, "right")}
+        />
+        {conversionRate && fee && amount.currency !== fee.currency && (
           <Info
-            label="Importe"
-            value={formatAmount(
-              row.movementDetail.amount.value,
-              row.movementDetail.amount.currency,
-              "right"
-            )}
+            label={<FormattedMessage id="conversionRate" />}
+            value={`1 EUR = ${conversionRate} ${amount.currency}`}
           />
+        )}
+        {fee && (
           <Info
-            label="Tasa de cambio"
-            value={
-              row.movementDetail.conversionRate &&
-              row.movementDetail.amount.currency !== row.fee.currency &&
-              `1 EUR = ${row.movementDetail.conversionRate} ${row.movementDetail.amount.currency}`
-            }
+            label={<FormattedMessage id="fee" />}
+            value={formatAmount(fee.value, fee.currency, "right")}
           />
-          <Info
-            label="Comisión"
-            value={formatAmount(row.fee.value, row.fee.currency, "right")}
-          />
-          <Info
-            label="Neto"
-            value={`${formatAmount(
-              row.movementDetail.netAmount.value,
-              row.movementDetail.netAmount.currency,
-              "right"
-            )}`}
-          />
-        </Section>
+        )}
+        <Info
+          label={<FormattedMessage id="netAmount" />}
+          value={`${formatAmount(
+            netAmount.value,
+            netAmount.currency,
+            "right"
+          )}`}
+        />
+      </Section>
 
-        <Section title="Método de pago">
-          {/* LISTOOOOOOOOOOOOOOOOO */}
-          <Info label="Tipo" value={row.movementDetail.cardType} />
-          <Info label="Cuenta" value="******** FALTA CUENTA" />
-          <Info label="Pan de la tarjeta" value={row.movementDetail.cardPan} />
+      <Section title={<FormattedMessage id="payment_method" />}>
+        <Info label={<FormattedMessage id="cardType" />} value={cardType} />
+        <Info
+          label={<FormattedMessage id="account" />}
+          value="******** FALTA CUENTA"
+        />
+        <Info
+          label={<FormattedMessage id="cardPan" />}
+          value={`**** ${cardPan}`}
+        />
+        {cardExpirationDate && (
           <Info
-            label="Fecha de vencimiento"
-            value={
-              row.movementDetail.cardExpirationDate &&
-              format(
-                new Date(row.movementDetail.cardExpirationDate),
-                "dd/MM/yy"
-              )
-            }
+            label={<FormattedMessage id="cardExpirationDate" />}
+            value={format(cardExpirationDate, "dd/MM/yy")}
           />
-          <Info
-            label="País de tarjeta"
-            value={row.movementDetail.cardCountry}
-          />
-          <Info label="IP del pago" value={row.movementDetail.clientIp} />
-        </Section>
+        )}
+        <Info
+          label={<FormattedMessage id="cardCountry" />}
+          value={cardCountry}
+        />
+        <Info label={<FormattedMessage id="clientIp" />} value={clientIp} />
+      </Section>
 
-        <Section title="Cronograma">
-          {/* LISTOOOOOOOOOOOOOOOOO */}
+      <Section title={<FormattedMessage id="schedule" />}>
+        {createdAt && (
           <Info
-            label="Fecha de creación"
-            value={
-              row.movementDetail.createdAt &&
-              format(new Date(row.movementDetail.createdAt), "dd/MM/yy")
-            }
+            label={<FormattedMessage id="createdAt" />}
+            value={format(new Date(createdAt), "dd/MM/yy")}
           />
+        )}
+        {completedAt && (
           <Info
-            label="Fecha valor"
-            value={
-              row.movementDetail.completedAt &&
-              format(new Date(row.movementDetail.completedAt), "dd/MM/yy")
-            }
+            label={<FormattedMessage id="completedAt" />}
+            value={format(new Date(completedAt), "dd/MM/yy")}
           />
-        </Section>
+        )}
+      </Section>
 
-        <div className="flex mt-4 gap-4">
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={onDownloadInvoiceFile}
-          >
-            <FormattedMessage id="download" />
-          </Button>
-          {/*           <Button variant="default" className="w-1/2">
+      <div className="flex mt-4 gap-4">
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={onDownloadInvoiceFile}
+        >
+          <FormattedMessage id="download" />
+        </Button>
+        {/*           <Button variant="default" className="w-1/2">
             <FormattedMessage id="refound" />
           </Button>
  */}
-        </div>
       </div>
-    </>
+    </div>
   )
 }

@@ -1,10 +1,10 @@
 import { setFilters } from "@/lib/utils"
+import { chargesColumns } from "./charges/chargesColumns"
+import { chargesColumnsDef } from "./charges/chargesColumnsDef"
 import { movementsColumns } from "./movements/movementsColumns"
 import { movementsColumnsDef } from "./movements/movementsColumnsDef"
 import { movementsDetailColumns } from "./movementsDetail/movementsDetailColumns"
 import { movementsDetailColumnsDef } from "./movementsDetail/movementsDetailColumnsDef"
-import { paymentsColumns } from "./payments/paymentsColumns"
-import { paymentsColumnsDef } from "./payments/paymentsColumnsDef"
 import { FetchDataConfig } from "./types"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
@@ -111,20 +111,20 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     filters: setFilters(movementsDetailColumnsDef),
     staleTime: 5 * 60 * 1000,
   },
-  payments: {
-    key: "payments",
-    url: `/api/v3/payments/business`,
+  charges: {
+    key: "charges",
+    url: `/api/v3/movements/business/charges`,
     method: "POST",
     body: {
-      query: `query GetPayments($filter: PaymentFilter, $pagination: PaginationInput) {
-        payments(filter: $filter, pagination: $pagination) {
+      query: `query GetCharges($filter: ChargeFilter, $pagination: PaginationInput) {
+        charges(filter: $filter, pagination: $pagination) {
           items {
           id
           $FIELDS }
             totalCount
           }
         }`,
-      operationName: "GetPayments",
+      operationName: "GetCharges",
       variables: {
         filter: {},
         pagination: {
@@ -133,9 +133,80 @@ export const apiConfig: Record<string, FetchDataConfig> = {
         },
       },
     },
-    columns: paymentsColumns,
-    columnsDef: JSON.parse(JSON.stringify(paymentsColumnsDef)),
-    filters: setFilters(paymentsColumnsDef),
+    columns: chargesColumns,
+    columnsDef: JSON.parse(JSON.stringify(chargesColumnsDef)),
+    filters: setFilters(chargesColumnsDef),
+    staleTime: 5 * 60 * 1000,
+  },
+  chargesDetail: {
+    key: "chargesDetail",
+    url: `/api/v3/movements/business/charges`,
+    method: "POST",
+    body: {
+      query: `query GetCharges($filter: ChargeFilter, $pagination: PaginationInput) {
+        movements(filter: $filter, pagination: $pagination) {
+          items {
+            id
+            state
+            bankOrderCode
+       			fee {
+              value
+              currency
+            }
+            email
+            movementDetail {
+              amount{
+                currency
+                value
+              }
+              cardCountry
+              cardExpirationDate
+              cardPan
+              cardType
+              chargedAmount{
+                currency
+                value
+              }
+              clientAddress
+              clientIp
+              completedAt
+              concept
+              conversionRate
+              createdAt
+              netAmount {
+                value
+                currency
+              }
+              recipientData{
+                alias
+                name
+                account
+              }
+              senderData {
+                name
+                lastName
+                email
+              }
+              type
+            }	
+            sender
+            product
+          }
+          totalCount
+        }
+      }`,
+      operationName: "GetCharges",
+      variables: {
+        filter: {},
+        pagination: {
+          limit: 50,
+          offset: 0,
+        },
+      },
+    },
+    columns: chargesColumns,
+    columnsDef: JSON.parse(JSON.stringify(chargesColumnsDef)),
+    filters: setFilters(chargesColumnsDef),
     staleTime: 5 * 60 * 1000,
   },
 }

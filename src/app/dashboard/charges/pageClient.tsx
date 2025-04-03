@@ -1,31 +1,33 @@
 "use client"
 
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import { chargesMock } from "@/app/queryDefinitions/charges/chargesMock"
 import DataComponent from "@/components/DataComponent"
 import DataTable from "@/components/table/dataTable"
 import { useSession } from "next-auth/react"
-import MovementDetail from "./movementDetail"
+import ChargeDetail from "./chargeDetail"
 
 interface Props {
   tableId: string
   columns: any
-  data?: GetMovementsResponse
+  data?: GetChargesResponse
 }
 
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const queryConfig = apiConfig.movementsDetail
+  const queryConfig = apiConfig.chargesDetail
 
-  const MovementDetailContainer = ({ row }: { row: any }) => (
+  const ChargeDetailContainer = ({ row }: { row: any }) => (
     <DataComponent
       key={queryConfig.key}
       {...{
         queryConfig,
         searchParams: { id: row.id },
+        mockData: { data: { charges: chargesMock } },
       }}
     >
-      <MovementDetail />
+      <ChargeDetail />
     </DataComponent>
   )
 
@@ -37,11 +39,11 @@ const PageClient = ({ tableId, columns, data }: Props) => {
             tableId,
             userId,
             columns,
-            data: data?.data?.movements?.items ?? [],
-            rowCount: data?.data?.movements?.totalCount ?? 0,
-            categoryFilterId: "movementDirection",
-            categoryFilters: ["ALL", "IN", "OUT"],
-            rowClickChildren: MovementDetailContainer,
+            data: data?.data?.charges?.items ?? [],
+            rowCount: data?.data?.charges?.totalCount ?? 0,
+            categoryFilterId: "state",
+            categoryFilters: ["ALL", "caught", "declined"],
+            rowClickChildren: ChargeDetailContainer,
           }}
         />
       )}

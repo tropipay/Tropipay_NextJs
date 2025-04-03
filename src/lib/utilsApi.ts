@@ -209,10 +209,7 @@ export const generateQueryFields = (
   return activeColumns
     .map((columnKey) => {
       const column = columns[columnKey]
-      if (column && column.field) {
-        return column.field
-      }
-      return null
+      return column.field ?? columnKey
     })
     .filter(Boolean) // Filtra los valores nulos
     .join("\n") // Une los campos con un salto de línea

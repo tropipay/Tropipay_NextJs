@@ -1,5 +1,4 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import { paymentsMock } from "@/app/queryDefinitions/payments/paymentsMock"
 import DataFull from "@/components/DataFull"
 import PageClient from "./pageClient"
 
@@ -8,7 +7,7 @@ interface Props {
 }
 
 export default async function Page({ searchParams }: Props) {
-  const { payments: queryConfig } = apiConfig
+  const { charges: queryConfig } = apiConfig
   const { columns, key } = queryConfig
 
   return (
@@ -16,7 +15,6 @@ export default async function Page({ searchParams }: Props) {
       {...{
         queryConfig,
         searchParams,
-        mockData: { data: { payments: paymentsMock } },
       }}
     >
       <PageClient
