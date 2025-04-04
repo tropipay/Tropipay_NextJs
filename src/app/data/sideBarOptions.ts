@@ -36,7 +36,13 @@ export const sideBarOptions: SidebarOption[] = [
   },
   {
     title: "reports",
-    url: "#",
+    url: "",
     icon: ScrollText,
+    items: [
+      {
+        title: "balance_summary",
+        url: "/dashboard/reports",
+      },
+    ],
   },
 ]
