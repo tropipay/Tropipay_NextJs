@@ -40,9 +40,9 @@ export default function Page() {
     setLoading(false)
   }
 
-  const onOk = () => {
-    // Implement back to Tropipay page ...
-  }
+  const onOk = () => 
+    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
+  
 
   useEffect(() => {
     onLogin()

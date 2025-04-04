@@ -8,6 +8,7 @@ export function useFetchData<T>({
   queryConfig,
   dehydratedState,
   urlParams,
+  enabled = true,
 }: any): UseQueryResult<T> {
   const QueryKey = generateHashedKey(queryConfig.key, urlParams)
   const filters = queryConfig.filters
@@ -34,6 +35,6 @@ export function useFetchData<T>({
       (q: any) => q.queryKey[0][0] === QueryKey
     )?.state?.data,
     staleTime: queryConfig.staleTime ?? 20 * 60 * 1000,
-    enabled: !!token,
+    enabled: !!token && enabled,
   })
 }

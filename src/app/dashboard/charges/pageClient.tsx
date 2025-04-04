@@ -1,7 +1,6 @@
 "use client"
 
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import { chargesMock } from "@/app/queryDefinitions/charges/chargesMock"
 import DataComponent from "@/components/DataComponent"
 import DataTable from "@/components/table/dataTable"
 import { useSession } from "next-auth/react"
@@ -21,10 +20,11 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const ChargeDetailContainer = ({ row }: { row: any }) => (
     <DataComponent
       key={queryConfig.key}
+      showLoading
       {...{
         queryConfig,
         searchParams: { id: row.id },
-        mockData: { data: { charges: chargesMock } },
+        // mockData: { data: { charges: chargesMock } },
       }}
     >
       <ChargeDetail />
@@ -42,7 +42,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
             data: data?.data?.charges?.items ?? [],
             rowCount: data?.data?.charges?.totalCount ?? 0,
             categoryFilterId: "state",
-            categoryFilters: ["ALL", "caught", "declined"],
+            categoryFilters: ["ALL", "CAPTURED", "DECLINED"],
             rowClickChildren: ChargeDetailContainer,
           }}
         />
