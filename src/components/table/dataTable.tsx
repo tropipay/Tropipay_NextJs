@@ -449,7 +449,7 @@ export default function DataTable<TData, TValue>({
           </SheetHeader>
           <SheetContent className="min-w-[500px]">
             <div className="pt-2">
-              <div className="mt-6 max-h-[90vh] overflow-y-auto">
+              <div className="mt-6 h-screen overflow-y-auto">
                 {selectedRow && RowClickChildren && (
                   <RowClickChildren row={selectedRow} />
                 )}

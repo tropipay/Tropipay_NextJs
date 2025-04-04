@@ -144,53 +144,26 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     method: "POST",
     body: {
       query: `query GetCharges($filter: ChargeFilter, $pagination: PaginationInput) {
-        movements(filter: $filter, pagination: $pagination) {
+        charges(filter: $filter, pagination: $pagination) {
           items {
             id
-            state
-            bankOrderCode
-       			fee {
+            amount {
               value
               currency
             }
+            state
+            createdAt
+            completedAt
+            fullName
+            paymentMethod
+            cardBin
+            cardPan
+            reference
+            errorCode
             email
-            movementDetail {
-              amount{
-                currency
-                value
-              }
-              cardCountry
-              cardExpirationDate
-              cardPan
-              cardType
-              chargedAmount{
-                currency
-                value
-              }
-              clientAddress
-              clientIp
-              completedAt
-              concept
-              conversionRate
-              createdAt
-              netAmount {
-                value
-                currency
-              }
-              recipientData{
-                alias
-                name
-                account
-              }
-              senderData {
-                name
-                lastName
-                email
-              }
-              type
-            }	
-            sender
-            product
+            address
+            country          
+            cardCountry
           }
           totalCount
         }
