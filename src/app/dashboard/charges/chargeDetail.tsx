@@ -96,10 +96,12 @@ export default function ChargeDetail(props: any): JSX.Element {
           label={<FormattedMessage id="paymentMethod" />}
           value={<FormattedMessage id={`pm_${paymentMethod}`} />}
         />
-        <Info
-          label={<FormattedMessage id="cardBin" />}
-          value={`${cardBin} **** `}
-        />
+        {cardBin && (
+          <Info
+            label={<FormattedMessage id="cardBin" />}
+            value={`${cardBin} **** `}
+          />
+        )}
         <Info label={<FormattedMessage id="reference" />} value={reference} />
         <Info label={<FormattedMessage id="errorCode" />} value={errorCode} />
       </Section>
@@ -112,10 +114,12 @@ export default function ChargeDetail(props: any): JSX.Element {
       </Section>
 
       <Section title={<FormattedMessage id="payment_method" />}>
-        <Info
-          label={<FormattedMessage id="cardPan" />}
-          value={`**** ${cardPan}`}
-        />
+        {cardPan && (
+          <Info
+            label={<FormattedMessage id="cardPan" />}
+            value={`**** ${cardPan}`}
+          />
+        )}
         {cardExpirationDate && (
           <Info
             label={<FormattedMessage id="cardExpirationDate" />}

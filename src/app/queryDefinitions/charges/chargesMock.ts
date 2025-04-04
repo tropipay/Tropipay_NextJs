@@ -1,6 +1,33 @@
 export const chargesMock: ApiDataResponse<Charge> = {
   items: [
     {
+      id: "M422912",
+      amount: {
+        value: 758,
+        currency: "USD",
+      },
+      state: "CAPTURED",
+      createdAt: "2024-11-14T21:00:45.926Z",
+      completedAt: "2024-11-14T21:00:56.162Z",
+      fullName: "Developers Tropi",
+      paymentMethod: "INTERNAL",
+      cardBin: null,
+      cardPan: null,
+      reference: "TX1731618045913943",
+      errorCode: null,
+      email: "developers@tropipay.com",
+      address: null,
+      country: "CU",
+      cardCountry: null,
+      //
+      product: "QR",
+      issuerBank: "BBVA",
+      cardType: "Creditcard",
+      currency: "USD",
+      cardExpirationDate: "2026-01-13T23:33:41.446Z",
+      clientIp: "225.230.230.4",
+    },
+    {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e1",
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-13T23:33:41.446Z",
