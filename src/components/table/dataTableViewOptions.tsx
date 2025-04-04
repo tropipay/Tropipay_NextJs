@@ -45,6 +45,8 @@ export function DataTableViewOptions<TData>({
           typeof column.accessorFn !== "undefined" &&
           column.getCanHide() && // Solo incluir columnas que se pueden ocultar
           // @ts-ignore
+          !column.columnDef.hideColumn &&
+          // @ts-ignore
           !column.columnDef.meta?.hidden
       )
       .map((column) => ({
@@ -115,7 +117,7 @@ export function DataTableViewOptions<TData>({
           <FormattedMessage id="show_columns" />
         </TooltipContent>
       </Tooltip>
-      <PopoverContent className="w-[250px] p-0" align="start">
+      <PopoverContent className="w-[270px] p-0" align="start">
         <Command>
           <CommandInput placeholder={t("search_columns")} />
           <CommandList>

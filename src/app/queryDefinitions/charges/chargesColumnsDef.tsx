@@ -3,48 +3,50 @@ import {
   chargeStates,
   chargeStatesGroups,
 } from "@/app/filterDefinitions/charges"
+import { currencyTypes } from "@/app/filterDefinitions/commons"
 import { movementsPaymentMethods } from "@/app/filterDefinitions/movements"
 
 export const chargesColumnsDef: any = {
+  createdAt: {
+    type: "date",
+    showFilter: true,
+    size: 120,
+    order: 0,
+  },
   amount: {
     type: "amount",
     showFilter: true,
-    order: 0,
+    order: 1,
     field: `amount { value currency }`,
+  },
+  paymentMethod: {
+    type: "faceted",
+    optionList: movementsPaymentMethods,
+    size: 220,
+    order: 2,
   },
   state: {
     type: "facetedBadge",
     optionList: chargeStates,
     optionListGroups: chargeStatesGroups,
     showFilter: true,
-    order: 1,
-  },
-  createdAt: {
-    type: "date",
-    showFilter: true,
-    size: 120,
-    order: 2,
-  },
-  paymentMethod: {
-    type: "faceted",
-    optionList: movementsPaymentMethods,
-    size: 220,
     order: 3,
   },
   reference: {
     order: 4,
+    showFilter: true,
+  },
+  email: {
+    order: 5,
+    showFilter: true,
   },
   concept: {
-    showFilter: true,
     hidden: true,
   },
   bankOrderCode: {
     hidden: true,
   },
   summary: {
-    hidden: true,
-  },
-  email: {
     hidden: true,
   },
   // cardBin: {
@@ -60,16 +62,19 @@ export const chargesColumnsDef: any = {
   },
   fullName: {
     hidden: true,
+    render: (value: string) => <span className="uppercase">{value}</span>,
   },
   issuerBank: {
     hidden: true,
   },
   errorCode: {
+    hidden: true,
     order: 5,
   },
   product: {
     type: "faceted",
     optionList: chargeProductTypes,
+    hidden: true,
     order: 6,
   },
   // country: {
@@ -79,11 +84,13 @@ export const chargesColumnsDef: any = {
     hidden: true,
   },
   currency: {
+    type: "faceted",
+    hideColumn: true,
     hidden: true,
+    optionList: currencyTypes,
   },
   completedAt: {
     type: "date",
-    showFilter: true,
     size: 120,
     hidden: true,
   },

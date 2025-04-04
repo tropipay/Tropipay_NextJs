@@ -112,13 +112,13 @@ export function DataTableFilterFaceted<TData, TValue>({
               <Separator orientation="vertical" className="h-4 separator" />
               <div className="space-x-1 lg:flex">
                 {truncateLabels(
-                  Array.from(selectedValues)
-                    .map(
-                      (value) =>
-                        optionList.find((option: any) => option.value === value)
-                          ?.label || value
+                  Array.from(selectedValues).map((value) => {
+                    const option = optionList.find(
+                      ({ label, value: optionValue }) =>
+                        optionValue === value && !!label
                     )
-                    .map((label) => t(label))
+                    return option ? t(option.label) : value
+                  })
                 )}
               </div>
             </>
@@ -137,7 +137,7 @@ export function DataTableFilterFaceted<TData, TValue>({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[280px] p-0" align="start">
+      <PopoverContent className="w-[285px] p-0" align="start">
         <Command>
           <CommandInput placeholder={t(filterLabel)} />
           <CommandList className="px-2 pt-2">
@@ -165,7 +165,11 @@ export function DataTableFilterFaceted<TData, TValue>({
                     </div>
                     {Icon && <Icon className="ml-0 h-4 w-4" />}
                     <span>
-                      <FormattedMessage id={option.label} />
+                      {option.label ? (
+                        <FormattedMessage id={option.label} />
+                      ) : (
+                        option.value
+                      )}
                     </span>
                     {facets?.get(option.value) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
