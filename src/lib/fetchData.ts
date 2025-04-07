@@ -4,6 +4,13 @@ import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 import { getUserSettingsServer } from "./utilsServer"
 
+/**
+ * Fetches data from the API.
+ * @param {QueryClient} queryClient The TanStack Query client.
+ * @param {FetchDataConfig} queryConfig The query configuration.
+ * @param {any} urlParams The URL parameters.
+ * @returns {Promise<T>} The data fetched from the API.
+ */
 export async function fetchData<T>(
   queryClient: QueryClient,
   queryConfig: FetchDataConfig,

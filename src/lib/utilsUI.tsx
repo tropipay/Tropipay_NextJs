@@ -1,4 +1,4 @@
-import { toast } from "@/hooks/use-toast"
+import { toast } from "@/hooks/useToast"
 import { CircleX, Info, TriangleAlert } from "lucide-react"
 
 type IconMessageType = "info" | "warn" | "error"

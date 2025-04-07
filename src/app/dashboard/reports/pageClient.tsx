@@ -1,17 +1,18 @@
 "use client"
 
 import { RowData } from "@/components/rowData/rowData"
-import React from "react"
-import InformationToolbar from "./informationToolbar"
-import { Button } from "@/components/ui/button"
 import { FormattedMessage } from "react-intl" // Importar FormattedMessage
-import html2pdf from "html2pdf.js" // Importar html2pdf
+import InformationToolbar from "./informationToolbar"
+
+const isBrowser = typeof window !== undefined
 
 const pageClient = () => {
-  const handleDownload = () => {
+  const handleDownload = async () => {
     console.log("DOWNLOAAAAAAAAAAAAD:")
     const element = document.querySelector(".report-container")
-    if (element) {
+
+    if (isBrowser && element) {
+      const { default: html2pdf } = await import("html2pdf.js")
       const opt = {
         margin: 1,
         filename: "reporte_tropipay.pdf",
