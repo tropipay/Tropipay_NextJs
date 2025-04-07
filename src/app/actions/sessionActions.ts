@@ -1,9 +1,18 @@
 "use server"
 
 import { signIn } from "@/auth"
+import { deleteAuthSessionCookies } from "@/lib/utilsServer"
 
-export const login = async (token: string) =>
-  await signIn("credentials", {
+/**
+ * sign in with Next Auth.
+ * All authentication cookies are previously deleted.
+ * @param token Authentication token.
+ */
+export const login = async (token: string) => {
+  await deleteAuthSessionCookies()
+
+  return await signIn("credentials", {
     redirect: false,
     token,
   })
+}

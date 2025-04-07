@@ -5,6 +5,18 @@ import { isTokenExpired } from "./lib/utils"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]
+const systemRoutes = ["/dashboard"]
+
+/**
+ * Returns the route to redirect after authentication in Tropipay.
+ * If it is not a system route, it returns the base route or origin of the application.
+ * @param path middleware next request path.
+ * @param origin Application origin.
+ */
+const getRedirectRoute = (path: string, origin: string) =>
+  systemRoutes.some((route) => path.startsWith(route))
+    ? `${origin}?redirect=${path}`
+    : origin
 
 export async function middleware(req: NextRequest) {
   const session = await auth()
@@ -17,7 +29,15 @@ export async function middleware(req: NextRequest) {
 
   if (isProtectedRoute && isTokenExpired(token)) {
     return NextResponse.redirect(
-      new URL(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`, req.nextUrl)
+      new URL(
+        `${
+          process.env.NEXT_PUBLIC_TROPIPAY_HOME
+        }/login?redirect=${getRedirectRoute(
+          req.nextUrl.pathname,
+          req.nextUrl.origin
+        )}`,
+        req.nextUrl
+      )
     )
   }
 

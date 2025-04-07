@@ -1,5 +1,12 @@
 import { cookies } from "next/headers"
 
+/**
+ * Get the user settings stored in a cookie in server side.
+ * @param userId User identifier.
+ * @param defaultValue Default value.
+ * @param tableId Table identifier.
+ * @param sectionId Configuration section identifier.
+ */
 export async function getUserSettingsServer(
   userId: string,
   defaultValue: any = null,
@@ -29,4 +36,16 @@ export async function getUserSettingsServer(
   }
 
   return settings[tableId][sectionId] || defaultValue
+}
+
+/**
+ * Delete all authentication cookies.
+ */
+export const deleteAuthSessionCookies = async () => {
+  const cookieStore = await cookies()
+  cookieStore
+    .getAll()
+    .filter(({ name }) => name.startsWith("authjs"))
+    .map(({ name }) => name)
+    .forEach((key) => cookieStore.delete(key))
 }

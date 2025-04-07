@@ -1,6 +1,5 @@
 "use client"
 
-import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { useFetchData } from "@/lib/useFetchData"
 import { DehydratedState } from "@tanstack/react-query"
 import { AlertTriangle, Loader2 } from "lucide-react"

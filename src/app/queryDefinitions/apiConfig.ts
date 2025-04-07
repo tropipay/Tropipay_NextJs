@@ -5,7 +5,6 @@ import { movementsColumns } from "./movements/movementsColumns"
 import { movementsColumnsDef } from "./movements/movementsColumnsDef"
 import { movementsDetailColumns } from "./movementsDetail/movementsDetailColumns"
 import { movementsDetailColumnsDef } from "./movementsDetail/movementsDetailColumnsDef"
-import { FetchDataConfig } from "./types"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
   accounts: {
@@ -51,7 +50,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
             id
             state
             bankOrderCode
-       			fee {
+            fee {
               value
               currency
             }
@@ -90,7 +89,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
                 email
               }
               type
-            }	
+            }
             sender
             product
           }
@@ -162,7 +161,7 @@ export const apiConfig: Record<string, FetchDataConfig> = {
             errorCode
             email
             address
-            country          
+            country
             cardCountry
           }
           totalCount

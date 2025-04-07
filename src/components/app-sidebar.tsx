@@ -1,7 +1,7 @@
 "use client"
 
 import { sideBarOptions } from "@/app/data/sideBarOptions"
-import { accountsMock } from "@/app/queryDefinitions/accounts/accounts"
+import { accountsMock } from "@/app/queryDefinitions/accounts/accountsMock"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"

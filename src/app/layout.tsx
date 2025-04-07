@@ -1,9 +1,10 @@
 import IntlWrapper from "@/components/intl/wrapper"
 import TanstackProvider from "@/components/TanstackProvider"
+import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
+import { Suspense } from "react"
 import "./globals.css"
-import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: "Tropipay Business",
@@ -36,10 +37,12 @@ export default function RootLayout({ children }: ChildrenProps) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
-        <IntlWrapper>
-          <Toaster />
-          <TanstackProvider>{children}</TanstackProvider>
-        </IntlWrapper>
+        <Suspense>
+          <IntlWrapper>
+            <Toaster />
+            <TanstackProvider>{children}</TanstackProvider>
+          </IntlWrapper>
+        </Suspense>
       </body>
     </html>
   )

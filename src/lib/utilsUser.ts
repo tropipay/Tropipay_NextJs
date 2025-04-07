@@ -2,11 +2,19 @@ import { UserSettings } from "@/types/security/user"
 import { getSession } from "next-auth/react"
 import CookiesManager from "./cookiesManager"
 
+/**
+ * Get user session.
+ */
 export const getUser = async () => {
   const session = getSession()
   return await JSON.stringify(session)
 }
 
+/**
+ * Get the session token.
+ * @param session User session.
+ * @returns Authentication token.
+ */
 export const getTokenFromSession = (session?: any): string => {
   try {
     const {
@@ -19,6 +27,13 @@ export const getTokenFromSession = (session?: any): string => {
   }
 }
 
+/**
+ * Get the user settings stored in a cookie.
+ * @param userId User identifier.
+ * @param defaultValue Default value.
+ * @param tableId Table identifier.
+ * @param sectionId Configuration section identifier.
+ */
 export const getUserSettings = (
   userId: string,
   defaultValue: any = {},
@@ -48,6 +63,13 @@ export const getUserSettings = (
   return settings[tableId][sectionId] || defaultValue
 }
 
+/**
+ * Set a configuration from a user table settings stored in a cookie.
+ * @param userId User identifier.
+ * @param tableId Table identifier.
+ * @param sectionId Configuration section identifier.
+ * @param value value for storage.
+ */
 export const setUserSettings = (
   userId: string,
   value: any,
@@ -58,16 +80,16 @@ export const setUserSettings = (
   const updatedSettings = {}
 
   if (!tableId) {
-    // Si no se proporciona tableId, se reemplaza toda la configuración
+    // If tableId is not provided, the entire configuration is replaced.
     updatedSettings["tableColumnsSettings"] = value
   } else if (!sectionId) {
-    // Si no se proporciona sectionId, se actualiza la tabla completa
+    // If sectionId is not provided, the entire table is updated.
     updatedSettings["tableColumnsSettings"] = {
       ...currentSettings,
       [tableId]: value,
     }
   } else {
-    // Si se proporcionan tableId y sectionId, se actualiza solo la sección específica
+    // If both tableId and sectionId are provided, only the specific section is updated.
     updatedSettings["tableColumnsSettings"] = {
       ...currentSettings,
       [tableId]: {
@@ -77,6 +99,6 @@ export const setUserSettings = (
     }
   }
 
-  // Guardar la configuración actualizada en las cookies
+  // Save updated configuration in cookies.
   CookiesManager.getInstance().set(`userSettings-${userId}`, updatedSettings)
 }
