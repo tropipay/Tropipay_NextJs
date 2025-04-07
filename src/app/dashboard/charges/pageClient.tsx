@@ -24,7 +24,6 @@ const PageClient = ({ tableId, columns, data }: Props) => {
       {...{
         queryConfig,
         searchParams: { id: row.id },
-        // mockData: { data: { charges: chargesMock } },
       }}
     >
       <ChargeDetail />

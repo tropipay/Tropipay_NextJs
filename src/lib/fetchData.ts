@@ -1,4 +1,3 @@
-import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
 import { generateHashedKey } from "./utils"

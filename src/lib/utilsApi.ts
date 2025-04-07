@@ -1,4 +1,3 @@
-import { FetchDataConfig } from "@/app/queryDefinitions/types"
 import { format, parse } from "date-fns"
 import { fetchHeaders } from "./utils"
 
