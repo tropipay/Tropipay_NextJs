@@ -4,6 +4,11 @@ import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 import { getUserSettings } from "./utilsUser"
 
+/**
+ * A hook for fetching data from the API using TanStack Query.
+ * @param {any} { queryConfig, dehydratedState, urlParams, enabled = true }
+ * @returns {UseQueryResult<T>} The result of the query.
+ */
 export function useFetchData<T>({
   queryConfig,
   dehydratedState,

@@ -24,6 +24,10 @@ const actionTypes = {
 
 let count = 0
 
+/**
+ * Generates a unique ID for each toast.
+ * @returns {string} The unique ID.
+ */
 function genId() {
   count = (count + 1) % Number.MAX_SAFE_INTEGER
   return count.toString()
@@ -141,6 +145,11 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
+/**
+ * Function to create and display a toast notification.
+ * @param {Toast} props - The properties of the toast.
+ * @returns {{ id: string; dismiss: () => void; update: (props: ToasterToast) => void; }} An object containing the toast's ID, dismiss function, and update function.
+ */
 function toast({ ...props }: Toast) {
   const id = genId()
 
@@ -170,6 +179,10 @@ function toast({ ...props }: Toast) {
   }
 }
 
+/**
+ * Hook to manage toast notifications.
+ * @returns {{ toasts: ToasterToast[]; toast: ({ ...props }: Toast) => { id: string; dismiss: () => void; update: (props: ToasterToast) => void; }; dismiss: (toastId?: string | undefined) => void; }} An object containing the toasts, the toast function, and the dismiss function.
+ */
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState)
 

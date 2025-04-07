@@ -5,10 +5,14 @@ import { createHash } from "crypto"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
 
-// Definimos un tipo para una función de búsqueda que toma un parámetro `T` y devuelve un endpoint
+/**
+ * Defines a type for a fetch function that takes a parameter `T` and returns an endpoint.
+ */
 type FetchFunction<T extends any[]> = (...args: T) => { endpoint: string }
 
-// Tipo de configuración para `useQuery`
+/**
+ * Type configuration for `useQuery`.
+ */
 type QueryConfig<TData> = {
   queryKey: QueryKey
   queryFn: () => Promise<TData>
@@ -16,12 +20,20 @@ type QueryConfig<TData> = {
   staleTime?: number
 }
 
-// Función para combinar clases (cn)
+/**
+ * Function to combine classes (cn).
+ * @param inputs ClassValue[]
+ * @returns string
+ */
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs))
 }
 
-// Función para construir parámetros de consulta (queryParams)
+/**
+ * Function to build query parameters (queryParams).
+ * @param params Record<string, string | number | boolean> query parameters.
+ * @returns string
+ */
 const queryParams = (
   params: Record<string, string | number | boolean>
 ): string => {
@@ -30,7 +42,9 @@ const queryParams = (
     .join("&")
 }
 
-// Tipos para fetchGetData y headerData
+/**
+ * Types for fetchGetData and headerData.
+ */
 interface FetchGetData {
   endpoint: string
   isPublic?: boolean
@@ -46,7 +60,12 @@ export const fetchHeaders: Record<string, string> = {
   "Content-Type": "application/json",
 }
 
-// Función para hacer un fetch GET con triggers
+/**
+ * Function to make a fetch GET with triggers.
+ * @param {endpoint, isPublic, filter} FetchGetData
+ * @param headerData HeaderData
+ * @returns Promise<any>
+ */
 export const fetchGetWithTriggers = async (
   { endpoint, isPublic, filter }: FetchGetData,
   headerData: HeaderData = {}
@@ -92,6 +111,12 @@ export const fetchGetWithTriggers = async (
   }
 }
 
+/**
+ * Generates a hashed key from a string and an object.
+ * @param key string
+ * @param obj any
+ * @returns string
+ */
 export function generateHashedKey(key: string, obj: any): string {
   const sortedObj = Object.keys(obj)
     .sort()
@@ -103,6 +128,11 @@ export function generateHashedKey(key: string, obj: any): string {
   return `${key} | ${btoa(str)}`
 }
 
+/**
+ * Processes query parameters.
+ * @param searchParams Record<string, string>
+ * @returns Promise<Record<string, string>>
+ */
 export async function processQueryParameters(
   searchParams: Record<string, string>
 ) {
@@ -114,6 +144,11 @@ export async function processQueryParameters(
   }
 }
 
+/**
+ * Converts search parameters to an object.
+ * @param searchParams URLSearchParams
+ * @returns {[key: string]: string | string[]}
+ */
 export function searchParamsToObject(searchParams: URLSearchParams): {
   [key: string]: string | string[]
 } {
@@ -132,6 +167,14 @@ export function searchParamsToObject(searchParams: URLSearchParams): {
   return obj
 }
 
+/**
+ * Selects a style based on a condition.
+ * @param condition boolean
+ * @param classesTrue string
+ * @param classesFalse string
+ * @param commonStyle string
+ * @returns string
+ */
 export function selStyle(
   condition: boolean,
   classesTrue: string,
@@ -141,6 +184,13 @@ export function selStyle(
   return condition ? classesTrue : classesFalse
 }
 
+/**
+ * Formats an amount.
+ * @param amount number
+ * @param currency string
+ * @param position "left" | "right"
+ * @returns string
+ */
 export const formatAmount = (
   amount: number,
   currency: string = "",
@@ -166,6 +216,12 @@ export const formatAmount = (
   return formatter
 }
 
+/**
+ * Truncates labels.
+ * @param options string[]
+ * @param maxLength number
+ * @returns string
+ */
 export const truncateLabels = (
   options: string[],
   maxLength: number = 20
@@ -181,6 +237,12 @@ export const truncateLabels = (
 
 /* ---------------------------- */
 
+/**
+ * Sets the filter type.
+ * @param filter any
+ * @param type any
+ * @returns string | null
+ */
 export const setFilterType = (filter: any, type: any): string | null => {
   const filterTypeResult = {
     simpleText: "uniqueValue",
@@ -194,6 +256,11 @@ export const setFilterType = (filter: any, type: any): string | null => {
   return filterTypeResult[type]
 }
 
+/**
+ * Sets filters.
+ * @param columnsConfig Record<string, ColumnOptions<TData>>
+ * @returns ColumnDef<TData>[]
+ */
 export function setFilters<TData>(
   // @ts-expect-error
   columnsConfig: Record<string, ColumnOptions<TData>>
@@ -229,6 +296,11 @@ export function setFilters<TData>(
   })
 }
 
+/**
+ * Converts an object to a hash.
+ * @param obj any
+ * @returns any
+ */
 export function objToHash(obj) {
   const keys = Object.keys(obj)
     .filter((key) => obj[key] === true)
@@ -238,16 +310,24 @@ export function objToHash(obj) {
   return createHash("sha256").update(keys).digest("hex")
 }
 
+/**
+ * Converts an array to an array of IDs.
+ * @param arr ColumnConfig[]
+ * @param propertyName string
+ * @param value any | ((itemValue: any) => boolean)
+ * @param sortBy string | null
+ * @returns string[]
+ */
 export function toArrayId(
   arr: ColumnConfig[],
   propertyName: string,
   value: any | ((itemValue: any) => boolean),
   sortBy: string | null = null
 ): string[] {
-  // Crear una copia del array para no modificar el original
+  // Create a copy of the array to avoid modifying the original
   const processedArray: ColumnConfig[] = [...arr]
 
-  // Ordenar el array si se especifica un campo para ordenar
+  // Sort the array if a field to sort is specified
   if (sortBy) {
     processedArray.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) return -1
@@ -256,7 +336,7 @@ export function toArrayId(
     })
   }
 
-  // Filtrar el array según la condición
+  // Filter the array based on the condition
   const filteredArray = processedArray.filter((item) => {
     if (typeof value === "function") {
       return value(item[propertyName])
@@ -265,7 +345,7 @@ export function toArrayId(
     }
   })
 
-  // Extraer solo los 'id' de los objetos filtrados
+  // Extract only the 'id's' from the filtered objects
   return filteredArray.map((item) => item.id)
 }
 
@@ -274,16 +354,24 @@ type ColumnConfig = {
   [key: string]: any // Permite otras propiedades dinámicas
 }
 
+/**
+ * Converts an array to an active object.
+ * @param arr ColumnConfig[]
+ * @param propertyName string
+ * @param value any | ((itemValue: any) => boolean)
+ * @param sortBy string | null
+ * @returns Record<string, boolean>
+ */
 export function toActiveObject(
   arr: ColumnConfig[],
   propertyName: string,
   value: any | ((itemValue: any) => boolean),
   sortBy: string | null = null
 ): Record<string, boolean> {
-  // Crear una copia del array para no modificar el original
+  // Create a copy of the array to avoid modifying the original
   const processedArray: ColumnConfig[] = [...arr]
 
-  // Ordenar el array si se especifica un campo para ordenar
+  // Sort the array if a sort field is specified
   if (sortBy) {
     processedArray.sort((a, b) => {
       if (a[sortBy] < b[sortBy]) return -1
@@ -292,7 +380,7 @@ export function toActiveObject(
     })
   }
 
-  // Crear un objeto con los id como claves y valores booleanos basados en la condición
+  // Create an object with the IDs as keys and boolean values ​​based on the condition
   const result: Record<string, boolean> = {}
   processedArray.forEach((item) => {
     if (typeof value === "function") {
@@ -305,11 +393,16 @@ export function toActiveObject(
   return result
 }
 
+/**
+ * Gets the row value.
+ * @param value string
+ * @returns string
+ */
 export const getRowValue = (value: string) => (!!value ? value : "-")
 
 /**
  * Check if the token expires.
- * @param token token.
+ * @param token authentication token.
  */
 export const isTokenExpired = (token: string) => {
   if (!token) return true

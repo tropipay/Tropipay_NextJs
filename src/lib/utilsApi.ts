@@ -8,6 +8,11 @@ export interface FetchOptions {
   columnVisibility: any
 }
 
+/**
+ * Makes an API request.
+ * @param {FetchOptions} { queryConfig, variables, token, columnVisibility }
+ * @returns {Promise<any>} The response from the API.
+ */
 export async function makeApiRequest({
   queryConfig,
   variables,
@@ -135,7 +140,7 @@ export function buildGraphQLVariables(
     },
   }
 
-  // Procesar el campo de búsqueda general (search)
+  // Process the general search field (search)
   if (search) {
     variables.filter.generalSearch = search
   }
@@ -143,7 +148,7 @@ export function buildGraphQLVariables(
   const formatNumber = (textNumber: string) =>
     parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
 
-  // Procesar los filtros adicionales
+  // Process additional filters
   columns?.forEach((column: any) => {
     if (filters[column.id]) {
       const filterType = column.filterType
@@ -189,7 +194,7 @@ export function buildGraphQLVariables(
     }
   })
 
-  // Dejar espacio para sort y order (a implementar en el futuro)
+  // Leave room for sort and order (to be implemented in the future)
   if (sort || order) {
     variables.filter = {
       ...variables.filter,
@@ -210,6 +215,6 @@ export const generateQueryFields = (
       const column = columns[columnKey]
       return column.field ?? columnKey
     })
-    .filter(Boolean) // Filtra los valores nulos
-    .join("\n") // Une los campos con un salto de línea
+    .filter(Boolean) // Filter null values
+    .join("\n") // Join fields with a line break
 }
