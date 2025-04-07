@@ -5,10 +5,8 @@ import {
 import { Info } from "@/components/sectionComponents/info"
 import { Section } from "@/components/sectionComponents/section"
 import FacetedBadge from "@/components/table/facetedBadge"
-import { Button } from "@/components/ui/button"
 import { fetchHeaders, formatAmount } from "@/lib/utils"
 import { format } from "date-fns"
-import { Download } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
 
@@ -78,7 +76,7 @@ export default function ChargeDetail(props: any): JSX.Element {
         />
       </div>
       <div className="flex justify-between items-center mb-4 pb-1">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-gray-500 uppercase">
           <FormattedMessage id="charge_to" /> {fullName}
         </p>
         {completedAt && (
@@ -107,7 +105,10 @@ export default function ChargeDetail(props: any): JSX.Element {
       </Section>
 
       <Section title={<FormattedMessage id="client_data" />}>
-        <Info label={<FormattedMessage id="fullName" />} value={fullName} />
+        <Info
+          label={<FormattedMessage id="fullName" />}
+          value={<span className="uppercase">{fullName}</span>}
+        />
         <Info label={<FormattedMessage id="email" />} value={email} />
         <Info label={<FormattedMessage id="address" />} value={address} />
         <Info label={<FormattedMessage id="country" />} value={country} />
@@ -148,7 +149,7 @@ export default function ChargeDetail(props: any): JSX.Element {
         )}
       </Section>
 
-      <div className="flex mt-4 gap-4">
+      {/* <div className="flex mt-4 gap-4">
         <Button
           variant="outline"
           className="w-full md:w-1/2"
@@ -160,7 +161,7 @@ export default function ChargeDetail(props: any): JSX.Element {
         <Button variant="default" className="w-full md:w-1/2">
           <FormattedMessage id="refound" />
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }

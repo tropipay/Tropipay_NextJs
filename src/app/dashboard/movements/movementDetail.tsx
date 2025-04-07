@@ -100,14 +100,20 @@ export default function MovementDetail(props: any): JSX.Element {
 
       <Section title={<FormattedMessage id="beneficiary_data" />}>
         <Info label={<FormattedMessage id="alias" />} value={alias} />
-        <Info label={<FormattedMessage id="name" />} value={name} />
+        <Info
+          label={<FormattedMessage id="name" />}
+          value={<span className="uppercase">{name}</span>}
+        />
         <Info label={<FormattedMessage id="account" />} value={account} />
         <Info label={<FormattedMessage id="email" />} value={email} />
         <Info label={<FormattedMessage id="country" />} value={country} />
       </Section>
 
       <Section title={<FormattedMessage id="sender_data" />}>
-        <Info label={<FormattedMessage id="name" />} value={senderName} />
+        <Info
+          label={<FormattedMessage id="name" />}
+          value={<span className="uppercase">{senderName}</span>}
+        />
         <Info label={<FormattedMessage id="email" />} value={senderEmail} />
         <Info label={<FormattedMessage id="address" />} value={clientAddress} />
         <Info label={<FormattedMessage id="country" />} value={senderCountry} />

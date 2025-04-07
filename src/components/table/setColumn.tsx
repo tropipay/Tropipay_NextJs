@@ -48,6 +48,7 @@ type ColumnOptions<TData> = {
   enableResizing?: boolean
   order?: number
   meta?: boolean
+  hideColumn?: boolean
   render?: (value: string) => string
 }
 
@@ -77,6 +78,7 @@ export function setColumns<TData>(
       enableResizing = false,
       order,
       meta,
+      hideColumn = false,
       render,
     } = options
 
@@ -101,6 +103,7 @@ export function setColumns<TData>(
       enableResizing,
       order,
       meta,
+      hideColumn,
     }
 
     switch (type) {
