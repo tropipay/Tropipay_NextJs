@@ -49,10 +49,16 @@ export const chargesColumnsDef: any = {
   summary: {
     hidden: true,
   },
-  // cardBin: {
-  //   hidden: true,
-  //   render: (value: string) => `${value} **** `,
-  // },
+  clientIp: {
+    hidden: true,
+  },
+  cardExpirationDate: {
+    hidden: true,
+  },
+  cardBin: {
+    hidden: true,
+    render: (value: string) => `${value} **** `,
+  },
   cardPan: {
     hidden: true,
     render: (value: string) => `**** ${value}`,
@@ -77,9 +83,9 @@ export const chargesColumnsDef: any = {
     hidden: true,
     order: 6,
   },
-  // country: {
-  //   hidden: true,
-  // },
+  country: {
+    hidden: true,
+  },
   address: {
     hidden: true,
   },
