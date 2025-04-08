@@ -164,6 +164,8 @@ export const apiConfig: Record<string, FetchDataConfig> = {
             address
             country
             cardCountry
+            cardExpirationDate
+            clientIp
           }
           totalCount
         }
