@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import useFilterParams from "./useFilterParams"
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 
 interface UrlParamsManagerProps {
   column?: { id?: string }
@@ -12,6 +13,9 @@ interface UrlParamsManagerProps {
  */
 const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
   const { setParams, getParam } = useFilterParams()
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const { replace } = useRouter()
   const thisColumn = useMemo(() => column?.id || "", [column])
 
   const initialSelected = useMemo(() => {
@@ -35,7 +39,7 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
 
   /**
    * Updates the values of the filters.
-   * @param {React.ChangeEvent<HTMLInputElement>} event - The change event.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The submit event.
    * @param {string} fallbackId - The fallback ID.
    */
   function updateValues(

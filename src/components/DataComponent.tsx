@@ -6,10 +6,16 @@ import { AlertTriangle, Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
 import { FormattedMessage } from "react-intl"
+import { FetchDataConfig } from "@/types/fetchData"
+
+interface DataChildProps {
+  data: any;
+  userId?: string;
+}
 
 interface DataComponentProps {
   dehydratedState?: DehydratedState
-  children: ReactElement<{ data: any }>
+  children: ReactElement<DataChildProps>
   queryConfig: FetchDataConfig
   searchParams?: { [key: string]: string }
   mockData?: any
@@ -66,7 +72,6 @@ export default function DataComponent({
       {userId &&
         data &&
         !isError &&
-        // @ts-ignore
         cloneElement(children, { data, userId })}
     </div>
   )

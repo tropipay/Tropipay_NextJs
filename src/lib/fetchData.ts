@@ -1,5 +1,6 @@
 import { auth } from "@/auth"
 import { QueryClient } from "@tanstack/react-query"
+import { FetchDataConfig } from "@/types/fetchData"
 import { generateHashedKey } from "./utils"
 import { buildGraphQLVariables, makeApiRequest } from "./utilsApi"
 import { getUserSettingsServer } from "./utilsServer"
