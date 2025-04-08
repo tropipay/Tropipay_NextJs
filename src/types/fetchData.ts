@@ -1,4 +1,4 @@
-interface FetchDataConfig {
+export interface FetchDataConfig {
   url: string
   method: string
   config?: Record<string, any>

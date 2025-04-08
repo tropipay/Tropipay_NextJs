@@ -1,3 +1,4 @@
+import { FetchDataConfig } from "@/types/fetchData"
 import { format, parse } from "date-fns"
 import { fetchHeaders } from "./utils"
 

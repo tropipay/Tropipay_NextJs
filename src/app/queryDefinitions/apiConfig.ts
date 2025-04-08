@@ -5,6 +5,7 @@ import { movementsColumns } from "./movements/movementsColumns"
 import { movementsColumnsDef } from "./movements/movementsColumnsDef"
 import { movementsDetailColumns } from "./movementsDetail/movementsDetailColumns"
 import { movementsDetailColumnsDef } from "./movementsDetail/movementsDetailColumnsDef"
+import { FetchDataConfig } from "@/types/fetchData"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
   accounts: {
