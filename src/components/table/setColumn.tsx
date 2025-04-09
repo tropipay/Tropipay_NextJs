@@ -69,7 +69,7 @@ export function setColumns<TData>(
       enableSorting = true,
       enableHiding = true,
       filter = true,
-      filterType = setFilterType(filter, type),
+      filterType = setFilterType(type),
       filterLabel = title || id,
       filterPlaceholder = title || id,
       showFilter = false,

@@ -217,6 +217,15 @@ export const formatAmount = (
 }
 
 /**
+ * Formats an amount to cents.
+ *
+ * @param textNumber The amount to format as a string.
+ * @returns The amount in cents as an integer.
+ */
+export const formatAmountToCents = (textNumber: string) =>
+  parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
+
+/**
  * Truncates labels.
  * @param options string[]
  * @param maxLength number
@@ -239,11 +248,10 @@ export const truncateLabels = (
 
 /**
  * Sets the filter type.
- * @param filter any
  * @param type any
  * @returns string | null
  */
-export const setFilterType = (filter: any, type: any): string | null => {
+export const setFilterType = (type = "simpleText"): string | null => {
   const filterTypeResult = {
     simpleText: "uniqueValue",
     faceted: "list",
@@ -272,7 +280,7 @@ export function setFilters<TData>(
       enableSorting = true,
       enableHiding = true,
       filter = true,
-      filterType = setFilterType(filter, type),
+      filterType = setFilterType(type),
       filterLabel = title || id,
       filterPlaceholder = title || id,
       showFilter = false,

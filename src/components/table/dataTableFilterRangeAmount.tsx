@@ -40,6 +40,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
 
     const minValue = min ? parseFloat(min) : undefined
     const maxValue = max ? parseFloat(max) : undefined
+    console.log(minValue, maxValue)
 
     if (
       minValue !== undefined &&
