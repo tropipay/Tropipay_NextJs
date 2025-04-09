@@ -1,24 +1,26 @@
 import { FetchDataConfig } from "@/types/fetchData"
 import { format, parse } from "date-fns"
-import { fetchHeaders } from "./utils"
+import { fetchHeaders, formatAmountToCents } from "./utils"
 
 export interface FetchOptions {
   queryConfig: FetchDataConfig
   variables: { variables: GraphQLVariables }
-  token?: string
   columnVisibility: any
+  token?: string
+  debug?: boolean
 }
 
 /**
  * Makes an API request.
- * @param {FetchOptions} { queryConfig, variables, token, columnVisibility }
+ * @param {FetchOptions} { queryConfig, variables, columnVisibility, token, debug }
  * @returns {Promise<any>} The response from the API.
  */
 export async function makeApiRequest({
   queryConfig,
   variables,
-  token,
   columnVisibility,
+  token,
+  debug = false,
 }: FetchOptions) {
   const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
     (key) => !queryConfig.columnsDef[key].hidden
@@ -30,25 +32,25 @@ export async function makeApiRequest({
       : visibleColumns
 
   const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
-
   const { url, method, body } = queryConfig
-  /* console.log("body:", {
-    ...{
-      body,
-      query: body.query.replace("$FIELDS", fields),
-    },
-    ...variables,
-  }.body) 
-  console.log(
-    "variables:",
-    {
-      ...{
-        body,
-        query: body.query.replace("$FIELDS", fields),
-      },
-      ...variables,
-    }.variables
-  )*/
+  const bodyUpdated = body
+    ? {
+        ...{
+          ...() => {
+            const { query, variables, ...rest } = body
+            return rest
+          },
+          query: body.query.replace("$FIELDS", fields),
+        },
+        ...variables,
+      }
+    : {}
+
+  if (debug) {
+    if (body) {
+      console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
+    }
+  }
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
@@ -57,13 +59,7 @@ export async function makeApiRequest({
       Authorization: `Bearer ${token}`,
     },
     ...(body && {
-      body: JSON.stringify({
-        ...{
-          body,
-          query: body.query.replace("$FIELDS", fields),
-        },
-        ...variables,
-      }),
+      body: JSON.stringify(bodyUpdated),
     }),
     cache: "no-store",
   })
@@ -146,9 +142,6 @@ export function buildGraphQLVariables(
     variables.filter.generalSearch = search
   }
 
-  const formatNumber = (textNumber: string) =>
-    parseInt(parseFloat(textNumber).toFixed(2).replace(".", ""))
-
   // Process additional filters
   columns?.forEach((column: any) => {
     if (filters[column.id]) {
@@ -157,31 +150,32 @@ export function buildGraphQLVariables(
 
       switch (filterType) {
         case "amount": {
-          const [amountFrom, amountTo] = filterValue?.split(",") ?? []
-          if (amountFrom) {
-            variables.filter[`${column.id}Gte`] = formatNumber(amountFrom)
+          const [amountGte, amountLte] = filterValue?.split(",") ?? []
+          if (amountGte) {
+            variables.filter[`${column.id}Gte`] = formatAmountToCents(amountGte)
           }
-          if (amountTo) {
-            variables.filter[`${column.id}Lte`] = formatNumber(amountTo)
+          if (amountLte) {
+            variables.filter[`${column.id}Lte`] = formatAmountToCents(amountLte)
           }
           break
         }
+
         case "list":
-          variables.filter[column.id] = filterValue?.split(",")
+          variables.filter[column.id] = filterValue?.split(",") ?? []
           break
 
         case "date":
           const [dateFrom, dateTo] = filterValue?.split(",") ?? []
           if (dateFrom) {
-            const fecha = parse(dateFrom, "dd/MM/yyyy", new Date())
-            const fechaISO = format(fecha, "yyyy-MM-dd")
-            variables.filter[`${column.id}From`] = fechaISO
+            const dateFromParsed = parse(dateFrom, "dd/MM/yyyy", new Date())
+            const dateFromISO = format(dateFromParsed, "yyyy-MM-dd")
+            variables.filter[`${column.id}From`] = dateFromISO
           }
 
           if (dateTo) {
-            const fecha = parse(dateTo, "dd/MM/yyyy", new Date())
-            const fechaISO = format(fecha, "yyyy-MM-dd")
-            variables.filter[`${column.id}To`] = fechaISO
+            const dateToParsed = parse(dateTo, "dd/MM/yyyy", new Date())
+            const dateToISO = format(dateToParsed, "yyyy-MM-dd")
+            variables.filter[`${column.id}To`] = dateToISO
           }
           break
 

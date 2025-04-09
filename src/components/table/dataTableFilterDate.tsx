@@ -137,17 +137,16 @@ export function DataTableFilterDate<TData, TValue>({
 
   // Aplicar y limpiar filtros
   const handleApplyFilter = React.useCallback(() => {
-    if (fromDate && toDate) {
-      const fromParsed = parse(fromDate, "dd/MM/yyyy", new Date())
-      const toParsed = parse(toDate, "dd/MM/yyyy", new Date())
-      if (isAfter(fromParsed, toParsed)) {
-        setError(t("from_date_cannot_be_after_to_date"))
-        return
-      }
+    const fromParsed = fromDate ? parse(fromDate, "dd/MM/yyyy", new Date()) : ""
+    const toParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : ""
+    if (fromParsed && toDate && isAfter(fromParsed, toParsed)) {
+      setError(t("from_date_cannot_be_after_to_date"))
+      return
     }
+
     setError(null)
     column?.setFilterValue(
-      fromDate && toDate ? [fromDate, toDate].join(",") : undefined
+      fromDate || toDate ? [fromDate, toDate].join(",") : undefined
     )
   }, [column, fromDate, toDate, t])
 

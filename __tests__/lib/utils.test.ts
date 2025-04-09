@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge"
 import {
   cn,
   formatAmount,
+  formatAmountToCents,
   generateHashedKey,
   getRowValue,
   isTokenExpired,
@@ -95,19 +96,19 @@ describe("utils", () => {
 
   describe("setFilterType", () => {
     it("should return the correct filter type based on the input type", () => {
-      let result = setFilterType({}, "simpleText")
+      let result = setFilterType("simpleText")
       expect(result).toBe("uniqueValue")
-      result = setFilterType({}, "faceted")
+      result = setFilterType("faceted")
       expect(result).toBe("list")
-      result = setFilterType({}, "date")
+      result = setFilterType("date")
       expect(result).toBe("date")
-      result = setFilterType({}, "amount")
+      result = setFilterType("amount")
       expect(result).toBe("amount")
-      result = setFilterType({}, "facetedBadge")
+      result = setFilterType("facetedBadge")
       expect(result).toBe("list")
-      result = setFilterType({}, "free")
+      result = setFilterType("free")
       expect(result).toBe("uniqueValue")
-      result = setFilterType({}, "select")
+      result = setFilterType("select")
       expect(result).toBe(null)
     })
   })
@@ -182,6 +183,14 @@ describe("utils", () => {
       const token = "invalid_token"
       const result = isTokenExpired(token)
       expect(result).toBe(true)
+    })
+  })
+
+  describe("formatAmountToCents", () => {
+    it("should format a number string to cents", () => {
+      expect(formatAmountToCents("10.50")).toBe(1050)
+      expect(formatAmountToCents("5.00")).toBe(500)
+      expect(formatAmountToCents("10")).toBe(1000)
     })
   })
 })
