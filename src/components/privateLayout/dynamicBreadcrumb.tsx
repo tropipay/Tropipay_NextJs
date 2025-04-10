@@ -44,19 +44,19 @@ const DynamicBreadcrumb: React.FC = () => {
 
   return (
     <Breadcrumb>
-      <BreadcrumbList className="capitalize">
+      <BreadcrumbList>
         {breadcrumbItems.map((item, index) => (
           <React.Fragment key={item.title}>
             <BreadcrumbItem className={index > 0 ? "hidden md:block" : ""}>
               {item.url ? (
                 <BreadcrumbLink
                   href={item.url}
-                  className="font-poppins font-semibold text-2xl text-foreground capitalize"
+                  className="font-poppins font-semibold text-2xl text-foreground"
                 >
                   <FormattedMessage id={item.title} />
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage className="font-poppins font-semibold text-2xl text-foreground capitalize">
+                <BreadcrumbPage className="font-poppins font-semibold text-2xl text-foreground">
                   <FormattedMessage id={item.title} />
                 </BreadcrumbPage>
               )}
