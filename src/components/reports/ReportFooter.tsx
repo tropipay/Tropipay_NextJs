@@ -1,8 +1,8 @@
-interface ReportFooterProps {
+interface Props {
   className?: string
 }
 
-export default function ReportFooter({ className }: ReportFooterProps) {
+export default function ReportFooter({ className }: Props) {
   return (
     <header className={`w-full text-left font-sans mb-8 ${className || ""}`}>
       <div className="mb-4">

@@ -421,3 +421,37 @@ export const isTokenExpired = (token: string) => {
     return true
   }
 }
+
+export const getDatePeriods = (monthsBefore: number): DatePeriod[] => {
+  if (monthsBefore < 0) throw new Error("El número de meses debe ser positivo")
+
+  const periods: DatePeriod[] = []
+  const currentDate = new Date()
+  const referenceDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  )
+
+  for (let i = 0; i <= monthsBefore; i++) {
+    const targetDate = new Date(referenceDate)
+    targetDate.setMonth(referenceDate.getMonth() - i)
+
+    const start = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1)
+    const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
+    end.setHours(23, 59, 59, 999)
+
+    const monthName = new Intl.DateTimeFormat("es", { month: "long" })
+      .format(targetDate)
+      .replace(/^\w/, (c) => c.toUpperCase())
+
+    periods.push({
+      label:
+        i === 0 ? "Mes actual" : `${monthName} de ${targetDate.getFullYear()}`,
+      from: start,
+      to: end,
+    })
+  }
+
+  return periods
+}
