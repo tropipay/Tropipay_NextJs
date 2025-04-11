@@ -3,12 +3,15 @@
 import ReportFooter from "@/components/reports/ReportFooter"
 import ReportHeader from "@/components/reports/ReportHeader"
 import { RowData } from "@/components/rowData/rowData"
+import { useState } from "react"
 import { FormattedMessage } from "react-intl" // Importar FormattedMessage
 import InformationToolbar from "./informationToolbar"
 
 const isBrowser = typeof window !== undefined
 
-const pageClient = () => {
+const PageClient = () => {
+  const [loading, setLoading] = useState<boolean>(false)
+
   /**
    * Handles the download of the report as a PDF.
    * @async
@@ -42,9 +45,13 @@ const pageClient = () => {
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
       }
 
+      setLoading(true)
+
       // Generate and download the PDF
       html2pdf().from(element).set(opt).save()
       element.remove()
+
+      setLoading(false)
     } else {
       console.error(
         "No es posible generar el archivo PDF: Elemento no encontrado."
@@ -52,10 +59,25 @@ const pageClient = () => {
     }
   }
 
+  /**
+   * Handles the change of the date range for the report.
+   * @param {string} value - The new date range value.
+   * @returns {void}
+   */
+  const handleChangeRangeDate = (value: string) => {
+    console.log(`Reload report data for range ${value}`)
+  }
+
   return (
     <div>
       <div className="space-y-4">
-        <InformationToolbar {...{ handleDownload }} />
+        <InformationToolbar
+          {...{
+            handleDownload,
+            handleChangeRangeDate,
+            downloadButtonDisabled: loading,
+          }}
+        />
 
         <div className="report-container">
           <ReportHeader className="hidden" />
@@ -150,4 +172,4 @@ const pageClient = () => {
   )
 }
 
-export default pageClient
+export default PageClient
