@@ -65,10 +65,11 @@ export const chargesColumnsDef: any = {
   },
   cardType: {
     hidden: true,
+    filterPlaceholder: "cardType_placeholder",
   },
   fullName: {
     hidden: true,
-    render: (value: string) => <span className="uppercase">{value}</span>,
+    render: (value: string) => <span className="capitalize">{value}</span>,
   },
   issuerBank: {
     hidden: true,

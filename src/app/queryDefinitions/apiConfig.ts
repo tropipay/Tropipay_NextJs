@@ -1,11 +1,13 @@
 import { setFilters } from "@/lib/utils"
+import { FetchDataConfig } from "@/types/fetchData"
 import { chargesColumns } from "./charges/chargesColumns"
 import { chargesColumnsDef } from "./charges/chargesColumnsDef"
+import { chargesDetailColumns } from "./chargesDetail/chargesDetailColumns"
+import { chargesDetailColumnsDef } from "./chargesDetail/chargesDetailColumnsDef"
 import { movementsColumns } from "./movements/movementsColumns"
 import { movementsColumnsDef } from "./movements/movementsColumnsDef"
 import { movementsDetailColumns } from "./movementsDetail/movementsDetailColumns"
 import { movementsDetailColumnsDef } from "./movementsDetail/movementsDetailColumnsDef"
-import { FetchDataConfig } from "@/types/fetchData"
 
 export const apiConfig: Record<string, FetchDataConfig> = {
   accounts: {
@@ -179,9 +181,9 @@ export const apiConfig: Record<string, FetchDataConfig> = {
         },
       },
     },
-    columns: chargesColumns,
-    columnsDef: JSON.parse(JSON.stringify(chargesColumnsDef)),
-    filters: setFilters(chargesColumnsDef),
+    columns: chargesDetailColumns,
+    columnsDef: JSON.parse(JSON.stringify(chargesDetailColumnsDef)),
+    filters: setFilters(chargesDetailColumnsDef),
     staleTime: 5 * 60 * 1000,
   },
 }

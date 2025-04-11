@@ -44,7 +44,7 @@ const FilterCategories: React.FC<Props> = ({
           key={categoryFilter}
           variant={
             filterCategoryValue === categoryFilter ||
-            filterCategoryValue === undefined
+            (filterCategoryValue === undefined && categoryFilter === "ALL")
               ? "filterActive"
               : "filterInactive"
           }

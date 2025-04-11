@@ -17,18 +17,20 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const userId = session?.user?.id
   const queryConfig = apiConfig.chargesDetail
 
-  const ChargeDetailContainer = ({ row }: { row: any }) => (
-    <DataComponent
-      key={queryConfig.key}
-      showLoading
-      {...{
-        queryConfig,
-        searchParams: { id: row.id },
-      }}
-    >
-      <ChargeDetail />
-    </DataComponent>
-  )
+  const ChargeDetailContainer = ({ row }: { row: any }) => {
+    return (
+      <DataComponent
+        key={queryConfig.key}
+        showLoading
+        {...{
+          queryConfig,
+          searchParams: { id: row.id },
+        }}
+      >
+        <ChargeDetail />
+      </DataComponent>
+    )
+  }
 
   return (
     <div className="container p-2">
