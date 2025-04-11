@@ -118,14 +118,14 @@ export function DataTableFilterDate<TData, TValue>({
       const toParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : null
 
       if (key === "from" && toParsed && isAfter(selectedDate, toParsed)) {
-        setError(t("from_date_cannot_be_after_to_date"))
+        setError(t("error_bad_period"))
         return
       } else if (
         key === "to" &&
         fromParsed &&
         isBefore(selectedDate, fromParsed)
       ) {
-        setError(t("to_date_cannot_be_before_from_date"))
+        setError(t("error_bad_period"))
         return
       }
 
@@ -140,7 +140,7 @@ export function DataTableFilterDate<TData, TValue>({
     const fromParsed = fromDate ? parse(fromDate, "dd/MM/yyyy", new Date()) : ""
     const toParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : ""
     if (fromParsed && toDate && isAfter(fromParsed, toParsed)) {
-      setError(t("from_date_cannot_be_after_to_date"))
+      setError(t("error_bad_period"))
       return
     }
 
