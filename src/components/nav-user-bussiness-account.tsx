@@ -13,6 +13,7 @@ export const NavUserBusinessAccount = ({
   userBusinessAccount: { alias, currency },
   asContext = false,
 }: Props) => {
+  console.log(alias, currency)
   return (
     <>
       <Avatar className="h-8 w-8 rounded-lg">

@@ -1,16 +1,16 @@
 "use client"
 
 import { useFetchData } from "@/lib/useFetchData"
+import { FetchDataConfig } from "@/types/fetchData"
 import { DehydratedState } from "@tanstack/react-query"
 import { AlertTriangle, Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
 import { FormattedMessage } from "react-intl"
-import { FetchDataConfig } from "@/types/fetchData"
 
 interface DataChildProps {
-  data: any;
-  userId?: string;
+  data: any
+  userId?: string
 }
 
 interface DataComponentProps {
@@ -20,6 +20,7 @@ interface DataComponentProps {
   searchParams?: { [key: string]: string }
   mockData?: any
   showLoading?: boolean
+  showError?: boolean
   loader?: ReactNode
 }
 
@@ -30,6 +31,7 @@ export default function DataComponent({
   mockData,
   children,
   showLoading = false,
+  showError = true,
   loader = <Loader2 className="animate-spin text-[#041266]" size={72} />,
 }: DataComponentProps) {
   const urlParams = searchParams
@@ -56,7 +58,7 @@ export default function DataComponent({
           {loader}
         </div>
       )}
-      {isError && (
+      {isError && showError && (
         <div className="w-full max-w-[500px] px-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div
             className="flex items-center justify-center bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded"
@@ -69,10 +71,7 @@ export default function DataComponent({
           </div>
         </div>
       )}
-      {userId &&
-        data &&
-        !isError &&
-        cloneElement(children, { data, userId })}
+      {userId && data && !isError && cloneElement(children, { data, userId })}
     </div>
   )
 }
