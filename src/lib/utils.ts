@@ -2,6 +2,7 @@ import { QueryKey } from "@tanstack/react-query"
 import { ColumnDef } from "@tanstack/react-table"
 import { clsx, type ClassValue } from "clsx"
 import { createHash } from "crypto"
+import { isBefore, startOfDay } from "date-fns"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "./utilsUser"
 
@@ -432,10 +433,12 @@ export const getDatePeriods = (monthsBefore: number): DatePeriod[] => {
     currentDate.getMonth(),
     1
   )
+  const startDate = startOfDay(new Date(2025, 0, 1))
 
   for (let i = 0; i <= monthsBefore; i++) {
     const targetDate = new Date(referenceDate)
     targetDate.setMonth(referenceDate.getMonth() - i)
+    if (isBefore(targetDate, startDate)) continue
 
     const start = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1)
     const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)

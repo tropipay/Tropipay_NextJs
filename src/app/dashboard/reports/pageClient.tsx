@@ -29,6 +29,15 @@ const PageClient = () => {
       (el) => ((el as HTMLElement).style.display = "initial")
     )
 
+    // Adjusting report style to a page
+    element?.querySelectorAll(".report-content-row").forEach((el) => {
+      el.classList.remove("report-content-row")
+      el.classList.remove("p-5")
+      el.classList.add("pt-0")
+      el.classList.add("pb-[13px]")
+      el.classList.add("px-4")
+    })
+
     // Add the dynamic element to the DOM
     document.body.appendChild(element)
 
@@ -48,7 +57,7 @@ const PageClient = () => {
       setLoading(true)
 
       // Generate and download the PDF
-      html2pdf().from(element).set(opt).save()
+      html2pdf().from(element).set(opt).toPdf().save()
       element.remove()
 
       setLoading(false)
@@ -81,7 +90,7 @@ const PageClient = () => {
 
         <div className="report-container">
           <ReportHeader className="hidden" />
-          <div className="pb-4">
+          <div className="my-4">
             {/* Contenido del reporte que se convertirá a PDF */}
             <RowData
               label={<FormattedMessage id="balance_summary" />}

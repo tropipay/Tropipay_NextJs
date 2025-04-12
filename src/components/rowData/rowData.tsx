@@ -4,10 +4,10 @@ export function RowData({ label, value, style }) {
   return (
     <div
       className={cn(
-        "flex justify-between px-4 py-2 text-sm",
-        style === "header" && "border-b text-gray-500 font-medium p-5",
-        style === "row" && "border-b border-gray-200 p-5",
-        style === "resume" && "bg-gray-200 font-semibold p-5"
+        "report-content-row flex items-center justify-between px-4 p-5 text-sm",
+        style === "header" && "border-b text-gray-500 font-medium",
+        style === "row" && "border-b border-gray-200",
+        style === "resume" && "bg-gray-200 font-semibold"
       )}
     >
       <span>{label}</span>
