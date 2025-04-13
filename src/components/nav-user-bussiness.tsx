@@ -27,7 +27,7 @@ export const NavUserBusiness = ({ data }: Props) => {
   const [userBusinessAccountSelectedId, setUserBusinessAccountSelectedId] =
     useState<string>(
       CookiesManager.getInstance().get(
-        "userAccountId",
+        "accountNumber",
         data?.[0]?.accountNumber.toString() ?? "0"
       )
     )
@@ -38,7 +38,7 @@ export const NavUserBusiness = ({ data }: Props) => {
 
   const onSelectUserBusinessAccount = (accountNumber: string) => {
     setUserBusinessAccountSelectedId(accountNumber)
-    CookiesManager.getInstance().set("userAccountId", accountNumber.toString())
+    CookiesManager.getInstance().set("accountNumber", accountNumber.toString())
   }
 
   useEffect(() => {
