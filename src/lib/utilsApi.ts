@@ -22,34 +22,35 @@ export async function makeApiRequest({
   token,
   debug = false,
 }: FetchOptions) {
-  const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
-    (key) => !queryConfig.columnsDef[key].hidden
-  )
-
-  const activeColumns: string[] =
-    Object.keys(columnVisibility).length > 0
-      ? Object.keys(columnVisibility).filter((key) => columnVisibility[key])
-      : visibleColumns
-
-  const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
   const { url, method, body } = queryConfig
-  const bodyUpdated = body
-    ? {
-        ...{
-          ...() => {
-            const { query, variables, ...rest } = body
-            return rest
-          },
-          query: body.query.replace("$FIELDS", fields),
+  let bodyUpdated = {}
+  if (body) {
+    const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
+      (key) => !queryConfig.columnsDef[key].hidden
+    )
+
+    const activeColumns: string[] =
+      Object.keys(columnVisibility).length > 0
+        ? Object.keys(columnVisibility).filter((key) => columnVisibility[key])
+        : visibleColumns
+
+    const fields = generateQueryFields(queryConfig.columnsDef, activeColumns)
+
+    bodyUpdated = {
+      ...{
+        ...() => {
+          const { query, variables, ...rest } = body
+          return rest
         },
-        ...variables,
-      }
-    : {}
+        query: body.query.replace("$FIELDS", fields),
+      },
+      ...variables,
+    }
+  }
 
   if (debug) {
-    if (body) {
-      console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
-    }
+    console.log("url: ", url)
+    body && console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
   }
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {

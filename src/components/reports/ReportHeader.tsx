@@ -1,10 +1,13 @@
+import { FormattedMessage } from "react-intl"
 import TropipayLogo from "../images/TropipayLogo"
 
 interface Props {
   className?: string
+  startDate: string
+  endDate: string
 }
 
-export default function ReportHeader({ className }: Props) {
+export default function ReportHeader({ className, startDate, endDate }: Props) {
   return (
     <header className={`w-full text-sm text-left font-sans ${className || ""}`}>
       {/* Encabezado principal */}
@@ -15,8 +18,12 @@ export default function ReportHeader({ className }: Props) {
 
         {/* Sección de liquidación */}
         <div className="flex flex-col items-end">
-          <h3 className="font-bold text-gray-900">Liquidación</h3>
-          <p className=" font-medium text-gray-700">2024/09/01 - 2024/09/30</p>
+          <h3 className="font-bold text-gray-900">
+            <FormattedMessage id="settlement" />
+          </h3>
+          <p className=" font-medium text-gray-700">
+            {startDate} - {endDate}
+          </p>
         </div>
       </div>
 

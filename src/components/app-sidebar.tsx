@@ -33,6 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {...{
               queryConfig,
               dehydratedState,
+              showError: false,
               mockData: accountsMock,
             }}
           >

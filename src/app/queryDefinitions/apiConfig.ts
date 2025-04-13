@@ -186,4 +186,9 @@ export const apiConfig: Record<string, FetchDataConfig> = {
     filters: setFilters(chargesDetailColumnsDef),
     staleTime: 5 * 60 * 1000,
   },
+  balanceSummary: {
+    key: "balanceSummary",
+    url: "/api/v3/reports/balance-summary",
+    method: "GET",
+  },
 }

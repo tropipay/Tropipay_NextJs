@@ -2,6 +2,7 @@ type UserBusinessAccount = {
   id: number
   accountNumber: string
   userId: string
+  groupId: number
   alias: string
   balance: number
   pendingIn: number
@@ -14,4 +15,5 @@ type UserBusinessAccount = {
   updatedAt: string
   isDefault: boolean
   TropiCards: any[]
+  services: any[]
 }

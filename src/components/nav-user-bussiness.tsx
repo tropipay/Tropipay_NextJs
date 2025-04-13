@@ -4,7 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -15,8 +14,8 @@ import {
 } from "@/components/ui/sidebar"
 import CookiesManager from "@/lib/cookiesManager"
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu"
-import { Check, ChevronsUpDown, SquarePlus } from "lucide-react"
-import { useState } from "react"
+import { Check, ChevronsUpDown } from "lucide-react"
+import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { NavUserBusinessAccount } from "./nav-user-bussiness-account"
 
@@ -25,23 +24,26 @@ interface Props {
 }
 
 export const NavUserBusiness = ({ data }: Props) => {
-  // const dataMocked = accounts
   const [userBusinessAccountSelectedId, setUserBusinessAccountSelectedId] =
-    useState<number>(
-      +CookiesManager.getInstance().get(
-        "userAccountId",
-        data?.[0]?.id.toString() ?? "0"
+    useState<string>(
+      CookiesManager.getInstance().get(
+        "accountNumber",
+        data?.[0]?.accountNumber.toString() ?? "0"
       )
     )
 
   const userBusinessAccountSelected = data?.find(
-    ({ id }) => id === userBusinessAccountSelectedId
+    ({ accountNumber }) => accountNumber === userBusinessAccountSelectedId
   )
 
-  const onSelectUserBusinessAccount = (id: number) => {
-    setUserBusinessAccountSelectedId(id)
-    CookiesManager.getInstance().set("userAccountId", id.toString())
+  const onSelectUserBusinessAccount = (accountNumber: string) => {
+    setUserBusinessAccountSelectedId(accountNumber)
+    CookiesManager.getInstance().set("accountNumber", accountNumber.toString())
   }
+
+  useEffect(() => {
+    data && onSelectUserBusinessAccount(data[0].accountNumber)
+  }, [data])
 
   return (
     <SidebarMenu>
@@ -74,25 +76,27 @@ export const NavUserBusiness = ({ data }: Props) => {
             <DropdownMenuSub>
               {data?.map((userBusinessAccount) => (
                 <DropdownMenuItem
-                  key={userBusinessAccount.id}
+                  key={userBusinessAccount.accountNumber}
                   onClick={() =>
-                    onSelectUserBusinessAccount(userBusinessAccount.id)
+                    onSelectUserBusinessAccount(
+                      userBusinessAccount.accountNumber
+                    )
                   }
                 >
                   <NavUserBusinessAccount
                     asContext
                     {...{ userBusinessAccount }}
                   />
-                  {userBusinessAccount.id ===
-                    userBusinessAccountSelected?.id && <Check />}
+                  {userBusinessAccount.accountNumber ===
+                    userBusinessAccountSelected?.accountNumber && <Check />}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuSub>
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuSeparator />
             <DropdownMenuItem>
               <SquarePlus />
               <FormattedMessage id="add_account" />
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
