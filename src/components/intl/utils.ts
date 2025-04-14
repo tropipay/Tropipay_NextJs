@@ -1,4 +1,4 @@
-import CookiesManager from "@/lib/cookiesManager"
+import CookiesManager from "@/utils/cookies/cookiesManager"
 import English from "./messages/en.json"
 import Spanish from "./messages/es.json"
 import Portuguese from "./messages/pt.json"

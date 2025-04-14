@@ -1,5 +1,5 @@
 import { ReportFilterDate } from "@/components/reports/ReportFilterDate"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui"
 import { DownloadIcon } from "lucide-react"
 
 interface InformationToolbarProps {

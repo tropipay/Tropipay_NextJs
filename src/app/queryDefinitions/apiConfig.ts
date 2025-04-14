@@ -1,4 +1,4 @@
-import { setFilters } from "@/lib/utils"
+import { setFilters } from "@/utils/data/utils"
 import { FetchDataConfig } from "@/types/fetchData"
 import { chargesColumns } from "./charges/chargesColumns"
 import { chargesColumnsDef } from "./charges/chargesColumnsDef"

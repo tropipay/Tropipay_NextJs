@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchGetWithTriggers } from "@/lib/utils"
+import { fetchGetWithTriggers } from "@/utils/data/utils"
 
 /**
  * Custom hook to fetch data from a URL.

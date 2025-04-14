@@ -1,15 +1,15 @@
-import CookiesManager from "../../src/lib/cookiesManager"
+import CookiesManager from "@/utils/cookies/cookiesManager"
 import {
   getTokenFromSession,
   getUserSettings,
   setUserSettings,
-} from "../../src/lib/utilsUser"
+} from "@/utils/user/utilsUser"
 
 jest.mock("next-auth/react", () => ({
   getSession: jest.fn(),
 }))
 
-jest.mock("../../src/lib/cookiesManager", () => ({
+jest.mock("@/utils/cookies/cookiesManager", () => ({
   getInstance: jest.fn().mockReturnValue({
     get: jest.fn(),
     set: jest.fn(),

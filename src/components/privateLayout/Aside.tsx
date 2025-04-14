@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { useState } from "react"
-import { Button } from "../ui/button"
+import { Button } from "../ui/Button"
 
 const links = [
   { name: "Home", href: "/dashboard" },

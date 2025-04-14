@@ -2,10 +2,10 @@ import {
   chargeStates,
   chargeStatesGroups,
 } from "@/app/filterDefinitions/charges"
-import { Info } from "@/components/sectionComponents/info"
-import { Section } from "@/components/sectionComponents/section"
-import FacetedBadge from "@/components/table/facetedBadge"
-import { fetchHeaders, formatAmount } from "@/lib/utils"
+import { Info } from "@/components/sectionComponents/Info"
+import { Section } from "@/components/sectionComponents/Section"
+import FacetedBadge from "@/components/table/FacetedBadge"
+import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"

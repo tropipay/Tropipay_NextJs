@@ -1,4 +1,4 @@
-import CookiesManager from '../../src/lib/cookiesManager';
+import CookiesManager from '@/utils/cookies/cookiesManager';
 import Cookies from 'js-cookie';
 
 jest.mock('js-cookie', () => ({

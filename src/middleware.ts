@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { auth } from "./auth"
-import { isTokenExpired } from "./lib/utils"
+import { isTokenExpired } from "@/utils/data/utils"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]

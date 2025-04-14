@@ -1,13 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button, Calendar } from "@/components/ui"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn, getDatePeriods } from "@/lib/utils"
+} from "@/components/ui/Popover"
+import { cn, getDatePeriods } from "@/utils/data/utils"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { SelectItem } from "@radix-ui/react-select"
 import { format, isAfter, isBefore, parse, startOfDay } from "date-fns"
@@ -15,8 +14,8 @@ import { CalendarDays, CalendarIcon, CheckIcon } from "lucide-react"
 import React, { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
-import { Label } from "../ui/label"
-import { Select, SelectContent, SelectTrigger, SelectValue } from "../ui/select"
+import { Label } from "../ui/Label"
+import { Select, SelectContent, SelectTrigger, SelectValue } from "../ui/Select"
 
 interface Props {
   onChange?: (value: string) => void
@@ -172,9 +171,11 @@ export function ReportFilterDate({ onChange }: Props) {
             </Label>
             <Select value={range} onValueChange={handlePeriodChange}>
               <SelectTrigger aria-label={t("select_period")}>
-                <SelectValue>
-                  {!!range ? range : t("select_period")}
-                </SelectValue>
+                {!range ? (
+                  t("select_period")
+                ) : (
+                  <SelectValue>{range}</SelectValue>
+                )}
               </SelectTrigger>
               <SelectContent position="popper">
                 {months.map(({ label }) => (

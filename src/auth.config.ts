@@ -1,6 +1,6 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { fetchHeaders } from "./lib/utils"
+import { fetchHeaders } from "@/utils/data/utils"
 
 export default {
   session: { strategy: "jwt" },

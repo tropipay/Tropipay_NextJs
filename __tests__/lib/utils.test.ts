@@ -15,7 +15,7 @@ import {
   toActiveObject,
   toArrayId,
   truncateLabels,
-} from "../../src/lib/utils"
+} from "@/utils/data/utils"
 
 jest.mock("tailwind-merge", () => ({
   twMerge: jest.fn(),
@@ -121,7 +121,7 @@ describe("utils", () => {
           title: "ID",
         },
       }
-      const result = setFilters(columnsConfig)
+      const result = setFilters(columnsConfig as any)
       expect(Array.isArray(result)).toBe(true)
       expect(result.length).toBe(1)
       expect(result[0]).toBeDefined()

@@ -31,7 +31,7 @@ export default function ReportHeader({ className, startDate, endDate }: Props) {
       <hr className="border-t-2 border-gray-300 my-1" />
 
       {/* Información de dirección */}
-      <div className="space-y-1">
+      <div className="space-y-1 mb-4">
         <h2 className="font-semibold text-gray-800">TUAMBIA SL</h2>
         <div className=" text-gray-600">
           <div>Avenida Andes 17, esc. 6, planta 2, puerta C Madrid, España</div>
