@@ -1,7 +1,7 @@
 "use server"
 
 import { signIn } from "@/auth"
-import { deleteAuthSessionCookies } from "@/lib/utilsServer"
+import { deleteAuthSessionCookies } from "@/utils/api/utilsServer"
 
 /**
  * sign in with Next Auth.

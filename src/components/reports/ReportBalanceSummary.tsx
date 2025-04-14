@@ -1,9 +1,9 @@
 import InformationToolbar from "@/app/dashboard/reports/informationToolbar"
 import ReportFooter from "@/components/reports/ReportFooter"
 import ReportHeader from "@/components/reports/ReportHeader"
-import { RowData } from "@/components/rowData/rowData"
-import { formatAmount } from "@/lib/utils"
+import { RowData } from "@/components/rowData/RowData"
 import { BalanceSummaryResponse } from "@/types/reports/balanceSummary/balanceSummaryResponse"
+import { formatAmount } from "@/utils/data/utils"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 

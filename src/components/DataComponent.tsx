@@ -1,6 +1,6 @@
 "use client"
 
-import { useFetchData } from "@/lib/useFetchData"
+import { useFetchData } from "@/utils/data/useFetchData"
 import { FetchDataConfig } from "@/types/fetchData"
 import { DehydratedState } from "@tanstack/react-query"
 import { AlertTriangle, Loader2 } from "lucide-react"

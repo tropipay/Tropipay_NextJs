@@ -1,8 +1,8 @@
 import DataComponent from "@/components/DataComponent"
-import { fetchData } from "@/lib/fetchData"
-import { processQueryParameters } from "@/lib/utils"
+import { fetchData } from "@/utils/data/fetchData"
+import { processQueryParameters } from "@/utils/data/utils"
 import { dehydrate } from "@tanstack/react-query"
-import getQueryClient from "./getQueryClient"
+import getQueryClient from "./GetQueryClient"
 interface DataFullProps {
   queryConfig: any
   children: React.ReactNode

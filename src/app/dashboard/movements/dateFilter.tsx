@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import {
+  Button,
+  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui"
 import { Table } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronUp } from "lucide-react"
 import { useState } from "react" // Importar useState para controlar el estado del Popover

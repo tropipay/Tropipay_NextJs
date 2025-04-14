@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button"
 import {
+  Button,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui"
 import React from "react"
 
 /**
@@ -18,10 +18,7 @@ import React from "react"
  * @param {Object} [props.checkbox=null] - Optional checkbox configuration with checked and onCheckedChange functions.
  * @param {...Object} anotherProps - Additional props to pass to the DropdownMenu component.
  * @returns {JSX.Element|null} A styled dropdown menu component with provided items, or null if no items are provided.
- * 
- * 
- * 
- * 
+ *
 
   props.items SAMPLE to SIMPLE dropdown menu -------------------------------------------------
 
