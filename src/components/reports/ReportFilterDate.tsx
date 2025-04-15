@@ -135,8 +135,21 @@ export function ReportFilterDate({ onChange }: Props) {
     [toDate]
   )
 
+  const onOpenChange = (open: boolean) => {
+    if (open) {
+      const month = months.find(({ label }) => label === currentRange)
+
+      if (!!month) {
+        setRange(currentRange)
+        setFromDate(format(month.from, "dd/MM/yyyy"))
+        setToDate(format(month.to, "dd/MM/yyyy"))
+        setError(null)
+      }
+    }
+  }
+
   return (
-    <Popover>
+    <Popover {...{ onOpenChange }}>
       <PopoverTrigger asChild>
         <Button variant="outline">
           <CalendarDays />
