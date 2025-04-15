@@ -113,19 +113,21 @@ export default function ReportBalanceSummary({
           />
 
           {/* Commissions */}
-          {[
-            "cardFees",
-            "cardCollection",
-            "internalTransfers",
-            "externalTransfers",
-          ].map((value) => (
-            <RowData
-              key={`commissions.${value}`}
-              label={<FormattedMessage id={value} />}
-              value={formatAmount(data.commissions[value], "EUR", "right")}
-              style="row"
-            />
-          ))}
+          <RowData
+            label={<FormattedMessage id="commissions" />}
+            value={""}
+            style="header"
+          />
+          {["cardCollection", "internalTransfers", "externalTransfers"].map(
+            (value) => (
+              <RowData
+                key={`commissions.${value}`}
+                label={<FormattedMessage id={value} />}
+                value={formatAmount(data.commissions[value], "EUR", "right")}
+                style="row"
+              />
+            )
+          )}
           <RowData
             label={<FormattedMessage id="total" />}
             value={formatAmount(data.commissions.total, "EUR", "right")}
@@ -134,7 +136,7 @@ export default function ReportBalanceSummary({
 
           <RowData
             label={<FormattedMessage id="shipments" />}
-            value={<FormattedMessage id="amount" />}
+            value={""}
             style="header"
           />
 
@@ -151,7 +153,7 @@ export default function ReportBalanceSummary({
           />
           <RowData
             label={<FormattedMessage id="balance" />}
-            value={<FormattedMessage id="amount" />}
+            value={""}
             style="row"
           />
           <RowData
