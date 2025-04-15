@@ -40,7 +40,7 @@ export const NavUserBusiness = ({ data }: Props) => {
   }
 
   useEffect(() => {
-    data && onSelectUserBusinessAccount(data[0].accountNumber)
+    data?.[0] && onSelectUserBusinessAccount(data[0].accountNumber)
   }, [data])
 
   return (

@@ -1,47 +1,38 @@
-"use client";
-
-import { Table } from "@tanstack/react-table";
+"use client"
 
 import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import { FormattedMessage } from "react-intl";
-
-import { Button } from "@/components/ui/Button";
-import {
+  Button,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
-
+} from "@/components/ui"
+import { Table } from "@tanstack/react-table"
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react"
+import { FormattedMessage } from "react-intl"
 interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
-  const pageSizeOptions = [10, 20, 30, 40, 50, 100];
+  const pageSizeOptions = [10, 20, 30, 40, 50, 100]
   return (
     <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        <FormattedMessage
-          id="showing"
-          values={{
-            from: table.getState().pagination.pageIndex + 1,
-            to:
-              table.getState().pagination.pageIndex +
-              table.getPageCount(),
-            count: table.getFilteredRowModel().rows.length,
-          }}
-        />
-      </div>
+      <div className="flex-1 text-sm text-muted-foreground"></div>
       <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="flex w-[110px] items-center justify-center text-sm font-medium">
+          <FormattedMessage id="page" />{" "}
+          {table.getState().pagination.pageIndex + 1}{" "}
+          <FormattedMessage id="of" /> {table.getPageCount()}
+        </div>
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -83,7 +74,7 @@ export function DataTablePagination<TData>({
           <Select
             value={table.getState().pagination.pageSize.toString()}
             onValueChange={(value) => {
-              table.setPageSize(Number(value));
+              table.setPageSize(Number(value))
             }}
           >
             <SelectTrigger className="h-8 w-[70px]">
@@ -100,5 +91,5 @@ export function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  );
+  )
 }

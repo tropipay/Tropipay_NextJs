@@ -13,8 +13,10 @@ const PageClient = () => {
   const searchParams = useSearchParams()
   const accountNumber = CookiesManager.getInstance().get("accountNumber")
 
-  let queryConfig = apiConfig.balanceSummary
-  queryConfig = { ...queryConfig, url: `${queryConfig.url}/${accountNumber}` }
+  const queryConfig = {
+    ...apiConfig.balanceSummary,
+    url: `${apiConfig.balanceSummary.url}/${accountNumber}`,
+  }
 
   // Get dates from query params url
   const [startDate, endDate] = useMemo(() => {
@@ -51,17 +53,19 @@ const PageClient = () => {
   )
 
   return (
-    <DataComponent
-      key={queryConfig.key}
-      showLoading
-      {...{
-        queryConfig,
-        searchParams: { startDate, endDate },
-        mockData: balanceSummaryMock,
-      }}
-    >
-      <ReportBalanceSummary {...{ startDate, endDate, onChangeRangeDate }} />
-    </DataComponent>
+    accountNumber && (
+      <DataComponent
+        key={queryConfig.key}
+        showLoading
+        {...{
+          queryConfig,
+          searchParams: { startDate, endDate },
+          mockData: balanceSummaryMock,
+        }}
+      >
+        <ReportBalanceSummary {...{ startDate, endDate, onChangeRangeDate }} />
+      </DataComponent>
+    )
   )
 }
 
