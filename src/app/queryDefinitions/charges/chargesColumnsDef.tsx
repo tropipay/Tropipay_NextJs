@@ -39,6 +39,7 @@ export const chargesColumnsDef: any = {
   email: {
     order: 5,
     showFilter: true,
+    filterSearchType: "EXACT_MATCH",
   },
   concept: {
     hidden: true,
@@ -58,10 +59,12 @@ export const chargesColumnsDef: any = {
   cardBin: {
     hidden: true,
     render: (value: string) => `${value} **** `,
+    filterSearchType: "EXACT_MATCH",
   },
   cardPan: {
     hidden: true,
     render: (value: string) => `**** ${value}`,
+    filterSearchType: "EXACT_MATCH",
   },
   cardType: {
     hidden: true,
@@ -70,6 +73,7 @@ export const chargesColumnsDef: any = {
   fullName: {
     hidden: true,
     render: (value: string) => <span className="capitalize">{value}</span>,
+    filterSearchType: "PARTIAL_MATCH",
   },
   issuerBank: {
     hidden: true,
@@ -83,6 +87,7 @@ export const chargesColumnsDef: any = {
     optionList: chargeProductTypes,
     hidden: true,
     order: 6,
+    filterSearchType: "EXACT_MATCH",
   },
   country: {
     hidden: true,

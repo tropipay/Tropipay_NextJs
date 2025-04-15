@@ -1,24 +1,28 @@
-import { Checkbox } from "@/components/ui/Checkbox";
-import { formatAmount, getRowValue, setFilterType } from "@/utils/data/utils";
-import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-import React from "react";
-import { FormattedMessage } from "react-intl";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip";
-import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
-import FacetedBadge from "@/components/table/FacetedBadge";
+import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader"
+import FacetedBadge from "@/components/table/FacetedBadge"
+import { Checkbox } from "@/components/ui/Checkbox"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { formatAmount, getRowValue, setFilterType } from "@/utils/data/utils"
+import { ColumnDef } from "@tanstack/react-table"
+import { format } from "date-fns"
+import React from "react"
+import { FormattedMessage } from "react-intl"
 
 // Definimos los tipos para los argumentos de la función
 type FacetedOption = {
-  value: string;
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-};
+  value: string
+  label: string
+  icon?: React.ComponentType<{ className?: string }>
+}
 
 type FacetedOptionGroup = {
-  group: string;
-  options: FacetedOption[];
-};
+  group: string
+  options: FacetedOption[]
+}
 
 type ColumnOptions<TData> = {
   type:
@@ -28,29 +32,30 @@ type ColumnOptions<TData> = {
     | "facetedBadge"
     | "amount"
     | "free"
-    | "select";
-  title?: string;
-  optionList?: FacetedOption[];
-  optionListGroups?: FacetedOptionGroup[];
-  format?: string;
-  component?: React.ReactNode;
-  addSign?: boolean;
-  enableSorting?: boolean;
-  enableHiding?: boolean;
-  filter?: false | true | null;
-  filterType?: "list" | "date" | "amount" | "uniqueValue" | null;
-  filterLabel?: string;
-  filterPlaceholder?: string;
-  showFilter?: boolean;
-  hidden?: boolean;
-  field?: string;
-  size?: number;
-  enableResizing?: boolean;
-  order?: number;
-  meta?: boolean;
-  hideColumn?: boolean;
-  render?: (value: string) => string;
-};
+    | "select"
+  title?: string
+  optionList?: FacetedOption[]
+  optionListGroups?: FacetedOptionGroup[]
+  format?: string
+  component?: React.ReactNode
+  addSign?: boolean
+  enableSorting?: boolean
+  enableHiding?: boolean
+  filter?: false | true | null
+  filterType?: "list" | "date" | "amount" | "uniqueValue" | null
+  filterSearchType?: "EXACT_MATCH" | "PARTIAL_MATCH" | "CONTAINS"
+  filterLabel?: string
+  filterPlaceholder?: string
+  showFilter?: boolean
+  hidden?: boolean
+  field?: string
+  size?: number
+  enableResizing?: boolean
+  order?: number
+  meta?: boolean
+  hideColumn?: boolean
+  render?: (value: string) => string
+}
 
 // Función unificada setColumns
 export function setColumns<TData>(
@@ -72,6 +77,7 @@ export function setColumns<TData>(
       filterType = setFilterType(type),
       filterLabel = title || id,
       filterPlaceholder = title || id,
+      filterSearchType = "CONTAINS",
       showFilter = false,
       hidden = false,
       size,
@@ -80,7 +86,7 @@ export function setColumns<TData>(
       meta,
       hideColumn = false,
       render,
-    } = options;
+    } = options
 
     let baseConfig: ColumnDef<TData> = {
       id,
@@ -95,6 +101,7 @@ export function setColumns<TData>(
       filterType,
       filterLabel,
       filterPlaceholder,
+      filterSearchType,
       filter,
       showFilter,
       hidden,
@@ -104,23 +111,23 @@ export function setColumns<TData>(
       order,
       meta,
       hideColumn,
-    };
+    }
 
     switch (type) {
       case "faceted":
         if (!optionList) {
-          throw new Error("optionList is required for faceted type");
+          throw new Error("optionList is required for faceted type")
         }
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
             const selectedOption = optionList.find(
               (option) => option.value === row.getValue(id)
-            );
+            )
             if (!selectedOption) {
-              return row.getValue(id);
+              return row.getValue(id)
             }
-            const Icon = selectedOption.icon;
+            const Icon = selectedOption.icon
             return (
               <div className="flex items-center">
                 {Icon && (
@@ -132,39 +139,39 @@ export function setColumns<TData>(
                   <FormattedMessage id={selectedOption.label} />
                 </span>
               </div>
-            );
+            )
           },
-        };
-        break;
+        }
+        break
       case "date":
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
             try {
-              let value = "-";
+              let value = "-"
               if (row.getValue(id)) {
-                const isoDate = row.getValue(id);
+                const isoDate = row.getValue(id)
                 value = format(
                   // @ts-ignore
                   new Date(isoDate),
                   dateFormat || "dd/MM/yy HH:mm"
-                );
+                )
               }
               if (render && value !== "-") {
-                value = render(value);
+                value = render(value)
               }
-              return value;
+              return value
             } catch (error) {
-              return "Fecha inválida";
+              return "Fecha inválida"
             }
           },
-        };
-        break;
+        }
+        break
       case "facetedBadge":
         if (!optionList || !optionListGroups) {
           throw new Error(
             "optionList and optionListGroups are required for facetedBadge type"
-          );
+          )
         }
         baseConfig = {
           ...baseConfig,
@@ -175,14 +182,14 @@ export function setColumns<TData>(
               optionListGroups={optionListGroups}
             />
           ),
-        };
+        }
 
-        break;
+        break
       case "amount":
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const { value, currency } = (row.getValue(id) as any) || [];
+            const { value, currency } = (row.getValue(id) as any) || []
             return (
               <div className="flex items-center gap-1">
                 <span className="font-bold">
@@ -191,20 +198,20 @@ export function setColumns<TData>(
                 </span>
                 <span className="text-grayFont">{currency}</span>
               </div>
-            );
+            )
           },
-        };
-        break;
+        }
+        break
       case "free":
         if (!component) {
-          throw new Error("component is required for free type");
+          throw new Error("component is required for free type")
         }
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) =>
             React.cloneElement(component as React.ReactElement, { row }),
-        };
-        break;
+        }
+        break
       case "select":
         // @ts-expect-error
         baseConfig = {
@@ -216,7 +223,7 @@ export function setColumns<TData>(
                 (table.getIsSomePageRowsSelected() && "indeterminate")
               }
               onCheckedChange={(value) => {
-                table.toggleAllPageRowsSelected(!!value);
+                table.toggleAllPageRowsSelected(!!value)
               }}
               aria-label="Select all"
             />
@@ -225,7 +232,7 @@ export function setColumns<TData>(
             <Checkbox
               checked={row.getIsSelected()}
               onCheckedChange={(value) => {
-                row.toggleSelected(!!value);
+                row.toggleSelected(!!value)
               }}
               aria-label="Select row"
             />
@@ -233,15 +240,15 @@ export function setColumns<TData>(
           enableSorting: false,
           enableHiding: false,
           size: 50,
-        };
-        break;
+        }
+        break
       default:
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            let value = getRowValue(row.getValue(id)) || "-";
+            let value = getRowValue(row.getValue(id)) || "-"
             if (render && value !== "-") {
-              value = render(value);
+              value = render(value)
             }
 
             return value !== "-" ? (
@@ -255,11 +262,11 @@ export function setColumns<TData>(
               </Tooltip>
             ) : (
               value
-            );
+            )
           },
-        };
+        }
     }
 
-    return baseConfig;
-  });
+    return baseConfig
+  })
 }

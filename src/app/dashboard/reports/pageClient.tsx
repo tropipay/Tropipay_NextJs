@@ -13,11 +13,6 @@ const PageClient = () => {
   const searchParams = useSearchParams()
   const accountNumber = CookiesManager.getInstance().get("accountNumber")
 
-  const queryConfig = {
-    ...apiConfig.balanceSummary,
-    url: `${apiConfig.balanceSummary.url}/${accountNumber}`,
-  }
-
   // Get dates from query params url
   const [startDate, endDate] = useMemo(() => {
     // Get current month interval for startDate and endDate.
@@ -31,12 +26,17 @@ const PageClient = () => {
     const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
 
     return (
-      searchParams.get("period")?.split(",") || [
+      searchParams.get("period")?.split(",") ?? [
         format(start, "dd/MM/yyyy"),
         format(end, "dd/MM/yyyy"),
       ]
     )
   }, [searchParams])
+
+  const queryConfig = {
+    ...apiConfig.balanceSummary,
+    url: `${apiConfig.balanceSummary.url}/${accountNumber}?startDate=${startDate}&endDate=${endDate}`,
+  }
 
   /**
    * Handles the change of the date range for the report.
