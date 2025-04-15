@@ -63,9 +63,11 @@ export const movementsColumnsDef: any = {
   },
   reference: {
     hidden: true,
+    filterSearchType: "EXACT_MATCH",
   },
   email: {
     hidden: true,
+    filterSearchType: "EXACT_MATCH",
   },
   completedAt: {
     type: "date",
@@ -94,6 +96,7 @@ export const movementsColumnsDef: any = {
   cardPan: {
     hidden: true,
     render: (value: string) => `**** ${value}`,
+    filterSearchType: "EXACT_MATCH",
   },
   movementDirection: {
     hidden: true,

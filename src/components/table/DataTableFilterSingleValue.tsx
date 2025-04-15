@@ -1,6 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Label } from "@/components/ui/Label"
 import {
   Popover,
   PopoverContent,
@@ -15,8 +17,6 @@ import { Eraser } from "lucide-react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
-import { Input } from "@/components/ui/Input"
-import { Label } from "@/components/ui/Label"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -74,6 +74,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
               {filterValue}
             </>
           )}
+
           <div
             onClick={(e) => {
               e.stopPropagation()
@@ -94,6 +95,21 @@ export function DataTableFilterSingleValue<TData, TValue>({
           <Label htmlFor="filterValue" className="my-2">
             <FormattedMessage id={filterLabel} />
           </Label>
+          {
+            // @ts-ignore
+            column?.config.filterSearchType !== "EXACT_MATCH" && (
+              <div className="my-1">
+                <span className="text-xs border-gray-600 bg-gray-100 rounded-sm px-2 py-1">
+                  <FormattedMessage
+                    id={
+                      // @ts-ignore
+                      `st_${column?.config.filterSearchType}`
+                    }
+                  />
+                </span>
+              </div>
+            )
+          }
           <Input
             id="filterValue"
             className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
