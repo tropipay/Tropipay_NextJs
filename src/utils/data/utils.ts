@@ -1,3 +1,4 @@
+import { LANG_DEFAULT } from "@/components/intl/utils"
 import { ColumnDef } from "@tanstack/react-table"
 import { clsx, type ClassValue } from "clsx"
 import { createHash } from "crypto"
@@ -407,7 +408,11 @@ export const isTokenExpired = (token: string) => {
   }
 }
 
-export const getDatePeriods = (monthsBefore: number): DatePeriod[] => {
+export const getDatePeriods = (
+  monthsBefore: number,
+  t?: (_: string) => string,
+  lang = LANG_DEFAULT
+): DatePeriod[] => {
   if (monthsBefore < 0) throw new Error("El número de meses debe ser positivo")
 
   const periods: DatePeriod[] = []
@@ -428,13 +433,15 @@ export const getDatePeriods = (monthsBefore: number): DatePeriod[] => {
     const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
     end.setHours(23, 59, 59, 999)
 
-    const monthName = new Intl.DateTimeFormat("es", { month: "long" })
+    const monthName = new Intl.DateTimeFormat(lang, { month: "long" })
       .format(targetDate)
       .replace(/^\w/, (c) => c.toUpperCase())
 
     periods.push({
       label:
-        i === 0 ? "Mes actual" : `${monthName} de ${targetDate.getFullYear()}`,
+        i === 0
+          ? t?.("currentMonth") ?? ""
+          : `${monthName} ${t?.("of")} ${targetDate.getFullYear()}`,
       from: start,
       to: end,
     })

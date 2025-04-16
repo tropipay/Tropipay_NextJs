@@ -150,12 +150,11 @@ export function buildGraphQLVariables(
 export const generateQueryFields = (
   columns: Record<string, any>,
   activeColumns: string[]
-): string => {
-  return activeColumns
+): string =>
+  activeColumns
     .map((columnKey) => {
       const column = columns[columnKey]
       return column.field ?? columnKey
     })
     .filter(Boolean) // Filter null values
     .join("\n") // Join fields with a line break
-}
