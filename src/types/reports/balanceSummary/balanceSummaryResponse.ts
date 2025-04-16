@@ -9,18 +9,15 @@ export interface BalanceSummaryResponse {
     refunds: number
     commissions: number
     net: number
+    finalBalance: number
   }
   commissions: {
     cardFees: number
-    cardCollection: number
     internalTransfers: number
     externalTransfers: number
     total: number
   }
   shipments: {
     totalShipments: number
-  }
-  balance: {
-    finalBalance: number
   }
 }

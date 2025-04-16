@@ -1,7 +1,6 @@
 "use client"
 
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import { balanceSummaryMock } from "@/app/queryDefinitions/reports/balanceSummary/balanceSummaryMock"
 import DataComponent from "@/components/DataComponent"
 import ReportBalanceSummary from "@/components/reports/ReportBalanceSummary"
 import CookiesManager from "@/utils/cookies/cookiesManager"
@@ -60,7 +59,7 @@ const PageClient = () => {
         {...{
           queryConfig,
           searchParams: { startDate, endDate },
-          mockData: balanceSummaryMock,
+          // mockData: balanceSummaryMock,
         }}
       >
         <ReportBalanceSummary {...{ startDate, endDate, onChangeRangeDate }} />

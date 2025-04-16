@@ -11,18 +11,15 @@ export const balanceSummaryMock: BalanceSummaryResponse = {
     refunds: 154792,
     commissions: 19804282,
     net: 474924017,
+    finalBalance: 474924017,
   },
   commissions: {
     cardFees: 19664392,
-    cardCollection: 0,
     internalTransfers: 0,
     externalTransfers: 0,
     total: 19804282,
   },
   shipments: {
     totalShipments: 0,
-  },
-  balance: {
-    finalBalance: 204499955,
   },
 }
