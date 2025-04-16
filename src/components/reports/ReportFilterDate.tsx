@@ -14,6 +14,7 @@ import { CalendarDays, CalendarIcon, CheckIcon } from "lucide-react"
 import React, { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
+import { getLocaleStored } from "../intl/utils"
 import { Label } from "../ui/Label"
 import { Select, SelectContent, SelectTrigger, SelectValue } from "../ui/Select"
 
@@ -22,10 +23,10 @@ interface Props {
 }
 
 export function ReportFilterDate({ onChange }: Props) {
-  const months: DatePeriod[] = getDatePeriods(12)
+  const { t } = useTranslation()
+  const months: DatePeriod[] = getDatePeriods(12, t, getLocaleStored())
   const defaultMonth = months[0]
 
-  const { t } = useTranslation()
   const [currentRange, setCurrentRange] = useState<string | undefined>(
     defaultMonth.label
   )
