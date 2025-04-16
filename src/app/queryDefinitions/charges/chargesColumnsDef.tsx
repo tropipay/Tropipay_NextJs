@@ -5,6 +5,7 @@ import {
 } from "@/app/filterDefinitions/charges"
 import { currencyTypes } from "@/app/filterDefinitions/commons"
 import { movementsPaymentMethods } from "@/app/filterDefinitions/movements"
+import ImageIcon from "@/components/ui/ImageIcon"
 
 export const chargesColumnsDef: any = {
   createdAt: {
@@ -69,6 +70,21 @@ export const chargesColumnsDef: any = {
   cardType: {
     hidden: true,
     filterPlaceholder: "cardType_placeholder",
+    render: (value: string) => {
+      return (
+        <div className="flex items-center">
+          <ImageIcon
+            {...{
+              image: `/images/cardTypes/${value}.svg`,
+              fallbackImage: `/images/cardTypes/CARD.svg`,
+            }}
+          />
+          <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
+            {value}
+          </span>
+        </div>
+      )
+    },
   },
   fullName: {
     hidden: true,

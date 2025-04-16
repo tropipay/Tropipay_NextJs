@@ -92,27 +92,23 @@ export function DataTableFilterSingleValue<TData, TValue>({
 
       <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
-          <Label htmlFor="filterValue" className="my-2">
+          <Label htmlFor="filterValue" className="my-2 font-bold text-gray-800">
             <FormattedMessage id={filterLabel} />
           </Label>
-          {
-            // @ts-ignore
-            column?.config.filterSearchType !== "EXACT_MATCH" && (
-              <div className="my-1">
-                <span className="text-xs border-gray-600 bg-gray-100 rounded-sm px-2 py-1">
-                  <FormattedMessage
-                    id={
-                      // @ts-ignore
-                      `st_${column?.config.filterSearchType}`
-                    }
-                  />
-                </span>
-              </div>
-            )
-          }
+          <div className="mt-3">
+            <span className="text-xs text-gray-600 font-medium">
+              <FormattedMessage
+                id={
+                  // @ts-ignore
+                  `st_${column?.config.filterSearchType}`
+                }
+              />
+            </span>
+          </div>
+
           <Input
             id="filterValue"
-            className="mt-2 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="mt-1 focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={filterPlaceholder ? t(filterPlaceholder) : ""}
             value={localFilterValue || ""}
             onChange={handleFilterChange}
