@@ -161,7 +161,7 @@
   "shipments": "Shipments",
   "show_columns": "Show Columns",
   "st_CONTAINS": "Contains",
-  "st_EXACT_MATCH": "=",
+  "st_EXACT_MATCH": "Is equal to",
   "st_PARTIAL_MATCH": "Partial Match",
   "state": "State",
   "summary": "Summary",
