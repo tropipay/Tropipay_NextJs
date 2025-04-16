@@ -100,7 +100,7 @@ export default function ReportBalanceSummary({
               <RowData
                 key={`summary.${value}`}
                 label={<FormattedMessage id={value} />}
-                value={formatAmount(data.summary[value], "EUR", "right")}
+                value={formatAmount(data.summary[value] ?? 0, "EUR", "right")}
                 style="row"
               />
             )
@@ -108,7 +108,7 @@ export default function ReportBalanceSummary({
 
           <RowData
             label={<FormattedMessage id="net" />}
-            value={formatAmount(data.summary.net, "EUR", "right")}
+            value={formatAmount(data.summary.net ?? 0, "EUR", "right")}
             style="resume"
           />
 
@@ -118,12 +118,16 @@ export default function ReportBalanceSummary({
             value={""}
             style="header"
           />
-          {["cardCollection", "internalTransfers", "externalTransfers"].map(
+          {["cardFees", "internalTransfers", "externalTransfers"].map(
             (value) => (
               <RowData
                 key={`commissions.${value}`}
                 label={<FormattedMessage id={value} />}
-                value={formatAmount(data.commissions[value], "EUR", "right")}
+                value={formatAmount(
+                  data.commissions[value] ?? 0,
+                  "EUR",
+                  "right"
+                )}
                 style="row"
               />
             )
@@ -151,6 +155,7 @@ export default function ReportBalanceSummary({
             value={formatAmount(data.shipments.totalShipments, "EUR", "right")}
             style="resume"
           />
+
           <RowData
             label={<FormattedMessage id="balance" />}
             value={""}
@@ -158,7 +163,7 @@ export default function ReportBalanceSummary({
           />
           <RowData
             label={<FormattedMessage id="available_balance" />}
-            value={formatAmount(data.balance.finalBalance, "EUR", "right")}
+            value={formatAmount(data.summary.finalBalance, "EUR", "right")}
             style="resume"
           />
         </div>
