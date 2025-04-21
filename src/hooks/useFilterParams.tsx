@@ -3,6 +3,10 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback } from "react"
 
+/**
+ * Hook to manage filter parameters in the URL.
+ * @returns {{ setParams: (paramsObject: Record<string, string | number | boolean | object | null>) => void; getParam: (paramName: string) => any; }} An object containing the setParams and getParam functions.
+ */
 const useFilterParams = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()

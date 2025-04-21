@@ -1,13 +1,13 @@
 "use client"
 
-import { AppSidebar } from "@/components/app-sidebar"
-import DynamicBreadcrumb from "@/components/privateLayout/dynamicBreadcrumb"
-import { Separator } from "@/components/ui/separator"
+import { AppSidebar } from "@/components/AppSidebar"
+import DynamicBreadcrumb from "@/components/privateLayout/DynamicBreadcrumb"
 import {
+  Separator,
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui"
 import { SessionProvider } from "next-auth/react"
 import { Suspense } from "react"
 

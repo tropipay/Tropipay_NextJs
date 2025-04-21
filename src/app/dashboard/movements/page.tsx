@@ -10,7 +10,12 @@ export default async function Page({ searchParams }: Props) {
   const queryConfig = apiConfig.movements
 
   return (
-    <DataFull queryConfig={queryConfig} searchParams={searchParams}>
+    <DataFull
+      {...{
+        queryConfig,
+        searchParams,
+      }}
+    >
       <PageClient
         columns={queryConfig.columns}
         tableId={queryConfig.key ?? ""}

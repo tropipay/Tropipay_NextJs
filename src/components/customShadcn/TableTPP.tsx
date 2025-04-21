@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui"
 import {
   ColumnFiltersState,
   flexRender,
@@ -16,11 +16,10 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table"
-import React from "react"
-
 import { ChevronDown } from "lucide-react"
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
+import React from "react"
+import { Button } from "../ui/Button"
+import { Input } from "../ui/Input"
 import DropdownMenuTPP from "./DropdownMenuTPP"
 
 interface dataType {

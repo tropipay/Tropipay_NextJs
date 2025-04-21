@@ -23,13 +23,26 @@ export const sideBarOptions: SidebarOption[] = [
     // ],
   },
   {
-    title: "payments",
-    url: "#",
+    title: "charges",
+    url: "/dashboard/charges",
     icon: Banknote,
+    isActive: true,
+    // items: [
+    //   {
+    //     title: "all",
+    //     url: "/dashboard/charges",
+    //   },
+    // ],
   },
   {
     title: "reports",
-    url: "#",
+    url: "",
     icon: ScrollText,
+    items: [
+      {
+        title: "balance_summary",
+        url: "/dashboard/reports",
+      },
+    ],
   },
 ]

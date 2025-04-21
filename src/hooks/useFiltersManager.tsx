@@ -1,12 +1,21 @@
 import { useEffect, useMemo, useState } from "react"
 import useFilterParams from "./useFilterParams"
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 
 interface UrlParamsManagerProps {
   column?: { id?: string }
 }
 
+/**
+ * Hook to manage filters.
+ * @param {UrlParamsManagerProps} props - The props for the hook.
+ * @returns {{ initialSelected: any; values: string[]; setValues: React.Dispatch<React.SetStateAction<string[]>>; onSubmit: (event: React.FormEvent<HTMLFormElement>) => void; updateValues: (event: React.ChangeEvent<HTMLInputElement>, fallbackId?: string) => void; setParams: (paramsObject: Record<string, string | number | boolean | object | null>) => void; }} An object containing the initialSelected, values, setValues, onSubmit, updateValues, and setParams functions.
+ */
 const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
   const { setParams, getParam } = useFilterParams()
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const { replace } = useRouter()
   const thisColumn = useMemo(() => column?.id || "", [column])
 
   const initialSelected = useMemo(() => {
@@ -19,11 +28,20 @@ const useFiltersManager = ({ column }: UrlParamsManagerProps) => {
     setValues(JSON.parse(JSON.stringify(initialSelected)))
   }, [initialSelected])
 
+  /**
+   * Handles the submit event of the form.
+   * @param {React.FormEvent<HTMLFormElement>} event - The submit event.
+   */
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setParams({ [thisColumn]: values })
   }
 
+  /**
+   * Updates the values of the filters.
+   * @param {React.ChangeEvent<HTMLInputElement>} event - The submit event.
+   * @param {string} fallbackId - The fallback ID.
+   */
   function updateValues(
     event: React.ChangeEvent<HTMLInputElement>,
     fallbackId?: string

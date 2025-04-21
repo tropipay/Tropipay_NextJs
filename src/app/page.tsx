@@ -1,15 +1,16 @@
 "use client"
 
 import { login } from "@/app/actions/sessionActions"
-import ErrorHandler from "@/components/errorHandler"
+import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
-import CookiesManager from "@/lib/cookiesManager"
-import { getTokenFromSession } from "@/lib/utilsUser"
+import CookiesManager from "@/utils/cookies/cookiesManager"
+import { getTokenFromSession } from "@/utils/user/utilsUser"
 import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function Page() {
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState<boolean>(false)
   const [errors, setErrors] = useState<
     Array<string | Error | { message: string }>
@@ -33,16 +34,15 @@ export default function Page() {
     setLoading(true)
     try {
       await login(token)
-      router.push("/dashboard/movements")
+      router.push(searchParams.get("redirect") ?? "/dashboard/movements")
     } catch (e) {
       setErrors([t("error_login_dialog_title")])
     }
     setLoading(false)
   }
 
-  const onOk = () => {
-    // Implement back to Tropipay page ...
-  }
+  const onOk = () =>
+    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
 
   useEffect(() => {
     onLogin()
