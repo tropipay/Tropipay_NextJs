@@ -55,6 +55,7 @@ type ColumnOptions<TData> = {
   meta?: boolean
   hideColumn?: boolean
   render?: (value: string) => string
+  valueMapper?: (_: any) => any
 }
 
 // Función unificada setColumns
@@ -86,6 +87,7 @@ export function setColumns<TData>(
       meta,
       hideColumn = false,
       render,
+      valueMapper,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
@@ -189,7 +191,12 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const { value, currency } = (row.getValue(id) as any) || []
+            const rowValue = row.getValue(id) as any
+            const rowValueMapper = valueMapper
+              ? valueMapper(row.original)
+              : rowValue
+
+            const { value, currency } = rowValueMapper || []
             return (
               <div className="flex items-center gap-1">
                 <span className="font-bold">
@@ -246,7 +253,11 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            let value = getRowValue(row.getValue(id)) || "-"
+            const rowValue = row.getValue(id) as any
+            const rowValueMapper = valueMapper
+              ? valueMapper(row.original)
+              : rowValue
+            let value = getRowValue(rowValueMapper) || "-"
             if (render && value !== "-") {
               value = render(value)
             }

@@ -1,3 +1,5 @@
+import { GraphQLVariables } from "./api"
+
 export interface FetchOptions {
   queryConfig: FetchDataConfig
   variables: { variables: GraphQLVariables }

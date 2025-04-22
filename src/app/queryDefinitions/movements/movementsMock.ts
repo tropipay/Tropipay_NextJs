@@ -1,4 +1,7 @@
-export const movementsMock: ApiDataResponse<Movement | MovementDetail> = {
+import { ApiDataResponse } from "@/types/api"
+import { Movement, MovementDetails } from "@/types/movements"
+
+export const movementsMock: ApiDataResponse<Movement | MovementDetails> = {
   items: [
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043ef",

@@ -7,12 +7,12 @@ import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { Button } from "@/components/ui"
 import { MovementDetails } from "@/types/movements"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
 
-export default function MovementDetail(props: any): JSX.Element {
+export default function MovementScheduledDetail(props: any): JSX.Element {
   const row: MovementDetails = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
@@ -44,30 +44,6 @@ export default function MovementDetail(props: any): JSX.Element {
       },
     },
   } = row
-
-  const onDownloadInvoiceFile = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
-        {
-          method: "POST",
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            bookingId: row.id,
-            label: row.state,
-          }),
-        }
-      )
-      const blob = await response.blob()
-      const link = document.createElement("a")
-      link.href = window.URL.createObjectURL(blob)
-      link.download = "invoice.pdf"
-      link.click()
-    } catch (e) {}
-  }
 
   return (
     <div className="max-w-md mx-auto p-4">
@@ -186,17 +162,9 @@ export default function MovementDetail(props: any): JSX.Element {
       </Section>
 
       <div className="flex mt-4 gap-4">
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={onDownloadInvoiceFile}
-        >
+        <Button variant="default" className="w-full">
           <FormattedMessage id="download" />
         </Button>
-        {/*           <Button variant="default" className="w-1/2">
-            <FormattedMessage id="refound" />
-          </Button>
- */}
       </div>
     </div>
   )

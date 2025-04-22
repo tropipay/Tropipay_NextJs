@@ -1,4 +1,6 @@
-type Charge = {
+import { ApiDataResponse } from "./api"
+
+export type Charge = {
   id: string
   createdAt: string
   completedAt: string
@@ -22,6 +24,6 @@ type Charge = {
   clientIp?: string
 }
 
-type GetChargesResponse = {
+export type GetChargesResponse = {
   data: { charges: ApiDataResponse<Charge> }
 }

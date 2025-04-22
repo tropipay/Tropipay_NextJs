@@ -1,3 +1,6 @@
+import { ApiDataResponse } from "@/types/api"
+import { Charge } from "@/types/charges"
+
 export const chargesMock: ApiDataResponse<Charge> = {
   items: [
     {

@@ -4,23 +4,23 @@ import { ArrowLeftRight, Banknote, ScrollText } from "lucide-react"
 export const sideBarOptions: SidebarOption[] = [
   {
     title: "movements",
-    url: "/dashboard/movements",
+    url: "#",
     icon: ArrowLeftRight,
     isActive: true,
-    // items: [
-    //   {
-    //     title: "all",
-    //     url: "/dashboard/movements",
-    //   },
-    //   {
-    //     title: "scheduled",
-    //     url: "#",
-    //   },
-    //   {
-    //     title: "disputes",
-    //     url: "#",
-    //   },
-    // ],
+    items: [
+      {
+        title: "all",
+        url: "/dashboard/movements",
+      },
+      {
+        title: "scheduled",
+        url: "/dashboard/movements/scheduled",
+      },
+      // {
+      //   title: "disputes",
+      //   url: "#",
+      // },
+    ],
   },
   {
     title: "charges",

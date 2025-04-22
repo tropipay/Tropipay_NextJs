@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui"
+import { UserBusinessAccount } from "@/types/accounts"
 import CookiesManager from "@/utils/cookies/cookiesManager"
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronsUpDown } from "lucide-react"
