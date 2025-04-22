@@ -27,6 +27,11 @@ export const getTokenFromSession = (session?: any): string => {
   }
 }
 
+export const getToken = (): string =>
+  getTokenFromSession(
+    CookiesManager.getInstance().get("session", "fill_with_session_info")
+  )
+
 /**
  * Get the user settings stored in a cookie.
  * @param userId User identifier.

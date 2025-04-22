@@ -1,10 +1,12 @@
 import IntlWrapper from "@/components/intl/Wrapper"
+import { ReduxProvider } from "@/components/ReduxProvider" // Import ReduxProvider
 import TanstackProvider from "@/components/TanstackProvider"
 import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
+import { SessionProvider } from "next-auth/react"
 
 export const metadata: Metadata = {
   title: "Tropipay Business",
@@ -37,12 +39,16 @@ export default function RootLayout({ children }: ChildrenProps) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
-        <Suspense>
-          <IntlWrapper>
-            <Toaster />
-            <TanstackProvider>{children}</TanstackProvider>
-          </IntlWrapper>
-        </Suspense>
+        <SessionProvider>
+          <Suspense>
+            <ReduxProvider>
+              <IntlWrapper>
+                <Toaster />
+                <TanstackProvider>{children}</TanstackProvider>
+              </IntlWrapper>
+            </ReduxProvider>
+          </Suspense>
+        </SessionProvider>
       </body>
     </html>
   )
