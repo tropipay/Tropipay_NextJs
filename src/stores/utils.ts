@@ -108,7 +108,6 @@ export function createStore<T extends { name: string } & Record<string, any>>(
     listeners.slice().forEach(({ callback }) => {
       try {
         callback({ type: eventType, payload })
-        console.log("trigger:", { type: eventType, payload })
       } catch (error) {
         console.error("Error in listener callback:", error)
       }
