@@ -1,29 +1,22 @@
 import axios, { AxiosRequestConfig } from "axios"
-import { reduxStore, RootState, AppDispatch } from "./reduxStore" // Import Redux store, RootState, AppDispatch
-import { updateAppData, clearAppDataKey, CacheEntry } from "./appSlice" // Import actions and CacheEntry type
-import { getToken } from "@/utils/user/utilsUser" // Import getToken
+import { reduxStore, RootState, AppDispatch } from "./reduxStore"
+import { updateAppData, clearAppDataKey, CacheEntry } from "./appSlice"
+import { getToken } from "@/utils/user/utilsUser"
 
-// Type for listener callbacks remains the same
 type ListenerCallback<T = any> = (event: { type: string; payload: T }) => void
 
-// Base store type with listen/trigger
 export type BaseStore = {
   listen: (callback: ListenerCallback) => () => void
   trigger: <P>(eventType: string, payload: P) => void
 }
 
-// Enhanced store type including Redux interaction methods and name
 export interface EnhancedStore extends BaseStore {
-  name: string // Store name used as prefix for Redux keys
-  // Reads CacheEntry structure directly from Redux state
+  name: string
   getData: <T = any>(key: string) => CacheEntry<T> | undefined
-  // Writes { data, timestamp } structure to Redux state
   setData: <T = any>(key: string, value: T) => void
-  // Resets (sets to null) a specific cache entry in Redux state
   resetData: (key: string) => void
 }
 
-// Modified createStore function
 export function createStore<T extends { name: string } & Record<string, any>>(
   methodsFactory: (store: Omit<EnhancedStore, "name">) => T // Factory receives store without name initially
 ): EnhancedStore & T {
@@ -145,9 +138,6 @@ export function createStore<T extends { name: string } & Record<string, any>>(
   return combinedStore
 }
 
-// --- Fetch Utilities ---
-
-// Updated FetchOptions interface
 interface FetchOptions<TPayload = any> {
   store: EnhancedStore // Use the enhanced store type
   endpoint: string
@@ -162,7 +152,6 @@ interface FetchOptions<TPayload = any> {
   isPublic?: boolean
 }
 
-// --- Modified fetchGetWithTriggers ---
 export async function fetchGetWithTriggers({
   store,
   endpoint,
@@ -216,9 +205,6 @@ export async function fetchGetWithTriggers({
     store.trigger(eventKO, { error })
   }
 }
-
-// --- Update other fetch functions signatures (no cache logic added yet) ---
-// Removed forceFetch parameter if it existed implicitly
 
 export async function fetchPostWithTriggers<TPayload = any>({
   store,
@@ -306,8 +292,6 @@ export async function fetchDeleteWithTriggers({
   }
 }
 
-// --- mapPublicEndpointToVersion and transformEndpointToV3 remain the same ---
-
 export const mapPublicEndpointToVersion = (endpoint: string): string => {
   const accessMode = process.env.NEXT_PUBLIC_V3_ACCESS_MODE || "disabled"
 
@@ -346,4 +330,30 @@ export const transformEndpointToV3 = (endpoint: string): string => {
     }
   }
   return endpoint
+}
+
+// --- User Profile Helper ---
+
+// Importar CacheEntry si no está ya importado globalmente en el archivo
+// (Asumiendo que CacheEntry ya está importado desde './appSlice' al principio del archivo)
+// Podríamos importar UserProfile de ProfileStore si estuviera exportado,
+// por ahora usamos Record<string, any> o any
+type UserProfile = Record<string, any>
+
+const PROFILE_STORE_NAME = "ProfileStore" // Constante para el nombre del store
+const PROFILE_CACHE_ID = "profile" // Constante para el ID de caché
+const PROFILE_REDUX_KEY = `${PROFILE_STORE_NAME}_${PROFILE_CACHE_ID}` // Clave completa en Redux
+
+/**
+ * Obtiene los datos del perfil de usuario directamente desde el estado global de Redux.
+ * @returns El objeto del perfil del usuario o undefined si no se encuentra.
+ */
+export function getUser(): UserProfile | undefined {
+  const state = reduxStore.getState() as RootState
+  // Accedemos al slice appData, luego al objeto appData interno, y finalmente a la clave específica
+  const cacheEntry = state.appData?.appData?.[PROFILE_REDUX_KEY] as
+    | CacheEntry<UserProfile>
+    | undefined
+  // Devolvemos solo la parte 'data' del objeto cacheado
+  return cacheEntry?.data
 }
