@@ -61,8 +61,9 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   columns: ColumnDef<TData, TValue>[]
   userId: string
-  categoryFilterId: string
+  categoryFilterId?: string
   categoryFilters?: string[]
+  enableToolbar?: boolean
   enableColumnOrder?: boolean
   blockedColumnOrder?: UniqueIdentifier[]
   defaultColumnOrder?: string[]
@@ -79,8 +80,9 @@ export default function DataTable<TData, TValue>({
   data,
   columns: columnsConfig,
   userId,
-  categoryFilterId,
+  categoryFilterId = "",
   categoryFilters = [],
+  enableToolbar = true,
   enableColumnOrder = true,
   blockedColumnOrder = ["select"],
   defaultColumnOrder,
@@ -359,15 +361,17 @@ export default function DataTable<TData, TValue>({
     return (
       <div className="space-y-4">
         {isLoading && <Spinner />}
-        <DataTableToolbar
-          {...{
-            tableId,
-            table,
-            columns: columnsConfig,
-            categoryFilterId,
-            categoryFilters,
-          }}
-        />
+        {enableToolbar && (
+          <DataTableToolbar
+            {...{
+              tableId,
+              table,
+              columns: columnsConfig,
+              categoryFilterId,
+              categoryFilters,
+            }}
+          />
+        )}
         <div>
           <DndContext
             collisionDetection={closestCenter}

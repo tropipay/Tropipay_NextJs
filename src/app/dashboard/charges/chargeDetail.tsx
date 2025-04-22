@@ -5,6 +5,7 @@ import {
 import { Info } from "@/components/sectionComponents/Info"
 import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
+import { Charge } from "@/types/charges"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"

@@ -1,3 +1,5 @@
+import { UserBusinessAccount } from "@/types/accounts"
+
 export const accountsMock: UserBusinessAccount[] = [
   {
     id: 21002,

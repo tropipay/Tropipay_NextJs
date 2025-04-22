@@ -93,3 +93,21 @@ export const movementsPaymentMethods = [
     icon: CircleHelp,
   },
 ].map((option) => ({ ...option, label: `pm_${option.value}` }))
+
+export const movementsScheduledRecurrences = [
+  {
+    value: 1,
+  },
+  {
+    value: 2,
+  },
+  {
+    value: 3,
+  },
+  {
+    value: 4,
+  },
+  {
+    value: 5,
+  },
+].map((option) => ({ ...option, label: `mr_${option.value}` }))
