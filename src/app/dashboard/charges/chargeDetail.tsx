@@ -10,12 +10,15 @@ import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
+import { RefundDialog } from "./refundDialog"
+import { useState } from "react"
+import { Button } from "@/components/ui"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const row: Charge = props.data.data.charges.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
-
+  const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const {
     amount,
     state,
@@ -164,6 +167,21 @@ export default function ChargeDetail(props: any): JSX.Element {
           <FormattedMessage id="refound" />
         </Button>
       </div> */}
+      <Button
+        variant="default"
+        className="w-full"
+        onClick={() => setOpenRefundDialog(true)}
+      >
+        <FormattedMessage id="refound" />
+      </Button>
+
+      <RefundDialog
+        open={openRefundDialog}
+        onOpenChange={setOpenRefundDialog}
+        amountValue={amount.value}
+        amountCurrency={amount.currency}
+        onReembolsar={() => {}}
+      />
     </div>
   )
 }
