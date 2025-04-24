@@ -76,50 +76,51 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
   return (
     <>
       <div className="max-w-md mx-auto p-4">
-        <div className="flex justify-between items-center mb-3">
-          <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {originAmount > 0 ? "+" : ""}
-            {formatAmount(originAmount, currency, "right")}
-          </div>
-          {/* <FacetedBadge
+        <div>
+          <div className="flex justify-between items-center mb-3">
+            <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
+              {originAmount > 0 ? "+" : ""}
+              {formatAmount(originAmount, currency, "right")}
+            </div>
+            {/* <FacetedBadge
           value={state}
           optionList={movementStates}
           optionListGroups={movementStateGroups}
         /> */}
-        </div>
-        <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500 flex items-center gap-1">
-            <FormattedMessage id="send_to" />
-            <span className="capitalize">{alias}</span>
-          </p>
-          {nextDate && (
-            <p className="text-xs text-gray-500">
-              {format(new Date(nextDate), "dd/MM/yy HH:mm")}
+          </div>
+          <div className="flex justify-between items-center mb-4 pb-1">
+            <p className="text-xs text-gray-500 flex items-center gap-1">
+              <FormattedMessage id="send_to" />
+              <span className="capitalize">{alias}</span>
             </p>
-          )}
-        </div>
-        <Section title={<FormattedMessage id="client_data" />}>
-          <Info
-            label={<FormattedMessage id="beneficiary" />}
-            value={<span className="capitalize">{alias}</span>}
-          />
-          <Info
-            label={<FormattedMessage id="destiny_account" />}
-            value={accountNumber}
-          />
-          <Info
-            label={<FormattedMessage id="concept" />}
-            value={conceptTransfer}
-          />
-        </Section>
+            {nextDate && (
+              <p className="text-xs text-gray-500">
+                {format(new Date(nextDate), "dd/MM/yy HH:mm")}
+              </p>
+            )}
+          </div>
+          <Section title={<FormattedMessage id="client_data" />}>
+            <Info
+              label={<FormattedMessage id="beneficiary" />}
+              value={<span className="capitalize">{alias}</span>}
+            />
+            <Info
+              label={<FormattedMessage id="destiny_account" />}
+              value={accountNumber}
+            />
+            <Info
+              label={<FormattedMessage id="concept" />}
+              value={conceptTransfer}
+            />
+          </Section>
 
-        <Section title={<FormattedMessage id="payment_details" />}>
-          <></>
-          {/* <Info
+          <Section title={<FormattedMessage id="payment_details" />}>
+            <></>
+            {/* <Info
           label={<FormattedMessage id="amount" />}
           value={formatAmount(originAmount, currency, "right")}
         /> */}
-          {/* <Info
+            {/* <Info
           label={<FormattedMessage id="paymentMethod" />}
           value={<FormattedMessage id={`pm_${paymentMethod}`} />}
         />
@@ -129,31 +130,31 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
             value={`${cardBin} **** `}
           />
         )} */}
-        </Section>
+          </Section>
 
-        <Section title={<FormattedMessage id="schedule" />}>
-          {createdAt && (
-            <Info
-              label={<FormattedMessage id="createdAt" />}
-              value={format(new Date(createdAt), "dd/MM/yy")}
-            />
-          )}
-          {nextDate && (
-            <Info
-              label={<FormattedMessage id="date_to_pay" />}
-              value={format(new Date(nextDate), "dd/MM/yy")}
-            />
-          )}
-          {frecuency && (
-            <Info
-              label={<FormattedMessage id="recurrence" />}
-              value={<FormattedMessage id={`mr_${frecuency}`} />}
-            />
-          )}
-        </Section>
-
+          <Section title={<FormattedMessage id="schedule" />}>
+            {createdAt && (
+              <Info
+                label={<FormattedMessage id="createdAt" />}
+                value={format(new Date(createdAt), "dd/MM/yy")}
+              />
+            )}
+            {nextDate && (
+              <Info
+                label={<FormattedMessage id="date_to_pay" />}
+                value={format(new Date(nextDate), "dd/MM/yy")}
+              />
+            )}
+            {frecuency && (
+              <Info
+                label={<FormattedMessage id="recurrence" />}
+                value={<FormattedMessage id={`mr_${frecuency}`} />}
+              />
+            )}
+          </Section>
+        </div>
         {!isDone && (
-          <div className="flex mt-4 gap-4">
+          <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
             <Button
               variant="default"
               className="w-full"
