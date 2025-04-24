@@ -1,149 +1,79 @@
-import {
-  movementStateGroups,
-  movementStates,
-} from "@/app/filterDefinitions/movements"
 import { Info } from "@/components/sectionComponents/Info"
 import { Section } from "@/components/sectionComponents/Section"
-import FacetedBadge from "@/components/table/FacetedBadge"
 import { Button } from "@/components/ui"
-import { MovementDetails } from "@/types/movements"
+import { MovementScheduled } from "@/types/movements"
 import { formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
-import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
-  const row: MovementDetails = props.data.data.movements.items[0]
-  const { data: session } = useSession()
-  const token = session?.user.token
+  const row: MovementScheduled = props.data
+
   const {
-    email,
-    fee,
-    movementDetail: {
-      amount,
-      state,
-      bankOrderCode,
-      createdAt,
-      completedAt,
-      type,
-      product,
-      concept,
-      clientAddress,
-      conversionRate,
-      netAmount,
-      cardType,
-      cardPan,
-      cardExpirationDate,
-      cardCountry,
-      clientIp,
-      recipientData: { alias, name, account, country },
-      senderData: {
-        name: senderName,
-        email: senderEmail,
-        country: senderCountry,
-      },
-    },
+    createdAt,
+    originAmount,
+    currency,
+    depositaccount: { alias, accountNumber },
+    nextDate,
+    frecuency,
+    conceptTransfer,
   } = row
 
   return (
     <div className="max-w-md mx-auto p-4">
       <div className="flex justify-between items-center mb-3">
         <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-          {amount.value > 0 ? "+" : ""}
-          {formatAmount(amount.value, amount.currency, "right")}
+          {originAmount > 0 ? "+" : ""}
+          {formatAmount(originAmount, currency, "right")}
         </div>
-        <FacetedBadge
+        {/* <FacetedBadge
           value={state}
           optionList={movementStates}
           optionListGroups={movementStateGroups}
-        />
+        /> */}
       </div>
       <div className="flex justify-between items-center mb-4 pb-1">
-        <p className="text-xs text-gray-500"> {bankOrderCode}</p>
-        {completedAt && (
+        <p className="text-xs text-gray-500 flex items-center gap-1">
+          <FormattedMessage id="send_to" />
+          <span className="capitalize">{alias}</span>
+        </p>
+        {nextDate && (
           <p className="text-xs text-gray-500">
-            {format(new Date(completedAt), "dd/MM/yy HH:mm")}
+            {format(new Date(nextDate), "dd/MM/yy HH:mm")}
           </p>
         )}
       </div>
-      <Section title={<FormattedMessage id="movement_data" />}>
+      <Section title={<FormattedMessage id="client_data" />}>
         <Info
-          label={<FormattedMessage id="type" />}
-          value={<FormattedMessage id={`mt_${type}`} />}
+          label={<FormattedMessage id="beneficiary" />}
+          value={<span className="capitalize">{alias}</span>}
         />
-        <Info label={<FormattedMessage id="product" />} value={product} />
-        <Info label={<FormattedMessage id="concept" />} value={concept} />
+        <Info
+          label={<FormattedMessage id="destiny_account" />}
+          value={accountNumber}
+        />
+        <Info
+          label={<FormattedMessage id="concept" />}
+          value={conceptTransfer}
+        />
       </Section>
 
-      <Section title={<FormattedMessage id="beneficiary_data" />}>
-        <Info label={<FormattedMessage id="alias" />} value={alias} />
-        <Info
-          label={<FormattedMessage id="name" />}
-          value={<span className="uppercase">{name}</span>}
+      <Section title={<FormattedMessage id="payment_details" />}>
+        <></>
+        {/* <Info
+          label={<FormattedMessage id="amount" />}
+          value={formatAmount(originAmount, currency, "right")}
+        /> */}
+        {/* <Info
+          label={<FormattedMessage id="paymentMethod" />}
+          value={<FormattedMessage id={`pm_${paymentMethod}`} />}
         />
-        <Info label={<FormattedMessage id="account" />} value={account} />
-        <Info label={<FormattedMessage id="email" />} value={email} />
-        <Info label={<FormattedMessage id="country" />} value={country} />
-      </Section>
-
-      <Section title={<FormattedMessage id="sender_data" />}>
-        <Info
-          label={<FormattedMessage id="name" />}
-          value={<span className="uppercase">{senderName}</span>}
-        />
-        <Info label={<FormattedMessage id="email" />} value={senderEmail} />
-        <Info label={<FormattedMessage id="address" />} value={clientAddress} />
-        <Info label={<FormattedMessage id="country" />} value={senderCountry} />
-      </Section>
-
-      <Section title={<FormattedMessage id="imports" />}>
-        <Info
-          label={<FormattedMessage id="import" />}
-          value={formatAmount(amount.value, amount.currency, "right")}
-        />
-        {conversionRate && fee && amount.currency !== fee.currency && (
+        {cardBin && (
           <Info
-            label={<FormattedMessage id="conversionRate" />}
-            value={`1 EUR = ${conversionRate} ${amount.currency}`}
+            label={<FormattedMessage id="cardPan" />}
+            value={`${cardBin} **** `}
           />
-        )}
-        {fee && (
-          <Info
-            label={<FormattedMessage id="fee" />}
-            value={formatAmount(fee.value, fee.currency, "right")}
-          />
-        )}
-        <Info
-          label={<FormattedMessage id="netAmount" />}
-          value={`${formatAmount(
-            netAmount.value,
-            netAmount.currency,
-            "right"
-          )}`}
-        />
-      </Section>
-
-      <Section title={<FormattedMessage id="payment_method" />}>
-        <Info label={<FormattedMessage id="cardType" />} value={cardType} />
-        <Info
-          label={<FormattedMessage id="account" />}
-          value="******** FALTA CUENTA"
-        />
-        <Info
-          label={<FormattedMessage id="cardPan" />}
-          value={`**** ${cardPan}`}
-        />
-        {cardExpirationDate && (
-          <Info
-            label={<FormattedMessage id="cardExpirationDate" />}
-            value={format(cardExpirationDate, "dd/MM/yy")}
-          />
-        )}
-        <Info
-          label={<FormattedMessage id="cardCountry" />}
-          value={cardCountry}
-        />
-        <Info label={<FormattedMessage id="clientIp" />} value={clientIp} />
+        )} */}
       </Section>
 
       <Section title={<FormattedMessage id="schedule" />}>
@@ -153,17 +83,23 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
             value={format(new Date(createdAt), "dd/MM/yy")}
           />
         )}
-        {completedAt && (
+        {nextDate && (
           <Info
-            label={<FormattedMessage id="completedAt" />}
-            value={format(new Date(completedAt), "dd/MM/yy")}
+            label={<FormattedMessage id="date_to_pay" />}
+            value={format(new Date(nextDate), "dd/MM/yy")}
+          />
+        )}
+        {frecuency && (
+          <Info
+            label={<FormattedMessage id="recurrence" />}
+            value={<FormattedMessage id={`mr_${frecuency}`} />}
           />
         )}
       </Section>
 
       <div className="flex mt-4 gap-4">
         <Button variant="default" className="w-full">
-          <FormattedMessage id="download" />
+          <FormattedMessage id="cancel_scheduled" />
         </Button>
       </div>
     </div>
