@@ -1,15 +1,26 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataFull from "@/components/DataFull"
+import { processQueryParameters } from "@/utils/data/utils"
 import PageClient from "./pageClient"
 
-export default async function Page() {
+interface Props {
+  searchParams: { [key: string]: string }
+}
+
+export default async function Page({ searchParams }: Props) {
   const queryConfig = apiConfig.movementsScheduled
+  const urlParams = await processQueryParameters(searchParams)
+  const size = urlParams["size"] ?? "50"
+  const page = urlParams["page"] ?? "0"
 
   return (
     <DataFull
       {...{
         queryConfig,
-        searchParams: { offset: "0", limit: "50" },
+        searchParams: {
+          offset: (parseInt(page) * parseInt(size)).toString(),
+          limit: size,
+        },
         // mockData: movementScheduledMock,
       }}
     >
