@@ -1,4 +1,4 @@
-import { movementsColumnsDef } from "../movements/movementsColumnsDef"
+import { movementsColumnsDef } from "../movementsColumnsDef"
 
 export const movementsDetailColumnsDef: any = {
   ...movementsColumnsDef,

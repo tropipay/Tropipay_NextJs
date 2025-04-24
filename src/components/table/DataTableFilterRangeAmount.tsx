@@ -1,4 +1,6 @@
+import InputAmount from "@/components/InputAmount"
 import { Button } from "@/components/ui/Button"
+import { Label } from "@/components/ui/Label"
 import {
   Popover,
   PopoverContent,
@@ -12,9 +14,7 @@ import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import InputAmount from "@/components/InputAmount"
 import { useTranslation } from "../intl/useTranslation"
-import { Label } from "@/components/ui/Label"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -40,7 +40,6 @@ export function DataTableFilterRangeAmount<TData, TValue>({
 
     const minValue = min ? parseFloat(min) : undefined
     const maxValue = max ? parseFloat(max) : undefined
-    console.log(minValue, maxValue)
 
     if (
       minValue !== undefined &&

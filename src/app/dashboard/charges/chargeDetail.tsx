@@ -5,6 +5,7 @@ import {
 import { Info } from "@/components/sectionComponents/Info"
 import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
+import { Charge } from "@/types/charges"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
@@ -76,8 +77,9 @@ export default function ChargeDetail(props: any): JSX.Element {
         />
       </div>
       <div className="flex justify-between items-center mb-4 pb-1">
-        <p className="text-xs text-gray-500 uppercase">
-          <FormattedMessage id="charge_to" /> {fullName}
+        <p className="text-xs text-gray-500 flex items-center gap-1">
+          <FormattedMessage id="charge_to" />
+          <span className="uppercase">{fullName}</span>
         </p>
         {completedAt && (
           <p className="text-xs text-gray-500">

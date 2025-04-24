@@ -6,13 +6,14 @@ import { Info } from "@/components/sectionComponents/Info"
 import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { Button } from "@/components/ui"
+import { MovementDetails } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
-  const row: MovementDetail = props.data.data.movements.items[0]
+  const row: MovementDetails = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
   const {

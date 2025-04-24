@@ -3,6 +3,7 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataComponent from "@/components/DataComponent"
 import DataTable from "@/components/table/DataTable"
+import { GetMovementsResponse } from "@/types/movements"
 import { useSession } from "next-auth/react"
 import MovementDetail from "./movementDetail"
 
