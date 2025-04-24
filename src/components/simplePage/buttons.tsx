@@ -59,7 +59,7 @@ const Buttons: React.FC<ButtonsComponentProps> = ({
     variant: variantA,
     type: typeA,
     size: sizeA,
-    className: `w-full flex-1 ${classNameA}`,
+    className: `${classNameA}`, // Removed w-full flex-1
     "data-test-id": "confirm-action",
     disabled: buttonADisabled || loading,
     onClick: buttonAAction,
@@ -70,7 +70,7 @@ const Buttons: React.FC<ButtonsComponentProps> = ({
     variant: variantB,
     type: typeB,
     size: sizeB,
-    className: `w-full flex-1 ${classNameB}`,
+    className: `${classNameB}`, // Removed w-full flex-1
     "data-test-id": "cancel-action",
     disabled: buttonBDisabled || loading,
     onClick: buttonBAction,
@@ -82,12 +82,12 @@ const Buttons: React.FC<ButtonsComponentProps> = ({
       className={`flex pt-3 ${className} ${
         buttonsDisposition === "vertical"
           ? "flex-col gap-3"
-          : "justify-between gap-4"
+          : "gap-4 flex-row-reverse"
       }`}
     >
       {!!buttonAText && (
         <Button {...finalButtonAProps} variant="default">
-          {loading && <Loader2 className="mr-2 h-4 animate-spin" />}
+          {loading && <Loader2 className="mr-2 h-4 animate-spin w-auto" />}
           {!loading && buttonAText}
         </Button>
       )}

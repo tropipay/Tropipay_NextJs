@@ -19,6 +19,8 @@ export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const { data: session } = useSession()
   const token = session?.user.token
+  const refundable = true
+
   const {
     email,
     fee,
@@ -39,6 +41,7 @@ export default function MovementDetail(props: any): JSX.Element {
       cardExpirationDate,
       cardCountry,
       clientIp,
+
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
@@ -191,18 +194,20 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="flex mt-4 gap-4">
         <Button
           variant="outline"
-          className="w-1/2"
+          className={` ${refundable ? "w-1/2" : "w-full"}`}
           onClick={onDownloadInvoiceFile}
         >
           <FormattedMessage id="download" />
         </Button>
-        <Button
-          variant="default"
-          className="w-1/2"
-          onClick={() => setOpenRefundDialog(true)}
-        >
-          <FormattedMessage id="refound" />
-        </Button>
+        {refundable && (
+          <Button
+            variant="default"
+            className="w-1/2"
+            onClick={() => setOpenRefundDialog(true)}
+          >
+            <FormattedMessage id="refound" />
+          </Button>
+        )}
         <RefundDialog
           open={openRefundDialog}
           onOpenChange={setOpenRefundDialog}

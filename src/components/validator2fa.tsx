@@ -99,12 +99,12 @@ const Validator2fa = ({
         buttonBText={buttonCancelLabel}
         buttonBAction={v2fa.cancel}
         buttonAText={expired ? buttonResendLabel : ""}
+        buttonsDisposition="horizontal"
         buttonAAction={() => {
           v2fa.sendCode()
           setFinish(false)
         }}
       >
-        111111111111
         <div>
           <div className="login-form mt1 col-xs-12">
             <div className="text-center mb1">
@@ -211,7 +211,6 @@ const Validator2fa = ({
           }
           key={"2fa"}
         />
-        2222222222
       </SimplePage>
     )
   }
