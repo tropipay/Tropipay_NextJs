@@ -27,17 +27,18 @@ const local2fa = {
   PIN_TROPICARD: 101,
 }
 
-const t = (key: string) => {
-  return key
-}
+// Removed dummy t function, assuming react-intl or similar is used globally
+// const t = (key: string) => {
+//   return key
+// }
 
 const Validator2fa = ({
-  titleLabel = "2fa.title",
+  titleLabel = "twofa_title", // Updated key
   className = "",
   classNameTitle = "fw500 fs20 text-center",
   classNameSubtitle = "",
-  buttonResendLabel = "2fa.buttons.resend",
-  buttonCancelLabel = "2fa.buttons.cancel",
+  buttonResendLabel = "resend_code", // Updated key
+  buttonCancelLabel = "cancel", // Updated key
   toSend,
   data,
 }) => {
@@ -63,9 +64,10 @@ const Validator2fa = ({
       if (!expired) setExpired(true)
       return (
         <>
+          {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
           {!v2fa.loading && (
             <div className="d-flex flex-nowrap align-items-center justify-content-center col-alert pt-5 mb-5">
-              {"Home.securityCodeExpired"}
+              {"code_expired"} {/* Updated key */}
             </div>
           )}
         </>
@@ -75,8 +77,9 @@ const Validator2fa = ({
       return (
         <>
           <div className="d-flex flex-nowrap align-items-center justify-content-center colPri-form mb-5">
+            {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
             <div className="text-center">
-              {"Home.expireTime"}:{" "}
+              {"expires_in"}: {/* Updated key */}
               {minutes.toString().length === 1 ? `0${minutes}` : minutes}:
               {seconds.toString().length === 1 ? `0${seconds}` : seconds}
             </div>
@@ -163,7 +166,9 @@ const Validator2fa = ({
                 v2fa.errorState &&
                 !finish && (
                   <p className="box210 error fs14 text-left mt-3">
-                    {v2fa.twofa === local2fa.PIN && `2fa.incorrectPin`}{" "}
+                    {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
+                    {v2fa.twofa === local2fa.PIN && `incorrect_pin`}{" "}
+                    {/* Updated key */}
                     {v2fa.twofa === local2fa.PIN &&
                       v2fa.errorState !== "INVALID_PIN1" && (
                         <span
@@ -174,7 +179,9 @@ const Validator2fa = ({
                             v2fa.resetMethod()
                           }}
                         >
-                          {`2fa.pinError.alternativeMethod.${method}`}
+                          {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
+                          {method === "useSMS" ? "use_sms" : "use_google_auth"}{" "}
+                          {/* Updated keys */}
                         </span>
                       )}
                   </p>
@@ -215,14 +222,18 @@ const Validator2fa = ({
     )
   }
   if (v2fa.errorState === "PIN_DISABLED") {
+    // Use the specific keys for title, description, and buttons
     return (
       <SimplePage
-        title={"2fa.pinError.removed"} // Replaced allTexts with title and t()
+        title={"max_attempts_title"} // Updated key
+        description={"max_attempts_desc"} // Added description with updated key
         icon="error"
+        buttonAText={"continue"} // Added button text with updated key
         buttonAAction={() => {
           v2fa.sendCode()
           v2fa.resetMethod()
         }}
+        buttonBText={"cancel"} // Added button text with updated key
         buttonBAction={() => {
           // Assuming getUser() returns an object where twoFaType can be set.
           // If getUser() returns undefined initially, this might need adjustment

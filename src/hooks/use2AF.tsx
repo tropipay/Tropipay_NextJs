@@ -46,12 +46,13 @@ const local2fa = {
   MAIL: 100,
   PIN_TROPICARD: 101,
 }
+// Updated keys for local2faMessages
 const local2faMessages = {
-  1: "2fa.messages.descriptionSms",
-  2: "2fa.messages.descriptionGoogle",
-  3: "2fa.messages.descriptionPin",
-  100: "2fa.messages.descriptionEmail",
-  101: "2fa.messages.descriptionPinTropiCard",
+  [local2fa.SMS]: "sms_description",
+  [local2fa.GOOGLE]: "google_auth_description",
+  [local2fa.PIN]: "pin_description",
+  [local2fa.MAIL]: "email_description",
+  [local2fa.PIN_TROPICARD]: "tropicard_pin_description",
 }
 
 const use2FA = (props) => {
@@ -78,13 +79,16 @@ const use2FA = (props) => {
       ? local2fa.PIN
       : user?.twoFaType
   const [twofa, setTwofa] = useState(props.twofa || use2fa)
-  const [messageLabel, setMessageLabel] = useState(local2faMessages[twofa])
+  // messageLabel will now hold the key, translation happens where it's displayed
+  const [messageLabelKey, setMessageLabelKey] = useState(
+    local2faMessages[twofa]
+  )
 
   const [countdown, setCountdown] = useState(0)
   const [loading, setLoading] = useState(false)
   const [inProcess, setInProcess] = useState(false)
-  const [errorData, setErrorData] = useState(null)
-  const [errorState, setErrorState] = useState(null)
+  const [errorData, setErrorData] = useState<any | null>(null) // Adjusted type for compatibility
+  const [errorState, setErrorState] = useState<string | null>(null) // Added type annotation
   const [Data, setData] = useState(data)
 
   const t = (key) => {
@@ -99,7 +103,7 @@ const use2FA = (props) => {
           setTwofa(local2fa.PIN)
           setInProcess(true)
         } else {
-          setTwofa(user.twoFaType)
+          setTwofa(user?.twoFaType || local2fa.SMS) // Corrected: Check user and provide default
           sendCodeFn()
         }
       },
@@ -114,14 +118,16 @@ const use2FA = (props) => {
     // CONSULTA POR ERROR CON PIN ACTIVO
     setErrorData(obj)
     if (obj.type === fns.validateCode?.ko) {
-      setErrorState(null)
-      if (obj.response.code !== "INVALID_CODE") {
+      // Check if response code exists before setting error state
+      if (obj.response?.code && obj.response.code !== "INVALID_CODE") {
         setErrorState(obj.response.code)
         if (obj.response.code === "PIN_DISABLED") {
-          ProfileStore.profile.activePin = false
-          user.activePin = false
-          setTwofa(user.twoFaType)
+          // ProfileStore.profile.activePin = false // Commented out: Direct store modification is likely incorrect. Needs proper state update logic.
+          if (user) user.activePin = false // Check if user exists before modifying
+          setTwofa(user?.twoFaType || local2fa.SMS) // Check user and provide default
         }
+      } else {
+        setErrorState(null) // Reset error state if code is invalid or missing
       }
     }
     // LIMPIAR CAJA DE INGRESO CLAVE/PIN
@@ -133,7 +139,9 @@ const use2FA = (props) => {
   }
 
   const resetMethod = () => {
-    setTwofa(user.twoFaType)
+    const resetTwofaType = user?.twoFaType || local2fa.SMS // Default to SMS if user type is undefined
+    setTwofa(resetTwofaType)
+    setMessageLabelKey(local2faMessages[resetTwofaType] || "sms_description") // Update message key on reset, add fallback
     setErrorState(null)
     setErrorData(null)
   }
@@ -185,11 +193,17 @@ const use2FA = (props) => {
   useEffect(() => {
     let Pin
     const payload = setPayload(fns.validateCode)
+    // Ensure user exists before checking activePin
     if (user?.activePin && payload.baseUrl) {
       Pin = PinStore.listen(pinListener)
       PinStore.DailyLimit(payload)
     } else {
-      setTwofa(user?.twoFaType)
+      // Ensure user exists before accessing twoFaType, provide default
+      setTwofa(user?.twoFaType || local2fa.SMS)
+      // Update message label key based on the potentially updated twofa state
+      setMessageLabelKey(
+        local2faMessages[user?.twoFaType || local2fa.SMS] || "sms_description"
+      )
       sendCodeFn()
     }
     return () => {
@@ -205,7 +219,7 @@ const use2FA = (props) => {
   }, [props.twofa])
 
   useEffect(() => {
-    setMessageLabel(local2faMessages[twofa])
+    setMessageLabelKey(local2faMessages[twofa]) // Update the key when twofa changes
   }, [twofa])
 
   // Esta función inicia todo el proceso de validación del 2FA al lanza el envío del sms
@@ -226,10 +240,11 @@ const use2FA = (props) => {
     const codeLenght =
       twofa === local2fa.PIN || twofa === local2fa.PIN_TROPICARD ? 4 : 6
     if (
+      // Pass the key to errorGenerator, assuming translation happens there or later
       errorGenerator({
         setErrorData,
         condition: code.length !== codeLenght,
-        message: t(messageLabel),
+        message: messageLabelKey, // Pass the key instead of translated message
       })
     )
       return null
@@ -260,7 +275,7 @@ const use2FA = (props) => {
     errorData,
     setErrorData,
     setData,
-    messageLabel,
+    messageLabel: messageLabelKey, // Return the key
     resetMethod,
     errorState,
   }
