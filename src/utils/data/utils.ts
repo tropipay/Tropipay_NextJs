@@ -230,8 +230,6 @@ export const truncateLabels = (
   return concatenated.substring(0, maxLength - 3) + "..."
 }
 
-/* ---------------------------- */
-
 /**
  * Sets the filter type.
  * @param type any
@@ -448,4 +446,42 @@ export const getDatePeriods = (
   }
 
   return periods
+}
+
+interface ErrorGeneratorParams {
+  setErrorData: (errorData: {
+    response: {
+      type: string
+      code: string
+      message: string
+      details: any[]
+      i18n: string
+    }
+    type: string
+  }) => void
+  condition: boolean
+  message: string
+  type?: string
+}
+
+export const errorGenerator = ({
+  setErrorData,
+  condition,
+  message,
+  type = "error",
+}: ErrorGeneratorParams): boolean => {
+  if (condition) {
+    setErrorData({
+      response: {
+        type: "VALIDATION_ERROR",
+        code: "INVALID_CODE",
+        message: "Invalid code",
+        details: [],
+        i18n: message,
+      },
+      type,
+    })
+    return true
+  }
+  return false
 }

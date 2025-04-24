@@ -28,3 +28,29 @@ export const toastMessage = (
     description: <span className="pl-6">{description}</span>,
   })
 }
+
+/** Crea un objeto de error con mensaje personalizado para ser utilizado con el componente ErrorHandler
+ * @param {string} Message
+ * @returns {object} ErrorData
+ */
+export const errorGenerator = ({
+  setErrorData,
+  condition,
+  message,
+  type = "error",
+}) => {
+  if (condition) {
+    setErrorData({
+      response: {
+        type: "VALIDATION_ERROR",
+        code: "INVALID_CODE",
+        message: "Invalid code",
+        details: [],
+        i18n: message,
+      },
+      type,
+    })
+    return true
+  }
+  return false
+}
