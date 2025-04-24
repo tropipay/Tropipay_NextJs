@@ -27,7 +27,7 @@ const Buttons: React.FC<ButtonsComponentProps> = ({
   loading = false,
   buttonAAction,
   buttonBAction,
-  buttonsDisposition = "vertical",
+  buttonsDisposition = "horizontal",
   className = "",
 }) => {
   if (!buttonAText && !buttonBText) return null
@@ -86,13 +86,13 @@ const Buttons: React.FC<ButtonsComponentProps> = ({
       }`}
     >
       {!!buttonAText && (
-        <Button {...finalButtonAProps}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button {...finalButtonAProps} variant="default">
+          {loading && <Loader2 className="mr-2 h-4 animate-spin" />}
           {!loading && buttonAText}
         </Button>
       )}
-      <Button {...finalButtonBProps}>
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+      <Button {...finalButtonBProps} variant="active">
+        {loading && <Loader2 className="mr-2 h-4 animate-spin" />}
         {!loading && buttonBText}
       </Button>
     </div>
