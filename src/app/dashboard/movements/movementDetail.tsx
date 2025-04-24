@@ -11,9 +11,12 @@ import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
+import { RefundDialog } from "./refundDialog"
+import { useState } from "react"
 
 export default function MovementDetail(props: any): JSX.Element {
-  const row: MovementDetails = props.data.data.movements.items[0]
+  const row: MovementDetail = props.data.data.movements.items[0]
+  const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const { data: session } = useSession()
   const token = session?.user.token
   const {
@@ -188,15 +191,25 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="flex mt-4 gap-4">
         <Button
           variant="outline"
-          className="w-full"
+          className="w-1/2"
           onClick={onDownloadInvoiceFile}
         >
           <FormattedMessage id="download" />
         </Button>
-        {/*           <Button variant="default" className="w-1/2">
-            <FormattedMessage id="refound" />
-          </Button>
- */}
+        <Button
+          variant="default"
+          className="w-1/2"
+          onClick={() => setOpenRefundDialog(true)}
+        >
+          <FormattedMessage id="refound" />
+        </Button>
+        <RefundDialog
+          open={openRefundDialog}
+          onOpenChange={setOpenRefundDialog}
+          amountValue={amount.value}
+          amountCurrency={amount.currency}
+          onReembolsar={() => {}}
+        />
       </div>
     </div>
   )
