@@ -104,11 +104,6 @@ export default function DataTable<TData, TValue>({
     .map(({ id }) => id ?? "")
   const [tableKey, setTableKey] = useState(0)
 
-  useEffect(() => {
-    setTableKey(Math.random())
-    setIsLoading(false)
-  }, [data])
-
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
       const params = new URLSearchParams(searchParams)
@@ -356,6 +351,11 @@ export default function DataTable<TData, TValue>({
     setSelectedRow(row)
     setIsSheetOpen(true)
   }
+
+  useEffect(() => {
+    setTableKey(Math.random())
+    setIsLoading(false)
+  }, [data])
 
   if (userId)
     return (
