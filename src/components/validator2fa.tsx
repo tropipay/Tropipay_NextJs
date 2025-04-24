@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react"
+import { FormattedMessage, useIntl } from "react-intl" // Import useIntl
 import Countdown from "react-countdown"
 import ErrorHandler from "@/components/ErrorHandler"
 import use2AF from "@/hooks/use2AF"
@@ -33,15 +34,16 @@ const local2fa = {
 // }
 
 const Validator2fa = ({
-  titleLabel = "twofa_title", // Updated key
+  titleLabel = "twofa_title", // Keep the key as default prop value
   className = "",
   classNameTitle = "fw500 fs20 text-center",
   classNameSubtitle = "",
-  buttonResendLabel = "resend_code", // Updated key
-  buttonCancelLabel = "cancel", // Updated key
+  buttonResendLabel = "resend_code", // Keep the key as default prop value
+  buttonCancelLabel = "cancel", // Keep the key as default prop value
   toSend,
   data,
 }) => {
+  const intl = useIntl() // Get intl object
   const user = getUserStore() // Corrected function call
   const [expired, setExpired] = useState(false)
   const [otpValue, setOtpValue] = useState("")
@@ -67,7 +69,8 @@ const Validator2fa = ({
           {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
           {!v2fa.loading && (
             <div className="d-flex flex-nowrap align-items-center justify-content-center col-alert pt-5 mb-5">
-              {"code_expired"} {/* Updated key */}
+              {intl.formatMessage({ id: "code_expired" })}{" "}
+              {/* Use formatMessage */}
             </div>
           )}
         </>
@@ -77,9 +80,9 @@ const Validator2fa = ({
       return (
         <>
           <div className="d-flex flex-nowrap align-items-center justify-content-center colPri-form mb-5">
-            {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
             <div className="text-center">
-              {"expires_in"}: {/* Updated key */}
+              {intl.formatMessage({ id: "expires_in" })}:{" "}
+              {/* Use formatMessage */}
               {minutes.toString().length === 1 ? `0${minutes}` : minutes}:
               {seconds.toString().length === 1 ? `0${seconds}` : seconds}
             </div>
@@ -90,18 +93,22 @@ const Validator2fa = ({
   }
 
   if (v2fa.inProcess && v2fa.errorState !== "PIN_DISABLED") {
+    // Pass FormattedMessage components as props where applicable
+    // Use intl.formatMessage for props expecting strings
     return (
       <SimplePage
         icon=""
-        title={titleLabel}
+        title={intl.formatMessage({ id: titleLabel })} // Use formatMessage
         className={className}
-        description={v2fa.messageLabel}
+        description={intl.formatMessage({ id: v2fa.messageLabel })} // Use formatMessage
         classTitle={`${classNameTitle}`}
         classDescription={`${classNameSubtitle}`}
         loading={v2fa.loading}
-        buttonBText={buttonCancelLabel}
+        buttonBText={intl.formatMessage({ id: buttonCancelLabel })} // Use formatMessage
         buttonBAction={v2fa.cancel}
-        buttonAText={expired ? buttonResendLabel : ""}
+        buttonAText={
+          expired ? intl.formatMessage({ id: buttonResendLabel }) : ""
+        } // Use formatMessage
         buttonsDisposition="horizontal"
         buttonAAction={() => {
           v2fa.sendCode()
@@ -166,9 +173,9 @@ const Validator2fa = ({
                 v2fa.errorState &&
                 !finish && (
                   <p className="box210 error fs14 text-left mt-3">
-                    {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
-                    {v2fa.twofa === local2fa.PIN && `incorrect_pin`}{" "}
-                    {/* Updated key */}
+                    {v2fa.twofa === local2fa.PIN &&
+                      intl.formatMessage({ id: "incorrect_pin" })}{" "}
+                    {/* Use formatMessage */}
                     {v2fa.twofa === local2fa.PIN &&
                       v2fa.errorState !== "INVALID_PIN1" && (
                         <span
@@ -179,9 +186,13 @@ const Validator2fa = ({
                             v2fa.resetMethod()
                           }}
                         >
-                          {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
-                          {method === "useSMS" ? "use_sms" : "use_google_auth"}{" "}
-                          {/* Updated keys */}
+                          {intl.formatMessage({
+                            id:
+                              method === "useSMS"
+                                ? "use_sms"
+                                : "use_google_auth",
+                          })}{" "}
+                          {/* Use formatMessage with conditional id */}
                         </span>
                       )}
                   </p>
@@ -222,18 +233,18 @@ const Validator2fa = ({
     )
   }
   if (v2fa.errorState === "PIN_DISABLED") {
-    // Use the specific keys for title, description, and buttons
+    // Use intl.formatMessage for props expecting strings
     return (
       <SimplePage
-        title={"max_attempts_title"} // Updated key
-        description={"max_attempts_desc"} // Added description with updated key
+        title={intl.formatMessage({ id: "max_attempts_title" })}
+        description={intl.formatMessage({ id: "max_attempts_desc" })}
         icon="error"
-        buttonAText={"continue"} // Added button text with updated key
+        buttonAText={intl.formatMessage({ id: "continue" })}
         buttonAAction={() => {
           v2fa.sendCode()
           v2fa.resetMethod()
         }}
-        buttonBText={"cancel"} // Added button text with updated key
+        buttonBText={intl.formatMessage({ id: "cancel" })}
         buttonBAction={() => {
           // Assuming getUser() returns an object where twoFaType can be set.
           // If getUser() returns undefined initially, this might need adjustment
