@@ -90,7 +90,7 @@ const SimplePage: React.FC<SimplePageProps> = ({
     IconComponent = icon
   }
 
-  const containerClasses = `flex flex-col min-h-screen p-4 ${className}`
+  const containerClasses = `flex flex-col p-4 ${className}`
 
   const iconColorClass =
     icon === "ok"

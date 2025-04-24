@@ -1,37 +1,35 @@
-import DestinationCountryStore from "@/stores/DestinationCountryStore"
+"use client"
+import Validator2fa from "@/components/validator2fa"
+import BookingStore from "@/stores/BookingStore"
+import MarketProductStore from "@/stores/MarketProductStore"
 import React, { useState } from "react"
 
 const Page = () => {
   const [step, setStep] = React.useState("INITIAL")
-  const setDataTo2fa = () => {
-    let toSend = {
-      cancel: () => {
-        setStep("CANCEL")
+  const setDataTo2fa = () => ({
+    toSend: {
+      sendCode: {
+        store: BookingStore,
+        fn: BookingStore.SendSecurityCode,
+        ok: "SEND_SECURITY_CODE_TRANSFER_OK",
+        ko: "SEND_SECURITY_CODE_TRANSFER_KO",
       },
-      validateCode: null,
-    }
-    const data = {
-      amount: 111111,
-      paymentcardId: 2222,
-    }
-    const validateCode = {
-      store: DestinationCountryStore,
-      fn: DestinationCountryStore.List,
-      ok: "DESTINATION_COUNTRY_LIST_OK",
-      ko: "DESTINATION_COUNTRY_LIST_KO",
-      okFn: (obj) => {
-        setStep("OK")
+      validateCode: {
+        store: BookingStore,
+        fn: (data) => console.log("validateCode", data),
+        ok: "REFUND_OK",
+        ko: "REFUND_KO",
+        okFn: (obj) => {
+          console.log("next step")
+        },
       },
-      koFn: (obj) => {
-        setStep("KO")
-      },
-    }
-    toSend = {
-      ...toSend,
-      validateCode,
-    }
-    return { toSend, data }
-  }
+      cancel: () => console.log("cancel"),
+    },
+    data: {
+      orderCode: 1111,
+      amount: 222,
+    },
+  })
 
   if (step === "INITIAL") {
     return (

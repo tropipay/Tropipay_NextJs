@@ -331,29 +331,3 @@ export const transformEndpointToV3 = (endpoint: string): string => {
   }
   return endpoint
 }
-
-// --- User Profile Helper ---
-
-// Importar CacheEntry si no está ya importado globalmente en el archivo
-// (Asumiendo que CacheEntry ya está importado desde './appSlice' al principio del archivo)
-// Podríamos importar UserProfile de ProfileStore si estuviera exportado,
-// por ahora usamos Record<string, any> o any
-type UserProfile = Record<string, any>
-
-const PROFILE_STORE_NAME = "ProfileStore" // Constante para el nombre del store
-const PROFILE_CACHE_ID = "profile" // Constante para el ID de caché
-const PROFILE_REDUX_KEY = `${PROFILE_STORE_NAME}_${PROFILE_CACHE_ID}` // Clave completa en Redux
-
-/**
- * Obtiene los datos del perfil de usuario directamente desde el estado global de Redux.
- * @returns El objeto del perfil del usuario o undefined si no se encuentra.
- */
-export function getUser(): UserProfile | undefined {
-  const state = reduxStore.getState() as RootState
-  // Accedemos al slice appData, luego al objeto appData interno, y finalmente a la clave específica
-  const cacheEntry = state.appData?.appData?.[PROFILE_REDUX_KEY] as
-    | CacheEntry<UserProfile>
-    | undefined
-  // Devolvemos solo la parte 'data' del objeto cacheado
-  return cacheEntry?.data
-}

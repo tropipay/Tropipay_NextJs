@@ -1,10 +1,3 @@
-import { useEffect, useState } from "react"
-import { USER, errorGenerator, twoFaTypes } from "../plugins/utils"
-import i18next from "i18next"
-import PinStore from "../stores/PinStore.js"
-import { twoFaEndpointList } from "../plugins/utilsPaylink.js"
-import ProfileStore from "../stores/ProfileStore.js"
-
 /**
  * 
  * @param {Object[]} sendCode - Objeto que contiene la información necesaria para el envío del 2fa
@@ -38,6 +31,13 @@ import ProfileStore from "../stores/ProfileStore.js"
     updateFns,
     setData
  */
+"use client"
+import PinStore from "@/stores/PinStore"
+import ProfileStore from "@/stores/ProfileStore"
+import { errorGenerator } from "@/utils/data/utils"
+import { twoFaEndpointList, twoFaTypes } from "@/utils/enums"
+import { getUserStore } from "@/utils/user/utilsUser"
+import { useEffect, useState } from "react"
 
 const local2fa = {
   SMS: 1,
@@ -59,7 +59,7 @@ const use2FA = (props) => {
     sendCode,
     validateCode,
     data,
-    time = 300000,
+    time = 3000,
     cancel,
     clearInput,
   } = props
@@ -72,7 +72,7 @@ const use2FA = (props) => {
 
   // Si tiene el pin activo el 2fa será el PIN, caso contraro será el que traiga asignado el usuario
   const codeName = props.codeName || "securityCode"
-  const user = USER()
+  const user = getUserStore()
   const use2fa =
     user?.activePin && twoFaEndpointList[fns.validateCode.ok]
       ? local2fa.PIN
@@ -86,6 +86,10 @@ const use2FA = (props) => {
   const [errorData, setErrorData] = useState(null)
   const [errorState, setErrorState] = useState(null)
   const [Data, setData] = useState(data)
+
+  const t = (key) => {
+    return key
+  }
 
   // VALIDACION EXCLUSIVA PARA COMPRAS CON PIN
   const pinListener = (obj) => {
@@ -225,7 +229,7 @@ const use2FA = (props) => {
       errorGenerator({
         setErrorData,
         condition: code.length !== codeLenght,
-        message: i18next.t(messageLabel),
+        message: t(messageLabel),
       })
     )
       return null
