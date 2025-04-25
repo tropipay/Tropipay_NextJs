@@ -72,6 +72,7 @@
   "destinationAmount": "Montante Destino",
   "destiny_account": "Conta do Destino",
   "disputes": "Disputas",
+  "done": "Pronto",
   "download": "Descarregar",
   "email": "Email",
   "email_description": "[TRANSLATE] Por favor, introduce el código de seguridad recibido por correo electrónico",
@@ -170,6 +171,9 @@
   "recurrence": "Recorrência",
   "reference": "Identificador",
   "refund": "Reembolsar",
+  "refund_failed": "Reembolso falhou",
+  "refund_processing_error": "Ocorreu um erro ao processar o reembolso, por favor tente novamente mais tarde.",
+  "refund_successful": "Reembolso realizado com sucesso",
   "refunds": "Reembolsos",
   "reports": "Relatórios",
   "resend_code": "[TRANSLATE] Reenviar código",
@@ -211,5 +215,6 @@
   "value_date": "Data de valor",
   "we_cant_get_invoice_file": "[TRANSLATE] We can't get the file",
   "we_cant_load_movements": "Não podemos carregar os movimentos",
+  "we_have_refunded": "Reembolsámos",
   "you_can_refund_up_to": "Você pode reembolsar até"
 }

@@ -10,16 +10,20 @@ const Step2_RefundSuccess = (props) => {
   return (
     <>
       <DialogHeader>
-        <DialogTitle className="text-lg">Reembolso realizado</DialogTitle>
+        <DialogTitle className="text-lg">
+          <FormattedMessage id="refund_successful" />
+        </DialogTitle>
       </DialogHeader>
       <p className="text-xs text-muted-foreground">
-        Reembolsamos{" "}
+        <FormattedMessage id="we_have_refunded" />{" "}
         <span className="text-primary font-medium">
-          {data0.amount + " " + data0.amountCurrency}
+          {formatAmount(data0.amount, data0.amountCurrency, "right")}
         </span>
-      </p>{" "}
+      </p>
       <div className="flex justify-end gap-2 pt-4">
-        <Button onClick={onFinish}>Listo</Button>
+        <Button onClick={onFinish}>
+          <FormattedMessage id="done" />
+        </Button>
       </div>
     </>
   )

@@ -72,6 +72,7 @@
   "destinationAmount": "Destination Amount",
   "destiny_account": "Destiny Account",
   "disputes": "Disputes",
+  "done": "Done",
   "download": "Download",
   "email": "Email",
   "email_description": "[TRANSLATE] Por favor, introduce el código de seguridad recibido por correo electrónico",
@@ -170,6 +171,9 @@
   "recurrence": "Recurrence",
   "reference": "Identifier",
   "refund": "Refund",
+  "refund_failed": "Refund failed",
+  "refund_processing_error": "There was an error processing the refund, please try again later.",
+  "refund_successful": "Refund successful",
   "refunds": "Refunds",
   "reports": "Reports",
   "resend_code": "[TRANSLATE] Reenviar código",
@@ -211,5 +215,6 @@
   "value_date": "Value date",
   "we_cant_get_invoice_file": "We can't get the file",
   "we_cant_load_movements": "We can't load the movements",
+  "we_have_refunded": "We have refunded",
   "you_can_refund_up_to": "You can refund up to"
 }
