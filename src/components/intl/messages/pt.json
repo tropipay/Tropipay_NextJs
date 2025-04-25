@@ -84,7 +84,7 @@
   "error_login_dialog_title": "O token de sessão não é válido ou expirou.",
   "errors_have_been_detected": "Foram detetados erros",
   "exit": "Sair",
-  "expires_in": "[TRANSLATE] El código de seguridad expira en",
+  "expires_in": "El código de seguridad expira en",
   "externalTransfers": "Transferências externas de saída",
   "fc_ALL": "Todos",
   "fc_CAPTURED": "Capturados",

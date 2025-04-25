@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import { FormattedMessage, useIntl } from "react-intl" // Import useIntl
+import { useIntl } from "react-intl"
 import Countdown from "react-countdown"
 import ErrorHandler from "@/components/ErrorHandler"
 import use2AF from "@/hooks/use2AF"
@@ -28,18 +28,13 @@ const local2fa = {
   PIN_TROPICARD: 101,
 }
 
-// Removed dummy t function, assuming react-intl or similar is used globally
-// const t = (key: string) => {
-//   return key
-// }
-
 const Validator2fa = ({
-  titleLabel = "twofa_title", // Keep the key as default prop value
+  titleLabel = "twofa_title",
   className = "",
-  classNameTitle = "fw500 fs20 text-center",
-  classNameSubtitle = "",
-  buttonResendLabel = "resend_code", // Keep the key as default prop value
-  buttonCancelLabel = "cancel", // Keep the key as default prop value
+  classNameTitle = "text-left mb-4 font-bold",
+  classNameSubtitle = "font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm text-left mb-2",
+  buttonResendLabel = "resend_code",
+  buttonCancelLabel = "cancel",
   toSend,
   data,
 }) => {
@@ -55,7 +50,7 @@ const Validator2fa = ({
   const method = user?.twoFaType === local2fa.SMS ? "useSMS" : "useGoogle"
   const [finish, setFinish] = useState(false)
 
-  const v2fa = use2AF({ ...toSend, data, clearInput }) // Corrected hook name
+  const v2fa = use2AF({ ...toSend, data, clearInput })
 
   useEffect(() => {
     v2fa.setData(data)
@@ -66,11 +61,9 @@ const Validator2fa = ({
       if (!expired) setExpired(true)
       return (
         <>
-          {/* Assuming react-intl FormattedMessage is used where this component is rendered or t() is available */}
           {!v2fa.loading && (
-            <div className="d-flex flex-nowrap align-items-center justify-content-center col-alert pt-5 mb-5">
+            <div className="d-flex flex-nowrap align-items-center justify-content-center col-alert pt-5 ">
               {intl.formatMessage({ id: "code_expired" })}{" "}
-              {/* Use formatMessage */}
             </div>
           )}
         </>
@@ -79,8 +72,8 @@ const Validator2fa = ({
       if (expired) setExpired(false)
       return (
         <>
-          <div className="d-flex flex-nowrap align-items-center justify-content-center colPri-form mb-5">
-            <div className="text-center">
+          <div className="d-flex flex-nowrap align-items-center justify-content-center colPri-form">
+            <div className="text-center font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm mt-3">
               {intl.formatMessage({ id: "expires_in" })}:{" "}
               {/* Use formatMessage */}
               {minutes.toString().length === 1 ? `0${minutes}` : minutes}:
@@ -93,12 +86,10 @@ const Validator2fa = ({
   }
 
   if (v2fa.inProcess && v2fa.errorState !== "PIN_DISABLED") {
-    // Pass FormattedMessage components as props where applicable
-    // Use intl.formatMessage for props expecting strings
     return (
       <SimplePage
         icon=""
-        title={intl.formatMessage({ id: titleLabel })} // Use formatMessage
+        title={intl.formatMessage({ id: titleLabel })}
         className={className}
         description={intl.formatMessage({ id: v2fa.messageLabel })} // Use formatMessage
         classTitle={`${classNameTitle}`}
@@ -142,7 +133,7 @@ const Validator2fa = ({
                   pattern="^[0-9]+$" // Basic pattern validation
                 >
                   <InputOTPGroup
-                    className={`d-flex justify-content-center align-items-center flex-nowrap ${
+                    className={`d-flex justify-content-center align-items-center flex-nowrap mx-auto ${
                       v2fa.twofa === local2fa.PIN ||
                       v2fa.twofa === local2fa.PIN_TROPICARD
                         ? "password-input" // Apply specific style if needed

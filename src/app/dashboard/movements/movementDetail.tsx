@@ -11,11 +11,11 @@ import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
-import { RefundDialog } from "./refundDialog"
 import { useState } from "react"
+import { RefundWizard } from "../movements/RefundDialog/RefundWizard"
 
 export default function MovementDetail(props: any): JSX.Element {
-  const row: MovementDetail = props.data.data.movements.items[0]
+  const row: MovementDetails = props.data.data.movements.items[0] // Corrected type to MovementDetails
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const { data: session } = useSession()
   const token = session?.user.token
@@ -23,11 +23,11 @@ export default function MovementDetail(props: any): JSX.Element {
 
   const {
     email,
+    bankOrderCode,
     fee,
     movementDetail: {
       amount,
       state,
-      bankOrderCode,
       createdAt,
       completedAt,
       type,
@@ -205,15 +205,15 @@ export default function MovementDetail(props: any): JSX.Element {
             className="w-1/2"
             onClick={() => setOpenRefundDialog(true)}
           >
-            <FormattedMessage id="refound" />
+            <FormattedMessage id="refund" />
           </Button>
         )}
-        <RefundDialog
+        <RefundWizard
           open={openRefundDialog}
           onOpenChange={setOpenRefundDialog}
           amountValue={amount.value}
           amountCurrency={amount.currency}
-          onReembolsar={() => {}}
+          orderCode={bankOrderCode}
         />
       </div>
     </div>

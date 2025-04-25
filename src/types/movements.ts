@@ -21,13 +21,13 @@ export type Movement = {
   sender: string
   email?: string
   fee?: Amount
+  bankOrderCode: string
 }
 
 export type MovementDetails = {
   movementDetail: {
     amount: Amount
     state: string
-    bankOrderCode: string
     createdAt: string
     completedAt: string
     type: string

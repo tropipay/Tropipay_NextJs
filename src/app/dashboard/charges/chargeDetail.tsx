@@ -10,9 +10,9 @@ import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
-import { RefundDialog } from "./refundDialog"
 import { useState } from "react"
 import { Button } from "@/components/ui"
+import { RefundWizard } from "../movements/RefundDialog/RefundWizard"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const row: Charge = props.data.data.charges.items[0]
@@ -36,7 +36,10 @@ export default function ChargeDetail(props: any): JSX.Element {
     cardExpirationDate,
     cardCountry,
     clientIp,
+    bankOrderCode,
   } = row
+
+  const refundable = true
 
   const onDownloadInvoiceFile = async () => {
     try {
@@ -168,19 +171,27 @@ export default function ChargeDetail(props: any): JSX.Element {
         </Button>
       </div> */}
       <Button
-        variant="default"
-        className="w-full"
-        onClick={() => setOpenRefundDialog(true)}
+        variant="outline"
+        className={` ${refundable ? "w-1/2" : "w-full"}`}
+        onClick={onDownloadInvoiceFile}
       >
-        <FormattedMessage id="refound" />
+        <FormattedMessage id="download" />
       </Button>
-
-      <RefundDialog
+      {refundable && (
+        <Button
+          variant="default"
+          className="w-1/2"
+          onClick={() => setOpenRefundDialog(true)}
+        >
+          <FormattedMessage id="refund" />
+        </Button>
+      )}
+      <RefundWizard
         open={openRefundDialog}
         onOpenChange={setOpenRefundDialog}
         amountValue={amount.value}
         amountCurrency={amount.currency}
-        onReembolsar={() => {}}
+        orderCode={bankOrderCode}
       />
     </div>
   )

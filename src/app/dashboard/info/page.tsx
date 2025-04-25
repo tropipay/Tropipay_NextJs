@@ -1,8 +1,7 @@
 "use client"
 import Validator2fa from "@/components/validator2fa"
 import BookingStore from "@/stores/BookingStore"
-import MarketProductStore from "@/stores/MarketProductStore"
-import React, { useState } from "react"
+import React from "react"
 
 const Page = () => {
   const [step, setStep] = React.useState("INITIAL")

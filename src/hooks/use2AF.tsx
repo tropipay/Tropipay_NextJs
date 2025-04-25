@@ -33,7 +33,6 @@
  */
 "use client"
 import PinStore from "@/stores/PinStore"
-import ProfileStore from "@/stores/ProfileStore"
 import { errorGenerator } from "@/utils/data/utils"
 import { twoFaEndpointList, twoFaTypes } from "@/utils/enums"
 import { getUserStore } from "@/utils/user/utilsUser"
@@ -60,7 +59,7 @@ const use2FA = (props) => {
     sendCode,
     validateCode,
     data,
-    time = 3000,
+    time = 300000,
     cancel,
     clearInput,
   } = props
@@ -71,7 +70,6 @@ const use2FA = (props) => {
     cancel,
   }
 
-  // Si tiene el pin activo el 2fa será el PIN, caso contraro será el que traiga asignado el usuario
   const codeName = props.codeName || "securityCode"
   const user = getUserStore()
   const use2fa =
@@ -79,7 +77,6 @@ const use2FA = (props) => {
       ? local2fa.PIN
       : user?.twoFaType
   const [twofa, setTwofa] = useState(props.twofa || use2fa)
-  // messageLabel will now hold the key, translation happens where it's displayed
   const [messageLabelKey, setMessageLabelKey] = useState(
     local2faMessages[twofa]
   )
@@ -87,15 +84,14 @@ const use2FA = (props) => {
   const [countdown, setCountdown] = useState(0)
   const [loading, setLoading] = useState(false)
   const [inProcess, setInProcess] = useState(false)
-  const [errorData, setErrorData] = useState<any | null>(null) // Adjusted type for compatibility
-  const [errorState, setErrorState] = useState<string | null>(null) // Added type annotation
+  const [errorData, setErrorData] = useState<any | null>(null)
+  const [errorState, setErrorState] = useState<string | null>(null)
   const [Data, setData] = useState(data)
 
   const t = (key) => {
     return key
   }
 
-  // VALIDACION EXCLUSIVA PARA COMPRAS CON PIN
   const pinListener = (obj) => {
     const actions = {
       PIN_DAILYLIMIT_OK: (obj) => {
@@ -103,7 +99,7 @@ const use2FA = (props) => {
           setTwofa(local2fa.PIN)
           setInProcess(true)
         } else {
-          setTwofa(user?.twoFaType || local2fa.SMS) // Corrected: Check user and provide default
+          setTwofa(user?.twoFaType || local2fa.SMS)
           sendCodeFn()
         }
       },

@@ -84,7 +84,7 @@
   "error_login_dialog_title": "The session token is invalid or the token has expired.",
   "errors_have_been_detected": "Errors have been detected",
   "exit": "Exit",
-  "expires_in": "[TRANSLATE] El código de seguridad expira en",
+  "expires_in": "El código de seguridad expira en",
   "externalTransfers": "Outgoing external transfers",
   "fc_ALL": "All",
   "fc_CAPTURED": "Captured",
