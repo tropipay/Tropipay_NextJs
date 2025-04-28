@@ -111,6 +111,7 @@ const Validator2fa = ({
             <div className="text-center mb1">
               {!finish && (
                 <InputOTP
+                  autoFocus
                   maxLength={
                     v2fa.twofa === local2fa.PIN ||
                     v2fa.twofa === local2fa.PIN_TROPICARD

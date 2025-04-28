@@ -127,10 +127,11 @@ const use2FA = (props) => {
       }
     }
     // LIMPIAR CAJA DE INGRESO CLAVE/PIN
-    if (obj.response.type === "VALIDATION_ERROR") {
-      clearInput()
-    } else {
+    if (obj?.response?.type === "VALIDATION_ERROR") {
+      // CAMBIAR EL IFFFFFFFF
       fns.validateCode?.koFn && fns.validateCode?.koFn(obj)
+    } else {
+      clearInput()
     }
   }
 
