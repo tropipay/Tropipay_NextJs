@@ -34,7 +34,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   }
 
   return (
-    <div className="container p-2">
+    <div className="w-full p-2">
       {userId && (
         <DataTable
           {...{
