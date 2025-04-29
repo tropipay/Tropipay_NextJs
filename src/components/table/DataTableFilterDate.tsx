@@ -164,13 +164,19 @@ export function DataTableFilterDate<TData, TValue>({
   const handleClearFilter = React.useCallback(() => {
     if (!column) return
     if (filterValue) {
+      callPosthog(posthog, "filter_value_cleared_from_badge", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: filterValue,
+        filter_type: "date",
+      })
       setFromDate(undefined)
       setToDate(undefined)
       setSelectedValue("")
       setError(null)
       column?.setFilterValue(undefined)
     } else onClear?.(column.id)
-  }, [column])
+  }, [column, filterValue, onClear, posthog, tableId]) // Add dependencies
 
   // Manejo de períodos predefinidos
   const handlePeriodChange = React.useCallback(

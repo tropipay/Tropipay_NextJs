@@ -62,6 +62,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (localFilterValue) {
+      callPosthog(posthog, "filter_value_cleared_from_badge", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: localFilterValue, // Value before clearing
+        filter_type: "uniqueValue",
+      })
       setLocalFilterValue(undefined)
       column.setFilterValue(undefined)
     } else onClear?.(column.id)

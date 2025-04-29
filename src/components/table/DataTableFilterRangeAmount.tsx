@@ -74,6 +74,15 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (filterValue) {
+      const [min, max] = filterValue
+        .split(",")
+        .map((v) => (v ? parseFloat(v) : undefined))
+      callPosthog(posthog, "filter_value_cleared_from_badge", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: { min, max }, // Send the object value
+        filter_type: "amount",
+      })
       column.setFilterValue(undefined)
       setError(null)
     } else onClear?.(column.id)

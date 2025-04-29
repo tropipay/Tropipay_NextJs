@@ -98,8 +98,14 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const handleClearFilters = () => {
     if (!column) return
-    const filterValues = Array.from(localSelectedValues)
-    if (filterValues.length > 0) {
+    const filterValuesArray = Array.from(localSelectedValues) // Get values before clearing
+    if (filterValuesArray.length > 0) {
+      callPosthog(posthog, "filter_value_cleared_from_badge", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: filterValuesArray, // Send the array of values
+        filter_type: "list",
+      })
       setLocalSelectedValues(new Set())
       column?.setFilterValue(undefined)
 
