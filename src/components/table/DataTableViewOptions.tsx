@@ -7,8 +7,9 @@ import { Table } from "@tanstack/react-table"
 import { CheckIcon, Ellipsis } from "lucide-react"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import { usePostHog } from "posthog-js/react" // Importar PostHog
+import { usePostHog } from "posthog-js/react"
 import { useTranslation } from "../intl/useTranslation"
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import {
   Command,
   CommandEmpty,
@@ -99,7 +100,7 @@ export function DataTableViewOptions<TData>({
       (id) => !pendingVisibility[id]
     )
 
-    posthog.capture("column_visibility_applied", {
+    callPosthog(posthog, "column_visibility_applied", {
       table_id: tableId,
       visible_columns: visibleColumns,
       hidden_columns: hiddenColumns,

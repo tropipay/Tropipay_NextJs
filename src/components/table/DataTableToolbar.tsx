@@ -6,9 +6,10 @@ import { Table } from "@tanstack/react-table"
 import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
-import { usePostHog } from "posthog-js/react" // Añadir import
+import { usePostHog } from "posthog-js/react"
 import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { DataTableViewOptions } from "./DataTableViewOptions"
 import { FilterManager } from "./FilterManager"
 
@@ -52,11 +53,9 @@ export function DataTableToolbar<TData, TValue>({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
 
-      // --- Añadir PostHog aquí ---
-      posthog.capture("table_search_initiated", {
+      callPosthog(posthog, "table_search_initiated", {
         table_id: tableId,
       })
-      // --- Fin PostHog ---
 
       if (value) {
         table.setColumnFilters((prev) => {
