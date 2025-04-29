@@ -107,7 +107,7 @@ export function DataTableToolbar<TData, TValue>({
           {/* <Button variant="outline">
             <Download />
           </Button> */}
-          <DataTableViewOptions table={table} />
+          <DataTableViewOptions table={table} tableId={tableId} />
         </div>
       </div>
       {/* Delegamos la visualización de filtros a FilterManager */}

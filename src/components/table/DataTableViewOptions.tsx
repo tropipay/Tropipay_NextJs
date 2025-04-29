@@ -7,6 +7,7 @@ import { Table } from "@tanstack/react-table"
 import { CheckIcon, Ellipsis } from "lucide-react"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar PostHog
 import { useTranslation } from "../intl/useTranslation"
 import {
   Command,
@@ -21,17 +22,24 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/Popover"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
+  tableId: string // Añadir tableId a las props
 }
 
 export function DataTableViewOptions<TData>({
   table,
+  tableId, // Recibir tableId
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
-  const intl = useIntl() // Use useIntl to translate column names
+  const posthog = usePostHog() // Obtener instancia de PostHog
+  const intl = useIntl()
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>
   >({})
@@ -84,6 +92,19 @@ export function DataTableViewOptions<TData>({
   }
 
   const handleApply = () => {
+    const visibleColumns = Object.keys(pendingVisibility).filter(
+      (id) => pendingVisibility[id]
+    )
+    const hiddenColumns = Object.keys(pendingVisibility).filter(
+      (id) => !pendingVisibility[id]
+    )
+
+    posthog.capture("column_visibility_applied", {
+      table_id: tableId,
+      visible_columns: visibleColumns,
+      hidden_columns: hiddenColumns,
+    })
+
     table.setColumnVisibility(pendingVisibility)
     const newlyVisible = sortedColumns
       .filter(
