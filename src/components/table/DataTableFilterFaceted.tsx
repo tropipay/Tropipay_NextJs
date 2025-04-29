@@ -27,21 +27,26 @@ import { Separator } from "@/components/ui/Separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/utils/data/utils"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
 interface DataTableFilterFacetedProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
 }
 
 // Componente principal
 export function DataTableFilterFaceted<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   const searchParams = useSearchParams()
   // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}
@@ -78,10 +83,16 @@ export function DataTableFilterFaceted<TData, TValue>({
   }
 
   const handleApplyFilters = () => {
-    const filterValues = Array.from(localSelectedValues)
-    const serializedValue = filterValues.join(",")
+    const filterValuesArray = Array.from(localSelectedValues)
+    callPosthog(posthog, "filter_value_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "list",
+      filter_value: filterValuesArray,
+    })
+    const serializedValue = filterValuesArray.join(",")
     column?.setFilterValue(
-      filterValues.length > 0 ? serializedValue : undefined
+      filterValuesArray.length > 0 ? serializedValue : undefined
     )
   }
 

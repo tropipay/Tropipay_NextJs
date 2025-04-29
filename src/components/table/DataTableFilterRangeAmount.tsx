@@ -14,18 +14,23 @@ import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
   // @ts-ignore
@@ -51,6 +56,12 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     }
 
     setError(null)
+    callPosthog(posthog, "filter_value_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "amount",
+      filter_value: { min: minValue, max: maxValue },
+    })
     const serializedValue = [minValue, maxValue].join(",")
     column?.setFilterValue(serializedValue)
 

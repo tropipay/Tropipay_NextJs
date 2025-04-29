@@ -289,6 +289,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterFaceted
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -301,6 +302,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterDate
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     // @ts-ignore
                     column={{
                       ...table.getColumn(column.id),
@@ -313,6 +315,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterRangeAmount
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -325,6 +328,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterSingleValue
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore

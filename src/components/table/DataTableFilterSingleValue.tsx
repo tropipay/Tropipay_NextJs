@@ -16,18 +16,23 @@ import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
 
@@ -44,6 +49,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
   // Función para aplicar el filtro a la columna
   const handleApplyFilter = (event: React.FormEvent) => {
     event.preventDefault()
+    callPosthog(posthog, "filter_value_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "uniqueValue",
+      filter_value: localFilterValue || undefined,
+    })
     column?.setFilterValue(localFilterValue || undefined)
   }
 

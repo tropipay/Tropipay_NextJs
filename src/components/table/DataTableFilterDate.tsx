@@ -24,6 +24,8 @@ import {
 import { CalendarIcon, Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 import { Label } from "@/components/ui/Label"
 import {
@@ -39,15 +41,18 @@ interface ColumnConfig {
 }
 
 interface DataTableFilterDateProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue> & { config?: ColumnConfig }
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterDate<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   const [selectedValue, setSelectedValue] = React.useState<string>("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
@@ -145,10 +150,16 @@ export function DataTableFilterDate<TData, TValue>({
     }
 
     setError(null)
-    column?.setFilterValue(
+    const appliedValue =
       fromDate || toDate ? [fromDate, toDate].join(",") : undefined
-    )
-  }, [column, fromDate, toDate, t])
+    callPosthog(posthog, "filter_value_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "date",
+      filter_value: appliedValue,
+    })
+    column?.setFilterValue(appliedValue)
+  }, [column, fromDate, toDate, t, posthog, tableId])
 
   const handleClearFilter = React.useCallback(() => {
     if (!column) return
