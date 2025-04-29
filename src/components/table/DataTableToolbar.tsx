@@ -6,6 +6,7 @@ import { Table } from "@tanstack/react-table"
 import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+import { usePostHog } from "posthog-js/react" // Añadir import
 import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableViewOptions } from "./DataTableViewOptions"
@@ -15,7 +16,7 @@ interface Props<TData, TValue> {
   tableId: string
   table: Table<TData>
   columns: any
-  categoryFilterId: string,
+  categoryFilterId: string
   categoryFilters?: string[]
 }
 
@@ -24,9 +25,10 @@ export function DataTableToolbar<TData, TValue>({
   table,
   columns,
   categoryFilterId,
-  categoryFilters
+  categoryFilters,
 }: Props<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Obtener instancia de PostHog
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const searchColumn = table.getColumn("search")
@@ -36,7 +38,9 @@ export function DataTableToolbar<TData, TValue>({
         const searchFilter = prev.find(({ id }) => id === "search")
         if (searchFilter) {
           return prev.map((filter) =>
-            filter.id === "search" ? { ...filter, value: searchParamValue } : filter
+            filter.id === "search"
+              ? { ...filter, value: searchParamValue }
+              : filter
           )
         }
         return [...prev, { id: "search", value: searchParamValue }]
@@ -47,6 +51,12 @@ export function DataTableToolbar<TData, TValue>({
   const handleSearchChange = useDebouncedCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
+
+      // --- Añadir PostHog aquí ---
+      posthog.capture("table_search_initiated", {
+        table_id: tableId,
+      })
+      // --- Fin PostHog ---
 
       if (value) {
         table.setColumnFilters((prev) => {
