@@ -1,9 +1,16 @@
-type ApiDataResponse<T> = {
+export type ApiDataResponse<T> = {
   items: T[]
   totalCount: number
 }
 
-interface SearchParams {
+export type ApiRestDataResponse<T> = {
+  count: number
+  rows: T[]
+  limit: number
+  offset: string
+}
+
+export interface SearchParams {
   page?: string
   size?: string
   sort?: string
@@ -13,7 +20,7 @@ interface SearchParams {
   [key: string]: string | undefined // Parámetros de búsqueda dinámicos
 }
 
-interface GraphQLVariables {
+export interface GraphQLVariables {
   filter: {
     [key: string]: any // Filtros dinámicos
     generalSearch?: string

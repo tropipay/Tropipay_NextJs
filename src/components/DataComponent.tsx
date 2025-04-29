@@ -1,12 +1,13 @@
 "use client"
 
-import { useFetchData } from "@/utils/data/useFetchData"
 import { FetchDataConfig } from "@/types/fetchData"
+import { useFetchData } from "@/utils/data/useFetchData"
 import { DehydratedState } from "@tanstack/react-query"
-import { AlertTriangle, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
 import { FormattedMessage } from "react-intl"
+import ErrorMessage from "./ErrorMessage"
 
 interface DataChildProps {
   data: any
@@ -59,22 +60,13 @@ export default function DataComponent({
         </div>
       )}
       {isError && showError && (
-        <div className="w-full max-w-[500px] px-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div
-            className="flex items-center justify-center bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded"
-            role="alert"
-          >
-            <AlertTriangle className="w-6 h-6 mr-2" />
-            <span>
-              <FormattedMessage id="loading_data_error" />
-            </span>
-          </div>
+        <div className="w-full max-w-[500px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <ErrorMessage>
+            <FormattedMessage id="loading_data_error" />
+          </ErrorMessage>
         </div>
       )}
       {userId && data && !isError && cloneElement(children, { data, userId })}
     </div>
   )
-}
-function awaitprocessQueryParameters(searchParams: { [key: string]: string }) {
-  throw new Error("Function not implemented.")
 }

@@ -3,6 +3,7 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataComponent from "@/components/DataComponent"
 import DataTable from "@/components/table/DataTable"
+import { GetChargesResponse } from "@/types/charges"
 import { useSession } from "next-auth/react"
 import ChargeDetail from "./chargeDetail"
 
@@ -33,7 +34,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   }
 
   return (
-    <div className="container p-2">
+    <div className="w-full p-2">
       {userId && (
         <DataTable
           {...{

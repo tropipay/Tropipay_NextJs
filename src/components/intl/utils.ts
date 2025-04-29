@@ -6,7 +6,6 @@ import Portuguese from "./messages/pt.json"
 const LOCALE_STORAGE_VAR = "userLang"
 
 export const LANG_DEFAULT = "es"
-
 export const supportedLanguages: string[] = ["es", "en", "pt"]
 
 export const getLocaleStored = () => {

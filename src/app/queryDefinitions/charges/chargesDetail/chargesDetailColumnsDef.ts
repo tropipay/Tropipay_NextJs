@@ -1,4 +1,4 @@
-import { chargesColumnsDef } from "../charges/chargesColumnsDef"
+import { chargesColumnsDef } from "../chargesColumnsDef"
 
 export const chargesDetailColumnsDef: any = {
   ...chargesColumnsDef,

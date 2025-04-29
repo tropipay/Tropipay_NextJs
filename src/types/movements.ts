@@ -1,4 +1,7 @@
-type MovementClientData = {
+import { UserDepositAccount } from "./accounts"
+import { ApiDataResponse } from "./api"
+
+export type MovementClientData = {
   name: string
   account: string
   country: string
@@ -6,7 +9,7 @@ type MovementClientData = {
   email?: string
 }
 
-type Movement = {
+export type Movement = {
   id: string
   state: string
   createdAt: string
@@ -20,7 +23,7 @@ type Movement = {
   fee?: Amount
 }
 
-type MovementDetail = {
+export type MovementDetails = {
   movementDetail: {
     amount: Amount
     state: string
@@ -43,6 +46,44 @@ type MovementDetail = {
   }
 } & Movement
 
-type GetMovementsResponse = {
+export type GetMovementsResponse = {
   data: { movements: ApiDataResponse<Movement> }
+}
+
+export interface MovementScheduled {
+  id: number
+  credentialId: null
+  userId: string
+  ipUser: null
+  depositaccountId: number
+  originAmount: number
+  currency: string
+  destinationCurrency: string
+  reasonId: number
+  reasonDes: null
+  conceptTransfer: string
+  callBackUrl: null
+  serviceId: null
+  userReference: null
+  fiat: boolean
+  destinationCredentialId: null
+  notifyUser: null
+  initialTransactionState: null
+  paymentcardId: null
+  startScheduledDate: string
+  frecuency: number
+  state: number
+  nextDate: string
+  createdAt: string
+  updatedAt: string
+  depositaccount: UserDepositAccount
+  service: any
+  paymentcard: any
+}
+
+export interface GetMovementsScheduledResponse {
+  count: number
+  rows: MovementScheduled[]
+  limit: number
+  offset: string
 }

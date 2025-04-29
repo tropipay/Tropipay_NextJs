@@ -42,7 +42,9 @@ export default function Page() {
   }
 
   const onOk = () =>
-    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
+    window.location.assign(
+      `${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login?redirect=${process.env.NEXT_PUBLIC_SITE_URL}`
+    )
 
   useEffect(() => {
     onLogin()
