@@ -80,6 +80,8 @@ export default function ReportBalanceSummary({
     <div className="space-y-4">
       <InformationToolbar
         {...{
+          startDate,
+          endDate,
           onDownload,
           onChangeRangeDate,
           downloadButtonDisabled: loading,

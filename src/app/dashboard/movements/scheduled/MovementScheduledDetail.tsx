@@ -1,6 +1,11 @@
+import {
+  movementScheduledStates,
+  movementStateGroups,
+} from "@/app/filterDefinitions/movements"
 import ErrorMessage from "@/components/ErrorMessage"
 import { Info } from "@/components/sectionComponents/Info"
 import { Section } from "@/components/sectionComponents/Section"
+import FacetedBadge from "@/components/table/FacetedBadge"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,6 +44,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     nextDate,
     frecuency,
     conceptTransfer,
+    state,
   } = row
 
   const onCancel = async () => {
@@ -82,11 +88,11 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               {originAmount > 0 ? "+" : ""}
               {formatAmount(originAmount, currency, "right")}
             </div>
-            {/* <FacetedBadge
-          value={state}
-          optionList={movementStates}
-          optionListGroups={movementStateGroups}
-        /> */}
+            <FacetedBadge
+              value={state}
+              optionList={movementScheduledStates}
+              optionListGroups={movementStateGroups}
+            />
           </div>
           <div className="flex justify-between items-center mb-4 pb-1">
             <p className="text-xs text-gray-500 flex items-center gap-1">

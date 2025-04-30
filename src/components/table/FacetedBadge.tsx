@@ -1,5 +1,5 @@
-import { FormattedMessage } from "react-intl"
 import { Badge } from "@/components/ui/Badge"
+import { FormattedMessage } from "react-intl"
 
 const FacetedBadge = ({ value, optionList, optionListGroups }) => {
   const currentState = optionList.find((thisState) => thisState.value === value)
@@ -33,7 +33,7 @@ const FacetedBadge = ({ value, optionList, optionListGroups }) => {
       <span className="mx-1 min-w-[72px] ">
         <FormattedMessage id={currentState.label} />
       </span>
-      <Icon className="h-4 w-4 mr-1" />
+      {Icon && <Icon className="h-4 w-4 mr-1" />}
     </Badge>
   )
 }
