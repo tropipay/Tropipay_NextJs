@@ -117,7 +117,10 @@ export function DataTableFilterFaceted<TData, TValue>({
   // Renderizado
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterFaceted-popoverTrigger-openFilter"
+      >
         <Button
           variant={selectedValues.size > 0 ? "active" : "inactive"}
           size="sm"
@@ -174,6 +177,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                   <CommandItem
                     key={option.value}
                     onSelect={() => handleSelectOption(option.value)}
+                    data-test-id={`dataTableFilterFaceted-commandItem-toggleOption-${option.value}`}
                   >
                     <div
                       className={cn(

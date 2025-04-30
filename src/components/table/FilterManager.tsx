@@ -206,7 +206,10 @@ export function FilterManager<TData, TValue>({
     <div className="flex w-full items-start justify-between">
       <div className="flex flex-1 items-start space-x-2 p-0 overflow-x-auto mr-4 pr-2">
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger
+            asChild
+            data-test-id="filterManager-popoverTrigger-addFilter"
+          >
             <Button
               variant="secondary"
               size="sm"
@@ -223,7 +226,7 @@ export function FilterManager<TData, TValue>({
             <Command>
               <CommandInput
                 placeholder={t("search_filters")}
-                data-test-id="filterManager-commandInput-searchFilters" // Added data-test-id
+                data-test-id="filterManager-commandInput-searchFilters"
               />
               <CommandList>
                 <CommandEmpty>
@@ -236,6 +239,7 @@ export function FilterManager<TData, TValue>({
                       <CommandItem
                         key={id}
                         onSelect={() => handleSelectOption(id)}
+                        data-test-id={`filterManager-commandItem-toggleFilter-${id}`}
                       >
                         <div
                           className={cn(

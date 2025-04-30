@@ -117,7 +117,10 @@ export function DataTableFilterRangeAmount<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterRangeAmount-popoverTrigger-openFilter"
+      >
         <Button
           // @ts-ignore
           variant={selStyle(!!filterValue, "active", "inactive", "")}

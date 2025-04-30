@@ -231,7 +231,10 @@ export function DataTableFilterDate<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterDate-popoverTrigger-openFilter"
+      >
         <Button
           variant={filterValue ? "active" : "inactive"}
           size="sm"
@@ -278,20 +281,35 @@ export function DataTableFilterDate<TData, TValue>({
         >
           <div className="mb-2">
             <Select value={selectedValue} onValueChange={handlePeriodChange}>
-              <SelectTrigger aria-label={t("select_period")}>
+              <SelectTrigger
+                aria-label={t("select_period")}
+                data-test-id="dataTableFilterDate-selectTrigger-selectPeriod"
+              >
                 <SelectValue placeholder={t("select_period")} />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="1">
+                <SelectItem
+                  value="1"
+                  data-test-id="dataTableFilterDate-selectItem-period-1"
+                >
                   <FormattedMessage id="today" />
                 </SelectItem>
-                <SelectItem value="2">
+                <SelectItem
+                  value="2"
+                  data-test-id="dataTableFilterDate-selectItem-period-2"
+                >
                   <FormattedMessage id="last_week" />
                 </SelectItem>
-                <SelectItem value="3">
+                <SelectItem
+                  value="3"
+                  data-test-id="dataTableFilterDate-selectItem-period-3"
+                >
                   <FormattedMessage id="last_month" />
                 </SelectItem>
-                <SelectItem value="4">
+                <SelectItem
+                  value="4"
+                  data-test-id="dataTableFilterDate-selectItem-period-4"
+                >
                   <FormattedMessage id="last_six_months" />
                 </SelectItem>
               </SelectContent>
@@ -301,7 +319,10 @@ export function DataTableFilterDate<TData, TValue>({
             <FormattedMessage id="from" />
           </Label>
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger
+              asChild
+              data-test-id="dataTableFilterDate-popoverTrigger-openDateFrom"
+            >
               <Button
                 id="date-from"
                 variant="outline"
@@ -321,6 +342,7 @@ export function DataTableFilterDate<TData, TValue>({
                         handleDateChange("from", undefined)
                       }}
                       className="ml-2 text-sm"
+                      data-test-id="dataTableFilterDate-span-clearDateFrom"
                     >
                       <FormattedMessage id="clear" />
                     </span>
@@ -355,7 +377,10 @@ export function DataTableFilterDate<TData, TValue>({
             <FormattedMessage id="to" />
           </Label>
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger
+              asChild
+              data-test-id="dataTableFilterDate-popoverTrigger-openDateTo
+            >
               <Button
                 id="date-to"
                 variant="outline"
@@ -375,6 +400,7 @@ export function DataTableFilterDate<TData, TValue>({
                         handleDateChange("to", undefined)
                       }}
                       className="ml-2 text-sm"
+                      data-test-id="dataTableFilterDate-span-clearDateTo"
                     >
                       <FormattedMessage id="clear" />
                     </span>

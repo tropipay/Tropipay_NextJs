@@ -264,6 +264,7 @@ export default function DataTable<TData, TValue>({
         ref={setNodeRef}
         className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
         style={style}
+        data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
       >
         <div className="flex gap-1 items-center">
           {header.isPlaceholder
@@ -398,7 +399,10 @@ export default function DataTable<TData, TValue>({
                             header={header}
                           />
                         ) : (
-                          <TableHead key={header.id}>
+                          <TableHead
+                            key={header.id}
+                            data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
+                          >
                             {header.isPlaceholder
                               ? null
                               : flexRender(

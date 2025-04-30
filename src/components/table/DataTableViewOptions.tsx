@@ -134,7 +134,10 @@ export function DataTableViewOptions<TData>({
     >
       <Tooltip>
         <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
+          <PopoverTrigger
+            asChild
+            data-test-id="dataTableViewOptions-popoverTrigger-openOptions"
+          >
             <Button variant="outline" aria-label="Column options">
               <Ellipsis className="mr-0 h-4 w-4" />
             </Button>
@@ -163,6 +166,7 @@ export function DataTableViewOptions<TData>({
                     key={column.id}
                     onSelect={() => handleToggleColumn(column.id)}
                     aria-selected={isVisible}
+                    data-test-id={`dataTableViewOptions-commandItem-toggleVisibility-${column.id}`}
                   >
                     <div
                       className={cn(

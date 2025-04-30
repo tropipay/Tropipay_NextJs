@@ -77,7 +77,10 @@ export function DataTableFilterSingleValue<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterSingleValue-popoverTrigger-openFilter"
+      >
         <Button
           // @ts-ignore
           variant={selStyle(filterValue, "active", "inactive", "")}
