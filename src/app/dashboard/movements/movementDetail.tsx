@@ -19,29 +19,31 @@ export default function MovementDetail(props: any): JSX.Element {
   const {
     email,
     fee,
+    createdAt,
+    completedAt,
+    paymentMethod,
+    amount,
+    cardPan,
+    product,
+    conversionRate,
+    concept,
+    bankOrderCode,
+    state,
     movementDetail: {
-      amount,
-      state,
-      bankOrderCode,
-      createdAt,
-      completedAt,
-      type,
-      product,
-      concept,
-      clientAddress,
-      conversionRate,
-      netAmount,
-      cardType,
-      cardPan,
-      cardExpirationDate,
       cardCountry,
+      cardExpirationDate,
+      cardType,
+      clientAddress,
       clientIp,
+      netAmount,
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
+        lastName: senderLastName,
         email: senderEmail,
         country: senderCountry,
       },
+      type,
     },
   } = row
 
@@ -96,26 +98,37 @@ export default function MovementDetail(props: any): JSX.Element {
             label={<FormattedMessage id="type" />}
             value={<FormattedMessage id={`mt_${type}`} />}
           />
-          <Info label={<FormattedMessage id="product" />} value={product} />
+          {product && (
+            <Info
+              label={<FormattedMessage id="product" />}
+              value={<FormattedMessage id={`cp_${product}`} />}
+            />
+          )}
           <Info label={<FormattedMessage id="concept" />} value={concept} />
         </Section>
 
         <Section title={<FormattedMessage id="beneficiary_data" />}>
           <Info label={<FormattedMessage id="alias" />} value={alias} />
-          <Info
-            label={<FormattedMessage id="name" />}
-            value={<span className="uppercase">{name}</span>}
-          />
+          {name && (
+            <Info
+              label={<FormattedMessage id="name" />}
+              value={<span className="uppercase">{name}</span>}
+            />
+          )}
           <Info label={<FormattedMessage id="account" />} value={account} />
           <Info label={<FormattedMessage id="email" />} value={email} />
           <Info label={<FormattedMessage id="country" />} value={country} />
         </Section>
 
         <Section title={<FormattedMessage id="sender_data" />}>
-          <Info
-            label={<FormattedMessage id="name" />}
-            value={<span className="uppercase">{senderName}</span>}
-          />
+          {senderName && (
+            <Info
+              label={<FormattedMessage id="name" />}
+              value={
+                <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
+              }
+            />
+          )}
           <Info label={<FormattedMessage id="email" />} value={senderEmail} />
           <Info
             label={<FormattedMessage id="address" />}
@@ -156,14 +169,20 @@ export default function MovementDetail(props: any): JSX.Element {
 
         <Section title={<FormattedMessage id="payment_method" />}>
           <Info label={<FormattedMessage id="cardType" />} value={cardType} />
-          <Info
+          {/* <Info
             label={<FormattedMessage id="account" />}
             value="******** FALTA CUENTA"
-          />
+          /> */}
           <Info
-            label={<FormattedMessage id="cardPan" />}
-            value={`**** ${cardPan}`}
+            label={<FormattedMessage id="paymentMethod" />}
+            value={<FormattedMessage id={`pm_${paymentMethod}`} />}
           />
+          {cardPan && (
+            <Info
+              label={<FormattedMessage id="cardPan" />}
+              value={`**** ${cardPan}`}
+            />
+          )}
           {cardExpirationDate && (
             <Info
               label={<FormattedMessage id="cardExpirationDate" />}

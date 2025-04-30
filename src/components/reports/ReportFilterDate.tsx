@@ -19,31 +19,40 @@ import { Label } from "../ui/Label"
 import { Select, SelectContent, SelectTrigger, SelectValue } from "../ui/Select"
 
 interface Props {
+  defaultStartDate: string
+  defaultEndDate: string
   onChange?: (value: string) => void
 }
 
-export function ReportFilterDate({ onChange }: Props) {
+export function ReportFilterDate({
+  defaultStartDate,
+  defaultEndDate,
+  onChange,
+}: Props) {
   const { t } = useTranslation()
   const months: DatePeriod[] = getDatePeriods(12, t, getLocaleStored())
-  const defaultMonth = months[0]
+
+  const defaultMonth = months.find(
+    ({ from, to }) =>
+      defaultStartDate === format(from, "dd/MM/yyyy") &&
+      defaultEndDate === format(to, "dd/MM/yyyy")
+  )
 
   const [currentRange, setCurrentRange] = useState<string | undefined>(
-    defaultMonth.label
+    defaultMonth?.label
   )
   const [currentFromDate, setCurrentFromDate] = React.useState<
     string | undefined
-  >(format(defaultMonth.from, "dd/MM/yyyy"))
+  >(defaultStartDate)
   const [currentToDate, setCurrentToDate] = React.useState<string | undefined>(
-    format(defaultMonth.to, "dd/MM/yyyy")
+    defaultEndDate
   )
 
-  const [range, setRange] = useState<string | undefined>(defaultMonth.label)
+  const [range, setRange] = useState<string | undefined>(defaultMonth?.label)
   const [fromDate, setFromDate] = React.useState<string | undefined>(
-    format(defaultMonth.from, "dd/MM/yyyy")
+    defaultStartDate
   )
-  const [toDate, setToDate] = React.useState<string | undefined>(
-    format(defaultMonth.to, "dd/MM/yyyy")
-  )
+  const [toDate, setToDate] = React.useState<string | undefined>(defaultEndDate)
   const [error, setError] = React.useState<string | null>(null)
   const today = React.useMemo(() => startOfDay(new Date()), [])
   const startDate = React.useMemo(() => startOfDay(new Date(2025, 0, 1)), [])
@@ -67,39 +76,39 @@ export function ReportFilterDate({ onChange }: Props) {
     }
   }
 
-  const handleDateChange = React.useCallback(
-    (key: "from" | "to", selectedDate: Date | undefined) => {
-      if (!selectedDate) {
-        key === "from" ? setFromDate(undefined) : setToDate(undefined)
-        setRange(undefined)
-        setError(null)
-        return
-      }
-
-      const formattedDate = format(selectedDate, "dd/MM/yyyy")
-      const fromParsed = fromDate
-        ? parse(fromDate, "dd/MM/yyyy", new Date())
-        : null
-      const toParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : null
-
-      if (key === "from" && toParsed && isAfter(selectedDate, toParsed)) {
-        setError(t("error_bad_period"))
-        return
-      } else if (
-        key === "to" &&
-        fromParsed &&
-        isBefore(selectedDate, fromParsed)
-      ) {
-        setError(t("error_bad_period"))
-        return
-      }
-
-      setError(null)
-      key === "from" ? setFromDate(formattedDate) : setToDate(formattedDate)
+  const handleDateChange = (
+    key: "from" | "to",
+    selectedDate: Date | undefined
+  ) => {
+    if (!selectedDate) {
+      key === "from" ? setFromDate(undefined) : setToDate(undefined)
       setRange(undefined)
-    },
-    [fromDate, toDate]
-  )
+      setError(null)
+      return
+    }
+
+    const formattedDate = format(selectedDate, "dd/MM/yyyy")
+    const fromParsed = fromDate
+      ? parse(fromDate, "dd/MM/yyyy", new Date())
+      : null
+    const toParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : null
+
+    if (key === "from" && toParsed && isAfter(selectedDate, toParsed)) {
+      setError(t("error_bad_period"))
+      return
+    } else if (
+      key === "to" &&
+      fromParsed &&
+      isBefore(selectedDate, fromParsed)
+    ) {
+      setError(t("error_bad_period"))
+      return
+    }
+
+    setError(null)
+    key === "from" ? setFromDate(formattedDate) : setToDate(formattedDate)
+    setRange(undefined)
+  }
 
   const handleApplyFilter = React.useCallback(() => {
     const fromParsed = fromDate ? parse(fromDate, "dd/MM/yyyy", new Date()) : ""
@@ -139,12 +148,14 @@ export function ReportFilterDate({ onChange }: Props) {
   const onOpenChange = (open: boolean) => {
     if (open) {
       const month = months.find(({ label }) => label === currentRange)
-
+      setError(null)
       if (!!month) {
         setRange(currentRange)
         setFromDate(format(month.from, "dd/MM/yyyy"))
         setToDate(format(month.to, "dd/MM/yyyy"))
-        setError(null)
+      } else {
+        setFromDate(defaultStartDate)
+        setToDate(defaultEndDate)
       }
     }
   }
