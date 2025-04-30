@@ -146,7 +146,10 @@ export function DataTableViewOptions<TData>({
       </Tooltip>
       <PopoverContent className="w-[270px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={t("search_columns")} />
+          <CommandInput
+            placeholder={t("search_columns")}
+            data-test-id="dataTableViewOptions-commandInput-searchColumns" // Added data-test-id
+          />
           <CommandList>
             <CommandEmpty>
               <FormattedMessage id="no_results_found" />

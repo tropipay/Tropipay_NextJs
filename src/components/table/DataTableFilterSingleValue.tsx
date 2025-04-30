@@ -144,6 +144,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
             placeholder={filterPlaceholder ? t(filterPlaceholder) : ""}
             value={localFilterValue || ""}
             onChange={handleFilterChange}
+            data-test-id="dataTableFilterSingleValue-input-filterValue" // Added data-test-id
           />
           <PopoverClose asChild>
             {/* Added data-test-id to the apply filter button */}

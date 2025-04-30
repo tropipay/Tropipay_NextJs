@@ -179,6 +179,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
                 ? (+filterValue.split(",")[0] * 100).toString() || ""
                 : ""
             }
+            data-test-id="dataTableFilterRangeAmount-input-amountMin" // Added data-test-id
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
@@ -192,6 +193,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
                 ? (+filterValue.split(",")[1] * 100).toString() || ""
                 : ""
             }
+            data-test-id="dataTableFilterRangeAmount-input-amountMax" // Added data-test-id
           />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}

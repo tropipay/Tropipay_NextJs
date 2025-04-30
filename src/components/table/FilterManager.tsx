@@ -221,7 +221,10 @@ export function FilterManager<TData, TValue>({
           </PopoverTrigger>
           <PopoverContent className="w-[264px] p-0" align="start">
             <Command>
-              <CommandInput placeholder={t("search_filters")} />
+              <CommandInput
+                placeholder={t("search_filters")}
+                data-test-id="filterManager-commandInput-searchFilters" // Added data-test-id
+              />
               <CommandList>
                 <CommandEmpty>
                   <FormattedMessage id="no_results_found" />

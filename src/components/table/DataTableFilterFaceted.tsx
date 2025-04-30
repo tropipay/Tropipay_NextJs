@@ -158,7 +158,10 @@ export function DataTableFilterFaceted<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[285px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={t(filterLabel)} />
+          <CommandInput
+            placeholder={t(filterLabel)}
+            data-test-id="dataTableFilterFaceted-commandInput-search" // Added data-test-id
+          />
           <CommandList className="px-2 pt-2">
             <CommandEmpty>
               <FormattedMessage id="no_filter_results" />
