@@ -140,7 +140,9 @@ export function DataTableFilterFaceted<TData, TValue>({
               </div>
             </>
           )}
+          {/* Updated data-test-id for the clear filter icon container */}
           <div
+            data-test-id="dataTableFilterFaceted-div-clearFilter"
             onClick={(e) => {
               e.stopPropagation()
               handleClearFilters()
@@ -206,6 +208,7 @@ export function DataTableFilterFaceted<TData, TValue>({
               className="w-full p-2"
               type="submit"
               onClick={handleApplyFilters}
+              data-test-id="dataTableFilterFaceted-button-applyFilter" // Updated data-test-id
             >
               {<FormattedMessage id="apply" />}
             </Button>

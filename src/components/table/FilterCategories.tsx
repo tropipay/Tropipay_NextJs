@@ -58,6 +58,7 @@ const FilterCategories: React.FC<Props> = ({
           }
           className="px-2 h-8"
           onClick={() => handleFilterChange(categoryFilter)}
+          data-test-id={`filter-category-button-${categoryFilterId}-${categoryFilter}`} // Added data-test-id
         >
           <FormattedMessage id={`fc_${categoryFilter}`} />
         </Button>

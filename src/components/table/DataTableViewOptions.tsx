@@ -182,7 +182,13 @@ export function DataTableViewOptions<TData>({
         </Command>
         <div className="p-3 flex gap-2">
           <PopoverClose asChild>
-            <Button variant="default" className="w-full" onClick={handleApply}>
+            {/* Added data-test-id to the apply button */}
+            <Button
+              variant="default"
+              className="w-full"
+              onClick={handleApply}
+              data-test-id="dataTableViewOptions-button-apply" // Updated data-test-id
+            >
               <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>

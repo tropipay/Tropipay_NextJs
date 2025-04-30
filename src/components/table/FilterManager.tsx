@@ -257,6 +257,7 @@ export function FilterManager<TData, TValue>({
                   variant="default"
                   className="w-full"
                   onClick={handleApplyFilters}
+                  data-test-id="filterManager-button-applyFilters" // Updated data-test-id
                 >
                   <FormattedMessage id="apply" />
                 </Button>
@@ -347,6 +348,7 @@ export function FilterManager<TData, TValue>({
           variant="active"
           onClick={handleClearFilters}
           className="h-8 px-2"
+          data-test-id="filterManager-button-clearAllFilters" // Updated data-test-id
         >
           <FormattedMessage id="clean_filters" />
         </Button>

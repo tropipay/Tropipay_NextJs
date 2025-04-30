@@ -253,7 +253,9 @@ export function DataTableFilterDate<TData, TValue>({
               </span>
             </>
           )}
+          {/* Updated data-test-id for the clear filter icon container */}
           <div
+            data-test-id="dataTableFilterDate-div-clearFilter"
             onClick={(e) => {
               e.stopPropagation()
               handleClearFilter()
@@ -404,7 +406,13 @@ export function DataTableFilterDate<TData, TValue>({
           {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="flex gap-2 mt-2">
             <PopoverClose asChild>
-              <Button variant="default" className="w-full" type="submit">
+              {/* Added data-test-id to the apply filter button */}
+              <Button
+                variant="default"
+                className="w-full"
+                type="submit"
+                data-test-id="dataTableFilterDate-button-applyFilter" // Updated data-test-id
+              >
                 <FormattedMessage id="apply" />
               </Button>
             </PopoverClose>

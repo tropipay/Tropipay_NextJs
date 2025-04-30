@@ -97,6 +97,7 @@ export function DataTableToolbar<TData, TValue>({
               onChange={handleSearchChange}
               className="pl-10 w-full"
               defaultValue={searchParamValue}
+              data-test-id="dataTableToolbar-input-search" // Updated data-test-id
             />
           </div>
         </div>

@@ -107,6 +107,21 @@ export function DataTableFilterSingleValue<TData, TValue>({
         </Button>
       </PopoverTrigger>
 
+      {/* Updated data-test-id for the clear filter icon container */}
+      <div
+        data-test-id="dataTableFilterSingleValue-div-clearFilter"
+        onClick={(e) => {
+          e.stopPropagation()
+          handleClearFilter()
+        }}
+      >
+        {filterValue ? (
+          <Eraser className="h-4 w-4" />
+        ) : (
+          <CrossCircledIcon className="h-4 w-4" />
+        )}
+      </div>
+
       <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <Label htmlFor="filterValue" className="my-2 font-bold text-gray-800">
@@ -131,7 +146,13 @@ export function DataTableFilterSingleValue<TData, TValue>({
             onChange={handleFilterChange}
           />
           <PopoverClose asChild>
-            <Button variant="default" className="w-full mt-6" type="submit">
+            {/* Added data-test-id to the apply filter button */}
+            <Button
+              variant="default"
+              className="w-full mt-6"
+              type="submit"
+              data-test-id="dataTableFilterSingleValue-button-applyFilter" // Updated data-test-id
+            >
               <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>

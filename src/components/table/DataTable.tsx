@@ -420,6 +420,7 @@ export default function DataTable<TData, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       className="cursor-pointer hover:bg-gray-100"
+                      data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
                       // @ts-ignore
                       onRowClick={handleRowClick}
                     >
