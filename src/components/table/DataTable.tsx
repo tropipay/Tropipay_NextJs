@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui"
+import { callPosthog } from "@/utils/utils"
 import { objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
 import {
@@ -52,6 +53,7 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { usePostHog } from "posthog-js/react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -346,12 +348,13 @@ export default function DataTable<TData, TValue>({
   )
 
   const table = useReactTable(tableConfig)
+  const posthog = usePostHog()
 
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
     setIsSheetOpen(true)
+    callPosthog(posthog, "detalle_abierto", { table_id: tableId })
   }
-
   useEffect(() => {
     setTableKey(Math.random())
     setIsLoading(false)
