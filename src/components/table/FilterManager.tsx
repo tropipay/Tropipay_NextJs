@@ -133,7 +133,7 @@ export function FilterManager<TData, TValue>({
   const handleApplyFilters = () => {
     const selectedFilterIdsArray = Array.from(selectedFilters)
 
-    callPosthog(posthog, "filter_manager_applied", {
+    callPosthog(posthog, "filterManager_applied", {
       table_id: tableId,
       selected_filter_ids: selectedFilterIdsArray,
     })
@@ -159,7 +159,7 @@ export function FilterManager<TData, TValue>({
     const clearedFilterIds = managedAppliedFilters.map(({ id }) => id)
 
     if (clearedFilterIds.length > 0) {
-      callPosthog(posthog, "all_filters_cleared", {
+      callPosthog(posthog, "filterManager_clearAll", {
         table_id: tableId,
         cleared_filter_ids: clearedFilterIds,
       })
@@ -178,7 +178,7 @@ export function FilterManager<TData, TValue>({
   const handleClearFilter = (filterId: string) => {
     const filterValue = table.getColumn(filterId)?.getFilterValue()
 
-    callPosthog(posthog, "filter_badge_removed", {
+    callPosthog(posthog, "filterManager_clear", {
       table_id: tableId,
       filter_id: filterId,
       filter_value: filterValue ?? "unknown", // Send value or 'unknown'

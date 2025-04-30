@@ -56,7 +56,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     }
 
     setError(null)
-    callPosthog(posthog, "filter_value_applied", {
+    callPosthog(posthog, "filterAmount_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "amount",
@@ -65,7 +65,6 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     const serializedValue = [minValue, maxValue].join(",")
     column?.setFilterValue(serializedValue)
 
-    // Cerrar el Popover solo si no hay errores
     if (!error) {
       document.getElementById("close-popover")?.click()
     }
@@ -77,10 +76,10 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       const [min, max] = filterValue
         .split(",")
         .map((v) => (v ? parseFloat(v) : undefined))
-      callPosthog(posthog, "filter_value_cleared_from_badge", {
+      callPosthog(posthog, "filterAmount_clear", {
         table_id: tableId,
         filter_id: column.id,
-        filter_value: { min, max }, // Send the object value
+        filter_value: { min, max },
         filter_type: "amount",
       })
       column.setFilterValue(undefined)

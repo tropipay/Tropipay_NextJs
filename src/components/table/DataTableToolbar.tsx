@@ -53,7 +53,7 @@ export function DataTableToolbar<TData, TValue>({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
 
-      callPosthog(posthog, "table_search_initiated", {
+      callPosthog(posthog, "filterSearch_applied", {
         table_id: tableId,
       })
 
@@ -83,7 +83,6 @@ export function DataTableToolbar<TData, TValue>({
   return (
     <>
       <div className="flex items-center justify-between">
-        {/* Elementos alineados a la izquierda */}
         <div className="flex items-center gap-2">
           <FilterCategories {...{ table, categoryFilterId, categoryFilters }} />
           <div className="relative flex items-center w-full">

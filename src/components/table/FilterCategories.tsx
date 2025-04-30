@@ -22,7 +22,7 @@ const FilterCategories: React.FC<Props> = ({
     .columnFilters.find((filter) => filter.id === categoryFilterId)?.value
 
   const handleFilterChange = (categoryFilterSelected: string) => {
-    callPosthog(posthog, "category_filter_selected", {
+    callPosthog(posthog, "filterCategory_selected", {
       category_filter_id: categoryFilterId,
       selected_category: categoryFilterSelected,
     })

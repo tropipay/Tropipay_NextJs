@@ -49,7 +49,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   // Función para aplicar el filtro a la columna
   const handleApplyFilter = (event: React.FormEvent) => {
     event.preventDefault()
-    callPosthog(posthog, "filter_value_applied", {
+    callPosthog(posthog, "filterSingleValue_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "uniqueValue",
@@ -62,7 +62,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (localFilterValue) {
-      callPosthog(posthog, "filter_value_cleared_from_badge", {
+      callPosthog(posthog, "filterSingleValue_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: localFilterValue, // Value before clearing

@@ -152,7 +152,7 @@ export function DataTableFilterDate<TData, TValue>({
     setError(null)
     const appliedValue =
       fromDate || toDate ? [fromDate, toDate].join(",") : undefined
-    callPosthog(posthog, "filter_value_applied", {
+    callPosthog(posthog, "filterDate_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "date",
@@ -164,7 +164,7 @@ export function DataTableFilterDate<TData, TValue>({
   const handleClearFilter = React.useCallback(() => {
     if (!column) return
     if (filterValue) {
-      callPosthog(posthog, "filter_value_cleared_from_badge", {
+      callPosthog(posthog, "filterDate_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: filterValue,
@@ -182,6 +182,13 @@ export function DataTableFilterDate<TData, TValue>({
   const handlePeriodChange = React.useCallback(
     (value: string) => {
       setSelectedValue(value)
+
+      callPosthog(posthog, "filterDate_periodSelected", {
+        table_id: tableId,
+        filter_id: column?.id,
+        period_value: value,
+      })
+
       switch (value) {
         case "1": // Hoy
           setFromDate(todayFormatted)
@@ -379,7 +386,7 @@ export function DataTableFilterDate<TData, TValue>({
           <Popover>
             <PopoverTrigger
               asChild
-              data-test-id="dataTableFilterDate-popoverTrigger-openDateTo
+              data-test-id="dataTableFilterDate-popoverTrigger-openDateTo"
             >
               <Button
                 id="date-to"

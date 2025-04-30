@@ -84,7 +84,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const handleApplyFilters = () => {
     const filterValuesArray = Array.from(localSelectedValues)
-    callPosthog(posthog, "filter_value_applied", {
+    callPosthog(posthog, "filterFaceted_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "list",
@@ -100,10 +100,10 @@ export function DataTableFilterFaceted<TData, TValue>({
     if (!column) return
     const filterValuesArray = Array.from(localSelectedValues) // Get values before clearing
     if (filterValuesArray.length > 0) {
-      callPosthog(posthog, "filter_value_cleared_from_badge", {
+      callPosthog(posthog, "filterFaceted_clear", {
         table_id: tableId,
         filter_id: column.id,
-        filter_value: filterValuesArray, // Send the array of values
+        filter_value: filterValuesArray,
         filter_type: "list",
       })
       setLocalSelectedValues(new Set())
