@@ -58,7 +58,7 @@ export function ReportFilterDate({
   const startDate = React.useMemo(() => startOfDay(new Date(2025, 0, 1)), [])
 
   const isApplyButtonDisabled = React.useMemo(() => {
-    if (!fromDate && !toDate) return true
+    if (!fromDate || !toDate) return true
     const fromParsed = fromDate ? parse(fromDate, "dd/MM/yyyy", new Date()) : ""
     const toParsed = toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : ""
     if (fromParsed && toDate && isAfter(fromParsed, toParsed)) return true
@@ -120,7 +120,7 @@ export function ReportFilterDate({
 
     setError(null)
 
-    if (fromDate || toDate) {
+    if (fromDate && toDate) {
       setCurrentRange(range)
       setCurrentFromDate(fromDate)
       setCurrentToDate(toDate)
