@@ -1,12 +1,16 @@
-type MovementClientData = {
+import { UserDepositAccount } from "./accounts"
+import { ApiDataResponse } from "./api"
+
+export type MovementClientData = {
   name: string
+  lastName: string
   account: string
   country: string
   alias?: string
   email?: string
 }
 
-type Movement = {
+export type Movement = {
   id: string
   state: string
   createdAt: string
@@ -16,25 +20,21 @@ type Movement = {
   paymentMethod: string
   reference: string
   sender: string
-  email?: string
-  fee?: Amount
+  product: string
+  conversionRate: string
+  cardPan: string
+  concept: string
+  bankOrderCode: string
+  email: string
+  fee: Amount
 }
 
-type MovementDetail = {
+export type MovementDetails = {
   movementDetail: {
-    amount: Amount
-    state: string
-    bankOrderCode: string
-    createdAt: string
-    completedAt: string
     type: string
-    product: string
-    concept: string
     clientAddress: string
-    conversionRate: string
     netAmount: Amount
     cardType: string
-    cardPan: string
     cardExpirationDate: string
     cardCountry: string
     clientIp: string
@@ -43,6 +43,44 @@ type MovementDetail = {
   }
 } & Movement
 
-type GetMovementsResponse = {
+export type GetMovementsResponse = {
   data: { movements: ApiDataResponse<Movement> }
+}
+
+export interface MovementScheduled {
+  id: number
+  credentialId: null
+  userId: string
+  ipUser: null
+  depositaccountId: number
+  originAmount: number
+  currency: string
+  destinationCurrency: string
+  reasonId: number
+  reasonDes: null
+  conceptTransfer: string
+  callBackUrl: null
+  serviceId: null
+  userReference: null
+  fiat: boolean
+  destinationCredentialId: null
+  notifyUser: null
+  initialTransactionState: null
+  paymentcardId: null
+  startScheduledDate: string
+  frecuency: number
+  state: number
+  nextDate: string
+  createdAt: string
+  updatedAt: string
+  depositaccount: UserDepositAccount
+  service: any
+  paymentcard: any
+}
+
+export interface GetMovementsScheduledResponse {
+  count: number
+  rows: MovementScheduled[]
+  limit: number
+  offset: string
 }

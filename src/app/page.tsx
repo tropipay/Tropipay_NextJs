@@ -1,10 +1,10 @@
 "use client"
 
 import { login } from "@/app/actions/sessionActions"
-import ErrorHandler from "@/components/errorHandler"
+import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
-import CookiesManager from "@/lib/cookiesManager"
-import { getTokenFromSession } from "@/lib/utilsUser"
+import CookiesManager from "@/utils/cookies/cookiesManager"
+import { getTokenFromSession } from "@/utils/user/utilsUser"
 import { Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -42,7 +42,9 @@ export default function Page() {
   }
 
   const onOk = () =>
-    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
+    window.location.assign(
+      `${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login?redirect=${process.env.NEXT_PUBLIC_SITE_URL}`
+    )
 
   useEffect(() => {
     onLogin()

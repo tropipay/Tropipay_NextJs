@@ -1,6 +1,6 @@
-import IntlWrapper from "@/components/intl/wrapper"
+import IntlWrapper from "@/components/intl/Wrapper"
 import TanstackProvider from "@/components/TanstackProvider"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"

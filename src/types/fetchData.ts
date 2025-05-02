@@ -1,3 +1,13 @@
+import { GraphQLVariables } from "./api"
+
+export interface FetchOptions {
+  queryConfig: FetchDataConfig
+  variables: { variables: GraphQLVariables }
+  columnVisibility: any
+  token?: string
+  debug?: boolean
+}
+
 export interface FetchDataConfig {
   url: string
   method: string

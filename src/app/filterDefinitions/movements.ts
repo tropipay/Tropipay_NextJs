@@ -1,11 +1,11 @@
-import BankIcon from "@/components/images/bankIcon"
-import GiftcardIcon from "@/components/images/giftcardIcon"
-import OtaIcon from "@/components/images/otaIcon"
-import PhoneRechargeIcon from "@/components/images/phoneRechargeIcon"
-import RefundIcon from "@/components/images/refundIcon"
-import RemittanceIcon from "@/components/images/remittanceIcon"
-import TropicardIcon from "@/components/images/tropicardIcon"
-import TropipayIcon from "@/components/images/tropipayIcon"
+import BankIcon from "@/components/images/BankIcon"
+import GiftcardIcon from "@/components/images/GiftcardIcon"
+import OtaIcon from "@/components/images/OtaIcon"
+import PhoneRechargeIcon from "@/components/images/PhoneRechargeIcon"
+import RefundIcon from "@/components/images/RefundIcon"
+import RemittanceIcon from "@/components/images/RemittanceIcon"
+import TropicardIcon from "@/components/images/TropicardIcon"
+import TropipayIcon from "@/components/images/TropipayIcon"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import {
   ArrowUpRight,
@@ -43,10 +43,22 @@ export const movementStates = [
   },
 ].map((option) => ({ ...option, label: `ms_${option.value}` }))
 
+export const movementScheduledStates = [
+  {
+    value: 1,
+  },
+  {
+    value: 2,
+  },
+  {
+    value: 3,
+  },
+].map((option) => ({ ...option, label: `sched_ms_${option.value}` }))
+
 export const movementStateGroups = {
   completedStates: ["completed"],
   processingStates: ["pending", "processing"],
-  anotherStates: ["cancelled"],
+  anotherStates: ["cancelled", 1, 2, 3],
   errorStates: ["error"],
 }
 
@@ -93,3 +105,21 @@ export const movementsPaymentMethods = [
     icon: CircleHelp,
   },
 ].map((option) => ({ ...option, label: `pm_${option.value}` }))
+
+export const movementsScheduledRecurrences = [
+  {
+    value: 1,
+  },
+  {
+    value: 2,
+  },
+  {
+    value: 3,
+  },
+  {
+    value: 4,
+  },
+  {
+    value: 5,
+  },
+].map((option) => ({ ...option, label: `mr_${option.value}` }))

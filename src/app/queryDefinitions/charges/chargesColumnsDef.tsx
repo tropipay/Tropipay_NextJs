@@ -5,6 +5,7 @@ import {
 } from "@/app/filterDefinitions/charges"
 import { currencyTypes } from "@/app/filterDefinitions/commons"
 import { movementsPaymentMethods } from "@/app/filterDefinitions/movements"
+import ImageIcon from "@/components/ui/ImageIcon"
 
 export const chargesColumnsDef: any = {
   createdAt: {
@@ -39,6 +40,7 @@ export const chargesColumnsDef: any = {
   email: {
     order: 5,
     showFilter: true,
+    filterSearchType: "EXACT_MATCH",
   },
   concept: {
     hidden: true,
@@ -58,17 +60,36 @@ export const chargesColumnsDef: any = {
   cardBin: {
     hidden: true,
     render: (value: string) => `${value} **** `,
+    filterSearchType: "EXACT_MATCH",
   },
   cardPan: {
     hidden: true,
     render: (value: string) => `**** ${value}`,
+    filterSearchType: "EXACT_MATCH",
   },
   cardType: {
     hidden: true,
+    filterPlaceholder: "cardType_placeholder",
+    render: (value: string) => {
+      return (
+        <div className="flex items-center">
+          <ImageIcon
+            {...{
+              image: `/images/cardTypes/${value}.svg`,
+              fallbackImage: `/images/cardTypes/CARD.svg`,
+            }}
+          />
+          <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
+            {value}
+          </span>
+        </div>
+      )
+    },
   },
   fullName: {
     hidden: true,
-    render: (value: string) => <span className="uppercase">{value}</span>,
+    render: (value: string) => <span className="capitalize">{value}</span>,
+    filterSearchType: "PARTIAL_MATCH",
   },
   issuerBank: {
     hidden: true,
@@ -82,6 +103,7 @@ export const chargesColumnsDef: any = {
     optionList: chargeProductTypes,
     hidden: true,
     order: 6,
+    filterSearchType: "EXACT_MATCH",
   },
   country: {
     hidden: true,

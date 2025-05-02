@@ -1,62 +1,53 @@
 "use client"
 
-import ReportFooter from "@/components/reports/ReportFooter"
-import ReportHeader from "@/components/reports/ReportHeader"
-import { RowData } from "@/components/rowData/rowData"
-import { useState } from "react"
-import { FormattedMessage } from "react-intl" // Importar FormattedMessage
-import InformationToolbar from "./informationToolbar"
-
-const isBrowser = typeof window !== undefined
+import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import DataComponent from "@/components/DataComponent"
+import ReportBalanceSummary from "@/components/reports/ReportBalanceSummary"
+import CookiesManager from "@/utils/cookies/cookiesManager"
+import { format, formatISO, parse } from "date-fns"
+import { useSearchParams } from "next/navigation"
+import { useMemo } from "react"
 
 const PageClient = () => {
-  const [loading, setLoading] = useState<boolean>(false)
+  const searchParams = useSearchParams()
+  const accountNumber = CookiesManager.getInstance().get("accountNumber")
 
-  /**
-   * Handles the download of the report as a PDF.
-   * @async
-   */
-  const handleDownload = async () => {
-    // Get the HTML element for generation
-    const reportContainerElement = document.querySelector(".report-container")
-
-    // Create a dynamic element and pass HTML content to it
-    const element = document.createElement("div")
-    element.innerHTML = reportContainerElement?.innerHTML ?? ""
-
-    // Display the report header and footer.
-    element?.childNodes.forEach(
-      (el) => ((el as HTMLElement).style.display = "initial")
+  // Get dates from query params url
+  const [startDate, endDate] = useMemo(() => {
+    // Get current month interval for startDate and endDate.
+    const currentDate = new Date()
+    const targetDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
     )
+    const start = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1)
+    const end = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
 
-    // Add the dynamic element to the DOM
-    document.body.appendChild(element)
+    return (
+      searchParams.get("period")?.split(",") ?? [
+        format(start, "dd/MM/yyyy"),
+        format(end, "dd/MM/yyyy"),
+      ]
+    )
+  }, [searchParams])
 
-    // Generate the PDF report
-    if (isBrowser && element) {
-      const { default: html2pdf } = await import("html2pdf.js")
+  const isoStartDate = startDate
+    ? formatISO(parse(startDate, "dd/MM/yyyy", new Date()))
+    : ""
+  const isoEndDate = endDate
+    ? formatISO(parse(endDate, "dd/MM/yyyy", new Date()))
+    : ""
+  const queryParams = [
+    isoStartDate && `startDate=${isoStartDate}`,
+    isoEndDate && `endDate=${isoEndDate}`,
+  ]
 
-      // Generation options
-      const opt = {
-        margin: 1,
-        filename: "reporte_tropipay.pdf",
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-      }
-
-      setLoading(true)
-
-      // Generate and download the PDF
-      html2pdf().from(element).set(opt).save()
-      element.remove()
-
-      setLoading(false)
-    } else {
-      console.error(
-        "No es posible generar el archivo PDF: Elemento no encontrado."
-      )
-    }
+  const queryConfig = {
+    ...apiConfig.balanceSummary,
+    url: `${apiConfig.balanceSummary.url}/${accountNumber}?${queryParams
+      .filter((item) => !!item)
+      .join("&")}`,
   }
 
   /**
@@ -64,111 +55,29 @@ const PageClient = () => {
    * @param {string} value - The new date range value.
    * @returns {void}
    */
-  const handleChangeRangeDate = (value: string) => {
-    console.log(`Reload report data for range ${value}`)
+  const onChangeRangeDate = (value: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set("period", value)
+    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
   }
 
   return (
-    <div>
-      <div className="space-y-4">
-        <InformationToolbar
-          {...{
-            handleDownload,
-            handleChangeRangeDate,
-            downloadButtonDisabled: loading,
-          }}
-        />
-
-        <div className="report-container">
-          <ReportHeader className="hidden" />
-          <div className="pb-4">
-            {/* Contenido del reporte que se convertirá a PDF */}
-            <RowData
-              label={<FormattedMessage id="balance_summary" />}
-              value={<FormattedMessage id="amount" />}
-              style="header"
-            />
-            <RowData
-              label={<FormattedMessage id="initial_balance" />}
-              value="0.00 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="sales" />}
-              value="4.948.830,91 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="refunds" />}
-              value="1.547,92 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="commissions" />}
-              value="198.042,82 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="net" />}
-              value="4.749.240,17 EUR"
-              style="resume"
-            />
-
-            <RowData
-              label={<FormattedMessage id="commissions" />}
-              value="196.643,92 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="card_payment" />}
-              value="530,10 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="internal_transfers" />}
-              value="4.948.830,91 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="outgoing_external_transfers" />}
-              value="868,80 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="total" />}
-              value="198.042,82 EUR"
-              style="resume"
-            />
-            <RowData
-              label={<FormattedMessage id="shipments" />}
-              value={<FormattedMessage id="amount" />}
-              style="header"
-            />
-            <RowData
-              label={<FormattedMessage id="shipments" />}
-              value="2.704.240,62 EUR"
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="total" />}
-              value="2.704.240,62 EUR"
-              style="resume"
-            />
-            <RowData
-              label={<FormattedMessage id="balance" />}
-              value={<FormattedMessage id="amount" />}
-              style="row"
-            />
-            <RowData
-              label={<FormattedMessage id="available_balance" />}
-              value="2.704.240,62 EUR"
-              style="resume"
-            />
-          </div>
-          <ReportFooter className="hidden" />
-        </div>
-      </div>
-    </div>
+    accountNumber && (
+      <DataComponent
+        key={queryConfig.key}
+        showLoading
+        {...{
+          queryConfig,
+          searchParams: {
+            ...(isoStartDate && { startDate: isoStartDate }),
+            ...(isoEndDate && { endDate: isoEndDate }),
+          },
+          // mockData: balanceSummaryMock,
+        }}
+      >
+        <ReportBalanceSummary {...{ startDate, endDate, onChangeRangeDate }} />
+      </DataComponent>
+    )
   )
 }
 

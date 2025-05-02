@@ -1,5 +1,5 @@
 "use client"
-import DynamicForm from "@/components/dynamicForm"
+import DynamicForm from "@/components/DynamicForm"
 
 const MyPage: React.FC = () => {
   const formConfig: FormDefinition = {

@@ -1,10 +1,5 @@
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { Accordion, AccordionItem, AccordionTrigger } from "@/components/ui"
 import { AccordionContent } from "@radix-ui/react-accordion"
-import React from "react"
 
 interface AccordionItemType {
   [key: string]: string
