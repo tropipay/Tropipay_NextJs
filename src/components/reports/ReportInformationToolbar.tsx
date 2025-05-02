@@ -10,7 +10,7 @@ interface InformationToolbarProps {
   downloadButtonDisabled?: boolean
 }
 
-export default function InformationToolbar({
+export default function ReportInformationToolbar({
   startDate,
   endDate,
   downloadButtonDisabled = false,

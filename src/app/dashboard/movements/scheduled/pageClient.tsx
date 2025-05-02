@@ -1,9 +1,9 @@
 "use client"
 
+import MovementScheduledDetailContainer from "@/components/movements/MovementScheduledDetailContainer"
 import DataTable from "@/components/table/DataTable"
 import { GetMovementsScheduledResponse } from "@/types/movements"
 import { useSession } from "next-auth/react"
-import MovementScheduledDetail from "./MovementScheduledDetail"
 
 interface Props {
   tableId: string
@@ -14,10 +14,6 @@ interface Props {
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
-
-  const MovementScheduledDetailContainer = ({ row }: { row: any }) => (
-    <MovementScheduledDetail {...{ data: row }} />
-  )
 
   return (
     <div className="w-full p-2">
