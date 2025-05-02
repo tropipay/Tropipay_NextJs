@@ -447,7 +447,7 @@ export default function DataTable<TData, TValue>({
         <DataTablePagination table={table} />
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetHeader>
-            <SheetTitle></SheetTitle>
+            <SheetTitle />
           </SheetHeader>
           <SheetContent className="min-w-[500px]">
             <div className="pt-2">

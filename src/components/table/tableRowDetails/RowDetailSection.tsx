@@ -1,12 +1,15 @@
 import React from "react"
-import { Card, CardContent } from "../ui/Card"
+import { Card, CardContent } from "../../ui/Card"
 
-type SectionProps = {
+type Props = {
   title: string | React.ReactNode
   children: React.ReactNode
 }
 
-export function Section({ title, children }: SectionProps): JSX.Element | null {
+export function RowDetailSection({
+  title,
+  children,
+}: Props): JSX.Element | null {
   // Convertimos children a un array para poder iterarlo
   const childrenArray = React.Children.toArray(children)
 

@@ -13,7 +13,7 @@ interface DateFilterProps<TData, TValue> {
   table: Table<TData>
 }
 
-export function DateFilter<TData, TValue>({
+export function MovementDateFilter<TData, TValue>({
   table,
 }: DateFilterProps<TData, TValue>) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false) // Estado para controlar el Popover

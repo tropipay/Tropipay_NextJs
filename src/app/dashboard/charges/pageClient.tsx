@@ -1,11 +1,9 @@
 "use client"
 
-import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import DataComponent from "@/components/DataComponent"
+import ChargeDetailContainer from "@/components/charges/ChargeDetailContainer"
 import DataTable from "@/components/table/DataTable"
 import { GetChargesResponse } from "@/types/charges"
 import { useSession } from "next-auth/react"
-import ChargeDetail from "./chargeDetail"
 
 interface Props {
   tableId: string
@@ -16,22 +14,6 @@ interface Props {
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const queryConfig = apiConfig.chargesDetail
-
-  const ChargeDetailContainer = ({ row }: { row: any }) => {
-    return (
-      <DataComponent
-        key={queryConfig.key}
-        showLoading
-        {...{
-          queryConfig,
-          searchParams: { id: row.id },
-        }}
-      >
-        <ChargeDetail />
-      </DataComponent>
-    )
-  }
 
   return (
     <div className="w-full p-2">

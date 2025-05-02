@@ -3,9 +3,9 @@ import {
   movementStateGroups,
 } from "@/app/filterDefinitions/movements"
 import ErrorMessage from "@/components/ErrorMessage"
-import { Info } from "@/components/sectionComponents/Info"
-import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,12 +21,10 @@ import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
-  const router = useRouter()
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [isError, setIsError] = useState<boolean>(false)
@@ -105,22 +103,22 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               </p>
             )}
           </div>
-          <Section title={<FormattedMessage id="client_data" />}>
-            <Info
+          <RowDetailSection title={<FormattedMessage id="client_data" />}>
+            <RowDetailInfo
               label={<FormattedMessage id="beneficiary" />}
               value={<span className="capitalize">{alias}</span>}
             />
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="destiny_account" />}
               value={accountNumber}
             />
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="concept" />}
               value={conceptTransfer}
             />
-          </Section>
+          </RowDetailSection>
 
-          <Section title={<FormattedMessage id="payment_details" />}>
+          <RowDetailSection title={<FormattedMessage id="payment_details" />}>
             <></>
             {/* <Info
           label={<FormattedMessage id="amount" />}
@@ -136,28 +134,28 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
             value={`${cardBin} **** `}
           />
         )} */}
-          </Section>
+          </RowDetailSection>
 
-          <Section title={<FormattedMessage id="schedule" />}>
+          <RowDetailSection title={<FormattedMessage id="schedule" />}>
             {createdAt && (
-              <Info
+              <RowDetailInfo
                 label={<FormattedMessage id="createdAt" />}
                 value={format(new Date(createdAt), "dd/MM/yy")}
               />
             )}
             {nextDate && (
-              <Info
+              <RowDetailInfo
                 label={<FormattedMessage id="date_to_pay" />}
                 value={format(new Date(nextDate), "dd/MM/yy")}
               />
             )}
             {frecuency && (
-              <Info
+              <RowDetailInfo
                 label={<FormattedMessage id="recurrence" />}
                 value={<FormattedMessage id={`mr_${frecuency}`} />}
               />
             )}
-          </Section>
+          </RowDetailSection>
         </div>
         {!isDone && (
           <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
