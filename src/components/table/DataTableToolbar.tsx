@@ -6,8 +6,10 @@ import { Table } from "@tanstack/react-table"
 import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
+import { usePostHog } from "posthog-js/react"
 import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { DataTableViewOptions } from "./DataTableViewOptions"
 import { FilterManager } from "./FilterManager"
 
@@ -15,7 +17,7 @@ interface Props<TData, TValue> {
   tableId: string
   table: Table<TData>
   columns: any
-  categoryFilterId: string,
+  categoryFilterId: string
   categoryFilters?: string[]
 }
 
@@ -24,9 +26,10 @@ export function DataTableToolbar<TData, TValue>({
   table,
   columns,
   categoryFilterId,
-  categoryFilters
+  categoryFilters,
 }: Props<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Obtener instancia de PostHog
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const searchColumn = table.getColumn("search")
@@ -36,7 +39,9 @@ export function DataTableToolbar<TData, TValue>({
         const searchFilter = prev.find(({ id }) => id === "search")
         if (searchFilter) {
           return prev.map((filter) =>
-            filter.id === "search" ? { ...filter, value: searchParamValue } : filter
+            filter.id === "search"
+              ? { ...filter, value: searchParamValue }
+              : filter
           )
         }
         return [...prev, { id: "search", value: searchParamValue }]
@@ -47,6 +52,10 @@ export function DataTableToolbar<TData, TValue>({
   const handleSearchChange = useDebouncedCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
+
+      callPosthog(posthog, "filterSearch_applied", {
+        table_id: tableId,
+      })
 
       if (value) {
         table.setColumnFilters((prev) => {
@@ -74,7 +83,6 @@ export function DataTableToolbar<TData, TValue>({
   return (
     <>
       <div className="flex items-center justify-between">
-        {/* Elementos alineados a la izquierda */}
         <div className="flex items-center gap-2">
           <FilterCategories {...{ table, categoryFilterId, categoryFilters }} />
           <div className="relative flex items-center w-full">
@@ -88,6 +96,7 @@ export function DataTableToolbar<TData, TValue>({
               onChange={handleSearchChange}
               className="pl-10 w-full"
               defaultValue={searchParamValue}
+              data-test-id="dataTableToolbar-input-search" // Updated data-test-id
             />
           </div>
         </div>
@@ -97,7 +106,7 @@ export function DataTableToolbar<TData, TValue>({
           {/* <Button variant="outline">
             <Download />
           </Button> */}
-          <DataTableViewOptions table={table} />
+          <DataTableViewOptions table={table} tableId={tableId} />
         </div>
       </div>
       {/* Delegamos la visualización de filtros a FilterManager */}

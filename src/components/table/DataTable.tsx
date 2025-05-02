@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui"
+import { callPosthog } from "@/utils/utils"
 import { objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
 import {
@@ -52,6 +53,7 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { usePostHog } from "posthog-js/react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -262,6 +264,7 @@ export default function DataTable<TData, TValue>({
         ref={setNodeRef}
         className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
         style={style}
+        data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
       >
         <div className="flex gap-1 items-center">
           {header.isPlaceholder
@@ -346,12 +349,13 @@ export default function DataTable<TData, TValue>({
   )
 
   const table = useReactTable(tableConfig)
+  const posthog = usePostHog()
 
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
     setIsSheetOpen(true)
+    callPosthog(posthog, "show_detail", { table_id: tableId })
   }
-
   useEffect(() => {
     setTableKey(Math.random())
     setIsLoading(false)
@@ -395,7 +399,10 @@ export default function DataTable<TData, TValue>({
                             header={header}
                           />
                         ) : (
-                          <TableHead key={header.id}>
+                          <TableHead
+                            key={header.id}
+                            data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
+                          >
                             {header.isPlaceholder
                               ? null
                               : flexRender(
@@ -417,6 +424,7 @@ export default function DataTable<TData, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       className="cursor-pointer hover:bg-gray-100"
+                      data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
                       // @ts-ignore
                       onRowClick={handleRowClick}
                     >

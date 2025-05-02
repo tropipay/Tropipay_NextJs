@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/Popover"
 import { cn } from "@/utils/data/utils"
 import { FormattedMessage, useIntl } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./DataTableFilterDate"
 import { DataTableFilterFaceted } from "./DataTableFilterFaceted"
@@ -43,6 +45,7 @@ export function FilterManager<TData, TValue>({
   columns,
 }: FilterManagerProps<TData, TValue>) {
   const { data: session } = useSession()
+  const posthog = usePostHog() // Obtener instancia de PostHog
   const userId = session?.user?.id
   const { t } = useTranslation()
   const intl = useIntl()
@@ -128,6 +131,13 @@ export function FilterManager<TData, TValue>({
 
   // Aplicar filtros seleccionados
   const handleApplyFilters = () => {
+    const selectedFilterIdsArray = Array.from(selectedFilters)
+
+    callPosthog(posthog, "filterManager_applied", {
+      table_id: tableId,
+      selected_filter_ids: selectedFilterIdsArray,
+    })
+
     const newSearchParams = new URLSearchParams(searchParams.toString())
     filters.forEach((column) => {
       if (!selectedFilters.has(column.id)) {
@@ -143,6 +153,18 @@ export function FilterManager<TData, TValue>({
   // Limpiar filtros
   const handleClearFilters = () => {
     const appliedFilters = table.getState().columnFilters
+    const managedAppliedFilters = appliedFilters.filter(({ id }) =>
+      filters.some((filter) => filter.id === id)
+    )
+    const clearedFilterIds = managedAppliedFilters.map(({ id }) => id)
+
+    if (clearedFilterIds.length > 0) {
+      callPosthog(posthog, "filterManager_clearAll", {
+        table_id: tableId,
+        cleared_filter_ids: clearedFilterIds,
+      })
+    }
+
     const remainingFilters = appliedFilters.filter(
       ({ id }) => !filters.some((filter) => filter.id === id)
     )
@@ -154,6 +176,14 @@ export function FilterManager<TData, TValue>({
    * @param filterId Filter identifier.
    */
   const handleClearFilter = (filterId: string) => {
+    const filterValue = table.getColumn(filterId)?.getFilterValue()
+
+    callPosthog(posthog, "filterManager_clear", {
+      table_id: tableId,
+      filter_id: filterId,
+      filter_value: filterValue ?? "unknown", // Send value or 'unknown'
+    })
+
     setActiveFilters(activeFilters.filter(({ id }) => id !== filterId))
     const newSelectedFilters = new Set(selectedFilters)
     if (newSelectedFilters.has(filterId)) {
@@ -176,7 +206,10 @@ export function FilterManager<TData, TValue>({
     <div className="flex w-full items-start justify-between">
       <div className="flex flex-1 items-start space-x-2 p-0 overflow-x-auto mr-4 pr-2">
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger
+            asChild
+            data-test-id="filterManager-popoverTrigger-addFilter"
+          >
             <Button
               variant="secondary"
               size="sm"
@@ -191,7 +224,10 @@ export function FilterManager<TData, TValue>({
           </PopoverTrigger>
           <PopoverContent className="w-[264px] p-0" align="start">
             <Command>
-              <CommandInput placeholder={t("search_filters")} />
+              <CommandInput
+                placeholder={t("search_filters")}
+                data-test-id="filterManager-commandInput-searchFilters"
+              />
               <CommandList>
                 <CommandEmpty>
                   <FormattedMessage id="no_results_found" />
@@ -203,6 +239,7 @@ export function FilterManager<TData, TValue>({
                       <CommandItem
                         key={id}
                         onSelect={() => handleSelectOption(id)}
+                        data-test-id={`filterManager-commandItem-toggleFilter-${id}`}
                       >
                         <div
                           className={cn(
@@ -227,6 +264,7 @@ export function FilterManager<TData, TValue>({
                   variant="default"
                   className="w-full"
                   onClick={handleApplyFilters}
+                  data-test-id="filterManager-button-applyFilters" // Updated data-test-id
                 >
                   <FormattedMessage id="apply" />
                 </Button>
@@ -259,6 +297,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterFaceted
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -271,6 +310,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterDate
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     // @ts-ignore
                     column={{
                       ...table.getColumn(column.id),
@@ -283,6 +323,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterRangeAmount
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -295,6 +336,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterSingleValue
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -313,6 +355,7 @@ export function FilterManager<TData, TValue>({
           variant="active"
           onClick={handleClearFilters}
           className="h-8 px-2"
+          data-test-id="filterManager-button-clearAllFilters" // Updated data-test-id
         >
           <FormattedMessage id="clean_filters" />
         </Button>

@@ -1,4 +1,5 @@
 import IntlWrapper from "@/components/intl/Wrapper"
+import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
 import TanstackProvider from "@/components/TanstackProvider"
 import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
@@ -38,10 +39,13 @@ export default function RootLayout({ children }: ChildrenProps) {
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
         <Suspense>
-          <IntlWrapper>
-            <Toaster />
-            <TanstackProvider>{children}</TanstackProvider>
-          </IntlWrapper>
+          {/* Wrap IntlWrapper with PostHogInsert */}
+          <PostHogInsert>
+            <IntlWrapper>
+              <Toaster />
+              <TanstackProvider>{children}</TanstackProvider>
+            </IntlWrapper>
+          </PostHogInsert>
         </Suspense>
       </body>
     </html>

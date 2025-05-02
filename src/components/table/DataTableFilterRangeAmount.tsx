@@ -14,18 +14,23 @@ import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
   // @ts-ignore
@@ -51,10 +56,15 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     }
 
     setError(null)
+    callPosthog(posthog, "filterAmount_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "amount",
+      filter_value: { min: minValue, max: maxValue },
+    })
     const serializedValue = [minValue, maxValue].join(",")
     column?.setFilterValue(serializedValue)
 
-    // Cerrar el Popover solo si no hay errores
     if (!error) {
       document.getElementById("close-popover")?.click()
     }
@@ -63,6 +73,15 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (filterValue) {
+      const [min, max] = filterValue
+        .split(",")
+        .map((v) => (v ? parseFloat(v) : undefined))
+      callPosthog(posthog, "filterAmount_clear", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: { min, max },
+        filter_type: "amount",
+      })
       column.setFilterValue(undefined)
       setError(null)
     } else onClear?.(column.id)
@@ -97,7 +116,10 @@ export function DataTableFilterRangeAmount<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterRangeAmount-popoverTrigger-openFilter"
+      >
         <Button
           // @ts-ignore
           variant={selStyle(!!filterValue, "active", "inactive", "")}
@@ -125,6 +147,21 @@ export function DataTableFilterRangeAmount<TData, TValue>({
           </div>
         </Button>
       </PopoverTrigger>
+
+      {/* Updated data-test-id for the clear filter icon container */}
+      <div
+        data-test-id="dataTableFilterRangeAmount-div-clearFilter"
+        onClick={(e) => {
+          e.stopPropagation()
+          handleClearFilter()
+        }}
+      >
+        {filterValue ? (
+          <Eraser className="h-4 w-4" />
+        ) : (
+          <CrossCircledIcon className="h-4 w-4" />
+        )}
+      </div>
       <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <div className="pb-4">
@@ -144,6 +181,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
                 ? (+filterValue.split(",")[0] * 100).toString() || ""
                 : ""
             }
+            data-test-id="dataTableFilterRangeAmount-input-amountMin" // Added data-test-id
           />
           <Label htmlFor="width">
             <FormattedMessage id="to" />
@@ -157,10 +195,17 @@ export function DataTableFilterRangeAmount<TData, TValue>({
                 ? (+filterValue.split(",")[1] * 100).toString() || ""
                 : ""
             }
+            data-test-id="dataTableFilterRangeAmount-input-amountMax" // Added data-test-id
           />
           <PopoverClose id="close-popover" className="hidden" />
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
-          <Button variant="default" className="w-full mt-6" type="submit">
+          {/* Added data-test-id to the apply filter button */}
+          <Button
+            variant="default"
+            className="w-full mt-6"
+            type="submit"
+            data-test-id="dataTableFilterRangeAmount-button-applyFilter" // Updated data-test-id
+          >
             <FormattedMessage id="apply" />
           </Button>
         </form>

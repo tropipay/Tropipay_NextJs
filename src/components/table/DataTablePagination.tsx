@@ -39,6 +39,7 @@ export function DataTablePagination<TData>({
             size="sm"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
+            data-test-id="dataTablePagination-button-firstPage"
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
@@ -47,6 +48,7 @@ export function DataTablePagination<TData>({
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            data-test-id="dataTablePagination-button-previousPage"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -55,6 +57,7 @@ export function DataTablePagination<TData>({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            data-test-id="dataTablePagination-button-nextPage"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -63,6 +66,7 @@ export function DataTablePagination<TData>({
             size="sm"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
+            data-test-id="dataTablePagination-button-lastPage"
           >
             <ChevronsRight className="h-4 w-4" />
           </Button>
@@ -77,12 +81,19 @@ export function DataTablePagination<TData>({
               table.setPageSize(Number(value))
             }}
           >
-            <SelectTrigger className="h-8 w-[70px]">
+            <SelectTrigger
+              className="h-8 w-[70px]"
+              data-test-id="dataTablePagination-selectTrigger-pageSize"
+            >
               <SelectValue placeholder="50" />
             </SelectTrigger>
             <SelectContent side="top">
               {pageSizeOptions.map((pageSize) => (
-                <SelectItem key={pageSize} value={pageSize.toString()}>
+                <SelectItem
+                  key={pageSize}
+                  value={pageSize.toString()}
+                  data-test-id={`dataTablePagination-selectItem-pageSize-${pageSize}`}
+                >
                   {pageSize}
                 </SelectItem>
               ))}
