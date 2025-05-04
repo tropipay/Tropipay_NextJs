@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 }
 
 const poppins = Poppins({
-  weight: ["600"], // semibold
+  weight: ["500", "600"], // Especifica los pesos que necesites
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
