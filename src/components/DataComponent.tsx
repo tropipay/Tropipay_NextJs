@@ -70,6 +70,3 @@ export default function DataComponent({
     </div>
   )
 }
-function awaitprocessQueryParameters(searchParams: { [key: string]: string }) {
-  throw new Error("Function not implemented.")
-}

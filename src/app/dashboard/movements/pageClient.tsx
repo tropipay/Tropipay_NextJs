@@ -1,11 +1,9 @@
 "use client"
 
-import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import DataComponent from "@/components/DataComponent"
+import MovementDetailContainer from "@/components/movements/MovementDetailContainer"
 import DataTable from "@/components/table/DataTable"
 import { GetMovementsResponse } from "@/types/movements"
 import { useSession } from "next-auth/react"
-import MovementDetail from "./movementDetail"
 
 interface Props {
   tableId: string
@@ -16,23 +14,9 @@ interface Props {
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const queryConfig = apiConfig.movementsDetail
-
-  const MovementDetailContainer = ({ row }: { row: any }) => (
-    <DataComponent
-      key={queryConfig.key}
-      showLoading
-      {...{
-        queryConfig,
-        searchParams: { id: row.id },
-      }}
-    >
-      <MovementDetail />
-    </DataComponent>
-  )
 
   return (
-    <div className="container p-2">
+    <div className="w-full p-2">
       {userId && (
         <DataTable
           {...{

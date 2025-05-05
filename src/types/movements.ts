@@ -3,6 +3,7 @@ import { ApiDataResponse } from "./api"
 
 export type MovementClientData = {
   name: string
+  lastName: string
   account: string
   country: string
   alias?: string
@@ -19,8 +20,12 @@ export type Movement = {
   paymentMethod: string
   reference: string
   sender: string
-  email?: string
-  fee?: Amount
+  product: string
+  conversionRate: string
+  cardPan: string
+  concept: string
+  email: string
+  fee: Amount
   bankOrderCode: string
 }
 
@@ -31,13 +36,9 @@ export type MovementDetails = {
     createdAt: string
     completedAt: string
     type: string
-    product: string
-    concept: string
     clientAddress: string
-    conversionRate: string
     netAmount: Amount
     cardType: string
-    cardPan: string
     cardExpirationDate: string
     cardCountry: string
     clientIp: string

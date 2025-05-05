@@ -1,7 +1,6 @@
 "use client"
 
 import { sideBarOptions } from "@/app/data/sideBarOptions"
-import { accountsMock } from "@/app/queryDefinitions/accounts/accountsMock"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import { NavMain } from "@/components/NavMain"
 import { NavUser } from "@/components/NavUser"
@@ -34,7 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               queryConfig,
               dehydratedState,
               showError: false,
-              mockData: accountsMock,
+              // mockData: accountsMock,
             }}
           >
             <NavUserBusiness />

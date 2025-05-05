@@ -4,7 +4,7 @@ type InfoProps = {
   icon?: React.ReactNode
 }
 
-export function Info({ label, value, icon }: InfoProps): any {
+export function RowDetailInfo({ label, value, icon }: InfoProps): any {
   if (!value) return null
   return (
     <div className="antialiased flex text-gray-700 font-roboto text-xs leading-5 tracking-tight">
