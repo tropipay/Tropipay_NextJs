@@ -196,6 +196,7 @@ export async function fetchGetWithTriggers({
     const actualEndpoint = mapPublicEndpointToVersion(endpoint)
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
+    console.log("GET actualEndpoint:", actualEndpoint)
     const { data } = await axios.get(url, finalAxiosConfig) // Use finalAxiosConfig
 
     // 3. Trigger OK event - include cacheConfig so listener can update cache
@@ -227,6 +228,7 @@ export async function fetchPostWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = mapPublicEndpointToVersion(endpoint)
+    console.log("POST actualEndpoint:", actualEndpoint)
     const { data } = await axios.post(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
@@ -255,6 +257,7 @@ export async function fetchPutWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = mapPublicEndpointToVersion(endpoint)
+    console.log("PUT actualEndpoint:", actualEndpoint)
     const { data } = await axios.put(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
@@ -285,6 +288,7 @@ export async function fetchDeleteWithTriggers({
     const actualEndpoint = mapPublicEndpointToVersion(endpoint)
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
+    console.log("DELETE actualEndpoint:", actualEndpoint)
     const { data } = await axios.delete(url, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
