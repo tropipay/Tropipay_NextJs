@@ -44,6 +44,7 @@ export type MovementDetails = {
     clientIp: string
     recipientData: MovementClientData
     senderData: MovementClientData
+    refundable: boolean
   }
 } & Movement
 

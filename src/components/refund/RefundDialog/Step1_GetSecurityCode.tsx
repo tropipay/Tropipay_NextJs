@@ -36,7 +36,7 @@ const Step1_GetSecurityCode = (props) => {
     },
     data: {
       orderCode: data.orderCode,
-      amount: data.amount,
+      amount: data.amount * 100,
     },
   })
 

@@ -17,7 +17,7 @@ const Step2_RefundSuccess = (props) => {
       <p className="text-xs text-muted-foreground">
         <FormattedMessage id="we_have_refunded" />{" "}
         <span className="text-primary font-medium">
-          {formatAmount(data0.amount, data0.amountCurrency, "right")}
+          {formatAmount(data0.amount * 100, data0.amountCurrency, "right")}
         </span>
       </p>
       <div className="flex justify-end gap-2 pt-4">

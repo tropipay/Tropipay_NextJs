@@ -16,11 +16,10 @@ import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
-  const refundable = true
   const row: Charge = props.data.data.charges.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
-
+  console.log("row:", row)
   const {
     bankOrderCode,
     amount,
@@ -39,6 +38,7 @@ export default function ChargeDetail(props: any): JSX.Element {
     cardExpirationDate,
     cardCountry,
     clientIp,
+    refundable,
   } = row
 
   const onDownloadInvoiceFile = async () => {

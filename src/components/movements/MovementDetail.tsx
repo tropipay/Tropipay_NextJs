@@ -15,7 +15,6 @@ import { useState } from "react"
 import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
-  const refundable = true
   const row: MovementDetails = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
@@ -39,6 +38,7 @@ export default function MovementDetail(props: any): JSX.Element {
       clientAddress,
       clientIp,
       netAmount,
+      refundable,
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
