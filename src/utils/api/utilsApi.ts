@@ -77,16 +77,11 @@ export function buildGraphQLVariables(
     ...filters
   } = searchParams
   const variables: GraphQLVariables = {
-    filter: {},
+    filter: { search },
     pagination: {
       limit: parseInt(size),
       offset: parseInt(page) * parseInt(size),
     },
-  }
-
-  // Process the general search field (search)
-  if (search) {
-    variables.filter.generalSearch = search
   }
 
   // Process additional filters

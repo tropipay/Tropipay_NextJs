@@ -1,7 +1,7 @@
-import InformationToolbar from "@/app/dashboard/reports/informationToolbar"
+import ReportInformationToolbar from "@/components/reports/ReportInformationToolbar"
 import ReportFooter from "@/components/reports/ReportFooter"
 import ReportHeader from "@/components/reports/ReportHeader"
-import { RowData } from "@/components/rowData/RowData"
+import { ReportRowInfo } from "@/components/reports/ReportRowInfo"
 import { BalanceSummaryResponse } from "@/types/reports/balanceSummary/balanceSummaryResponse"
 import { formatAmount } from "@/utils/data/utils"
 import { useState } from "react"
@@ -78,8 +78,10 @@ export default function ReportBalanceSummary({
 
   return data ? (
     <div className="space-y-4">
-      <InformationToolbar
+      <ReportInformationToolbar
         {...{
+          startDate,
+          endDate,
           onDownload,
           onChangeRangeDate,
           downloadButtonDisabled: loading,
@@ -90,14 +92,14 @@ export default function ReportBalanceSummary({
         <ReportHeader className="hidden" {...{ startDate, endDate }} />
         <div className="my-4">
           {/* Summary */}
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="balance_summary" />}
             value={<FormattedMessage id="amount" />}
             style="header"
           />
           {["initialBalance", "sales", "refunds", "commissions"].map(
             (value) => (
-              <RowData
+              <ReportRowInfo
                 key={`summary.${value}`}
                 label={<FormattedMessage id={value} />}
                 value={formatAmount(data.summary[value] ?? 0, "EUR", "right")}
@@ -106,21 +108,21 @@ export default function ReportBalanceSummary({
             )
           )}
 
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="net" />}
             value={formatAmount(data.summary.net ?? 0, "EUR", "right")}
             style="resume"
           />
 
           {/* Commissions */}
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="commissions" />}
             value={""}
             style="header"
           />
           {["cardFees", "internalTransfers", "externalTransfers"].map(
             (value) => (
-              <RowData
+              <ReportRowInfo
                 key={`commissions.${value}`}
                 label={<FormattedMessage id={value} />}
                 value={formatAmount(
@@ -132,36 +134,36 @@ export default function ReportBalanceSummary({
               />
             )
           )}
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="total" />}
             value={formatAmount(data.commissions.total, "EUR", "right")}
             style="resume"
           />
 
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="shipments" />}
             value={""}
             style="header"
           />
 
           {/* shipments */}
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="shipments" />}
             value={formatAmount(data.shipments.totalShipments, "EUR", "right")}
             style="row"
           />
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="total" />}
             value={formatAmount(data.shipments.totalShipments, "EUR", "right")}
             style="resume"
           />
 
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="balance" />}
             value={""}
             style="row"
           />
-          <RowData
+          <ReportRowInfo
             label={<FormattedMessage id="available_balance" />}
             value={formatAmount(data.summary.finalBalance, "EUR", "right")}
             style="resume"

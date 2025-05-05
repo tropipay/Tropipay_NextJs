@@ -2,9 +2,9 @@ import {
   movementStateGroups,
   movementStates,
 } from "@/app/filterDefinitions/movements"
-import { Info } from "@/components/sectionComponents/Info"
-import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
 import { MovementDetails } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
@@ -23,29 +23,31 @@ export default function MovementDetail(props: any): JSX.Element {
     id: bookingId,
     email,
     fee,
+    createdAt,
+    completedAt,
+    paymentMethod,
+    amount,
+    cardPan,
+    product,
+    conversionRate,
+    concept,
+    bankOrderCode,
+    state,
     movementDetail: {
-      amount,
-      state,
-      bankOrderCode,
-      createdAt,
-      completedAt,
-      type,
-      product,
-      concept,
-      clientAddress,
-      conversionRate,
-      netAmount,
-      cardType,
-      cardPan,
-      cardExpirationDate,
       cardCountry,
+      cardExpirationDate,
+      cardType,
+      clientAddress,
       clientIp,
+      netAmount,
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
+        lastName: senderLastName,
         email: senderEmail,
         country: senderCountry,
       },
+      type,
     },
   } = row
 
@@ -96,60 +98,89 @@ export default function MovementDetail(props: any): JSX.Element {
             </p>
           )}
         </div>
-        <Section title={<FormattedMessage id="movement_data" />}>
-          <Info
+        <RowDetailSection title={<FormattedMessage id="movement_data" />}>
+          <RowDetailInfo
             label={<FormattedMessage id="type" />}
             value={<FormattedMessage id={`mt_${type}`} />}
           />
-          <Info label={<FormattedMessage id="product" />} value={product} />
-          <Info label={<FormattedMessage id="concept" />} value={concept} />
-        </Section>
-
-        <Section title={<FormattedMessage id="beneficiary_data" />}>
-          <Info label={<FormattedMessage id="alias" />} value={alias} />
-          <Info
-            label={<FormattedMessage id="name" />}
-            value={<span className="uppercase">{name}</span>}
+          {product && (
+            <RowDetailInfo
+              label={<FormattedMessage id="product" />}
+              value={<FormattedMessage id={`cp_${product}`} />}
+            />
+          )}
+          <RowDetailInfo
+            label={<FormattedMessage id="concept" />}
+            value={concept}
           />
-          <Info label={<FormattedMessage id="account" />} value={account} />
-          <Info label={<FormattedMessage id="email" />} value={email} />
-          <Info label={<FormattedMessage id="country" />} value={country} />
-        </Section>
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="sender_data" />}>
-          <Info
-            label={<FormattedMessage id="name" />}
-            value={<span className="uppercase">{senderName}</span>}
+        <RowDetailSection title={<FormattedMessage id="beneficiary_data" />}>
+          <RowDetailInfo
+            label={<FormattedMessage id="alias" />}
+            value={alias}
           />
-          <Info label={<FormattedMessage id="email" />} value={senderEmail} />
-          <Info
+          {name && (
+            <RowDetailInfo
+              label={<FormattedMessage id="name" />}
+              value={<span className="uppercase">{name}</span>}
+            />
+          )}
+          <RowDetailInfo
+            label={<FormattedMessage id="account" />}
+            value={account}
+          />
+          <RowDetailInfo
+            label={<FormattedMessage id="email" />}
+            value={email}
+          />
+          <RowDetailInfo
+            label={<FormattedMessage id="country" />}
+            value={country}
+          />
+        </RowDetailSection>
+
+        <RowDetailSection title={<FormattedMessage id="sender_data" />}>
+          {senderName && (
+            <RowDetailInfo
+              label={<FormattedMessage id="name" />}
+              value={
+                <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
+              }
+            />
+          )}
+          <RowDetailInfo
+            label={<FormattedMessage id="email" />}
+            value={senderEmail}
+          />
+          <RowDetailInfo
             label={<FormattedMessage id="address" />}
             value={clientAddress}
           />
-          <Info
+          <RowDetailInfo
             label={<FormattedMessage id="country" />}
             value={senderCountry}
           />
-        </Section>
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="imports" />}>
-          <Info
+        <RowDetailSection title={<FormattedMessage id="imports" />}>
+          <RowDetailInfo
             label={<FormattedMessage id="import" />}
             value={formatAmount(amount.value, amount.currency, "right")}
           />
           {conversionRate && fee && amount.currency !== fee.currency && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="conversionRate" />}
               value={`1 EUR = ${conversionRate} ${amount.currency}`}
             />
           )}
           {fee && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="fee" />}
               value={formatAmount(fee.value, fee.currency, "right")}
             />
           )}
-          <Info
+          <RowDetailInfo
             label={<FormattedMessage id="netAmount" />}
             value={`${formatAmount(
               netAmount.value,
@@ -157,45 +188,57 @@ export default function MovementDetail(props: any): JSX.Element {
               "right"
             )}`}
           />
-        </Section>
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="payment_method" />}>
-          <Info label={<FormattedMessage id="cardType" />} value={cardType} />
-          <Info
+        <RowDetailSection title={<FormattedMessage id="payment_method" />}>
+          <RowDetailInfo
+            label={<FormattedMessage id="cardType" />}
+            value={cardType}
+          />
+          {/* <Info
             label={<FormattedMessage id="account" />}
             value="******** FALTA CUENTA"
+          /> */}
+          <RowDetailInfo
+            label={<FormattedMessage id="paymentMethod" />}
+            value={<FormattedMessage id={`pm_${paymentMethod}`} />}
           />
-          <Info
-            label={<FormattedMessage id="cardPan" />}
-            value={`**** ${cardPan}`}
-          />
+          {cardPan && (
+            <RowDetailInfo
+              label={<FormattedMessage id="cardPan" />}
+              value={`**** ${cardPan}`}
+            />
+          )}
           {cardExpirationDate && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="cardExpirationDate" />}
               value={format(cardExpirationDate, "dd/MM/yy")}
             />
           )}
-          <Info
+          <RowDetailInfo
             label={<FormattedMessage id="cardCountry" />}
             value={cardCountry}
           />
-          <Info label={<FormattedMessage id="clientIp" />} value={clientIp} />
-        </Section>
+          <RowDetailInfo
+            label={<FormattedMessage id="clientIp" />}
+            value={clientIp}
+          />
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="schedule" />}>
+        <RowDetailSection title={<FormattedMessage id="schedule" />}>
           {createdAt && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="createdAt" />}
               value={format(new Date(createdAt), "dd/MM/yy")}
             />
           )}
           {completedAt && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="completedAt" />}
               value={format(new Date(completedAt), "dd/MM/yy")}
             />
           )}
-        </Section>
+        </RowDetailSection>
       </div>
       <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
         <Button
