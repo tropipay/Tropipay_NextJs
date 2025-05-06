@@ -21,6 +21,5 @@ export const callPosthog = (
   if (!isProduction()) {
     console.log(`[PostHog Event]: ${eventName}`, properties || {})
   }
-
   posthogInstance.capture(eventName, properties)
 }

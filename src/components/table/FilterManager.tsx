@@ -181,7 +181,6 @@ export function FilterManager<TData, TValue>({
     callPosthog(posthog, "filterManager_clear", {
       table_id: tableId,
       filter_id: filterId,
-      filter_value: filterValue ?? "unknown", // Send value or 'unknown'
     })
 
     setActiveFilters(activeFilters.filter(({ id }) => id !== filterId))

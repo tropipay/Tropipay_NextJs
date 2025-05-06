@@ -148,20 +148,6 @@ export function DataTableFilterRangeAmount<TData, TValue>({
         </Button>
       </PopoverTrigger>
 
-      {/* Updated data-test-id for the clear filter icon container */}
-      <div
-        data-test-id="dataTableFilterRangeAmount-div-clearFilter"
-        onClick={(e) => {
-          e.stopPropagation()
-          handleClearFilter()
-        }}
-      >
-        {filterValue ? (
-          <Eraser className="h-4 w-4" />
-        ) : (
-          <CrossCircledIcon className="h-4 w-4" />
-        )}
-      </div>
       <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <div className="pb-4">
