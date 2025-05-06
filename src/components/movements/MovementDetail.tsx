@@ -7,6 +7,7 @@ import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
 import { MovementDetails } from "@/types/movements"
+import { processEnvNEXT_PUBLIC_API_URL } from "@/utils/config"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
@@ -50,7 +51,7 @@ export default function MovementDetail(props: any): JSX.Element {
   const onDownloadInvoiceFile = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        `${processEnvNEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
         {
           method: "POST",
           headers: {

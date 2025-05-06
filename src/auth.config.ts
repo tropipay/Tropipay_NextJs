@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { fetchHeaders } from "@/utils/data/utils"
+import { processEnvNEXT_PUBLIC_API_URL } from "./utils/config"
 
 export default {
   session: { strategy: "jwt" },
@@ -14,7 +15,7 @@ export default {
         let user: object | null = null
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,
+            `${processEnvNEXT_PUBLIC_API_URL}/api/v3/users/profile`,
             {
               method: "GET",
               headers: {
