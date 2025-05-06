@@ -4,9 +4,9 @@ import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataComponent from "@/components/DataComponent"
 import ReportBalanceSummary from "@/components/reports/ReportBalanceSummary"
 import CookiesManager from "@/utils/cookies/cookiesManager"
-import { format } from "date-fns"
+import { format, formatISO, parse } from "date-fns"
 import { useSearchParams } from "next/navigation"
-import { useCallback, useMemo } from "react"
+import { useMemo } from "react"
 
 const PageClient = () => {
   const searchParams = useSearchParams()
@@ -32,9 +32,22 @@ const PageClient = () => {
     )
   }, [searchParams])
 
+  const isoStartDate = startDate
+    ? formatISO(parse(startDate, "dd/MM/yyyy", new Date()))
+    : ""
+  const isoEndDate = endDate
+    ? formatISO(parse(endDate, "dd/MM/yyyy", new Date()))
+    : ""
+  const queryParams = [
+    isoStartDate && `startDate=${isoStartDate}`,
+    isoEndDate && `endDate=${isoEndDate}`,
+  ]
+
   const queryConfig = {
     ...apiConfig.balanceSummary,
-    url: `${apiConfig.balanceSummary.url}/${accountNumber}?startDate=${startDate}&endDate=${endDate}`,
+    url: `${apiConfig.balanceSummary.url}/${accountNumber}?${queryParams
+      .filter((item) => !!item)
+      .join("&")}`,
   }
 
   /**
@@ -42,14 +55,11 @@ const PageClient = () => {
    * @param {string} value - The new date range value.
    * @returns {void}
    */
-  const onChangeRangeDate = useCallback(
-    (value: string) => {
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.set("period", value)
-      window.history.pushState(null, "", `?${newSearchParams.toString()}`)
-    },
-    [searchParams]
-  )
+  const onChangeRangeDate = (value: string) => {
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.set("period", value)
+    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
+  }
 
   return (
     accountNumber && (
@@ -58,7 +68,10 @@ const PageClient = () => {
         showLoading
         {...{
           queryConfig,
-          searchParams: { startDate, endDate },
+          searchParams: {
+            ...(isoStartDate && { startDate: isoStartDate }),
+            ...(isoEndDate && { endDate: isoEndDate }),
+          },
           // mockData: balanceSummaryMock,
         }}
       >

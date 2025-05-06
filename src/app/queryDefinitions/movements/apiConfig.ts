@@ -51,14 +51,27 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
                 currency
               }
               email
-              movementDetail {
-                amount{
+              createdAt
+              paymentMethod
+                  amount{
                   currency
                   value
-                }
+              }
+              cardPan
+              createdAt
+              completedAt
+              concept
+              conversionRate
+              createdAt
+              amount {
+                  currency
+                  value
+              }
+              sender
+              product
+              movementDetail {
                 cardCountry
                 cardExpirationDate
-                cardPan
                 cardType
                 chargedAmount{
                   currency
@@ -66,15 +79,11 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
                 }
                 clientAddress
                 clientIp
-                completedAt
-                concept
-                conversionRate
-                createdAt
                 netAmount {
                   value
                   currency
                 }
-                recipientData{
+                recipientData {
                   alias
                   name
                   account
@@ -86,8 +95,7 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
                 }
                 type
               }
-              sender
-              product
+              
             }
             totalCount
           }

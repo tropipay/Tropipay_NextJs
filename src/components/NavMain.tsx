@@ -4,17 +4,23 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
+  sidebarMenuButtonVariants,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui"
 import { SidebarOption } from "@/types/sidebarOption"
 import { ChevronRight } from "lucide-react"
-import Link from "next/link" // Importa el componente Link de Next.js
 import { useRouter } from "next/navigation"
 import React from "react"
 import { FormattedMessage } from "react-intl"
@@ -23,6 +29,7 @@ import { useTranslation } from "./intl/useTranslation"
 export function NavMain({ items }: { items: SidebarOption[] }) {
   const router = useRouter()
   const { t } = useTranslation()
+  const { isMobile } = useSidebar()
   const onItemClick = (url: string) => router.push(url)
 
   return (
@@ -38,21 +45,56 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={t(item.title)}>
-                      {item.icon && <item.icon />}
-                      <FormattedMessage id={item.title} />
-                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                    </SidebarMenuButton>
+                    <div>
+                      <SidebarMenuButton
+                        tooltip={t(item.title)}
+                        className="group-data-[collapsible=icon]:hidden"
+                      >
+                        {item.icon && <item.icon />}
+                        <FormattedMessage id={item.title} />
+                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                      </SidebarMenuButton>
+
+                      <div className="hidden group-data-[collapsible=icon]:block">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <div
+                              className={sidebarMenuButtonVariants({
+                                variant: "default",
+                                size: "default",
+                              })}
+                            >
+                              {item.icon && <item.icon />}
+                            </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                            side={isMobile ? "bottom" : "right"}
+                            sideOffset={4}
+                            align={"start"}
+                          >
+                            <DropdownMenuGroup>
+                              {item.items?.map((subItem) => (
+                                <DropdownMenuItem key={`ms-${subItem.title}`}>
+                                  <a href={subItem.url}>
+                                    <FormattedMessage id={subItem.title} />
+                                  </a>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubItem key={`s-${subItem.title}`}>
                           <SidebarMenuSubButton asChild>
-                            {/* Usa Link en lugar de <a> */}
-                            <Link href={subItem.url}>
-                              <FormattedMessage id={subItem.title} />
-                            </Link>
+                            <a href={subItem.url}>
+                              {<FormattedMessage id={subItem.title} />}
+                            </a>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

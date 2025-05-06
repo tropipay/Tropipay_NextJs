@@ -2,6 +2,7 @@ import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import { format, parse } from "date-fns"
+import { processEnvNEXT_PUBLIC_API_URL } from "../config"
 
 /**
  * Makes an API request.
@@ -46,7 +47,7 @@ export async function makeApiRequest({
     body && console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+  const response = await fetch(`${processEnvNEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
       ...fetchHeaders,
@@ -77,16 +78,11 @@ export function buildGraphQLVariables(
     ...filters
   } = searchParams
   const variables: GraphQLVariables = {
-    filter: {},
+    filter: { search },
     pagination: {
       limit: parseInt(size),
       offset: parseInt(page) * parseInt(size),
     },
-  }
-
-  // Process the general search field (search)
-  if (search) {
-    variables.filter.generalSearch = search
   }
 
   // Process additional filters

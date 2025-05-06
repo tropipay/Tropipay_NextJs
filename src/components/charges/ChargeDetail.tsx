@@ -2,10 +2,11 @@ import {
   chargeStates,
   chargeStatesGroups,
 } from "@/app/filterDefinitions/charges"
-import { Info } from "@/components/sectionComponents/Info"
-import { Section } from "@/components/sectionComponents/Section"
 import FacetedBadge from "@/components/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Charge } from "@/types/charges"
+import { processEnvNEXT_PUBLIC_API_URL } from "@/utils/config"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
@@ -38,7 +39,7 @@ export default function ChargeDetail(props: any): JSX.Element {
   const onDownloadInvoiceFile = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        `${processEnvNEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
         {
           method: "POST",
           headers: {
@@ -88,69 +89,87 @@ export default function ChargeDetail(props: any): JSX.Element {
             </p>
           )}
         </div>
-        <Section title={<FormattedMessage id="payment_details" />}>
-          <Info
+        <RowDetailSection title={<FormattedMessage id="payment_details" />}>
+          <RowDetailInfo
             label={<FormattedMessage id="amount" />}
             value={formatAmount(amount.value, amount.currency, "right")}
           />
-          <Info
+          <RowDetailInfo
             label={<FormattedMessage id="paymentMethod" />}
             value={<FormattedMessage id={`pm_${paymentMethod}`} />}
           />
           {cardBin && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="cardBin" />}
               value={`${cardBin} **** `}
             />
           )}
-          <Info label={<FormattedMessage id="reference" />} value={reference} />
-          <Info label={<FormattedMessage id="errorCode" />} value={errorCode} />
-        </Section>
+          <RowDetailInfo
+            label={<FormattedMessage id="reference" />}
+            value={reference}
+          />
+          <RowDetailInfo
+            label={<FormattedMessage id="errorCode" />}
+            value={errorCode}
+          />
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="client_data" />}>
-          <Info
+        <RowDetailSection title={<FormattedMessage id="client_data" />}>
+          <RowDetailInfo
             label={<FormattedMessage id="fullName" />}
             value={<span className="uppercase">{fullName}</span>}
           />
-          <Info label={<FormattedMessage id="email" />} value={email} />
-          <Info label={<FormattedMessage id="address" />} value={address} />
-          <Info label={<FormattedMessage id="country" />} value={country} />
-        </Section>
+          <RowDetailInfo
+            label={<FormattedMessage id="email" />}
+            value={email}
+          />
+          <RowDetailInfo
+            label={<FormattedMessage id="address" />}
+            value={address}
+          />
+          <RowDetailInfo
+            label={<FormattedMessage id="country" />}
+            value={country}
+          />
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="payment_method" />}>
+        <RowDetailSection title={<FormattedMessage id="payment_method" />}>
           {cardPan && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="cardPan" />}
               value={`**** ${cardPan}`}
             />
           )}
           {cardExpirationDate && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="cardExpirationDate" />}
               value={format(cardExpirationDate, "dd/MM/yy")}
             />
           )}
-          <Info
+          <RowDetailInfo
             label={<FormattedMessage id="cardCountry" />}
             value={cardCountry}
           />
-          <Info label={<FormattedMessage id="clientIp" />} value={clientIp} />
-        </Section>
+          <RowDetailInfo
+            label={<FormattedMessage id="clientIp" />}
+            value={clientIp}
+          />
+        </RowDetailSection>
 
-        <Section title={<FormattedMessage id="schedule" />}>
+        <RowDetailSection title={<FormattedMessage id="schedule" />}>
           {createdAt && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="createdAt" />}
               value={createdAt && format(new Date(createdAt), "dd/MM/yy")}
             />
           )}
           {completedAt && (
-            <Info
+            <RowDetailInfo
               label={<FormattedMessage id="completedAt" />}
               value={completedAt && format(new Date(completedAt), "dd/MM/yy")}
             />
           )}
-        </Section>
+        </RowDetailSection>
       </div>
 
       {/* <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">

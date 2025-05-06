@@ -43,10 +43,22 @@ export const movementStates = [
   },
 ].map((option) => ({ ...option, label: `ms_${option.value}` }))
 
+export const movementScheduledStates = [
+  {
+    value: 1,
+  },
+  {
+    value: 2,
+  },
+  {
+    value: 3,
+  },
+].map((option) => ({ ...option, label: `sched_ms_${option.value}` }))
+
 export const movementStateGroups = {
   completedStates: ["completed"],
   processingStates: ["pending", "processing"],
-  anotherStates: ["cancelled"],
+  anotherStates: ["cancelled", 1, 2, 3],
   errorStates: ["error"],
 }
 

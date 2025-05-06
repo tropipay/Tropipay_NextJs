@@ -1,6 +1,6 @@
 import { cn } from "@/utils/data/utils"
 
-export function RowData({ label, value, style }) {
+export function ReportRowInfo({ label, value, style }) {
   return (
     <div
       className={cn(
