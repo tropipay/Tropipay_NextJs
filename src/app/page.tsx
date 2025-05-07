@@ -3,6 +3,7 @@
 import { login } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
+import { Process } from "@/utils/config"
 import CookiesManager from "@/utils/cookies/cookiesManager"
 import { getTokenFromSession } from "@/utils/user/utilsUser"
 import { Loader2 } from "lucide-react"
@@ -19,12 +20,16 @@ export default function Page() {
   const router = useRouter()
   const { t } = useTranslation()
 
+  console.log("Process", Process)
+
   const getToken = (): string =>
     getTokenFromSession(
       CookiesManager.getInstance().get(
         "session",
-        'fill_with_session_info',
-        typeof window !== 'undefined' && window.location.hostname === 'localhost' && window.location.port === '3000'
+        "fill_with_session_info",
+        typeof window !== "undefined" &&
+          window.location.hostname === "localhost" &&
+          window.location.port === "3000"
       )
     )
 
@@ -47,7 +52,7 @@ export default function Page() {
 
   const onOk = () =>
     window.location.assign(
-      `${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login?redirect=${process.env.NEXT_PUBLIC_SITE_URL}`
+      `${Process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login?redirect=${Process.env.NEXT_PUBLIC_SITE_URL}`
     )
 
   useEffect(() => {
