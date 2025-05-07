@@ -3,6 +3,7 @@ import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import { format, parse } from "date-fns"
 import { Process } from "../config"
+import getConfig from 'next/config'
 
 /**
  * Makes an API request.
@@ -17,6 +18,9 @@ export async function makeApiRequest({
   debug = false,
 }: FetchOptions) {
   const { url, method, body } = queryConfig
+  const { publicRuntimeConfig } = getConfig()
+  const apiUrl = publicRuntimeConfig?.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL
+
   let bodyUpdated = {}
   if (body) {
     const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
@@ -47,7 +51,7 @@ export async function makeApiRequest({
     body && console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
   }
 
-  const response = await fetch(`${Process.env.NEXT_PUBLIC_API_URL}${url}`, {
+  const response = await fetch(`${apiUrl}${url}`, {
     method,
     headers: {
       ...fetchHeaders,
