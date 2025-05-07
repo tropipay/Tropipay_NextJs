@@ -27,7 +27,7 @@ const poppins = Poppins({
 
 // Configuración de Roboto
 const roboto = Roboto({
-  weight: ["400", "500"], // regular y medium (en lugar de semibold)
+  weight: ["400", "500", "600"], // regular y medium (en lugar de semibold)
   // O si prefieres que sea más bold: weight: ['400', '700']
   subsets: ["latin"],
   variable: "--font-roboto",
