@@ -76,7 +76,7 @@
   "error_detected": "Error detectado",
   "error_execute_operation": "Ocurrió un error en la operación. Intenta más tarde.",
   "error_failed_to_fetch": "Se ha detectado un error obteniendo datos de nuestros servicios, es posible que su sesión haya expirado. Usted deberá iniciar sesión en el sitio Tropipay.",
-  "error_login_dialog_title": "El token de sesión no es válido o el token ha expirado.",
+  "error_login_dialog_title": "El token de sesión no es válido o el token ha expirado...",
   "errors_have_been_detected": "Se han detectado errores",
   "exit": "Salir",
   "externalTransfers": "Transferencias externas de salida",
