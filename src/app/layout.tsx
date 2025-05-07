@@ -1,12 +1,13 @@
 import IntlWrapper from "@/components/intl/Wrapper"
+import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
 import { ReduxProvider } from "@/components/ReduxProvider" // Import ReduxProvider
 import TanstackProvider from "@/components/TanstackProvider"
 import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
+import { SessionProvider } from "next-auth/react"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
-import { SessionProvider } from "next-auth/react"
 
 export const metadata: Metadata = {
   title: "Tropipay Business",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 }
 
 const poppins = Poppins({
-  weight: ["600"], // semibold
+  weight: ["500", "600"], // Especifica los pesos que necesites
   subsets: ["latin"],
   variable: "--font-poppins",
   display: "swap",
@@ -28,7 +29,7 @@ const poppins = Poppins({
 
 // Configuración de Roboto
 const roboto = Roboto({
-  weight: ["400", "500"], // regular y medium (en lugar de semibold)
+  weight: ["400", "500", "600"], // regular y medium (en lugar de semibold)
   // O si prefieres que sea más bold: weight: ['400', '700']
   subsets: ["latin"],
   variable: "--font-roboto",
@@ -41,12 +42,15 @@ export default function RootLayout({ children }: ChildrenProps) {
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
         <SessionProvider>
           <Suspense>
-            <ReduxProvider>
-              <IntlWrapper>
-                <Toaster />
-                <TanstackProvider>{children}</TanstackProvider>
-              </IntlWrapper>
-            </ReduxProvider>
+            {/* Wrap IntlWrapper with PostHogInsert */}
+            <PostHogInsert>
+              <ReduxProvider>
+                <IntlWrapper>
+                  <Toaster />
+                  <TanstackProvider>{children}</TanstackProvider>
+                </IntlWrapper>
+              </ReduxProvider>
+            </PostHogInsert>
           </Suspense>
         </SessionProvider>
       </body>

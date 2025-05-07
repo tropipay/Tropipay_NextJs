@@ -24,6 +24,8 @@ import {
 import { CalendarIcon, Eraser } from "lucide-react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 import { Label } from "@/components/ui/Label"
 import {
@@ -39,15 +41,18 @@ interface ColumnConfig {
 }
 
 interface DataTableFilterDateProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue> & { config?: ColumnConfig }
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterDate<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   const [selectedValue, setSelectedValue] = React.useState<string>("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
@@ -145,26 +150,45 @@ export function DataTableFilterDate<TData, TValue>({
     }
 
     setError(null)
-    column?.setFilterValue(
+    const appliedValue =
       fromDate || toDate ? [fromDate, toDate].join(",") : undefined
-    )
-  }, [column, fromDate, toDate, t])
+    callPosthog(posthog, "filterDate_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "date",
+      filter_value: appliedValue,
+    })
+    column?.setFilterValue(appliedValue)
+  }, [column, fromDate, toDate, t, posthog, tableId])
 
   const handleClearFilter = React.useCallback(() => {
     if (!column) return
     if (filterValue) {
+      callPosthog(posthog, "filterDate_clear", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: filterValue,
+        filter_type: "date",
+      })
       setFromDate(undefined)
       setToDate(undefined)
       setSelectedValue("")
       setError(null)
       column?.setFilterValue(undefined)
     } else onClear?.(column.id)
-  }, [column])
+  }, [column, filterValue, onClear, posthog, tableId]) // Add dependencies
 
   // Manejo de períodos predefinidos
   const handlePeriodChange = React.useCallback(
     (value: string) => {
       setSelectedValue(value)
+
+      callPosthog(posthog, "filterDate_periodSelected", {
+        table_id: tableId,
+        filter_id: column?.id,
+        period_value: value,
+      })
+
       switch (value) {
         case "1": // Hoy
           setFromDate(todayFormatted)
@@ -214,7 +238,10 @@ export function DataTableFilterDate<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterDate-popoverTrigger-openFilter"
+      >
         <Button
           variant={filterValue ? "active" : "inactive"}
           size="sm"
@@ -236,7 +263,9 @@ export function DataTableFilterDate<TData, TValue>({
               </span>
             </>
           )}
+          {/* Updated data-test-id for the clear filter icon container */}
           <div
+            data-test-id="dataTableFilterDate-div-clearFilter"
             onClick={(e) => {
               e.stopPropagation()
               handleClearFilter()
@@ -259,20 +288,35 @@ export function DataTableFilterDate<TData, TValue>({
         >
           <div className="mb-2">
             <Select value={selectedValue} onValueChange={handlePeriodChange}>
-              <SelectTrigger aria-label={t("select_period")}>
+              <SelectTrigger
+                aria-label={t("select_period")}
+                data-test-id="dataTableFilterDate-selectTrigger-selectPeriod"
+              >
                 <SelectValue placeholder={t("select_period")} />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="1">
+                <SelectItem
+                  value="1"
+                  data-test-id="dataTableFilterDate-selectItem-period-1"
+                >
                   <FormattedMessage id="today" />
                 </SelectItem>
-                <SelectItem value="2">
+                <SelectItem
+                  value="2"
+                  data-test-id="dataTableFilterDate-selectItem-period-2"
+                >
                   <FormattedMessage id="last_week" />
                 </SelectItem>
-                <SelectItem value="3">
+                <SelectItem
+                  value="3"
+                  data-test-id="dataTableFilterDate-selectItem-period-3"
+                >
                   <FormattedMessage id="last_month" />
                 </SelectItem>
-                <SelectItem value="4">
+                <SelectItem
+                  value="4"
+                  data-test-id="dataTableFilterDate-selectItem-period-4"
+                >
                   <FormattedMessage id="last_six_months" />
                 </SelectItem>
               </SelectContent>
@@ -282,7 +326,10 @@ export function DataTableFilterDate<TData, TValue>({
             <FormattedMessage id="from" />
           </Label>
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger
+              asChild
+              data-test-id="dataTableFilterDate-popoverTrigger-openDateFrom"
+            >
               <Button
                 id="date-from"
                 variant="outline"
@@ -302,6 +349,7 @@ export function DataTableFilterDate<TData, TValue>({
                         handleDateChange("from", undefined)
                       }}
                       className="ml-2 text-sm"
+                      data-test-id="dataTableFilterDate-span-clearDateFrom"
                     >
                       <FormattedMessage id="clear" />
                     </span>
@@ -336,7 +384,10 @@ export function DataTableFilterDate<TData, TValue>({
             <FormattedMessage id="to" />
           </Label>
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger
+              asChild
+              data-test-id="dataTableFilterDate-popoverTrigger-openDateTo"
+            >
               <Button
                 id="date-to"
                 variant="outline"
@@ -356,6 +407,7 @@ export function DataTableFilterDate<TData, TValue>({
                         handleDateChange("to", undefined)
                       }}
                       className="ml-2 text-sm"
+                      data-test-id="dataTableFilterDate-span-clearDateTo"
                     >
                       <FormattedMessage id="clear" />
                     </span>
@@ -387,7 +439,13 @@ export function DataTableFilterDate<TData, TValue>({
           {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="flex gap-2 mt-2">
             <PopoverClose asChild>
-              <Button variant="default" className="w-full" type="submit">
+              {/* Added data-test-id to the apply filter button */}
+              <Button
+                variant="default"
+                className="w-full"
+                type="submit"
+                data-test-id="dataTableFilterDate-button-applyFilter" // Updated data-test-id
+              >
                 <FormattedMessage id="apply" />
               </Button>
             </PopoverClose>

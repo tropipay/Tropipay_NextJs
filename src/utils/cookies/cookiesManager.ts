@@ -31,7 +31,7 @@ class CookiesManager {
    * @param {any} [defaultValue=""] The default value to return if the cookie is not found.
    * @returns The value of the cookie, or the default value if not found.
    */
-  get = (id: string, defaultValue: any = "") => {
+  get = (id: string, defaultValue: any = "", createCookie = true) => {
     /**
      * Gets the cookie value from the js-cookie library.
      */
@@ -44,7 +44,7 @@ class CookiesManager {
     }
 
     if (!value) {
-      this.set(id, defaultValue)
+      if(createCookie) this.set(id, defaultValue)
       return defaultValue
     }
 
