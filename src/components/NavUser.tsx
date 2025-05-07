@@ -17,12 +17,13 @@ import {
 
 import { FormattedMessage } from "react-intl"
 import { NavUserAccount } from "./NavUserAccount"
+import { Process } from "@/utils/config"
 
 export function NavUser(props: any) {
   const { isMobile } = useSidebar()
   const user = props.user
   const onExit = () =>
-    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
+    window.location.assign(`${Process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
 
   return (
     <SidebarMenu>
