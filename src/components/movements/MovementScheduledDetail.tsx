@@ -17,7 +17,6 @@ import {
   Button,
 } from "@/components/ui"
 import { MovementScheduled } from "@/types/movements"
-import { Process } from "@/utils/config"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
@@ -51,7 +50,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     setIsLoading(true)
     try {
       const res = await fetch(
-        `${Process.env.NEXT_PUBLIC_API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
         {
           method: "PUT",
           headers: {
