@@ -14,8 +14,10 @@ import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { FormattedMessage } from "react-intl"
-
+import { useState } from "react"
+import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
 export default function MovementDetail(props: any): JSX.Element {
+  const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: MovementDetails = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
@@ -41,6 +43,7 @@ export default function MovementDetail(props: any): JSX.Element {
       clientAddress,
       clientIp,
       netAmount,
+      refundable,
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
@@ -241,18 +244,30 @@ export default function MovementDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
+      <div className="flex mt-4 gap-4">
         <Button
           variant="outline"
-          className="w-full"
+          className={`${refundable ? "w-1/2" : "w-full"}`}
           onClick={onDownloadInvoiceFile}
         >
           <FormattedMessage id="download" />
         </Button>
-        {/*           <Button variant="default" className="w-1/2">
-            <FormattedMessage id="refound" />
+        {refundable && (
+          <Button
+            variant="default"
+            className="w-1/2"
+            onClick={() => setOpenRefundDialog(true)}
+          >
+            <FormattedMessage id="refund" />
           </Button>
- */}
+        )}
+        <RefundWizard
+          open={openRefundDialog}
+          onOpenChange={setOpenRefundDialog}
+          amountValue={amount.value}
+          amountCurrency={amount.currency}
+          orderCode={bankOrderCode}
+        />
       </div>
     </div>
   )

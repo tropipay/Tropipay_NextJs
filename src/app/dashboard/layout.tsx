@@ -8,12 +8,31 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui"
+import ProfileStore from "@/stores/ProfileStore"
 import { SessionProvider } from "next-auth/react"
-import { Suspense } from "react"
+import { useEffect, useState } from "react"
 
 export default function Page({ children }: ChildrenProps) {
-  return (
-    <Suspense>
+  const [withProfile, setWithProfile] = useState(false)
+  const listener = (obj) => {
+    const actions = {
+      USER_PROFILE_OK: (obj) => {
+        setWithProfile(true)
+      },
+    }
+    actions[obj.type] && actions[obj.type](obj)
+  }
+
+  useEffect(() => {
+    const unsuscriber = ProfileStore.listen(listener)
+    ProfileStore.FetchProfile()
+    return () => {
+      unsuscriber()
+    }
+  }, [])
+
+  if (withProfile)
+    return (
       <SessionProvider>
         <SidebarProvider defaultOpen={false}>
           <AppSidebar />
@@ -31,6 +50,5 @@ export default function Page({ children }: ChildrenProps) {
           </SidebarInset>
         </SidebarProvider>
       </SessionProvider>
-    </Suspense>
-  )
+    )
 }

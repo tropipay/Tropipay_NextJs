@@ -8,6 +8,7 @@ import {
 import { Table } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronUp } from "lucide-react"
 import { useState } from "react" // Importar useState para controlar el estado del Popover
+import { FormattedMessage } from "react-intl"
 
 interface DateFilterProps<TData, TValue> {
   table: Table<TData>
@@ -40,16 +41,15 @@ export function MovementDateFilter<TData, TValue>({
       <PopoverTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2">
           <Icon className="h-4 w-4" />
-          Fecha de creación
+          <FormattedMessage id="creation_date" />
         </Button>
       </PopoverTrigger>
-
       <PopoverContent className="w-[200px] p-3" align="start">
         <Label
           htmlFor="filterValue"
           className="text-xs font-semibold text-grayFont ml-2"
         >
-          Ordenar por
+          <FormattedMessage id="sort_by" />
         </Label>
         <div className="ml-2 text-sm">
           {/* Opción para ordenar por fecha de creación */}
@@ -57,14 +57,18 @@ export function MovementDateFilter<TData, TValue>({
             className="mb-2 mt-2 flex w-full text-left"
             onClick={() => handleSort(createdAt, false)}
           >
-            <span>Fecha de creación</span>
+            <span>
+              <FormattedMessage id="creation_date" />
+            </span>
           </button>
           {/* Opción para ordenar por fecha valor */}
           <button
             className="mb-2 flex w-full text-left"
             onClick={() => handleSort(completedAt, false)}
           >
-            <span>Fecha valor</span>
+            <span>
+              <FormattedMessage id="value_date" />
+            </span>
           </button>
         </div>
       </PopoverContent>

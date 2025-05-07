@@ -1,8 +1,10 @@
 import IntlWrapper from "@/components/intl/Wrapper"
 import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
+import { ReduxProvider } from "@/components/ReduxProvider" // Import ReduxProvider
 import TanstackProvider from "@/components/TanstackProvider"
 import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
+import { SessionProvider } from "next-auth/react"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"
 import "./globals.css"
@@ -38,15 +40,19 @@ export default function RootLayout({ children }: ChildrenProps) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
-        <Suspense>
-          {/* Wrap IntlWrapper with PostHogInsert */}
-          <PostHogInsert>
-            <IntlWrapper>
-              <Toaster />
-              <TanstackProvider>{children}</TanstackProvider>
-            </IntlWrapper>
-          </PostHogInsert>
-        </Suspense>
+        <SessionProvider>
+          <Suspense>
+            {/* Wrap IntlWrapper with PostHogInsert */}
+            <PostHogInsert>
+              <ReduxProvider>
+                <IntlWrapper>
+                  <Toaster />
+                  <TanstackProvider>{children}</TanstackProvider>
+                </IntlWrapper>
+              </ReduxProvider>
+            </PostHogInsert>
+          </Suspense>
+        </SessionProvider>
       </body>
     </html>
   )

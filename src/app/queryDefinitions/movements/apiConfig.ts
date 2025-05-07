@@ -94,6 +94,7 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
                   email
                 }
                 type
+                refundable
               }
               
             }

@@ -1,5 +1,6 @@
 import { Button, Input } from "@/components/ui"
 import React, { useEffect, useState } from "react"
+import { FormattedMessage } from "react-intl"
 
 interface InputAmountProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
@@ -7,6 +8,7 @@ interface InputAmountProps
   maxValue?: number // Máximo permitido en centavos
   amount?: number | string // Valor inicial en centavos o formateado
   placeholder?: string // Propiedad placeholder
+  action?: "clear" | "max" // Acción a realizar al hacer clic en el botón
 }
 
 const InputAmount: React.FC<InputAmountProps> = (props) => {
@@ -18,6 +20,7 @@ const InputAmount: React.FC<InputAmountProps> = (props) => {
     value,
     id,
     placeholder = "",
+    action = "clear",
     ...rest
   } = props
 
@@ -79,6 +82,13 @@ const InputAmount: React.FC<InputAmountProps> = (props) => {
     }
   }
 
+  const handleMax = () => {
+    setInternalValue(formatter(maxValue))
+    if (onChange) {
+      onChange(formatter(maxValue))
+    }
+  }
+
   return (
     <div className="relative">
       <Input
@@ -93,15 +103,27 @@ const InputAmount: React.FC<InputAmountProps> = (props) => {
         placeholder={internalValue ? "" : placeholder} // Mostrar placeholder solo si no hay valor
         {...rest}
       />
-      {internalValue && ( // Mostrar el botón solo si hay un valor
+      {action === "clear" &&
+        internalValue && ( // Mostrar el botón solo si hay un valor
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-6 pb-[2px] w-[50px]"
+            onClick={handleClear}
+          >
+            <FormattedMessage id="clear" />
+          </Button>
+        )}
+      {action === "max" && (
         <Button
           type="button"
           variant="ghost"
           size="icon"
           className="absolute right-2 top-1/2 -translate-y-1/2 h-6 pb-[2px] w-[50px]"
-          onClick={handleClear}
+          onClick={handleMax}
         >
-          Borrar
+          <FormattedMessage id="max" />
         </Button>
       )}
     </div>

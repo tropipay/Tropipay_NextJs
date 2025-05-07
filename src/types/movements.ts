@@ -24,13 +24,17 @@ export type Movement = {
   conversionRate: string
   cardPan: string
   concept: string
-  bankOrderCode: string
   email: string
   fee: Amount
+  bankOrderCode: string
 }
 
 export type MovementDetails = {
   movementDetail: {
+    amount: Amount
+    state: string
+    createdAt: string
+    completedAt: string
     type: string
     clientAddress: string
     netAmount: Amount
@@ -40,6 +44,7 @@ export type MovementDetails = {
     clientIp: string
     recipientData: MovementClientData
     senderData: MovementClientData
+    refundable: boolean
   }
 } & Movement
 

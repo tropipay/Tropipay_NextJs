@@ -1,6 +1,8 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { fetchHeaders } from "@/utils/data/utils"
+import axios from "axios"
+import ProfileStore from "@/stores/ProfileStore"
 import { Process } from "./utils/config"
 
 export default {
@@ -12,12 +14,11 @@ export default {
         token: {},
       },
       async authorize({ token }) {
-        let user: object | null = null
+        let user: any = null
         try {
-          const res = await fetch(
+          const response = await axios.get(
             `${Process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,
             {
-              method: "GET",
               headers: {
                 ...fetchHeaders,
                 Authorization: `Bearer ${token}`,
@@ -25,20 +26,18 @@ export default {
             }
           )
 
-          if (!res.ok) {
-            throw new Error(
-              `Failed to fetch user profile: ${res.status} ${res.statusText}`
-            )
+          const profileData = response.data
+
+          if (!profileData) {
+            throw new Error("Profile data is empty")
           }
 
-          user = await res.json()
-          user = { ...user, token }
+          ProfileStore.setData("profile", profileData)
+
+          user = { ...profileData, token }
         } catch (error) {
-          if (error instanceof Error) {
-            throw new Error(`Authorization failed: ${error.message}`)
-          } else {
-            throw new Error("Authorization failed: Unknown error occurred")
-          }
+          console.error("Authorization failed:", error)
+          return null
         }
 
         return user
