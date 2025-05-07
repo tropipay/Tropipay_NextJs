@@ -2,7 +2,6 @@ import { isTokenExpired } from "@/utils/data/utils"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { auth } from "./auth"
-import { Process } from "./utils/config"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]
@@ -32,10 +31,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(
       new URL(
         `${
-          Process.env.NEXT_PUBLIC_TROPIPAY_HOME
+          process.env.NEXT_PUBLIC_TROPIPAY_HOME
         }/login?redirect=${getRedirectRoute(
           req.nextUrl.pathname,
-          Process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin
+          process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin
         )}`,
         req.nextUrl
       )

@@ -2,8 +2,7 @@ import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import { format, parse } from "date-fns"
-import { Process } from "../config"
-import getConfig from 'next/config'
+import getConfig from "next/config"
 
 /**
  * Makes an API request.
@@ -19,7 +18,8 @@ export async function makeApiRequest({
 }: FetchOptions) {
   const { url, method, body } = queryConfig
   const { publicRuntimeConfig } = getConfig()
-  const apiUrl = publicRuntimeConfig?.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL
+  const apiUrl =
+    publicRuntimeConfig?.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL
 
   let bodyUpdated = {}
   if (body) {

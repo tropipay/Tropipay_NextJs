@@ -3,21 +3,20 @@ import Credentials from "next-auth/providers/credentials"
 import { fetchHeaders } from "@/utils/data/utils"
 import axios from "axios"
 import ProfileStore from "@/stores/ProfileStore"
-import { Process } from "./utils/config"
 
 export default {
   session: { strategy: "jwt" },
-  secret: Process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       credentials: {
         token: {},
       },
       async authorize({ token }) {
-        let user: any = null
+        let user: object | null = null
         try {
           const response = await axios.get(
-            `${Process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,
             {
               headers: {
                 ...fetchHeaders,

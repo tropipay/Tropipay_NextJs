@@ -7,7 +7,6 @@ import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
 import { MovementDetails } from "@/types/movements"
-import { Process } from "@/utils/config"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { callPosthog } from "@/utils/utils"
 import { format } from "date-fns"
@@ -59,7 +58,7 @@ export default function MovementDetail(props: any): JSX.Element {
     callPosthog(posthog, "download_invoice_clicked")
     try {
       const response = await fetch(
-        `${Process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
         {
           method: "POST",
           headers: {

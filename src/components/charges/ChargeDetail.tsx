@@ -6,7 +6,6 @@ import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Charge } from "@/types/charges"
-import { Process } from "@/utils/config"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
@@ -45,7 +44,7 @@ export default function ChargeDetail(props: any): JSX.Element {
   const onDownloadInvoiceFile = async () => {
     try {
       const response = await fetch(
-        `${Process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
         {
           method: "POST",
           headers: {
