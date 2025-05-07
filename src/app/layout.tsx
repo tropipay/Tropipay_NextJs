@@ -1,4 +1,5 @@
 import IntlWrapper from "@/components/intl/Wrapper"
+import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
 import TanstackProvider from "@/components/TanstackProvider"
 import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
@@ -26,7 +27,7 @@ const poppins = Poppins({
 
 // Configuración de Roboto
 const roboto = Roboto({
-  weight: ["400", "500"], // regular y medium (en lugar de semibold)
+  weight: ["400", "500", "600"], // regular y medium (en lugar de semibold)
   // O si prefieres que sea más bold: weight: ['400', '700']
   subsets: ["latin"],
   variable: "--font-roboto",
@@ -38,10 +39,13 @@ export default function RootLayout({ children }: ChildrenProps) {
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
         <Suspense>
-          <IntlWrapper>
-            <Toaster />
-            <TanstackProvider>{children}</TanstackProvider>
-          </IntlWrapper>
+          {/* Wrap IntlWrapper with PostHogInsert */}
+          <PostHogInsert>
+            <IntlWrapper>
+              <Toaster />
+              <TanstackProvider>{children}</TanstackProvider>
+            </IntlWrapper>
+          </PostHogInsert>
         </Suspense>
       </body>
     </html>

@@ -27,21 +27,26 @@ import { Separator } from "@/components/ui/Separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/utils/data/utils"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
 interface DataTableFilterFacetedProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
 }
 
 // Componente principal
 export function DataTableFilterFaceted<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
   const { t } = useTranslation()
+  const posthog = usePostHog() // Get posthog instance
   const searchParams = useSearchParams()
   // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}
@@ -78,17 +83,29 @@ export function DataTableFilterFaceted<TData, TValue>({
   }
 
   const handleApplyFilters = () => {
-    const filterValues = Array.from(localSelectedValues)
-    const serializedValue = filterValues.join(",")
+    const filterValuesArray = Array.from(localSelectedValues)
+    callPosthog(posthog, "filterFaceted_applied", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "list",
+      filter_value: filterValuesArray,
+    })
+    const serializedValue = filterValuesArray.join(",")
     column?.setFilterValue(
-      filterValues.length > 0 ? serializedValue : undefined
+      filterValuesArray.length > 0 ? serializedValue : undefined
     )
   }
 
   const handleClearFilters = () => {
     if (!column) return
-    const filterValues = Array.from(localSelectedValues)
-    if (filterValues.length > 0) {
+    const filterValuesArray = Array.from(localSelectedValues) // Get values before clearing
+    if (filterValuesArray.length > 0) {
+      callPosthog(posthog, "filterFaceted_clear", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: filterValuesArray,
+        filter_type: "list",
+      })
       setLocalSelectedValues(new Set())
       column?.setFilterValue(undefined)
 
@@ -100,7 +117,10 @@ export function DataTableFilterFaceted<TData, TValue>({
   // Renderizado
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterFaceted-popoverTrigger-openFilter"
+      >
         <Button
           variant={selectedValues.size > 0 ? "active" : "inactive"}
           size="sm"
@@ -123,7 +143,9 @@ export function DataTableFilterFaceted<TData, TValue>({
               </div>
             </>
           )}
+          {/* Updated data-test-id for the clear filter icon container */}
           <div
+            data-test-id="dataTableFilterFaceted-div-clearFilter"
             onClick={(e) => {
               e.stopPropagation()
               handleClearFilters()
@@ -139,7 +161,10 @@ export function DataTableFilterFaceted<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[285px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={t(filterLabel)} />
+          <CommandInput
+            placeholder={t(filterLabel)}
+            data-test-id="dataTableFilterFaceted-commandInput-search" // Added data-test-id
+          />
           <CommandList className="px-2 pt-2">
             <CommandEmpty>
               <FormattedMessage id="no_filter_results" />
@@ -152,6 +177,7 @@ export function DataTableFilterFaceted<TData, TValue>({
                   <CommandItem
                     key={option.value}
                     onSelect={() => handleSelectOption(option.value)}
+                    data-test-id={`dataTableFilterFaceted-commandItem-toggleOption-${option.value}`}
                   >
                     <div
                       className={cn(
@@ -189,6 +215,7 @@ export function DataTableFilterFaceted<TData, TValue>({
               className="w-full p-2"
               type="submit"
               onClick={handleApplyFilters}
+              data-test-id="dataTableFilterFaceted-button-applyFilter" // Updated data-test-id
             >
               {<FormattedMessage id="apply" />}
             </Button>

@@ -9,15 +9,19 @@ import { Button } from "@/components/ui"
 import { MovementDetails } from "@/types/movements"
 import { Process } from "@/utils/config"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { callPosthog } from "@/utils/utils"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
+import { usePostHog } from "posthog-js/react"
 import { FormattedMessage } from "react-intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const row: MovementDetails = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
+  const posthog = usePostHog()
   const {
+    id: bookingId,
     email,
     fee,
     createdAt,
@@ -49,6 +53,7 @@ export default function MovementDetail(props: any): JSX.Element {
   } = row
 
   const onDownloadInvoiceFile = async () => {
+    callPosthog(posthog, "download_invoice_clicked")
     try {
       const response = await fetch(
         `${Process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
