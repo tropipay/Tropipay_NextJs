@@ -8,6 +8,7 @@ interface PageChangePayload {
 }
 
 interface AppStoreMethods {
+  name: string
   Page(pageToGo: string): void
 }
 
@@ -15,6 +16,7 @@ type AppStoreType = BaseStore & AppStoreMethods
 
 const AppStores = createStore(
   (store): AppStoreMethods => ({
+    name: "AppStore",
     Page(pageToGo: string): void {
       store.trigger<PageChangePayload>("PAGE_CHANGE", {
         result: {

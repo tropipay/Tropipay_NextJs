@@ -29,6 +29,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       currency: "USD",
       cardExpirationDate: "2026-01-13T23:33:41.446Z",
       clientIp: "225.230.230.4",
+      bankOrderCode: "BOC-422912",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e1",
@@ -55,6 +57,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       country: "ES",
       cardCountry: "US",
       clientIp: "225.230.230.4",
+      bankOrderCode: "BOC-043e1",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e2",
@@ -77,6 +81,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e2",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e3",
@@ -99,6 +105,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e3",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e4",
@@ -121,6 +129,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e4",
+      refundable: false,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e5",
@@ -143,6 +153,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e5",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e6",
@@ -165,6 +177,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e6",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e7",
@@ -187,6 +201,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e7",
+      refundable: false,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e8",
@@ -209,6 +225,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e8",
+      refundable: true,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e9",
@@ -231,6 +249,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e9",
+      refundable: false,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e0",
@@ -253,6 +273,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-043e0",
+      refundable: false,
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c96004301",
@@ -275,6 +297,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
       cardType: "Creditcard",
       address: "Texas, Apt 4",
       currency: "USD",
+      bankOrderCode: "BOC-04301",
+      refundable: false,
     },
   ],
   totalCount: 11,
