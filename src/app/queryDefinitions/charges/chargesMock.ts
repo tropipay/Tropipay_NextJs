@@ -5,6 +5,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
   items: [
     {
       id: "M422912",
+      bankOrderCode: "BOC-M422912",
+      refundable: false,
       amount: {
         value: 758,
         currency: "USD",
@@ -34,6 +36,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e1",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e1",
+      refundable: false,
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-13T23:33:41.446Z",
       amount: {
@@ -62,6 +66,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e2",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e2",
+      refundable: false,
       createdAt: "2024-12-24T06:58:23.916Z",
       completedAt: "2025-01-14T23:33:41.446Z",
       amount: {
@@ -86,6 +92,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e3",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e3",
+      refundable: false,
       createdAt: "2024-12-25T06:58:23.916Z",
       completedAt: "2025-01-14T23:33:41.446Z",
       amount: {
@@ -110,6 +118,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e4",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e4",
+      refundable: false,
       createdAt: "2024-12-26T06:58:23.916Z",
       completedAt: "2025-01-14T23:33:41.446Z",
       amount: {
@@ -134,6 +144,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e5",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e5",
+      refundable: false,
       createdAt: "2024-12-27T06:58:23.916Z",
       completedAt: "2025-01-14T23:33:41.446Z",
       amount: {
@@ -158,6 +170,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e6",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e6",
+      refundable: false,
       createdAt: "2024-12-27T06:58:23.916Z",
       completedAt: "2025-01-15T23:33:41.446Z",
       amount: {
@@ -182,6 +196,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e7",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e7",
+      refundable: false,
       createdAt: "2024-12-27T06:58:23.916Z",
       completedAt: "2025-01-15T23:33:41.446Z",
       amount: {
@@ -206,6 +222,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e8",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e8",
+      refundable: true,
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-15T23:33:41.446Z",
       amount: {
@@ -230,6 +248,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e9",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e9",
+      refundable: true,
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-15T23:33:41.446Z",
       amount: {
@@ -254,6 +274,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c960043e0",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c960043e0",
+      refundable: true,
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-15T23:33:41.446Z",
       amount: {
@@ -278,6 +300,8 @@ export const chargesMock: ApiDataResponse<Charge> = {
     },
     {
       id: "24406c8c-efd5-4e9b-8f7d-727c96004301",
+      bankOrderCode: "BOC-24406c8c-efd5-4e9b-8f7d-727c96004301",
+      refundable: true,
       createdAt: "2024-12-23T06:58:23.916Z",
       completedAt: "2025-01-16T23:33:41.446Z",
       amount: {
