@@ -27,7 +27,7 @@ const CryptoStore = createStore(
     GenerateTopUpPayment(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/crypto/generate_topup_payment",
+        endpoint: "/api/v3/crypto/generate_topup_payment",
         payload: data,
         eventOk: "CRYPTO_GENERATE_TOPUP_PAYMENT_OK",
         eventKO: "CRYPTO_GENERATE_TOPUP_PAYMENT_KO",

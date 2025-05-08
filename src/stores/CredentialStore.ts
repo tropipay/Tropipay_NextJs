@@ -32,7 +32,7 @@ const CredentialStore = createStore(
     Save(payload: GenericPayload, securityCode?: SecurityCodeType): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential",
+        endpoint: "/api/v3/credential",
         payload,
         eventOk: "CREDENTIAL_SAVE_OK",
         eventKO: "CREDENTIAL_SAVE_KO",
@@ -43,7 +43,7 @@ const CredentialStore = createStore(
     Authorize(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/authorize",
+        endpoint: "/api/v3/access/authorize",
         payload,
         eventOk: "CREDENTIAL_AUTHORIZE_OK",
         eventKO: "CREDENTIAL_AUTHORIZE_KO",
@@ -53,7 +53,7 @@ const CredentialStore = createStore(
     VerifyAuthorization(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/authorize",
+        endpoint: "/api/v3/access/authorize",
         payload,
         eventOk: "CREDENTIAL_VERIFY_AUTHORIZATION_OK",
         eventKO: "CREDENTIAL_VERIFY_AUTHORIZATION_KO",
@@ -63,7 +63,7 @@ const CredentialStore = createStore(
     Update(payload: UpdatePayload, securityCode?: SecurityCodeType): void {
       fetchPutWithTriggers<UpdatePayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential/" + payload.client_id,
+        endpoint: "/api/v3/credential/" + payload.client_id,
         payload,
         eventOk: "CREDENTIAL_UPDATE_OK",
         eventKO: "CREDENTIAL_UPDATE_KO",
@@ -74,7 +74,7 @@ const CredentialStore = createStore(
     Remove(id: string | number, securityCode?: SecurityCodeType): void {
       fetchDeleteWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential/" + id,
+        endpoint: "/api/v3/credential/" + id,
         eventOk: "CREDENTIAL_REMOVE_OK",
         eventKO: "CREDENTIAL_REMOVE_KO",
         securityCode: securityCode,
@@ -84,7 +84,7 @@ const CredentialStore = createStore(
     RemoveBiometric(): void {
       fetchPostWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential/delete-biometric",
+        endpoint: "/api/v3/credential/delete-biometric",
         eventOk: "BIOMETRIC_CREDENTIAL_REMOVE_OK",
         eventKO: "BIOMETRIC_CREDENTIAL_REMOVE_KO",
       })
@@ -93,7 +93,7 @@ const CredentialStore = createStore(
     List(securityCode?: SecurityCodeType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential",
+        endpoint: "/api/v3/credential",
         eventOk: "CREDENTIAL_LIST_OK",
         eventKO: "CREDENTIAL_LIST_KO",
         securityCode: securityCode,
@@ -103,7 +103,7 @@ const CredentialStore = createStore(
     Select(id: string | number, securityCode?: SecurityCodeType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential/" + id,
+        endpoint: "/api/v3/credential/" + id,
         eventOk: "CREDENTIAL_SELECT_OK",
         eventKO: "CREDENTIAL_SELECT_KO",
         securityCode: securityCode,
@@ -113,7 +113,7 @@ const CredentialStore = createStore(
     Grant(): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/credential/grant/list",
+        endpoint: "/api/v3/credential/grant/list",
         eventOk: "CREDENTIAL_GRANT_OK",
         eventKO: "CREDENTIAL_GRANT_KO",
       })

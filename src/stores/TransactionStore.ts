@@ -39,7 +39,7 @@ const TransactionStore = createStore(
     GetMediationState(payload: GetMediationStatePayload): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/transaction/mediation/${payload.securityHash}/state`,
+        endpoint: `/api/v3/transaction/mediation/${payload.securityHash}/state`,
         eventOk: "GETTING_MEDIATION_TRANSACTION_OK",
         eventKO: "GETTING_MEDIATION_TRANSACTION_KO",
       })
@@ -48,7 +48,7 @@ const TransactionStore = createStore(
     GetState(payload: GetStatePayload): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/transaction/${payload.bankOrderCode}/state`,
+        endpoint: `/api/v3/transaction/${payload.bankOrderCode}/state`,
         eventOk: "GETTING_TRANSACTION_OK",
         eventKO: "GETTING_TRANSACTION_KO",
       })
@@ -57,7 +57,7 @@ const TransactionStore = createStore(
     SetState(payload: SetStatePayload): void {
       fetchPostWithTriggers<SetStatePayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/transaction/${payload.bankOrderCode}/state`,
+        endpoint: `/api/v3/transaction/${payload.bankOrderCode}/state`,
         payload,
         eventOk: "SET_TRANSACTION_STATUS_OK",
         eventKO: "SET_TRANSACTION_STATUS_KO",
@@ -67,7 +67,7 @@ const TransactionStore = createStore(
     SetCode(payload: SetCodePayload): void {
       fetchPostWithTriggers<SetCodePayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/transaction/${payload.bankOrderCode}/code`,
+        endpoint: `/api/v3/transaction/${payload.bankOrderCode}/code`,
         payload,
         eventOk: "SET_TRANSACTION_CODE_OK",
         eventKO: "SET_TRANSACTION_CODE_KO",

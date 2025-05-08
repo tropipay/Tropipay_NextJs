@@ -27,7 +27,7 @@ const NotificationStore = createStore(
     List(querySet: QuerySet = { queryName: "notificationList" }): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/notifications",
+        endpoint: "/api/v3/notifications",
         eventOk: "NOTIFICATION_LIST_OK",
         eventKO: "NOTIFICATION_LIST_KO",
       })
@@ -42,7 +42,7 @@ const NotificationStore = createStore(
     ): void {
       fetchPostWithTriggers<NotificationId>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/notifications/dismiss",
+        endpoint: "/api/v3/notifications/dismiss",
         payload: notificationId,
         eventOk: "NOTIFICATION_DIMISS_OK",
         eventKO: "NOTIFICATION_DIMISS_KO",

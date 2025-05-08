@@ -25,7 +25,7 @@ const GiftcardStore = createStore(
     Add(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/giftcards/check/add",
+        endpoint: "/api/v3/giftcards/check/add",
         payload: data,
         eventOk: "GIFTCARD_ADD_OK",
         eventKO: "GIFTCARD_ADD_KO",
@@ -35,7 +35,7 @@ const GiftcardStore = createStore(
     Analytics(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/giftcards/analytics",
+        endpoint: "/api/v3/giftcards/analytics",
         filter: filter,
         eventOk: "GIFTCARD_ANALYTICS_OK",
         eventKO: "GIFTCARD_ANALYTICS_KO",
@@ -45,7 +45,7 @@ const GiftcardStore = createStore(
     Delete(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/giftcards/check/delete",
+        endpoint: "/api/v3/giftcards/check/delete",
         payload: data,
         eventOk: "GIFTCARD_DELETE_OK",
         eventKO: "GIFTCARD_DELETE_KO",
@@ -55,7 +55,7 @@ const GiftcardStore = createStore(
     Consume(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/giftcards/consume",
+        endpoint: "/api/v3/giftcards/consume",
         payload: data,
         eventOk: "GIFTCARD_CONSUME_OK",
         eventKO: "GIFTCARD_CONSUME_KO",
@@ -65,7 +65,7 @@ const GiftcardStore = createStore(
     onConsumeInternal(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/giftcards/consume-internal",
+        endpoint: "/api/v3/giftcards/consume-internal",
         payload: data,
         eventOk: "GIFTCARD_CONSUMEINTERNAL_OK",
         eventKO: "GIFTCARD_CONSUMEINTERNAL_KO",

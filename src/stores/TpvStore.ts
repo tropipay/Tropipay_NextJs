@@ -17,7 +17,7 @@ const TpvStore = createStore((store): { name: string } & TpvStoreMethods => ({
   ChargeToken(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/tpv/chargetoken`,
+      endpoint: `/api/v3/tpv/chargetoken`,
       payload,
       eventOk: "CHARGE_TOKEN_OK",
       eventKO: "CHARGE_TOKEN_KO",
@@ -27,7 +27,7 @@ const TpvStore = createStore((store): { name: string } & TpvStoreMethods => ({
   ChargeTokenApplePay(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/tpv/chargeTokenApplePay`,
+      endpoint: `/api/v3/tpv/chargeTokenApplePay`,
       payload,
       eventOk: "CHARGE_TOKEN_OK",
       eventKO: "CHARGE_TOKEN_KO",
@@ -37,7 +37,7 @@ const TpvStore = createStore((store): { name: string } & TpvStoreMethods => ({
   ChargeTokenGooglePay(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/tpv/chargeTokenGooglePay`,
+      endpoint: `/api/v3/tpv/chargeTokenGooglePay`,
       payload,
       eventOk: "CHARGE_TOKEN_OK_GOOGLE",
       eventKO: "CHARGE_TOKEN_KO_GOOGLE",
@@ -47,7 +47,7 @@ const TpvStore = createStore((store): { name: string } & TpvStoreMethods => ({
   ValidateAppleSession(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/tpv/validateAppleSession`,
+      endpoint: `/api/v3/tpv/validateAppleSession`,
       payload,
       eventOk: "VALIDATE_SESSION_OK",
       eventKO: "VALIDATE_SESSION_KO",

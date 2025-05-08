@@ -36,7 +36,7 @@ const TropiCardStore = createStore(
     CreateCard(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/accounts`,
+        endpoint: `/api/v3/accounts`,
         payload,
         eventOk: "TROPICAD_CREATE_OK",
         eventKO: "TROPICAD_CREATE_KO",
@@ -46,7 +46,7 @@ const TropiCardStore = createStore(
     ListAccount(): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/accounts`,
+        endpoint: `/api/v3/tropicards/accounts`,
         eventOk: "TROPICAD_LIST_OK",
         eventKO: "TROPICAD_LIST_KO",
       })
@@ -55,7 +55,7 @@ const TropiCardStore = createStore(
     Freeze(id: CardIdType): void {
       fetchPostWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/${id}/freeze`,
+        endpoint: `/api/v3/tropicards/${id}/freeze`,
         eventOk: "TROPICAD_FREEZE_OK",
         eventKO: "TROPICAD_FREEZE_KO",
       })
@@ -64,7 +64,7 @@ const TropiCardStore = createStore(
     Unfreeze(payload: IdPayload): void {
       fetchPostWithTriggers<IdPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/${payload.id}/unfreeze`,
+        endpoint: `/api/v3/tropicards/${payload.id}/unfreeze`,
         payload,
         eventOk: "TROPICAD_UNFREEZE_OK",
         eventKO: "TROPICAD_UNFREEZE_KO",
@@ -74,7 +74,7 @@ const TropiCardStore = createStore(
     ChangePin(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/pin`,
+        endpoint: `/api/v3/tropicards/pin`,
         payload,
         eventOk: "TROPICAD_CHANGEPIN_OK",
         eventKO: "TROPICAD_CHANGEPIN_KO",
@@ -84,7 +84,7 @@ const TropiCardStore = createStore(
     Recharge(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/tropicards/recharge",
+        endpoint: "/api/v3/tropicards/recharge",
         payload,
         eventOk: "TROPICAD_RECHARGE_OK",
         eventKO: "TROPICAD_RECHARGE_KO",
@@ -94,7 +94,7 @@ const TropiCardStore = createStore(
     Withdraw(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/tropicards/withdrawal",
+        endpoint: "/api/v3/tropicards/withdrawal",
         payload,
         eventOk: "TROPICAD_WITHDRAW_OK",
         eventKO: "TROPICAD_WITHDRAW_KO",
@@ -104,7 +104,7 @@ const TropiCardStore = createStore(
     Movements(id: CardIdType, filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/accounts/${id}/movements`,
+        endpoint: `/api/v3/accounts/${id}/movements`,
         eventOk: "TROPICAD_MOVEMENTS_OK",
         eventKO: "TROPICAD_MOVEMENTS_KO",
         filter,
@@ -114,7 +114,7 @@ const TropiCardStore = createStore(
     Delete(payload: IdPayload): void {
       fetchPostWithTriggers<IdPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/${payload.id}/delete`,
+        endpoint: `/api/v3/tropicards/${payload.id}/delete`,
         payload,
         eventOk: "TROPICAD_DELETE_OK",
         eventKO: "TROPICAD_DELETE_KO",
@@ -124,7 +124,7 @@ const TropiCardStore = createStore(
     DownloadQR(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/download`,
+        endpoint: `/api/v3/tropicards/download`,
         payload,
         eventOk: "TROPICAD_DOWNLOAD_OK",
         eventKO: "TROPICAD_DOWNLOAD_KO",
@@ -134,7 +134,7 @@ const TropiCardStore = createStore(
     Pay(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tropicards/pay`,
+        endpoint: `/api/v3/tropicards/pay`,
         payload,
         eventOk: "TROPICAD_PAY_OK",
         eventKO: "TROPICAD_PAY_KO",

@@ -36,7 +36,7 @@ const KycStores = createStore((store): { name: string } & KycStoreMethods => ({
     fetchPostWithTriggers<VerifyPayload>({
       store: store as EnhancedStore,
       payload: payload,
-      endpoint: "/api/v2/merchant/kyc/url",
+      endpoint: "/api/v3/merchant/kyc/url",
       eventOk: "MERCHANT_KYC_URL_OK",
       eventKO: "MERCHANT_KYC_URL_KO",
     })

@@ -115,7 +115,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
   Affiliates(querySet: QuerySet = { queryName: "affiliates" }): void {
     fetchGetWithTriggers({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/users/affiliates",
+      endpoint: "/api/v3/users/affiliates",
       eventOk: "AFFILIATES_DATA_OK",
       eventKO: "AFFILIATES_DATA_KO",
     })
@@ -124,7 +124,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
   SendAffiliateLink(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/users/share-affiliate-link",
+      endpoint: "/api/v3/users/share-affiliate-link",
       payload,
       eventOk: "SEND_AFFILIATE_LINK_OK",
       eventKO: "SEND_AFFILIATE_LINK_KO",
@@ -137,7 +137,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
   ): void {
     fetchGetWithTriggers({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/business/${payload.userId}/public-info`,
+      endpoint: `/api/v3/business/${payload.userId}/public-info`,
       eventOk: "GET_PUBLIC_INFO_OK",
       eventKO: "GET_PUBLIC_INFO_KO",
     })
@@ -146,7 +146,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
   CreateBusinessPaylink(payload: CreateBusinessPayload): void {
     fetchPostWithTriggers<CreateBusinessPayload>({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/business/${payload.userId}/create-paylink`,
+      endpoint: `/api/v3/business/${payload.userId}/create-paylink`,
       payload,
       eventOk: "CREATED_PAYLINK_OK",
       eventKO: "CREATED_PAYLINK_KO",
@@ -156,7 +156,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
   CreateBusinessExpressPay(payload: CreateBusinessPayload): void {
     fetchPostWithTriggers<CreateBusinessPayload>({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/business/${payload.userId}/create-expresspay`,
+      endpoint: `/api/v3/business/${payload.userId}/create-expresspay`,
       payload,
       eventOk: "CREATED_EXPRESSPAY_OK",
       eventKO: "CREATED_EXPRESSPAY_KO",
@@ -188,7 +188,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
     const { id, width } = payload
     fetchGetWithTriggers({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/business/${id}/url?width=${width}`,
+      endpoint: `/api/v3/business/${id}/url?width=${width}`,
       eventOk: "GET_USER_URL_OK",
       eventKO: "GET_USER_URL_KO",
     })
@@ -197,7 +197,7 @@ const UserStore = createStore((store): { name: string } & UserStoreMethods => ({
   DownloadQR(): void {
     fetchGetWithTriggers({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/users/download-qr",
+      endpoint: "/api/v3/users/download-qr",
       eventOk: "DOWNLOAD_QR_OK",
       eventKO: "DOWNLOAD_QR_KO",
     })

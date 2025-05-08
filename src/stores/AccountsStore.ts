@@ -21,7 +21,7 @@ const AccountsStore = createStore(
     List(filter: AccountFilter) {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/accounts`,
+        endpoint: `/api/v3/accounts`,
         eventOk: "ACCOUNTS_LIST_OK",
         eventKO: "ACCOUNTS_LIST_KO",
         filter: { ...filter },
@@ -31,7 +31,7 @@ const AccountsStore = createStore(
     CountAll(id: string | number): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/accounts/${id}/movements/countall`,
+        endpoint: `/api/v3/accounts/${id}/movements/countall`,
         eventOk: "ACCOUNT_MOVEMENTS_COUNT_ALL_OK",
         eventKO: "ACCOUNT_MOVEMENTS_COUNT_ALL_KO",
       })
@@ -40,7 +40,7 @@ const AccountsStore = createStore(
     Movements(id: string | number, filter: AccountFilter): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/accounts/${id}/movements`,
+        endpoint: `/api/v3/accounts/${id}/movements`,
         eventOk: "ACCOUNT_MOVEMENTS_OK",
         eventKO: "ACCOUNT_MOVEMENTS_KO",
         filter,

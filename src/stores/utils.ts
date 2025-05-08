@@ -193,7 +193,7 @@ export async function fetchGetWithTriggers({
       }
     }
 
-    const actualEndpoint = mapPublicEndpointToVersion(endpoint)
+    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
     const { data } = await axios.get(url, finalAxiosConfig) // Use finalAxiosConfig
@@ -226,7 +226,7 @@ export async function fetchPostWithTriggers<TPayload = any>({
       }
     }
 
-    const actualEndpoint = mapPublicEndpointToVersion(endpoint)
+    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
     const { data } = await axios.post(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
@@ -254,7 +254,7 @@ export async function fetchPutWithTriggers<TPayload = any>({
       }
     }
 
-    const actualEndpoint = mapPublicEndpointToVersion(endpoint)
+    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
     const { data } = await axios.put(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
@@ -282,7 +282,7 @@ export async function fetchDeleteWithTriggers({
       }
     }
 
-    const actualEndpoint = mapPublicEndpointToVersion(endpoint)
+    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
     const { data } = await axios.delete(url, finalAxiosConfig) // Use finalAxiosConfig
@@ -292,30 +292,6 @@ export async function fetchDeleteWithTriggers({
   }
 }
 
-export const mapPublicEndpointToVersion = (endpoint: string): string => {
-  const accessMode = process.env.NEXT_PUBLIC_V3_ACCESS_MODE || "disabled"
-
-  const isEndpointBusiness =
-    endpoint.includes("business") || endpoint.includes("merchant")
-
-  const shouldUseV3 = (() => {
-    switch (accessMode) {
-      case "physical":
-        return !isEndpointBusiness
-      case "companies":
-        return isEndpointBusiness
-      case "all":
-        return true
-      default:
-        return false
-    }
-  })()
-
-  return shouldUseV3
-    ? process.env.NEXT_PUBLIC_API_URL + transformEndpointToV3(endpoint)
-    : process.env.NEXT_PUBLIC_API_URL + endpoint
-}
-
 /**
  * Convierte un endpoint de v1/v2 a v3 si corresponde.
  * @param endpoint - El endpoint original.
@@ -323,8 +299,8 @@ export const mapPublicEndpointToVersion = (endpoint: string): string => {
  */
 export const transformEndpointToV3 = (endpoint: string): string => {
   if (!endpoint.includes("/api/v3/")) {
-    if (endpoint.startsWith("/api/v2/")) {
-      return endpoint.replace("/api/v2/", "/api/v3/")
+    if (endpoint.startsWith("/api/v3/")) {
+      return endpoint.replace("/api/v3/", "/api/v3/")
     } else if (endpoint.startsWith("/api/")) {
       return endpoint.replace("/api/", "/api/v3/")
     }

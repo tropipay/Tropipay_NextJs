@@ -23,7 +23,7 @@ const PosStore = createStore((store): { name: string } & PosStoreMethods => ({
   List(): void {
     fetchGetWithTriggers({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/pos/list_pos_credentials",
+      endpoint: "/api/v3/pos/list_pos_credentials",
       eventOk: "POS_LIST_OK",
       eventKO: "POS_LIST_KO",
     })
@@ -32,7 +32,7 @@ const PosStore = createStore((store): { name: string } & PosStoreMethods => ({
   Create(data: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/pos/create_pos_credential",
+      endpoint: "/api/v3/pos/create_pos_credential",
       payload: data,
       eventOk: "POS_CREATE_OK",
       eventKO: "POS_CREATE_KO",
@@ -42,7 +42,7 @@ const PosStore = createStore((store): { name: string } & PosStoreMethods => ({
   Remove(id: PosIdType): void {
     fetchDeleteWithTriggers({
       store: store as EnhancedStore,
-      endpoint: `/api/v2/pos/${id}`,
+      endpoint: `/api/v3/pos/${id}`,
       eventOk: "POS_REMOVE_OK",
       eventKO: "POS_REMOVE_KO",
     })

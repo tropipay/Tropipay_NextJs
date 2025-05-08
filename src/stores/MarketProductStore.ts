@@ -108,7 +108,7 @@ const MarketProductStore = createStore(
     StoreList(querySet: QuerySet = { queryName: "marketStoreList" }): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/stores",
+        endpoint: "/api/v3/stores",
         eventOk: "MARKET_STORE_LIST_OK",
         eventKO: "MARKET_STORE_LIST_KO",
       })
@@ -117,7 +117,7 @@ const MarketProductStore = createStore(
     Categories(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/stores/storeCategories",
+        endpoint: "/api/v3/stores/storeCategories",
         eventOk: "MARKET_CATEGORIES_LIST_OK",
         eventKO: "MARKET_CATEGORIES_LIST_KO",
         filter,
@@ -127,7 +127,7 @@ const MarketProductStore = createStore(
     GetStore(): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/stores/byUser",
+        endpoint: "/api/v3/stores/byUser",
         eventOk: "MARKET_GET_STORE_OK",
         eventKO: "MARKET_GET_STORE_KO",
       })
@@ -137,7 +137,7 @@ const MarketProductStore = createStore(
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
         payload,
-        endpoint: "/api/v2/stores",
+        endpoint: "/api/v3/stores",
         eventOk: "STORE_CREATE_OK",
         eventKO: "STORE_CREATE_KO",
       })
@@ -147,7 +147,7 @@ const MarketProductStore = createStore(
       fetchPutWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
         payload,
-        endpoint: `/api/v2/stores/${id}`,
+        endpoint: `/api/v3/stores/${id}`,
         eventOk: "STORE_UPDATE_OK",
         eventKO: "STORE_UPDATE_KO",
       })
