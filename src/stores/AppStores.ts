@@ -16,7 +16,7 @@ type AppStoreType = BaseStore & AppStoreMethods
 
 const AppStores = createStore(
   (store): AppStoreMethods => ({
-    name: "appNavigation",
+    name: "AppStore",
     Page(pageToGo: string): void {
       store.trigger<PageChangePayload>("PAGE_CHANGE", {
         result: {

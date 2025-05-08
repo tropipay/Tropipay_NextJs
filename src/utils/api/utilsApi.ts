@@ -2,7 +2,6 @@ import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import { format, parse } from "date-fns"
-import getConfig from "next/config"
 
 /**
  * Makes an API request.
@@ -16,11 +15,8 @@ export async function makeApiRequest({
   token,
   debug = false,
 }: FetchOptions) {
+  console.log("**************** Call From:", process.env.NEXT_PUBLIC_API_URL)
   const { url, method, body } = queryConfig
-  const { publicRuntimeConfig } = getConfig()
-  const apiUrl =
-    publicRuntimeConfig?.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL
-
   let bodyUpdated = {}
   if (body) {
     const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
@@ -51,7 +47,7 @@ export async function makeApiRequest({
     body && console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
   }
 
-  const response = await fetch(`${apiUrl}${url}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
       ...fetchHeaders,
