@@ -2,15 +2,6 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 
-ARG NEXT_PUBLIC_API_URL
-ARG NEXT_PUBLIC_SITE_URL
-ARG var1
-
-ENV VAR1=$var1
-# puedes usar ARG y ENV así:
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
-
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* ./
 RUN \
@@ -29,6 +20,15 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
+
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SITE_URL
+ARG var1
+
+ENV VAR1=$var1
+# puedes usar ARG y ENV así:
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 
 RUN echo "NEXT_PUBLIC_API_URL = $NEXT_PUBLIC_API_URL"
 RUN echo "📦 Entorno en el momento del build:" && printenv
