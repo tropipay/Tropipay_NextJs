@@ -10,6 +10,7 @@ import { MovementDetails } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { callPosthog } from "@/utils/utils"
 import { format } from "date-fns"
+import { env } from "@/config/env"
 import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { FormattedMessage } from "react-intl"
@@ -58,7 +59,7 @@ export default function MovementDetail(props: any): JSX.Element {
     callPosthog(posthog, "download_invoice_clicked")
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        `${env.API_URL}/api/v3/movements/transferinvoice`,
         {
           method: "POST",
           headers: {

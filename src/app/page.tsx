@@ -7,6 +7,7 @@ import CookiesManager from "@/utils/cookies/cookiesManager"
 import { getTokenFromSession } from "@/utils/user/utilsUser"
 import { Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { env } from "@/config/env"
 import { useEffect, useState } from "react"
 
 export default function Page() {
@@ -24,9 +25,7 @@ export default function Page() {
       CookiesManager.getInstance().get(
         "session",
         "fill_with_session_info",
-        typeof window !== "undefined" &&
-          window.location.hostname === "localhost" &&
-          window.location.port === "3000"
+        window.location.hostname === "localhost"
       )
     )
 
@@ -49,7 +48,7 @@ export default function Page() {
 
   const onOk = () =>
     window.location.assign(
-      `${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login?redirect=${process.env.NEXT_PUBLIC_SITE_URL}`
+      `${env.TROPIPAY_HOME}/login?redirect=${env.SITE_URL}`
     )
 
   useEffect(() => {

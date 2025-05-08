@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios"
 import { reduxStore, RootState, AppDispatch } from "./reduxStore"
+import { env } from "@/config/env"
 import { updateAppData, clearAppDataKey, CacheEntry } from "./appSlice"
 import { getToken } from "@/utils/user/utilsUser"
 
@@ -193,7 +194,7 @@ export async function fetchGetWithTriggers({
       }
     }
 
-    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
+    const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
     const { data } = await axios.get(url, finalAxiosConfig) // Use finalAxiosConfig
@@ -226,7 +227,7 @@ export async function fetchPostWithTriggers<TPayload = any>({
       }
     }
 
-    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
+    const actualEndpoint = env.API_URL + endpoint
     const { data } = await axios.post(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
@@ -254,7 +255,7 @@ export async function fetchPutWithTriggers<TPayload = any>({
       }
     }
 
-    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
+    const actualEndpoint = env.API_URL + endpoint
     const { data } = await axios.put(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
     store.trigger(eventOk, { data, source: "network" })
   } catch (error) {
@@ -282,7 +283,7 @@ export async function fetchDeleteWithTriggers({
       }
     }
 
-    const actualEndpoint = process.env.NEXT_PUBLIC_API_URL + endpoint
+    const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
     const { data } = await axios.delete(url, finalAxiosConfig) // Use finalAxiosConfig

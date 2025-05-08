@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from "next-auth"
+import { env } from "@/config/env"
 import Credentials from "next-auth/providers/credentials"
 import { fetchHeaders } from "@/utils/data/utils"
 import axios from "axios"
@@ -16,7 +17,7 @@ export default {
         let user: object | null = null
         try {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/v3/users/profile`,
+            `${env.API_URL}/api/v3/users/profile`,
             {
               headers: {
                 ...fetchHeaders,
