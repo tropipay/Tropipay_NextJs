@@ -8,7 +8,6 @@ module.exports = {
     'next-auth/react': '<rootDir>/__mocks__/next-auth/react.js',
   },
   transformIgnorePatterns: [
-    '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
   transform: {

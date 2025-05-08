@@ -2,25 +2,26 @@ import {
   chargeStates,
   chargeStatesGroups,
 } from "@/app/filterDefinitions/charges"
+import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
+import { Button } from "@/components/ui"
+import { env } from "@/config/env"
 import { Charge } from "@/types/charges"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import axios from "axios"
 import { format } from "date-fns"
-import { env } from "@/config/env"
 import { useSession } from "next-auth/react"
-import { FormattedMessage } from "react-intl"
 import { useState } from "react"
-import { Button } from "@/components/ui"
-import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
+import { FormattedMessage } from "react-intl"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: Charge = props.data.data.charges.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
-  console.log("row:", row)
+
   const {
     bankOrderCode,
     amount,
@@ -44,21 +45,22 @@ export default function ChargeDetail(props: any): JSX.Element {
 
   const onDownloadInvoiceFile = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${env.API_URL}/api/v3/movements/transferinvoice`,
+        JSON.stringify({
+          bookingId: row.id,
+          label: row.state,
+        }),
         {
-          method: "POST",
           headers: {
             ...fetchHeaders,
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            bookingId: row.id,
-            label: row.state,
-          }),
+          responseType: "blob",
+          validateStatus: (status) => status >= 200 && status < 300,
         }
       )
-      const blob = await response.blob()
+      const blob = await response.data
       const link = document.createElement("a")
       link.href = window.URL.createObjectURL(blob)
       link.download = "invoice.pdf"
@@ -177,7 +179,7 @@ export default function ChargeDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4">
+      <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
         <Button
           variant="outline"
           className={`${refundable ? "w-1/2" : "w-full"}`}

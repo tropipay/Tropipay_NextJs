@@ -33,7 +33,7 @@ export default function DataComponent({
   children,
   showLoading = false,
   showError = true,
-  loader = <Loader2 className="animate-spin text-[#041266]" size={72} />,
+  loader = <Loader2 className="animate-spin text-[#041266]" size={56} />,
 }: DataComponentProps) {
   const urlParams = searchParams
   const {

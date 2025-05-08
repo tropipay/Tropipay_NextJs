@@ -59,7 +59,7 @@ export default function Page() {
     <>
       <div className="flex items-center justify-center gap-2 h-screen">
         {loading && (
-          <Loader2 className="animate-spin text-[#041266]" size={72} />
+          <Loader2 className="animate-spin text-[#041266]" size={56} />
         )}
       </div>
 
