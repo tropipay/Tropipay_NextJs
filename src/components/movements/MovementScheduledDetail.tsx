@@ -23,6 +23,7 @@ import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+import { env } from "@/config/env"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
@@ -50,7 +51,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     setIsLoading(true)
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
+        `${env.API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
         {
           method: "PUT",
           headers: {

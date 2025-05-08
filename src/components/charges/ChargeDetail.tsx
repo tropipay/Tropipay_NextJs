@@ -8,6 +8,7 @@ import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSe
 import { Charge } from "@/types/charges"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
+import { env } from "@/config/env"
 import { useSession } from "next-auth/react"
 import { FormattedMessage } from "react-intl"
 import { useState } from "react"
@@ -44,7 +45,7 @@ export default function ChargeDetail(props: any): JSX.Element {
   const onDownloadInvoiceFile = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
+        `${env.API_URL}/api/v3/movements/transferinvoice`,
         {
           method: "POST",
           headers: {

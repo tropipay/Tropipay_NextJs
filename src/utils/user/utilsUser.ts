@@ -34,9 +34,7 @@ export const getToken = (): string =>
     CookiesManager.getInstance().get(
       "session",
       "fill_with_session_info",
-      typeof window !== "undefined" &&
-        window.location.hostname === "localhost" &&
-        window.location.port === "3000"
+      window.location.hostname === "localhost"
     )
   )
 
