@@ -4,8 +4,9 @@ import { PostHogProvider as PHProvider } from "posthog-js/react"
 import { ReactNode } from "react"
 
 // Use standard Next.js environment variables
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
-const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST
+import { env } from "@/config/env"
+const posthogKey = env.POSTHOG_KEY
+const posthogHost = env.POSTHOG_HOST
 
 // Define options
 const posthogOptions = {
