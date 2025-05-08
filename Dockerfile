@@ -27,7 +27,9 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN echo "argumento NEXT_PUBLIC_API_URL:" && $NEXT_PUBLIC_API_URL
 RUN echo "📦 Entorno en el momento del build:" && printenv
+RUN node -e "console.log('API desde Node:', process.env.NEXT_PUBLIC_API_URL)"
 
 RUN yarn build
 
