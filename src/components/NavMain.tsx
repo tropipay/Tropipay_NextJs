@@ -76,8 +76,8 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                           >
                             <DropdownMenuGroup>
                               {item.items?.map((subItem) => (
-                                <Link href={subItem.url}>
-                                  <DropdownMenuItem key={`ms-${subItem.title}`}>
+                                <Link key={`ms-${subItem.title}`} href={subItem.url}>
+                                  <DropdownMenuItem>
                                     <FormattedMessage id={subItem.title} />
                                   </DropdownMenuItem>
                                 </Link>
@@ -93,7 +93,7 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={`s-${subItem.title}`}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
+                            <Link key={subItem.title} href={subItem.url}>
                               {<FormattedMessage id={subItem.title} />}
                             </Link>
                           </SidebarMenuSubButton>
