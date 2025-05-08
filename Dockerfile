@@ -27,6 +27,8 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN echo "📦 Entorno en el momento del build:" && printenv
+
 RUN yarn build
 
 # Stage 3: Runner
