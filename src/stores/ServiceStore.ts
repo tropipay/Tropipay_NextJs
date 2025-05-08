@@ -46,7 +46,7 @@ const ServiceStore = createStore(
     PayWithTppUrl(paymentData: PaymentData): void {
       fetchPostWithTriggers<PaymentData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/in/with_tpp_url",
+        endpoint: "/api/v3/movements/in/with_tpp_url",
         payload: paymentData,
         eventOk: "PAY_WITH_TPP_URL_OK",
         eventKO: "PAY_WITH_TPP_URL_KO",

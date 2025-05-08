@@ -15,7 +15,7 @@ const TrackStore = createStore(
     Track(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/track`,
+        endpoint: `/api/v3/track`,
         payload,
         eventOk: "TRACK_OK",
         eventKO: "TRACK_KO",

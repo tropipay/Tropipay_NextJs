@@ -22,7 +22,7 @@ const BusinessKitStore = createStore(
     GetBK(): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/business-kit",
+        endpoint: "/api/v3/business-kit",
         eventOk: "GET_BK_OK",
         eventKO: "GET_BK_KO",
       })
@@ -31,7 +31,7 @@ const BusinessKitStore = createStore(
     Request(data: BusinessKitPayload): void {
       fetchPostWithTriggers<BusinessKitPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/business-kit/request",
+        endpoint: "/api/v3/business-kit/request",
         payload: data,
         eventOk: "BK_REQUEST_OK",
         eventKO: "BK_REQUEST_KO",
@@ -41,7 +41,7 @@ const BusinessKitStore = createStore(
     Activate(data: BusinessKitPayload): void {
       fetchPostWithTriggers<BusinessKitPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/business-kit/activate",
+        endpoint: "/api/v3/business-kit/activate",
         payload: data,
         eventOk: "BK_ACTIVATE_OK",
         eventKO: "BK_ACTIVATE_KO",

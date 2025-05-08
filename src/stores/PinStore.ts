@@ -16,7 +16,7 @@ const PinStore = createStore((store): { name: string } & PinStoreMethods => ({
   Create(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/userPin/create",
+      endpoint: "/api/v3/userPin/create",
       payload,
       eventOk: "PIN_CREATE_OK",
       eventKO: "PIN_CREATE_KO",
@@ -26,7 +26,7 @@ const PinStore = createStore((store): { name: string } & PinStoreMethods => ({
   Delete(): void {
     fetchPostWithTriggers({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/userPin/delete",
+      endpoint: "/api/v3/userPin/delete",
       eventOk: "PIN_DELETE_OK",
       eventKO: "PIN_DELETE_KO",
     })
@@ -35,7 +35,7 @@ const PinStore = createStore((store): { name: string } & PinStoreMethods => ({
   DailyLimit(payload: GenericPayload): void {
     fetchPostWithTriggers<GenericPayload>({
       store: store as EnhancedStore,
-      endpoint: "/api/v2/userPin/dailyLimit",
+      endpoint: "/api/v3/userPin/dailyLimit",
       payload,
       eventOk: "PIN_DAILYLIMIT_OK",
       eventKO: "PIN_DAILYLIMIT_KO",

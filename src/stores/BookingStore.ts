@@ -95,7 +95,7 @@ const BookingStore = createStore(
     ): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements",
+        endpoint: "/api/v3/movements",
         eventOk: "BOOKING_LASTMOVEMENTS_OK",
         eventKO: "BOOKING_LASTMOVEMENTS_KO",
         filter: { ...filter, "q.service.ne": "EXPRESS_REMITTANCE" },
@@ -107,7 +107,7 @@ const BookingStore = createStore(
     ): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/depositwithdrawal",
+        endpoint: "/api/v3/movements/depositwithdrawal",
         eventOk: "BOOKING_DEPOSITWITHDRAWAL_OK",
         eventKO: "BOOKING_DEPOSITWITHDRAWAL_KO",
       })
@@ -118,7 +118,7 @@ const BookingStore = createStore(
     ): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/dailydeposit",
+        endpoint: "/api/v3/movements/dailydeposit",
         eventOk: "BOOKING_DAILYDEPOSIT_OK",
         eventKO: "BOOKING_DAILYDEPOSIT_KO",
       })
@@ -127,7 +127,7 @@ const BookingStore = createStore(
     List(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements",
+        endpoint: "/api/v3/movements",
         eventOk: "BOOKING_LIST_OK",
         eventKO: "BOOKING_LIST_KO",
         filter: { ...filter, "q.service.ne": "EXPRESS_REMITTANCE" },
@@ -150,7 +150,7 @@ const BookingStore = createStore(
     ): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/countall",
+        endpoint: "/api/v3/movements/countall",
         eventOk: "BOOKING_COUNT_ALL_OK",
         eventKO: "BOOKING_COUNT_ALL_KO",
         filter,
@@ -178,7 +178,7 @@ const BookingStore = createStore(
     GetRate(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/get_rate",
+        endpoint: "/api/v3/movements/get_rate",
         payload: data,
         eventOk: "GET_RATE_OK",
         eventKO: "GET_RATE_KO",
@@ -228,7 +228,7 @@ const BookingStore = createStore(
     CryptoExternalPayOut(bookingData: BookingData): void {
       fetchPostWithTriggers<BookingData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/crypto/external_transfer",
+        endpoint: "/api/v3/crypto/external_transfer",
         payload: bookingData,
         eventOk: "CRYPTO_PAYOUT_OK",
         eventKO: "CRYPTO_PAYOUT_KO",
@@ -238,7 +238,7 @@ const BookingStore = createStore(
     MediationPayOut(bookingData: BookingData): void {
       fetchPostWithTriggers<BookingData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/transaction/mediation-payout",
+        endpoint: "/api/v3/transaction/mediation-payout",
         payload: bookingData,
         eventOk: "PAYOUT_MEDIATION_OK",
         eventKO: "PAYOUT_MEDIATION_KO",
@@ -248,7 +248,7 @@ const BookingStore = createStore(
     Download(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/download",
+        endpoint: "/api/v3/movements/download",
         eventOk: "DOWNLOAD_OK",
         eventKO: "DOWNLOAD_KO",
         filter,
@@ -302,7 +302,7 @@ const BookingStore = createStore(
       }
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/transferinvoice",
+        endpoint: "/api/v3/movements/transferinvoice",
         payload: data,
         eventOk: "DOWNLOAD_PDF_OK",
         eventKO: "DOWNLOAD_PDF_KO",
@@ -323,7 +323,7 @@ const BookingStore = createStore(
     Refund(data: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/movements/in/refund",
+        endpoint: "/api/v3/movements/in/refund",
         payload: data,
         eventOk: "REFUND_OK",
         eventKO: "REFUND_KO",
@@ -333,7 +333,7 @@ const BookingStore = createStore(
     ScheduledTransaction(bookingData: BookingData): void {
       fetchPostWithTriggers<BookingData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/scheduled_transaction",
+        endpoint: "/api/v3/scheduled_transaction",
         payload: bookingData,
         eventOk: "SCHEDULED_TRANSACTION_OK",
         eventKO: "SCHEDULED_TRANSACTION_KO",
@@ -343,7 +343,7 @@ const BookingStore = createStore(
     ScheduledList(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/scheduled_transaction",
+        endpoint: "/api/v3/scheduled_transaction",
         eventOk: "SCHEDULED_TRANSACTION_LIST_OK",
         eventKO: "SCHEDULED_TRANSACTION_LIST_KO",
         filter,
@@ -353,7 +353,7 @@ const BookingStore = createStore(
     DeactivateScheduled(payload: DeactivatePayload): void {
       fetchPutWithTriggers<DeactivatePayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/scheduled_transaction/${payload.id}/deactivate`,
+        endpoint: `/api/v3/scheduled_transaction/${payload.id}/deactivate`,
         eventOk: "DEACTIVATE_SCHEDULED_TRANSACTION_OK",
         eventKO: "DEACTIVATE_SCHEDULED_TRANSACTION_KO",
       })
@@ -362,7 +362,7 @@ const BookingStore = createStore(
     ExpressPayment(payload: ExpressPayload): void {
       fetchPostWithTriggers<ExpressPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/business/${payload.userId}/pay-express`,
+        endpoint: `/api/v3/business/${payload.userId}/pay-express`,
         payload,
         eventOk: "EXPRESS_PAYMENT_OK",
         eventKO: "EXPRESS_PAYMENT_KO",
@@ -372,7 +372,7 @@ const BookingStore = createStore(
     BookingData(bookingId: string | number): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/booking/${bookingId}`,
+        endpoint: `/api/v3/booking/${bookingId}`,
         eventOk: "GET_BOOKING_DATA_OK",
         eventKO: "GET_BOOKING_DATA_KO",
       })

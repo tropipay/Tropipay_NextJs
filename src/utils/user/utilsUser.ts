@@ -31,7 +31,13 @@ export const getTokenFromSession = (session?: any): string => {
 
 export const getToken = (): string =>
   getTokenFromSession(
-    CookiesManager.getInstance().get("session", "fill_with_session_info")
+    CookiesManager.getInstance().get(
+      "session",
+      "fill_with_session_info",
+      typeof window !== "undefined" &&
+        window.location.hostname === "localhost" &&
+        window.location.port === "3000"
+    )
   )
 
 /**

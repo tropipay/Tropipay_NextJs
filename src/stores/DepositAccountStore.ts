@@ -32,7 +32,7 @@ const DepositAccountStore = createStore(
     Create(depositAccountData: DepositAccountPayload): void {
       fetchPostWithTriggers<DepositAccountPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/deposit_accounts",
+        endpoint: "/api/v3/deposit_accounts",
         payload: depositAccountData,
         eventOk: "DEPOSIT_ACCOUNT_CREATE_OK",
         eventKO: "DEPOSIT_ACCOUNT_CREATE_KO",
@@ -42,7 +42,7 @@ const DepositAccountStore = createStore(
     Validate(depositAccountData: DepositAccountPayload): void {
       fetchPostWithTriggers<DepositAccountPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/deposit_accounts/validate_account_number",
+        endpoint: "/api/v3/deposit_accounts/validate_account_number",
         payload: depositAccountData,
         eventOk: "DEPOSIT_ACCOUNT_VALIDATE_OK",
         eventKO: "DEPOSIT_ACCOUNT_VALIDATE_KO",
@@ -52,7 +52,7 @@ const DepositAccountStore = createStore(
     Validate_Swift(swiftData: SwiftPayload): void {
       fetchPostWithTriggers<SwiftPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/deposit_accounts/validate_swift",
+        endpoint: "/api/v3/deposit_accounts/validate_swift",
         payload: swiftData,
         eventOk: "DEPOSIT_ACCOUNT_VALIDATESWIFT_OK",
         eventKO: "DEPOSIT_ACCOUNT_VALIDATESWIFT_KO",
@@ -62,7 +62,7 @@ const DepositAccountStore = createStore(
     Edit(depositAccountData: DepositAccountPayload): void {
       fetchPutWithTriggers<DepositAccountPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/deposit_accounts",
+        endpoint: "/api/v3/deposit_accounts",
         payload: depositAccountData,
         eventOk: "DEPOSIT_ACCOUNT_EDIT_OK",
         eventKO: "DEPOSIT_ACCOUNT_EDIT_KO",
@@ -72,7 +72,7 @@ const DepositAccountStore = createStore(
     Delete(depositAccountData: DeletePayload): void {
       fetchDeleteWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/deposit_accounts/${depositAccountData.id}`,
+        endpoint: `/api/v3/deposit_accounts/${depositAccountData.id}`,
         eventOk: "DEPOSIT_ACCOUNT_DELETED_OK",
         eventKO: "DEPOSIT_ACCOUNT_DELETED_KO",
       })
@@ -81,7 +81,7 @@ const DepositAccountStore = createStore(
     List(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/deposit_accounts",
+        endpoint: "/api/v3/deposit_accounts",
         eventOk: "DEPOSIT_ACCOUNT_LIST_OK",
         eventKO: "DEPOSIT_ACCOUNT_LIST_KO",
         filter,

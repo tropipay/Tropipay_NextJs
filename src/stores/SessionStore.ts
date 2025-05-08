@@ -45,7 +45,7 @@ const SessionStores = createStore(
     MerchantLogin(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/merchant_login",
+        endpoint: "/api/v3/access/merchant_login",
         payload: userData,
         eventOk: "LOGIN_OK",
         eventKO: "LOGIN_ERROR",
@@ -55,7 +55,7 @@ const SessionStores = createStore(
     ForgotPass(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/send_reset_pass",
+        endpoint: "/api/v3/access/send_reset_pass",
         payload: userData,
         eventOk: "RESET_PASS_OK",
         eventKO: "RESET_PASS_ERROR",
@@ -65,7 +65,7 @@ const SessionStores = createStore(
     IsNewUser(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/is_new_user",
+        endpoint: "/api/v3/access/is_new_user",
         payload: userData,
         eventOk: "NEWUSER_OK",
         eventKO: "NEWUSER_KO",
@@ -75,7 +75,7 @@ const SessionStores = createStore(
     Login(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/login",
+        endpoint: "/api/v3/access/login",
         payload: userData,
         eventOk: "LOGIN_OK",
         eventKO: "LOGIN_ERROR",
@@ -85,7 +85,7 @@ const SessionStores = createStore(
     LoginBiometric(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/login_biometric",
+        endpoint: "/api/v3/access/login_biometric",
         payload: userData,
         eventOk: "LOGIN_BIO_OK",
         eventKO: "LOGIN_BIO_ERROR",
@@ -98,7 +98,7 @@ const SessionStores = createStore(
       }
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/signup",
+        endpoint: "/api/v3/access/signup",
         payload: userData,
         eventOk: "USER_CREATE_OK",
         eventKO: "USER_CREATE_KO",
@@ -149,7 +149,7 @@ const SessionStores = createStore(
     SendEmailCode(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/send_email_code",
+        endpoint: "/api/v3/access/send_email_code",
         payload: userData,
         eventOk: "SEND_EMAIL_CODE_OK",
         eventKO: "SEND_EMAIL_CODE_KO",
@@ -162,7 +162,7 @@ const SessionStores = createStore(
       }
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/send_phone_code",
+        endpoint: "/api/v3/access/send_phone_code",
         payload: userData,
         eventOk: "SEND_PHONE_CODE_OK",
         eventKO: "SEND_PHONE_CODE_KO",
@@ -173,7 +173,7 @@ const SessionStores = createStore(
     BusinessUpdateData(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/business-update-data",
+        endpoint: "/api/v3/access/business-update-data",
         payload: userData,
         eventOk: "BUSINESS_UPDATE_DATA_OK",
         eventKO: "BUSINESS_UPDATE_DATA_KO",
@@ -186,7 +186,7 @@ const SessionStores = createStore(
       }
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/validate_phone",
+        endpoint: "/api/v3/access/validate_phone",
         payload: userData,
         eventOk: "VALIDATE_PHONE_OK",
         eventKO: "VALIDATE_PHONE_KO",
@@ -197,7 +197,7 @@ const SessionStores = createStore(
     CheckUniqueEmail(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/send_email_code",
+        endpoint: "/api/v3/access/send_email_code",
         payload: userData,
         eventOk: "UNIQUE_EMAIL_OK",
         eventKO: "UNIQUE_EMAIL_KO",
@@ -207,7 +207,7 @@ const SessionStores = createStore(
     ValidateEmail(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/validate_email",
+        endpoint: "/api/v3/access/validate_email",
         payload: userData,
         eventOk: "VALIDATE_EMAIL_OK",
         eventKO: "VALIDATE_EMAIL_KO",
@@ -217,7 +217,7 @@ const SessionStores = createStore(
     BusinessRegister(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/business-register",
+        endpoint: "/api/v3/access/business-register",
         payload: userData,
         eventOk: "BUSINESS_REGISTER_OK",
         eventKO: "BUSINESS_REGISTER_KO",
@@ -230,7 +230,7 @@ const SessionStores = createStore(
       }
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/business-validate-phone",
+        endpoint: "/api/v3/access/business-validate-phone",
         payload: userData,
         eventOk: "BUSINESS_VALIDATE_PHONE_OK",
         eventKO: "BUSINESS_VALIDATE_PHONE_KO",
@@ -269,7 +269,7 @@ const SessionStores = createStore(
     SignUpWith(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/signup_with",
+        endpoint: "/api/v3/access/signup_with",
         payload: userData,
         eventOk: "SIGNUP_WITH_OK",
         eventKO: "SIGNUP_WITH_KO",
@@ -279,7 +279,7 @@ const SessionStores = createStore(
     LoginWith(userData: UserData): void {
       fetchPostWithTriggers<UserData>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/login_with",
+        endpoint: "/api/v3/access/login_with",
         payload: userData,
         eventOk: "LOGIN_WITH_OK",
         eventKO: "LOGIN_WITH_KO",

@@ -28,7 +28,7 @@ const CardTokensStore = createStore(
     GetCardTokens(): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/card_tokens",
+        endpoint: "/api/v3/card_tokens",
         eventOk: "GET_CARD_TOKENS_OK",
         eventKO: "GET_CARD_TOKENS_KO",
         filter: { "q.service.ne": "EXPRESS_REMITTANCE" },
@@ -38,7 +38,7 @@ const CardTokensStore = createStore(
     SetPredefinedCard(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/card_tokens/predefined-card",
+        endpoint: "/api/v3/card_tokens/predefined-card",
         payload,
         eventOk: "SET_PREDEFINED_CARD_OK",
         eventKO: "SET_PREDEFINED_CARD_KO",
@@ -48,7 +48,7 @@ const CardTokensStore = createStore(
     DeleteCardToken(payload: DeleteCardPayload): void {
       fetchPostWithTriggers<DeleteCardPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/card_tokens/deactivate-card/${payload.cofToken.id}`,
+        endpoint: `/api/v3/card_tokens/deactivate-card/${payload.cofToken.id}`,
         payload,
         eventOk: "DELETE_CARD_TOKEN_OK",
         eventKO: "DELETE_CARD_TOKEN_KO",
@@ -58,7 +58,7 @@ const CardTokensStore = createStore(
     AddCardToken(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/tokenized/card",
+        endpoint: "/api/v3/tokenized/card",
         payload,
         eventOk: "ADD_CARD_TOKEN_OK",
         eventKO: "ADD_CARD_TOKEN_KO",

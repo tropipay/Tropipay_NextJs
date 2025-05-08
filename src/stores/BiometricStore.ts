@@ -17,7 +17,7 @@ const BiometricStore = createStore(
     BiometricRegisterStart(payload: BiometricPayload): void {
       fetchPostWithTriggers<BiometricPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/register_biometric_start",
+        endpoint: "/api/v3/access/register_biometric_start",
         payload,
         eventOk: "BIOMETRIC_REGISTER_START_OK",
         eventKO: "BIOMETRIC_REGISTER_START_KO",
@@ -27,7 +27,7 @@ const BiometricStore = createStore(
     BiometricRegisterEnd(payload: BiometricPayload): void {
       fetchPostWithTriggers<BiometricPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/register_biometric_finish",
+        endpoint: "/api/v3/access/register_biometric_finish",
         payload,
         eventOk: "BIOMETRIC_REGISTER_FINISH_OK",
         eventKO: "BIOMETRIC_REGISTER_FINISH_KO",
@@ -37,7 +37,7 @@ const BiometricStore = createStore(
     BiometricLoginStart(payload: BiometricPayload): void {
       fetchPostWithTriggers<BiometricPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/access/login_biometric_start",
+        endpoint: "/api/v3/access/login_biometric_start",
         payload,
         eventOk: "BIOMETRIC_LOGIN_START_OK",
         eventKO: "BIOMETRIC_LOGIN_START_KO",

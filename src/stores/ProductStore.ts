@@ -18,7 +18,7 @@ const ProductStore = createStore(
     List(querySet: QuerySet = { queryName: "productList" }): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/products",
+        endpoint: "/api/v3/products",
         eventOk: "PRODUCT_LIST_OK",
         eventKO: "PRODUCT_LIST_KO",
       })

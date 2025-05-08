@@ -23,7 +23,7 @@ const PaymentMethodStore = createStore(
     ): Promise<void> {
       return fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/payment_methods",
+        endpoint: "/api/v3/payment_methods",
         eventOk: "PAYMENT_METHOD_LIST_OK",
         eventKO: "PAYMENT_METHOD_LIST_KO",
       })
@@ -32,7 +32,7 @@ const PaymentMethodStore = createStore(
     PublicList(userId: UserIdType): Promise<void> {
       return fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/payment_methods/${userId}`,
+        endpoint: `/api/v3/payment_methods/${userId}`,
         eventOk: "PAYMENT_METHOD_LIST_OK",
         eventKO: "PAYMENT_METHOD_LIST_KO",
       })

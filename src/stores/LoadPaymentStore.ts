@@ -54,7 +54,7 @@ const LoadPaymentStore = createStore(
     PayCardToken(payload: GenericPayload): void {
       fetchPostWithTriggers<GenericPayload>({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/tokenized/payment`,
+        endpoint: `/api/v3/tokenized/payment`,
         payload,
         eventOk: "PAY_CARD_TOKEN_OK",
         eventKO: "PAY_CARD_TOKEN_KO",

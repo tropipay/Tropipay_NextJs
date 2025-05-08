@@ -31,7 +31,7 @@ const PaymentCardStore = createStore(
     Create(paymentCardData: PaymentCardPayload): void {
       fetchPostWithTriggers<PaymentCardPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/paymentcards",
+        endpoint: "/api/v3/paymentcards",
         payload: paymentCardData,
         eventOk: "PAYMENT_CARD_CREATED_OK",
         eventKO: "PAYMENT_CARD_CREATED_KO",
@@ -41,7 +41,7 @@ const PaymentCardStore = createStore(
     Edit(paymentCardData: PaymentCardPayload): void {
       fetchPutWithTriggers<PaymentCardPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/paymentcards",
+        endpoint: "/api/v3/paymentcards",
         payload: paymentCardData,
         eventOk: "PAYMENT_CARD_EDITED_OK",
         eventKO: "PAYMENT_CARD_EDITED_KO",
@@ -51,7 +51,7 @@ const PaymentCardStore = createStore(
     Delete(paymentCardData: DeletePayload): void {
       fetchDeleteWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/paymentcards/${paymentCardData.id}`,
+        endpoint: `/api/v3/paymentcards/${paymentCardData.id}`,
         eventOk: "PAYMENT_CARD_DELETED_OK",
         eventKO: "PAYMENT_CARD_DELETED_KO",
       })
@@ -60,7 +60,7 @@ const PaymentCardStore = createStore(
     Notify(paymentCardData: PaymentCardPayload): void {
       fetchPostWithTriggers<PaymentCardPayload>({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/paymentcards/notify",
+        endpoint: "/api/v3/paymentcards/notify",
         payload: paymentCardData,
         eventOk: "PAYMENT_CARD_NOTIFY_OK",
         eventKO: "PAYMENT_CARD_NOTIFY_KO",
@@ -80,7 +80,7 @@ const PaymentCardStore = createStore(
     Favorites(filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: "/api/v2/paymentcards/filters",
+        endpoint: "/api/v3/paymentcards/filters",
         eventOk: "PAYMENT_CARD_WITH_FILTER_OK",
         eventKO: "PAYMENT_CARD_WITH_FILTER_KO",
         filter,
@@ -90,7 +90,7 @@ const PaymentCardStore = createStore(
     Charges(id: PaymentCardId, filter: FilterType): void {
       fetchGetWithTriggers({
         store: store as EnhancedStore,
-        endpoint: `/api/v2/paymentcards/${id}/details`,
+        endpoint: `/api/v3/paymentcards/${id}/details`,
         eventOk: "PAYMENT_CARD_CHARGES_LIST_OK",
         eventKO: "PAYMENT_CARD_CHARGES_LIST_KO",
         filter,
