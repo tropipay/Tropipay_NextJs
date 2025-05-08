@@ -1,8 +1,8 @@
+import { buildGraphQLVariables, makeApiRequest } from "@/utils/api/utilsApi"
+import { generateHashedKey } from "@/utils/data/utils"
+import { getUserSettings } from "@/utils/user/utilsUser"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
-import { generateHashedKey } from "@/utils/data/utils"
-import { buildGraphQLVariables, makeApiRequest } from "@/utils/api/utilsApi"
-import { getUserSettings } from "@/utils/user/utilsUser"
 
 /**
  * A hook for fetching data from the API using TanStack Query.

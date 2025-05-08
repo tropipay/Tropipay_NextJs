@@ -1,9 +1,7 @@
-import type { NextAuthConfig } from "next-auth"
-import { env } from "@/config/env"
-import Credentials from "next-auth/providers/credentials"
-import { fetchHeaders } from "@/utils/data/utils"
-import axios from "axios"
 import ProfileStore from "@/stores/ProfileStore"
+import type { NextAuthConfig } from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import { getUserProfile } from "./app/actions/sessionActions"
 
 export default {
   session: { strategy: "jwt" },
@@ -16,15 +14,7 @@ export default {
       async authorize({ token }) {
         let user: object | null = null
         try {
-          const response = await axios.get(
-            `${env.API_URL}/api/v3/users/profile`,
-            {
-              headers: {
-                ...fetchHeaders,
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          const response = await getUserProfile(token)
 
           const profileData = response.data
 

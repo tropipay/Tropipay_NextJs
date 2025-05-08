@@ -16,14 +16,15 @@ import {
   AlertDialogTitle,
   Button,
 } from "@/components/ui"
+import { env } from "@/config/env"
 import { MovementScheduled } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import axios from "axios"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { env } from "@/config/env"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
@@ -50,20 +51,17 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     setIsError(false)
     setIsLoading(true)
     try {
-      const res = await fetch(
+      await axios.put(
         `${env.API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
+        {},
         {
-          method: "PUT",
           headers: {
             ...fetchHeaders,
             Authorization: `Bearer ${token}`,
           },
+          validateStatus: (status) => status >= 200 && status < 300,
         }
       )
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`)
-      }
 
       setIsDone(true)
     } catch (error) {

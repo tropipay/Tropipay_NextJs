@@ -1,21 +1,24 @@
+"use client"
+
 import {
   movementStateGroups,
   movementStates,
 } from "@/app/filterDefinitions/movements"
+import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
+import { env } from "@/config/env"
 import { MovementDetails } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import { callPosthog } from "@/utils/utils"
+import axios from "axios"
 import { format } from "date-fns"
-import { env } from "@/config/env"
 import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
-import { FormattedMessage } from "react-intl"
 import { useState } from "react"
-import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
+import { FormattedMessage } from "react-intl"
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: MovementDetails = props.data.data.movements.items[0]
@@ -23,7 +26,6 @@ export default function MovementDetail(props: any): JSX.Element {
   const token = session?.user.token
   const posthog = usePostHog()
   const {
-    id: bookingId,
     email,
     fee,
     createdAt,
@@ -58,21 +60,22 @@ export default function MovementDetail(props: any): JSX.Element {
   const onDownloadInvoiceFile = async () => {
     callPosthog(posthog, "download_invoice_clicked")
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${env.API_URL}/api/v3/movements/transferinvoice`,
+        JSON.stringify({
+          bookingId: row.id,
+          label: row.state,
+        }),
         {
-          method: "POST",
           headers: {
             ...fetchHeaders,
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            bookingId: row.id,
-            label: row.state,
-          }),
+          responseType: "blob",
+          validateStatus: (status) => status >= 200 && status < 300,
         }
       )
-      const blob = await response.blob()
+      const blob = await response.data
       const link = document.createElement("a")
       link.href = window.URL.createObjectURL(blob)
       link.download = "invoice.pdf"
@@ -244,7 +247,7 @@ export default function MovementDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4">
+      <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
         <Button
           variant="outline"
           className={`${refundable ? "w-1/2" : "w-full"}`}

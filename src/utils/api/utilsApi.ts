@@ -1,8 +1,10 @@
+import { env } from "@/config/env"
 import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
-import { env } from "@/config/env"
+import axios, { AxiosError } from "axios"
 import { format, parse } from "date-fns"
+import getConfig from "next/config"
 
 /**
  * Makes an API request.
@@ -17,6 +19,8 @@ export async function makeApiRequest({
   debug = false,
 }: FetchOptions) {
   const { url, method, body } = queryConfig
+  const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
+
   let bodyUpdated = {}
   if (body) {
     const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
@@ -43,26 +47,37 @@ export async function makeApiRequest({
   }
 
   if (debug) {
-    console.log("url: ", url)
+    console.log("url: ", `${apiUrl}${url}`)
     body && console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
   }
 
-  const response = await fetch(`${env.API_URL}${url}`, {
-    method,
-    headers: {
-      ...fetchHeaders,
-      Authorization: `Bearer ${token}`,
-    },
-    ...(body && {
-      body: JSON.stringify(bodyUpdated),
-    }),
-    cache: "no-store",
-  })
-  // console.log("response:", await response.json())
+  try {
+    const response = await axios({
+      url: `${env.API_URL}${url}`,
+      method,
+      headers: {
+        ...fetchHeaders,
+        Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+      ...(body && {
+        data: JSON.stringify(bodyUpdated),
+      }),
+      validateStatus: (status) => status >= 200 && status < 300,
+    })
 
-  if (!response.ok) throw new Error(response.statusText)
+    // console.log(response.data)
 
-  return response.json()
+    return response.data
+  } catch (e) {
+    if (axios.isAxiosError(e)) {
+      const error = e as AxiosError<{ message: string }>
+      console.error(error.message)
+    }
+    return null
+  }
 }
 
 export function buildGraphQLVariables(

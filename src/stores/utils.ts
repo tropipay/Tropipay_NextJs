@@ -1,8 +1,8 @@
-import axios, { AxiosRequestConfig } from "axios"
-import { reduxStore, RootState, AppDispatch } from "./reduxStore"
 import { env } from "@/config/env"
-import { updateAppData, clearAppDataKey, CacheEntry } from "./appSlice"
 import { getToken } from "@/utils/user/utilsUser"
+import axios, { AxiosRequestConfig } from "axios"
+import { CacheEntry, clearAppDataKey, updateAppData } from "./appSlice"
+import { reduxStore, RootState } from "./reduxStore"
 
 type ListenerCallback<T = any> = (event: { type: string; payload: T }) => void
 
