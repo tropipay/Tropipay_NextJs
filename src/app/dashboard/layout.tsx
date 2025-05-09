@@ -8,6 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui"
+import { Toaster } from "@/components/ui/Toaster"
 import ProfileStore from "@/stores/ProfileStore"
 import { SessionProvider } from "next-auth/react"
 import { useEffect, useState } from "react"
@@ -48,6 +49,7 @@ export default function Page({ children }: ChildrenProps) {
               {children}
             </div>
           </SidebarInset>
+          <Toaster />
         </SidebarProvider>
       </SessionProvider>
     )

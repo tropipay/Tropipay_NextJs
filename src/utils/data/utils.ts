@@ -153,6 +153,30 @@ export function searchParamsToObject(searchParams: URLSearchParams): {
   return obj
 }
 
+export function getUrlSearchData(data: any): URLSearchParams {
+  const params = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(data)) {
+    if (value === null || value === undefined) {
+      continue
+    }
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        if (item !== null && item !== undefined) {
+          params.append(key, String(item))
+        }
+      }
+    } else if (typeof value === "object") {
+      params.append(key, JSON.stringify(value))
+    } else {
+      params.append(key, String(value))
+    }
+  }
+
+  return params
+}
+
 /**
  * Selects a style based on a condition.
  * @param condition boolean
