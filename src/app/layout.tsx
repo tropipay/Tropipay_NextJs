@@ -2,7 +2,6 @@ import IntlWrapper from "@/components/intl/Wrapper"
 import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
 import { ReduxProvider } from "@/components/ReduxProvider" // Import ReduxProvider
 import TanstackProvider from "@/components/TanstackProvider"
-import { Toaster } from "@/components/ui"
 import type { Metadata } from "next"
 import { SessionProvider } from "next-auth/react"
 import { Poppins, Roboto } from "next/font/google"
@@ -46,7 +45,6 @@ export default function RootLayout({ children }: ChildrenProps) {
             <PostHogInsert>
               <ReduxProvider>
                 <IntlWrapper>
-                  <Toaster />
                   <TanstackProvider>{children}</TanstackProvider>
                 </IntlWrapper>
               </ReduxProvider>

@@ -19,7 +19,8 @@ export const toastMessage = (
   type: IconMessageType = "info"
 ) => {
   toast({
-    title: String(
+    //@ts-ignore
+    title: (
       <div className="w-full flex items-center">
         {getIconMessageByType(type)}
         <span>{title}</span>

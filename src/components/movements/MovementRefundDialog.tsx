@@ -1,5 +1,6 @@
 "use client"
 
+import InputAmount from "@/components/InputAmount"
 import {
   Button,
   Dialog,
@@ -8,31 +9,30 @@ import {
   DialogTitle,
   Label,
 } from "@/components/ui"
-import InputAmount from "@/components/InputAmount"
-import { useState } from "react"
 import { formatAmount } from "@/utils/data/utils"
+import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 
-type RefundDialogProps = {
+type Props = {
   open: boolean
-  onOpenChange: (open: boolean) => void
   amountValue: number
   amountCurrency: string
-  onReembolsar: (monto: number) => void
+  onOpenChange: (open: boolean) => void
+  onRefound: (monto: number) => void
 }
 
-export function RefundDialog({
+export function MovementRefundDialog({
   open,
   onOpenChange,
   amountValue,
   amountCurrency,
-  onReembolsar,
-}: RefundDialogProps) {
-  const [monto, setMonto] = useState<number>(amountValue)
+  onRefound,
+}: Props) {
+  const [amount, setAmount] = useState<number>(amountValue)
 
   const handleSubmit = () => {
-    if (monto > 0 && monto <= amountValue) {
-      onReembolsar(monto)
+    if (amount > 0 && amount <= amountValue) {
+      onRefound(amount)
       onOpenChange(false)
     }
   }
@@ -73,7 +73,7 @@ export function RefundDialog({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={monto <= 0 || monto > amountValue}
+            disabled={amount <= 0 || amount > amountValue}
           >
             <FormattedMessage id="refund" />
           </Button>

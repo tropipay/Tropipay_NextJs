@@ -1,9 +1,24 @@
 "use client"
 
+import { useTranslation } from "@/components/intl/useTranslation"
 import MovementDetailContainer from "@/components/movements/MovementDetailContainer"
+import MovementDownloadDialog from "@/components/movements/MovementDownloadModal"
 import DataTable from "@/components/table/DataTable"
+import {
+  Button,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui"
+import { env } from "@/config/env"
 import { GetMovementsResponse } from "@/types/movements"
+import { fetchHeaders, getUrlSearchData } from "@/utils/data/utils"
+import { toastMessage } from "@/utils/ui/utilsUI"
+import axios from "axios"
+import { Download } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { useState } from "react"
+import { FormattedMessage } from "react-intl"
 
 interface Props {
   tableId: string
@@ -12,8 +27,66 @@ interface Props {
 }
 
 const PageClient = ({ tableId, columns, data }: Props) => {
+  const { t } = useTranslation()
   const { data: session } = useSession()
-  const userId = session?.user?.id
+  const { id: userId, token } = session?.user
+
+  const [open, setOpen] = useState<boolean>(false)
+
+  const onDownloadButtonClick = () => setOpen(true)
+
+  const onDownloadModalClose = () => setOpen(false)
+
+  const onDownload = async (
+    reportType: string,
+    reportFormat: string,
+    reportParam: any
+  ) => {
+    const queryParams = { reportType: "ALL_MOVEMENTS", format: reportFormat }
+
+    try {
+      const response = await axios(
+        `${env.API_URL}/api/v3/movements/download?${getUrlSearchData(
+          queryParams
+        ).toString()}`,
+        {
+          headers: {
+            ...fetchHeaders,
+            Authorization: `Bearer ${token}`,
+          },
+          validateStatus: (status) => status >= 200 && status < 300,
+        }
+      )
+
+      if (response.data.download === "OK") {
+        toastMessage(t("download"), t("you_will_receive_email_transactions"))
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const toolbarActions = (
+    <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline" onClick={onDownloadButtonClick}>
+            <Download />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" align="center">
+          <FormattedMessage id="download" />
+        </TooltipContent>
+      </Tooltip>
+      <MovementDownloadDialog
+        {...{
+          open,
+          onClose: onDownloadModalClose,
+          onDownload,
+        }}
+      />
+    </>
+  )
 
   return (
     <div className="w-full p-2">
@@ -28,6 +101,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
             categoryFilterId: "movementDirection",
             categoryFilters: ["ALL", "IN", "OUT"],
             rowClickChildren: MovementDetailContainer,
+            toolbarActions,
           }}
         />
       )}

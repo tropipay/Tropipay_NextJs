@@ -13,9 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui"
-import { callPosthog } from "@/utils/utils"
 import { objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
+import { callPosthog } from "@/utils/utils"
 import {
   closestCenter,
   DndContext,
@@ -52,8 +52,8 @@ import {
 } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
 import { usePostHog } from "posthog-js/react"
+import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -75,6 +75,7 @@ interface DataTableProps<TData, TValue> {
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
+  toolbarActions?: React.ReactNode
 }
 
 export default function DataTable<TData, TValue>({
@@ -94,6 +95,7 @@ export default function DataTable<TData, TValue>({
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
+  toolbarActions,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
@@ -373,6 +375,7 @@ export default function DataTable<TData, TValue>({
               columns: columnsConfig,
               categoryFilterId,
               categoryFilters,
+              actions: toolbarActions,
             }}
           />
         )}

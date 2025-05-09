@@ -93,6 +93,7 @@
   "fc_IN": "Entrada",
   "fc_OUT": "Saída",
   "fee": "Taxa",
+  "file_format": "Formato de ficheiro",
   "filters": "Filtros",
   "from": "De",
   "fullName": "Nome do cliente",
@@ -219,5 +220,6 @@
   "we_cant_get_invoice_file": "No se pudo obtener el archivo",
   "we_cant_load_movements": "Não podemos carregar os movimentos",
   "we_have_refunded": "Reembolsámos",
-  "you_can_refund_up_to": "Você pode reembolsar até"
+  "you_can_refund_up_to": "Você pode reembolsar até",
+  "you_will_receive_email_transactions": "Receberá um e-mail com a lista de transações."
 }

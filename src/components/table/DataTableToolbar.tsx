@@ -2,14 +2,14 @@
 
 import FilterCategories from "@/components/table/FilterCategories"
 import { Input } from "@/components/ui/Input"
+import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { Table } from "@tanstack/react-table"
 import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
-import { useEffect } from "react"
 import { usePostHog } from "posthog-js/react"
+import { useEffect } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { DataTableViewOptions } from "./DataTableViewOptions"
 import { FilterManager } from "./FilterManager"
 
@@ -19,6 +19,7 @@ interface Props<TData, TValue> {
   columns: any
   categoryFilterId: string
   categoryFilters?: string[]
+  actions?: React.ReactNode
 }
 
 export function DataTableToolbar<TData, TValue>({
@@ -27,6 +28,7 @@ export function DataTableToolbar<TData, TValue>({
   columns,
   categoryFilterId,
   categoryFilters,
+  actions,
 }: Props<TData, TValue>) {
   const { t } = useTranslation()
   const posthog = usePostHog() // Obtener instancia de PostHog
@@ -103,9 +105,7 @@ export function DataTableToolbar<TData, TValue>({
 
         {/* Elementos alineados a la derecha */}
         <div className="flex items-center gap-2">
-          {/* <Button variant="outline">
-            <Download />
-          </Button> */}
+          {actions}
           <DataTableViewOptions table={table} tableId={tableId} />
         </div>
       </div>
