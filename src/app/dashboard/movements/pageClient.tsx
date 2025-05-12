@@ -15,6 +15,7 @@ import { GetMovementsResponse } from "@/types/movements"
 import { fetchHeaders, getUrlSearchData } from "@/utils/data/utils"
 import { toastMessage } from "@/utils/ui/utilsUI"
 import axios from "axios"
+import { format, parse } from "date-fns"
 import { Download } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
@@ -40,9 +41,25 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const onDownload = async (
     reportType: string,
     reportFormat: string,
-    reportParam: any
+    dateStart?: string,
+    dateEnd?: string
   ) => {
-    const queryParams = { reportType: "ALL_MOVEMENTS", format: reportFormat }
+    const queryParams = {
+      reportType,
+      format: reportFormat,
+      ...(reportType === "FILTERED_MOVEMENTS" &&
+        dateStart &&
+        dateEnd && {
+          dateStart: format(
+            parse(dateStart, "dd/MM/yyyy", new Date()),
+            "yyyy-MM-dd"
+          ),
+          dateEnd: format(
+            parse(dateEnd, "dd/MM/yyyy", new Date()),
+            "yyyy-MM-dd"
+          ),
+        }),
+    }
 
     try {
       const response = await axios(

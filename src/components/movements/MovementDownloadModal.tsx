@@ -37,7 +37,8 @@ interface Props {
   onDownload?: (
     reportType: string,
     reportFormat: string,
-    reportParam: any
+    fromDate?: string,
+    endDate?: string
   ) => void
 }
 
@@ -48,6 +49,7 @@ const MovementDownloadDialog = ({
 }: Props) => {
   const { t } = useTranslation()
 
+  const [movementType, setMovementType] = useState<string>("all")
   const [selectedValue, setSelectedValue] = React.useState<string>("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
@@ -149,11 +151,12 @@ const MovementDownloadDialog = ({
   )
 
   const handleDownload = () => {
-    const reportType =
-      fromDate && toDate ? "FILTERED_MOVEMENTS" : "ALL_MOVEMENTS"
-    const reportParam = {}
-
-    onDownload?.(reportType, reportFormat, reportParam)
+    onDownload?.(
+      movementType !== "all" ? "FILTERED_MOVEMENTS" : "ALL_MOVEMENTS",
+      reportFormat,
+      fromDate,
+      toDate
+    )
     onClose?.()
   }
 
@@ -169,7 +172,45 @@ const MovementDownloadDialog = ({
             <FormattedMessage id="download" />
           </DialogTitle>
         </DialogHeader>
+
         <div className="space-y-2">
+          <div className="mb-4 flex flex-col gap-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="radio"
+                id="all_movements"
+                name="movement_type"
+                value="all"
+                className="h-4 w-4"
+                checked={movementType === "all"}
+                onChange={() => setMovementType("all")}
+              />
+              <label
+                htmlFor="all_movements"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                <FormattedMessage id="all_movements" />
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="radio"
+                id="filtered_movements"
+                name="movement_type"
+                value="filtered"
+                className="h-4 w-4"
+                checked={movementType === "filtered"}
+                onChange={() => setMovementType("filtered")}
+              />
+              <label
+                htmlFor="filtered_movements"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                <FormattedMessage id="filtered_movements" />
+              </label>
+            </div>
+          </div>
+
           <div className="mb-2">
             <Select value={selectedValue} onValueChange={handlePeriodChange}>
               <SelectTrigger
@@ -206,109 +247,121 @@ const MovementDownloadDialog = ({
               </SelectContent>
             </Select>
           </div>
-          <Label htmlFor="date-from" className="my-2">
-            <FormattedMessage id="from" />
-          </Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                id="date-from"
-                variant="outline"
-                className={cn(
-                  "justify-start text-left font-normal w-full mb-3",
-                  !fromDate && "text-muted-foreground"
-                )}
-                aria-label={fromDate ? fromDate : t("pick_a_date")}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {fromDate ? (
-                  <div className="flex justify-between w-full">
-                    {fromDate}
-                    <span
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDateChange("from", undefined)
-                      }}
-                      className="ml-2 text-sm"
+
+          {movementType !== "all" && (
+            <>
+              <>
+                <Label htmlFor="date-from" className="my-2">
+                  <FormattedMessage id="from" />
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date-from"
+                      variant="outline"
+                      className={cn(
+                        "justify-start text-left font-normal w-full mb-3",
+                        !fromDate && "text-muted-foreground"
+                      )}
+                      aria-label={fromDate ? fromDate : t("pick_a_date")}
                     >
-                      <FormattedMessage id="clear" />
-                    </span>
-                  </div>
-                ) : (
-                  <span>
-                    <FormattedMessage id="pick_a_date" />
-                  </span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                initialFocus
-                defaultMonth={
-                  fromDate ? parse(fromDate, "dd/MM/yyyy", new Date()) : today
-                }
-                selected={
-                  fromDate
-                    ? parse(fromDate, "dd/MM/yyyy", new Date())
-                    : undefined
-                }
-                onSelect={(date) => handleDateChange("from", date)}
-              />
-            </PopoverContent>
-          </Popover>
-          <div className="mb-4">
-            <Label htmlFor="date-to" className="my-2">
-              <FormattedMessage id="to" />
-            </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  id="date-to"
-                  variant="outline"
-                  className={cn(
-                    "justify-start text-left font-normal w-full mb-3",
-                    !toDate && "text-muted-foreground"
-                  )}
-                  aria-label={toDate ? toDate : t("pick_a_date")}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {toDate ? (
-                    <div className="flex justify-between w-full">
-                      {toDate}
-                      <span
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleDateChange("to", undefined)
-                        }}
-                        className="ml-2 text-sm"
-                        data-test-id="dataTableFilterDate-span-clearDateTo"
-                      >
-                        <FormattedMessage id="clear" />
-                      </span>
-                    </div>
-                  ) : (
-                    <span>
-                      <FormattedMessage id="pick_a_date" />
-                    </span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  initialFocus
-                  defaultMonth={
-                    toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : today
-                  }
-                  selected={
-                    toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : undefined
-                  }
-                  onSelect={(date) => handleDateChange("to", date)}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {fromDate ? (
+                        <div className="flex justify-between w-full">
+                          {fromDate}
+                          <span
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDateChange("from", undefined)
+                            }}
+                            className="ml-2 text-sm"
+                          >
+                            <FormattedMessage id="clear" />
+                          </span>
+                        </div>
+                      ) : (
+                        <span>
+                          <FormattedMessage id="pick_a_date" />
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      initialFocus
+                      defaultMonth={
+                        fromDate
+                          ? parse(fromDate, "dd/MM/yyyy", new Date())
+                          : today
+                      }
+                      selected={
+                        fromDate
+                          ? parse(fromDate, "dd/MM/yyyy", new Date())
+                          : undefined
+                      }
+                      onSelect={(date) => handleDateChange("from", date)}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </>
+
+              <>
+                <Label htmlFor="date-to" className="my-2">
+                  <FormattedMessage id="to" />
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date-to"
+                      variant="outline"
+                      className={cn(
+                        "justify-start text-left font-normal w-full mb-3",
+                        !toDate && "text-muted-foreground"
+                      )}
+                      aria-label={toDate ? toDate : t("pick_a_date")}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {toDate ? (
+                        <div className="flex justify-between w-full">
+                          {toDate}
+                          <span
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleDateChange("to", undefined)
+                            }}
+                            className="ml-2 text-sm"
+                            data-test-id="dataTableFilterDate-span-clearDateTo"
+                          >
+                            <FormattedMessage id="clear" />
+                          </span>
+                        </div>
+                      ) : (
+                        <span>
+                          <FormattedMessage id="pick_a_date" />
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      initialFocus
+                      defaultMonth={
+                        toDate ? parse(toDate, "dd/MM/yyyy", new Date()) : today
+                      }
+                      selected={
+                        toDate
+                          ? parse(toDate, "dd/MM/yyyy", new Date())
+                          : undefined
+                      }
+                      onSelect={(date) => handleDateChange("to", date)}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </>
+            </>
+          )}
 
           <div className="mb-4">
             <Label className="mt-4">
@@ -333,7 +386,10 @@ const MovementDownloadDialog = ({
           <Button
             variant={"default"}
             onClick={handleDownload}
-            disabled={!reportFormat}
+            disabled={
+              !reportFormat ||
+              (movementType !== "all" && (!fromDate || !toDate))
+            }
           >
             <FormattedMessage id="download" />
           </Button>
