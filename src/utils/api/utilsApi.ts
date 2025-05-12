@@ -68,7 +68,9 @@ export async function makeApiRequest({
       validateStatus: (status) => status >= 200 && status < 300,
     })
 
-    // console.log(response.data)
+    if (debug) {
+      console.log(response.data)
+    }
 
     return response.data
   } catch (e) {
