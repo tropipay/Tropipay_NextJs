@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/Button"
+import { callPostHog } from "@/utils/utils"
 import { Table } from "@tanstack/react-table"
+import { usePostHog } from "posthog-js/react"
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { usePostHog } from "posthog-js/react"
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 
 interface Props {
   table: Table<any>
@@ -16,13 +16,13 @@ const FilterCategories: React.FC<Props> = ({
   categoryFilterId,
   categoryFilters,
 }) => {
-  const posthog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() // Obtener instancia de PostHog
   const filterCategoryValue = table
     .getState()
     .columnFilters.find((filter) => filter.id === categoryFilterId)?.value
 
   const handleFilterChange = (categoryFilterSelected: string) => {
-    callPosthog(posthog, "filterCategory_selected", {
+    callPostHog(postHog, "filterCategory_selected", {
       category_filter_id: categoryFilterId,
       selected_category: categoryFilterSelected,
     })

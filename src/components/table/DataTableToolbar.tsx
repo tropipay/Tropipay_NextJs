@@ -2,7 +2,7 @@
 
 import FilterCategories from "@/components/table/FilterCategories"
 import { Input } from "@/components/ui/Input"
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
+import { callPostHog } from "@/utils/utils"
 import { Table } from "@tanstack/react-table"
 import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
@@ -31,7 +31,7 @@ export function DataTableToolbar<TData, TValue>({
   actions,
 }: Props<TData, TValue>) {
   const { t } = useTranslation()
-  const posthog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() // Obtener instancia de PostHog
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const searchColumn = table.getColumn("search")
@@ -55,7 +55,7 @@ export function DataTableToolbar<TData, TValue>({
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
 
-      callPosthog(posthog, "filterSearch_applied", {
+      callPostHog(postHog, "filterSearch_applied", {
         table_id: tableId,
       })
 

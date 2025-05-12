@@ -15,7 +15,7 @@ import {
 } from "@/components/ui"
 import { objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
-import { callPosthog } from "@/utils/utils"
+import { callPostHog } from "@/utils/utils"
 import {
   closestCenter,
   DndContext,
@@ -351,12 +351,12 @@ export default function DataTable<TData, TValue>({
   )
 
   const table = useReactTable(tableConfig)
-  const posthog = usePostHog()
+  const postHog = usePostHog()
 
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
     setIsSheetOpen(true)
-    callPosthog(posthog, "show_detail", { table_id: tableId })
+    callPostHog(postHog, "show_detail", { table_id: tableId })
   }
   useEffect(() => {
     setTableKey(Math.random())

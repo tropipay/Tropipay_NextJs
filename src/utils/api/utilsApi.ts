@@ -82,6 +82,12 @@ export async function makeApiRequest({
   }
 }
 
+/**
+ * Builds GraphQL variables based on search parameters and column definitions.
+ * @param {SearchParams} searchParams - The search parameters.
+ * @param {any} columns - The column definitions.
+ * @returns {{ variables: GraphQLVariables }} The GraphQL variables.
+ */
 export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
@@ -161,6 +167,12 @@ export function buildGraphQLVariables(
   return { variables }
 }
 
+/**
+ * Generates a string of query fields based on active columns.
+ * @param {Record<string, any>} columns - The column definitions.
+ * @param {string[]} activeColumns - The active columns.
+ * @returns {string} The generated query fields.
+ */
 export const generateQueryFields = (
   columns: Record<string, any>,
   activeColumns: string[]

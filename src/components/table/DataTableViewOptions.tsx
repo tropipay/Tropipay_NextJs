@@ -1,15 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
-import { cn } from "@/utils/data/utils"
-import { PopoverClose } from "@radix-ui/react-popover"
-import { Table } from "@tanstack/react-table"
-import { CheckIcon, Ellipsis } from "lucide-react"
-import { useMemo, useState } from "react"
-import { FormattedMessage, useIntl } from "react-intl"
-import { usePostHog } from "posthog-js/react"
-import { useTranslation } from "../intl/useTranslation"
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import {
   Command,
   CommandEmpty,
@@ -28,6 +19,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import { cn } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
+import { PopoverClose } from "@radix-ui/react-popover"
+import { Table } from "@tanstack/react-table"
+import { CheckIcon, Ellipsis } from "lucide-react"
+import { usePostHog } from "posthog-js/react"
+import { useMemo, useState } from "react"
+import { FormattedMessage, useIntl } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -39,7 +39,7 @@ export function DataTableViewOptions<TData>({
   tableId, // Recibir tableId
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
-  const posthog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() // Obtener instancia de PostHog
   const intl = useIntl()
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>
@@ -100,7 +100,7 @@ export function DataTableViewOptions<TData>({
       (id) => !pendingVisibility[id]
     )
 
-    callPosthog(posthog, "column_visibility_applied", {
+    callPostHog(postHog, "column_visibility_applied", {
       table_id: tableId,
       visible_columns: visibleColumns,
       hidden_columns: hiddenColumns,

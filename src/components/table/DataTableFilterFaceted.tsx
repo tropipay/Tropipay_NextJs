@@ -27,8 +27,8 @@ import { Separator } from "@/components/ui/Separator"
 
 // Utilidades
 import { cn, truncateLabels } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 // Interfaces
@@ -46,7 +46,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
   const { t } = useTranslation()
-  const posthog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() // Get posthog instance
   const searchParams = useSearchParams()
   // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}
@@ -84,7 +84,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const handleApplyFilters = () => {
     const filterValuesArray = Array.from(localSelectedValues)
-    callPosthog(posthog, "filterFaceted_applied", {
+    callPostHog(postHog, "filterFaceted_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "list",
@@ -100,7 +100,7 @@ export function DataTableFilterFaceted<TData, TValue>({
     if (!column) return
     const filterValuesArray = Array.from(localSelectedValues) // Get values before clearing
     if (filterValuesArray.length > 0) {
-      callPosthog(posthog, "filterFaceted_clear", {
+      callPostHog(postHog, "filterFaceted_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: filterValuesArray,

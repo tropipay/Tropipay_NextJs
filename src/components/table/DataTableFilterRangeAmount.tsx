@@ -8,14 +8,14 @@ import {
 } from "@/components/ui/Popover"
 import { Separator } from "@/components/ui/Separator"
 import { formatAmount, selStyle } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
@@ -30,7 +30,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
-  const posthog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() // Get posthog instance
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
   // @ts-ignore
@@ -56,7 +56,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     }
 
     setError(null)
-    callPosthog(posthog, "filterAmount_applied", {
+    callPostHog(postHog, "filterAmount_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "amount",
@@ -76,7 +76,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       const [min, max] = filterValue
         .split(",")
         .map((v) => (v ? parseFloat(v) : undefined))
-      callPosthog(posthog, "filterAmount_clear", {
+      callPostHog(postHog, "filterAmount_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: { min, max },

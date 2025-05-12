@@ -12,7 +12,7 @@ import { Button } from "@/components/ui"
 import { env } from "@/config/env"
 import { MovementDetails } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
-import { callPosthog } from "@/utils/utils"
+import { callPostHog } from "@/utils/utils"
 import axios from "axios"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
@@ -24,7 +24,7 @@ export default function MovementDetail(props: any): JSX.Element {
   const row: MovementDetails = props.data.data.movements.items[0]
   const { data: session } = useSession()
   const token = session?.user.token
-  const posthog = usePostHog()
+  const postHog = usePostHog()
   const {
     email,
     fee,
@@ -58,7 +58,7 @@ export default function MovementDetail(props: any): JSX.Element {
   } = row
 
   const onDownloadInvoiceFile = async () => {
-    callPosthog(posthog, "download_invoice_clicked")
+    callPostHog(postHog, "download_invoice_clicked")
     try {
       const response = await axios.post(
         `${env.API_URL}/api/v3/movements/transferinvoice`,
