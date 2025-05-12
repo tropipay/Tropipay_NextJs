@@ -8,7 +8,7 @@ export const isProduction = (): boolean => {
   return false
 }
 
-export const callPosthog = (
+export const callPostHog = (
   posthogInstance: PostHog | null, // Allow null in case PostHog is not initialized
   eventName: string,
   properties?: Record<string, any>

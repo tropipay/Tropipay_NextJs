@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/Popover"
 import { Separator } from "@/components/ui/Separator"
 import { selStyle } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
@@ -32,7 +32,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
-  const posthog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() // Get posthog instance
   // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
 
@@ -49,7 +49,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   // Función para aplicar el filtro a la columna
   const handleApplyFilter = (event: React.FormEvent) => {
     event.preventDefault()
-    callPosthog(posthog, "filterSingleValue_applied", {
+    callPostHog(postHog, "filterSingleValue_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "uniqueValue",
@@ -62,7 +62,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (localFilterValue) {
-      callPosthog(posthog, "filterSingleValue_clear", {
+      callPostHog(postHog, "filterSingleValue_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: localFilterValue, // Value before clearing

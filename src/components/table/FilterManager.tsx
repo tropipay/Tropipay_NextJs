@@ -24,9 +24,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover"
 import { cn } from "@/utils/data/utils"
-import { FormattedMessage, useIntl } from "react-intl"
+import { callPostHog } from "@/utils/utils"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
+import { FormattedMessage, useIntl } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./DataTableFilterDate"
 import { DataTableFilterFaceted } from "./DataTableFilterFaceted"
@@ -45,7 +45,7 @@ export function FilterManager<TData, TValue>({
   columns,
 }: FilterManagerProps<TData, TValue>) {
   const { data: session } = useSession()
-  const posthog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() // Obtener instancia de PostHog
   const userId = session?.user?.id
   const { t } = useTranslation()
   const intl = useIntl()
@@ -133,7 +133,7 @@ export function FilterManager<TData, TValue>({
   const handleApplyFilters = () => {
     const selectedFilterIdsArray = Array.from(selectedFilters)
 
-    callPosthog(posthog, "filterManager_applied", {
+    callPostHog(postHog, "filterManager_applied", {
       table_id: tableId,
       selected_filter_ids: selectedFilterIdsArray,
     })
@@ -159,7 +159,7 @@ export function FilterManager<TData, TValue>({
     const clearedFilterIds = managedAppliedFilters.map(({ id }) => id)
 
     if (clearedFilterIds.length > 0) {
-      callPosthog(posthog, "filterManager_clearAll", {
+      callPostHog(postHog, "filterManager_clearAll", {
         table_id: tableId,
         cleared_filter_ids: clearedFilterIds,
       })
@@ -178,7 +178,7 @@ export function FilterManager<TData, TValue>({
   const handleClearFilter = (filterId: string) => {
     const filterValue = table.getColumn(filterId)?.getFilterValue()
 
-    callPosthog(posthog, "filterManager_clear", {
+    callPostHog(postHog, "filterManager_clear", {
       table_id: tableId,
       filter_id: filterId,
     })

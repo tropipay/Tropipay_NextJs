@@ -2,13 +2,22 @@
 
 import { Button } from "@/components/ui/Button"
 import { Calendar } from "@/components/ui/Calendar"
+import { Label } from "@/components/ui/Label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/Popover"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select"
 import { Separator } from "@/components/ui/Separator"
 import { cn } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
@@ -22,19 +31,10 @@ import {
   startOfDay,
 } from "date-fns"
 import { CalendarIcon, Eraser } from "lucide-react"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import { callPosthog } from "@/utils/utils" // Importar callPosthog
 import { useTranslation } from "../intl/useTranslation"
-import { Label } from "@/components/ui/Label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Select"
 
 interface ColumnConfig {
   filterLabel?: string
@@ -52,7 +52,7 @@ export function DataTableFilterDate<TData, TValue>({
   onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
-  const posthog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() // Get posthog instance
   const [selectedValue, setSelectedValue] = React.useState<string>("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
@@ -152,19 +152,19 @@ export function DataTableFilterDate<TData, TValue>({
     setError(null)
     const appliedValue =
       fromDate || toDate ? [fromDate, toDate].join(",") : undefined
-    callPosthog(posthog, "filterDate_applied", {
+    callPostHog(postHog, "filterDate_applied", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "date",
       filter_value: appliedValue,
     })
     column?.setFilterValue(appliedValue)
-  }, [column, fromDate, toDate, t, posthog, tableId])
+  }, [column, fromDate, toDate, t, postHog, tableId])
 
   const handleClearFilter = React.useCallback(() => {
     if (!column) return
     if (filterValue) {
-      callPosthog(posthog, "filterDate_clear", {
+      callPostHog(postHog, "filterDate_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: filterValue,
@@ -176,14 +176,14 @@ export function DataTableFilterDate<TData, TValue>({
       setError(null)
       column?.setFilterValue(undefined)
     } else onClear?.(column.id)
-  }, [column, filterValue, onClear, posthog, tableId]) // Add dependencies
+  }, [column, filterValue, onClear, postHog, tableId]) // Add dependencies
 
   // Manejo de períodos predefinidos
   const handlePeriodChange = React.useCallback(
     (value: string) => {
       setSelectedValue(value)
 
-      callPosthog(posthog, "filterDate_periodSelected", {
+      callPostHog(postHog, "filterDate_periodSelected", {
         table_id: tableId,
         filter_id: column?.id,
         period_value: value,
