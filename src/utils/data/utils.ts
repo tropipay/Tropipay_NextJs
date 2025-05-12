@@ -7,28 +7,6 @@ import { twMerge } from "tailwind-merge"
 import { getUser } from "../user/utilsUser"
 
 /**
- * Function to combine classes (cn).
- * @param inputs ClassValue[]
- * @returns string
- */
-export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs))
-}
-
-/**
- * Function to build query parameters (queryParams).
- * @param params Record<string, string | number | boolean> query parameters.
- * @returns string
- */
-const queryParams = (
-  params: Record<string, string | number | boolean>
-): string => {
-  return Object.keys(params)
-    .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
-    .join("&")
-}
-
-/**
  * Types for fetchGetData and headerData.
  */
 interface FetchGetData {
@@ -41,6 +19,28 @@ interface HeaderData {
   [key: string]: string
 }
 
+/**
+ * Combines class names using `clsx` and `tailwind-merge`.
+ * @param {...ClassValue[]} inputs - The class names to combine.
+ * @returns {string} The combined class names.
+ */
+export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs))
+
+/**
+ * Builds query parameters from a record of parameters.
+ * @param {Record<string, string | number | boolean>} params - The query parameters.
+ * @returns {string} The encoded query string.
+ */
+const queryParams = (
+  params: Record<string, string | number | boolean>
+): string =>
+  Object.keys(params)
+    .map((k) => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+    .join("&")
+
+/**
+ * Defines the standard headers for fetch requests.
+ */
 export const fetchHeaders: Record<string, string> = {
   Accept: "application/json",
   "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const fetchGetWithTriggers = async (
       user = await getUser()
     } catch (error) {
       console.warn("No se pudo obtener el usuario en el servidor:", error)
-      user = {} // Default vacío si no se puede obtener en el servidor
+      user = {} // Default empty if it cannot be obtained on the server
     }
 
     const headers: Record<string, string> = {
@@ -153,6 +153,12 @@ export function searchParamsToObject(searchParams: URLSearchParams): {
   return obj
 }
 
+/**
+ * Converts a data object into a URLSearchParams object.
+ *
+ * @param data - The data object to convert.
+ * @returns A URLSearchParams object containing the data.
+ */
 export function getUrlSearchData(data: any): URLSearchParams {
   const params = new URLSearchParams()
 
@@ -367,7 +373,7 @@ export function toArrayId(
 
 type ColumnConfig = {
   id: string
-  [key: string]: any // Permite otras propiedades dinámicas
+  [key: string]: any // Allows other dynamic properties
 }
 
 /**
@@ -430,12 +436,21 @@ export const isTokenExpired = (token: string) => {
   }
 }
 
+/**
+ * Gets an array of date periods (months) starting from a specified number of months before the current date.
+ *
+ * @param {number} monthsBefore - The number of months to go back from the current date. Must be a non-negative number.
+ * @param {(_: string) => string} [t] - An optional translation function.
+ * @param {string} [lang=LANG_DEFAULT] - The language code for formatting the month name.
+ * @returns {DatePeriod[]} An array of DatePeriod objects, each representing a month.
+ * @throws {Error} If `monthsBefore` is a negative number.
+ */
 export const getDatePeriods = (
   monthsBefore: number,
   t?: (_: string) => string,
   lang = LANG_DEFAULT
 ): DatePeriod[] => {
-  if (monthsBefore < 0) throw new Error("El número de meses debe ser positivo")
+  if (monthsBefore < 0) throw new Error("The number of months must be positive")
 
   const periods: DatePeriod[] = []
   const currentDate = new Date()
@@ -488,6 +503,12 @@ interface ErrorGeneratorParams {
   type?: string
 }
 
+/**
+ * Generates an error object and sets it to the setErrorData state.
+ *
+ * @param {ErrorGeneratorParams} params - The parameters for generating the error.
+ * @returns {boolean} - Returns true if the condition is met and the error is set, false otherwise.
+ */
 export const errorGenerator = ({
   setErrorData,
   condition,

@@ -1,8 +1,8 @@
-import { UserSettings } from "@/types/security/user"
-import { getSession } from "next-auth/react"
-import CookiesManager from "@/utils/cookies/cookiesManager"
-import { reduxStore, RootState } from "@/stores/reduxStore"
 import { CacheEntry } from "@/stores/appSlice"
+import { reduxStore, RootState } from "@/stores/reduxStore"
+import { UserSettings } from "@/types/security/user"
+import CookiesManager from "@/utils/cookies/cookiesManager"
+import { getSession } from "next-auth/react"
 
 /**
  * Get user session.
@@ -116,10 +116,10 @@ export const setUserSettings = (
 
 // --- User Profile Helper ---
 
-// Importar CacheEntry si no está ya importado globalmente en el archivo
-// (Asumiendo que CacheEntry ya está importado desde './appSlice' al principio del archivo)
-// Podríamos importar UserProfile de ProfileStore si estuviera exportado,
-// por ahora usamos Record<string, any> o any
+// Import CacheEntry if it is not already imported globally in the file
+// (Assuming that CacheEntry is already imported from './appSlice' at the beginning of the file)
+// We could import UserProfile from ProfileStore if it was exported,
+// for now we use Record<string, any> or any
 type UserProfile = Record<string, any>
 
 const PROFILE_STORE_NAME = "ProfileStore" // Constante para el nombre del store
@@ -127,8 +127,8 @@ const PROFILE_CACHE_ID = "profile" // Constante para el ID de caché
 const PROFILE_REDUX_KEY = `${PROFILE_STORE_NAME}_${PROFILE_CACHE_ID}` // Clave completa en Redux
 
 /**
- * Obtiene los datos del perfil de usuario directamente desde el estado global de Redux.
- * @returns El objeto del perfil del usuario o undefined si no se encuentra.
+ * Gets the user profile data directly from the global Redux state.
+ * @returns The user profile object or undefined if not found.
  */
 export function getUserStore(): UserProfile | undefined {
   const state = reduxStore.getState() as RootState
