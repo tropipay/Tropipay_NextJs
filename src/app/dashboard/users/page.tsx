@@ -23,7 +23,7 @@ const Page = () => {
       {/* <DialogTrigger asChild>
         <Button variant="outline">Abrir Página Simple</Button>
       </DialogTrigger> */}
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px]" aria-description="">
         {/* No necesitamos DialogHeader si SimplePage ya tiene su propio título/descripción */}
         {/* <DialogHeader>
           <DialogTitle>Título del Diálogo</DialogTitle>

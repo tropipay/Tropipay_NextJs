@@ -2,7 +2,7 @@ import { env } from "@/config/env"
 import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { format, parse } from "date-fns"
 import getConfig from "next/config"
 
@@ -74,10 +74,7 @@ export async function makeApiRequest({
 
     return response.data
   } catch (e) {
-    if (axios.isAxiosError(e)) {
-      const error = e as AxiosError<{ message: string }>
-      console.error(error.message)
-    }
+    console.error(e)
     return null
   }
 }

@@ -1,33 +1,26 @@
+"use client"
+
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import DataFull from "@/components/DataFull"
-import { processQueryParameters } from "@/utils/data/utils"
+import DataComponent from "@/components/DataComponent"
+import React from "react"
 import PageClient from "./pageClient"
 
-interface Props {
-  searchParams: { [key: string]: string }
-}
-
-export default async function Page({ searchParams }: Props) {
+export default function Page({ params }) {
   const queryConfig = apiConfig.movementsScheduled
-  const urlParams = await processQueryParameters(searchParams)
-  const size = urlParams["size"] ?? "50"
-  const page = urlParams["page"] ?? "0"
 
   return (
-    <DataFull
+    <DataComponent
+      key={queryConfig.key}
+      showLoading
       {...{
         queryConfig,
-        searchParams: {
-          offset: (parseInt(page) * parseInt(size)).toString(),
-          limit: size,
-        },
-        // mockData: movementScheduledMock,
+        searchParams: React.use(params),
       }}
     >
       <PageClient
         columns={queryConfig.columns}
         tableId={queryConfig.key ?? ""}
       />
-    </DataFull>
+    </DataComponent>
   )
 }
