@@ -15,7 +15,6 @@ interface DataChildProps {
 }
 
 interface DataComponentProps {
-  dehydratedState?: DehydratedState
   children: ReactElement<DataChildProps>
   queryConfig: FetchDataConfig
   searchParams?: { [key: string]: string }
@@ -26,7 +25,6 @@ interface DataComponentProps {
 }
 
 export default function DataComponent({
-  dehydratedState,
   queryConfig,
   searchParams = {},
   mockData,
@@ -43,13 +41,12 @@ export default function DataComponent({
     isError,
   } = useFetchData({
     queryConfig,
-    dehydratedState,
     urlParams,
     enabled: !mockData,
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const loading = isLoading || isFetching
+  const loading = isLoading
   const data = mockData ?? fetchData
 
   return (
