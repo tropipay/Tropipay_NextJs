@@ -28,7 +28,7 @@ export function useFetchData<T>({
   )
 
   return useQuery({
-    queryKey: [QueryKey],
+    queryKey: [QueryKey, variables],
     queryFn: () =>
       makeApiRequest({
         queryConfig,
@@ -36,10 +36,8 @@ export function useFetchData<T>({
         token,
         columnVisibility,
       }),
-    initialData: dehydratedState?.queries.find(
-      (q: any) => q.queryKey[0][0] === QueryKey
-    )?.state?.data,
     staleTime: queryConfig.staleTime ?? 20 * 60 * 1000,
     enabled: !!token && enabled,
+    retry: 2,
   })
 }
