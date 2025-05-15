@@ -45,7 +45,7 @@ export function FilterManager<TData, TValue>({
   columns,
 }: FilterManagerProps<TData, TValue>) {
   const { data: session } = useSession()
-  const postHog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog()
   const userId = session?.user?.id
   const { t } = useTranslation()
   const intl = useIntl()

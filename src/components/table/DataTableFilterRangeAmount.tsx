@@ -30,7 +30,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() 
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
   // @ts-ignore

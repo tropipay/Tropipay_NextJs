@@ -39,7 +39,7 @@ export function DataTableViewOptions<TData>({
   tableId, // Recibir tableId
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() 
   const intl = useIntl()
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>

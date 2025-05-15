@@ -46,7 +46,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
   const { t } = useTranslation()
-  const postHog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() 
   const searchParams = useSearchParams()
   // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}

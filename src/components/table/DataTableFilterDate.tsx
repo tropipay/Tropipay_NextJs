@@ -52,7 +52,7 @@ export function DataTableFilterDate<TData, TValue>({
   onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() 
   const [selectedValue, setSelectedValue] = React.useState<string>("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
