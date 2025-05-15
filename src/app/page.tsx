@@ -29,7 +29,9 @@ export default function Page() {
     setLoading(true)
     try {
       await login(token)
-      router.push(searchParams.get("redirect") ?? "/dashboard/movements")
+      const redirectTo = searchParams.get("redirect") ?? "/dashboard/movements"
+      console.log(`Login successfully. Redirect to ${redirectTo} ...`)
+      router.push(redirectTo)
     } catch (e) {
       setErrors([t("error_login_dialog_title")])
     }
