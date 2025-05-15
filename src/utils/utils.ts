@@ -6,7 +6,7 @@ import { PostHog } from "posthog-js"
  */
 export const isProduction = (): boolean => {
   if (typeof window !== "undefined") {
-    return window.location.hostname === "business.tropipay.com"
+    return window.location.hostname.startsWith("business.tropipay")
   }
   // Default to false if window is not defined (e.g., during SSR)
   return false
@@ -23,13 +23,14 @@ export const callPostHog = (
   eventName: string,
   properties?: Record<string, any>
 ): void => {
-  if (!postHogInstance) {
-    console.warn("PostHog instance not available for event:", eventName)
-    return
-  }
+  return // disable postHog
+  // if (!postHogInstance) {
+  //   console.warn("PostHog instance not available for event:", eventName)
+  //   return
+  // }
 
-  if (!isProduction()) {
-    console.log(`[PostHog Event]: ${eventName}`, properties || {})
-  }
-  postHogInstance.capture(eventName, properties)
+  // if (!isProduction()) {
+  //   console.log(`[PostHog Event]: ${eventName}`, properties || {})
+  // }
+  // postHogInstance.capture(eventName, properties)
 }
