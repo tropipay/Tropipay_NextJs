@@ -32,7 +32,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() // Get posthog instance
+  const postHog = usePostHog() 
   // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
 

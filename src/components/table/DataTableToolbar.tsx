@@ -31,7 +31,7 @@ export function DataTableToolbar<TData, TValue>({
   actions,
 }: Props<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() 
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const searchColumn = table.getColumn("search")

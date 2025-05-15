@@ -5,12 +5,13 @@ import { ReactNode } from "react"
 
 // Use standard Next.js environment variables
 import { env } from "@/config/env"
-const posthogKey = env.POSTHOG_KEY
-const posthogHost = env.POSTHOG_HOST
+const postHogKey = env.POSTHOG_KEY
+const postHogHost = env.POSTHOG_HOST
+const postHogEnabled = false
 
 // Define options
-const posthogOptions = {
-  api_host: posthogHost,
+const postHogOptions = {
+  api_host: postHogHost,
   autocapture: false,
   capture_pageview: false,
   disable_session_recording: true,
@@ -18,8 +19,13 @@ const posthogOptions = {
 }
 
 export function PostHogInsert({ children }: { children: ReactNode }) {
-  if (typeof window !== "undefined" && posthogKey && posthogHost) {
-    posthog.init(posthogKey, posthogOptions)
+  if (
+    postHogEnabled &&
+    typeof window !== "undefined" &&
+    postHogKey &&
+    postHogHost
+  ) {
+    posthog.init(postHogKey, postHogOptions)
     return <PHProvider client={posthog}>{children}</PHProvider>
   } else {
     return <>{children}</>

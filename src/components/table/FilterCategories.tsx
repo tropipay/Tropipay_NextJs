@@ -16,7 +16,7 @@ const FilterCategories: React.FC<Props> = ({
   categoryFilterId,
   categoryFilters,
 }) => {
-  const postHog = usePostHog() // Obtener instancia de PostHog
+  const postHog = usePostHog() 
   const filterCategoryValue = table
     .getState()
     .columnFilters.find((filter) => filter.id === categoryFilterId)?.value

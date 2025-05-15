@@ -3,11 +3,10 @@
 import { login } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
-import CookiesManager from "@/utils/cookies/cookiesManager"
-import { getTokenFromSession } from "@/utils/user/utilsUser"
+import { env } from "@/config/env"
+import { getToken } from "@/utils/user/utilsUser"
 import { Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { env } from "@/config/env"
 import { useEffect, useState } from "react"
 
 export default function Page() {
@@ -19,15 +18,6 @@ export default function Page() {
 
   const router = useRouter()
   const { t } = useTranslation()
-
-  const getToken = (): string =>
-    getTokenFromSession(
-      CookiesManager.getInstance().get(
-        "session",
-        "fill_with_session_info",
-        window.location.hostname === "localhost"
-      )
-    )
 
   const onLogin = async () => {
     const token = getToken()
