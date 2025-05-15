@@ -5,7 +5,7 @@ import DataComponent from "@/components/DataComponent"
 import React from "react"
 import PageClient from "./pageClient"
 
-export default function Page({ params }) {
+export default function Page({ searchParams }) {
   const queryConfig = apiConfig.charges
 
   return (
@@ -14,7 +14,7 @@ export default function Page({ params }) {
       showLoading
       {...{
         queryConfig,
-        searchParams: React.use(params),
+        searchParams: React.use(searchParams),
       }}
     >
       <PageClient

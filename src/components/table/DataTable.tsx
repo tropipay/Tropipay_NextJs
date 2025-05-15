@@ -1,6 +1,5 @@
 "use client"
 
-import Spinner from "@/components/Spinner"
 import {
   Sheet,
   SheetContent,
@@ -366,7 +365,7 @@ export default function DataTable<TData, TValue>({
   if (userId)
     return (
       <div className="space-y-4">
-        {isLoading && <Spinner />}
+        {/* {isLoading && <Spinner />} */}
         {enableToolbar && (
           <DataTableToolbar
             {...{
