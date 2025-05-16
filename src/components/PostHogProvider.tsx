@@ -13,7 +13,7 @@ const postHogEnabled = true
 const postHogOptions = {
   api_host: postHogHost,
   autocapture: false,
-  capture_pageview: false,
+  capture_pageview: true,
   disable_session_recording: true,
   disable_performance_metrics: true,
 }
