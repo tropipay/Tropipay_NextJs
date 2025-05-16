@@ -211,45 +211,47 @@ const MovementDownloadDialog = ({
             </div>
           </div>
 
-          <div className="mb-2">
-            <Select value={selectedValue} onValueChange={handlePeriodChange}>
-              <SelectTrigger
-                aria-label={t("select_period")}
-                data-test-id="dataTableFilterDate-selectTrigger-selectPeriod"
-              >
-                <SelectValue placeholder={t("select_period")} />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem
-                  value="1"
-                  data-test-id="dataTableFilterDate-selectItem-period-1"
-                >
-                  <FormattedMessage id="today" />
-                </SelectItem>
-                <SelectItem
-                  value="2"
-                  data-test-id="dataTableFilterDate-selectItem-period-2"
-                >
-                  <FormattedMessage id="last_week" />
-                </SelectItem>
-                <SelectItem
-                  value="3"
-                  data-test-id="dataTableFilterDate-selectItem-period-3"
-                >
-                  <FormattedMessage id="last_month" />
-                </SelectItem>
-                <SelectItem
-                  value="4"
-                  data-test-id="dataTableFilterDate-selectItem-period-4"
-                >
-                  <FormattedMessage id="last_six_months" />
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           {movementType !== "all" && (
             <>
+              <div className="mb-2">
+                <Select
+                  value={selectedValue}
+                  onValueChange={handlePeriodChange}
+                >
+                  <SelectTrigger
+                    aria-label={t("select_period")}
+                    data-test-id="dataTableFilterDate-selectTrigger-selectPeriod"
+                  >
+                    <SelectValue placeholder={t("select_period")} />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    <SelectItem
+                      value="1"
+                      data-test-id="dataTableFilterDate-selectItem-period-1"
+                    >
+                      <FormattedMessage id="today" />
+                    </SelectItem>
+                    <SelectItem
+                      value="2"
+                      data-test-id="dataTableFilterDate-selectItem-period-2"
+                    >
+                      <FormattedMessage id="last_week" />
+                    </SelectItem>
+                    <SelectItem
+                      value="3"
+                      data-test-id="dataTableFilterDate-selectItem-period-3"
+                    >
+                      <FormattedMessage id="last_month" />
+                    </SelectItem>
+                    <SelectItem
+                      value="4"
+                      data-test-id="dataTableFilterDate-selectItem-period-4"
+                    >
+                      <FormattedMessage id="last_six_months" />
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <>
                 <Label htmlFor="date-from" className="my-2">
                   <FormattedMessage id="from" />
