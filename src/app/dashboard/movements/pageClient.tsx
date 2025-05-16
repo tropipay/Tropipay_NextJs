@@ -15,7 +15,7 @@ import { GetMovementsResponse } from "@/types/movements"
 import { fetchHeaders, getUrlSearchData } from "@/utils/data/utils"
 import { toastMessage } from "@/utils/ui/utilsUI"
 import { callPostHog } from "@/utils/utils"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { format, parse } from "date-fns"
 import { Download } from "lucide-react"
 import { useSession } from "next-auth/react"
@@ -83,7 +83,10 @@ const PageClient = ({ tableId, columns, data }: Props) => {
         callPostHog(postHog, "movements:download", queryParams)
       }
     } catch (e) {
-      console.error(e)
+      if (axios.isAxiosError(e)) {
+        const error = e as AxiosError<any>
+        toastMessage(t("download"), error.response?.data.error.message, "error")
+      }
     }
   }
 
