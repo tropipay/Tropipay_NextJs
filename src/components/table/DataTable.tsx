@@ -339,7 +339,7 @@ export default function DataTable<TData, TValue>({
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
     setIsSheetOpen(true)
-    callPostHog(postHog, "show_detail", { table_id: tableId })
+    callPostHog(postHog, "data_table:show_details", { table_id: tableId })
   }
   useEffect(() => {
     setTableKey(Math.random())

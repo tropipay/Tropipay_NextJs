@@ -7,7 +7,7 @@ import { ReactNode } from "react"
 import { env } from "@/config/env"
 const postHogKey = env.POSTHOG_KEY
 const postHogHost = env.POSTHOG_HOST
-const postHogEnabled = false
+const postHogEnabled = true
 
 // Define options
 const postHogOptions = {

@@ -46,7 +46,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
   const { t } = useTranslation()
-  const postHog = usePostHog() 
+  const postHog = usePostHog()
   const searchParams = useSearchParams()
   // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}
@@ -84,7 +84,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   const handleApplyFilters = () => {
     const filterValuesArray = Array.from(localSelectedValues)
-    callPostHog(postHog, "filterFaceted_applied", {
+    callPostHog(postHog, "filter_faceted:apply", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "list",
@@ -100,7 +100,7 @@ export function DataTableFilterFaceted<TData, TValue>({
     if (!column) return
     const filterValuesArray = Array.from(localSelectedValues) // Get values before clearing
     if (filterValuesArray.length > 0) {
-      callPostHog(postHog, "filterFaceted_clear", {
+      callPostHog(postHog, "filter_faceted:clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: filterValuesArray,

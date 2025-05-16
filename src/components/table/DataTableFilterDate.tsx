@@ -52,7 +52,7 @@ export function DataTableFilterDate<TData, TValue>({
   onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() 
+  const postHog = usePostHog()
   const [selectedValue, setSelectedValue] = React.useState<string>("")
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
@@ -152,7 +152,7 @@ export function DataTableFilterDate<TData, TValue>({
     setError(null)
     const appliedValue =
       fromDate || toDate ? [fromDate, toDate].join(",") : undefined
-    callPostHog(postHog, "filterDate_applied", {
+    callPostHog(postHog, "filter_date:apply", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "date",
@@ -164,7 +164,7 @@ export function DataTableFilterDate<TData, TValue>({
   const handleClearFilter = React.useCallback(() => {
     if (!column) return
     if (filterValue) {
-      callPostHog(postHog, "filterDate_clear", {
+      callPostHog(postHog, "filter_date:_clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: filterValue,
@@ -183,7 +183,7 @@ export function DataTableFilterDate<TData, TValue>({
     (value: string) => {
       setSelectedValue(value)
 
-      callPostHog(postHog, "filterDate_periodSelected", {
+      callPostHog(postHog, "filter_date:select_period", {
         table_id: tableId,
         filter_id: column?.id,
         period_value: value,

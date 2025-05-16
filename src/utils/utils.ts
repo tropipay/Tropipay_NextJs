@@ -23,14 +23,13 @@ export const callPostHog = (
   eventName: string,
   properties?: Record<string, any>
 ): void => {
-  return // disable postHog
-  // if (!postHogInstance) {
-  //   console.warn("PostHog instance not available for event:", eventName)
-  //   return
-  // }
+  if (!postHogInstance) {
+    console.warn("PostHog instance not available for event:", eventName)
+    return
+  }
 
-  // if (!isProduction()) {
-  //   console.log(`[PostHog Event]: ${eventName}`, properties || {})
-  // }
-  // postHogInstance.capture(eventName, properties)
+  if (!isProduction()) {
+    console.log(`[PostHog Event]: ${eventName}`, properties || {})
+  }
+  postHogInstance.capture(eventName, properties)
 }

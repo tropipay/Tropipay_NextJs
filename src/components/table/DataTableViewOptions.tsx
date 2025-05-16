@@ -100,7 +100,7 @@ export function DataTableViewOptions<TData>({
       (id) => !pendingVisibility[id]
     )
 
-    callPostHog(postHog, "column_visibility_applied", {
+    callPostHog(postHog, "data_table:column_visibility:apply", {
       table_id: tableId,
       visible_columns: visibleColumns,
       hidden_columns: hiddenColumns,
