@@ -14,10 +14,12 @@ import { env } from "@/config/env"
 import { GetMovementsResponse } from "@/types/movements"
 import { fetchHeaders, getUrlSearchData } from "@/utils/data/utils"
 import { toastMessage } from "@/utils/ui/utilsUI"
+import { callPostHog } from "@/utils/utils"
 import axios from "axios"
 import { format, parse } from "date-fns"
 import { Download } from "lucide-react"
 import { useSession } from "next-auth/react"
+import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 
@@ -29,6 +31,7 @@ interface Props {
 
 const PageClient = ({ tableId, columns, data }: Props) => {
   const { t } = useTranslation()
+  const postHog = usePostHog()
   const { data: session } = useSession()
   const { id: userId, token } = session?.user
 
@@ -77,6 +80,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
 
       if (response.data.download === "OK") {
         toastMessage(t("download"), t("you_will_receive_email_transactions"))
+        callPostHog(postHog, "movements:download", queryParams)
       }
     } catch (e) {
       console.error(e)
