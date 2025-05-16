@@ -52,7 +52,7 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
-import { CSSProperties, useEffect, useMemo, useState } from "react"
+import { CSSProperties, useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -307,34 +307,31 @@ export default function DataTable<TData, TValue>({
       )
     }
   }
-  const tableConfig = useMemo(
-    () => ({
-      data: Array.isArray(data) ? data : [],
-      columns: columnsConfig,
-      pageCount: rowCount ? Math.ceil(rowCount / pagination.pageSize) : -1,
-      state: {
-        sorting,
-        columnVisibility,
-        columnFilters,
-        columnOrder,
-        pagination,
-      },
-      manualPagination,
-      manualSorting,
-      manualFiltering,
-      enableRowSelection: true,
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      onPaginationChange,
-      onSortingChange,
-      onColumnFiltersChange,
-      onColumnVisibilityChange,
-      onColumnOrderChange: setColumnOrder,
-    }),
-    [data, columnOrder]
-  )
+  const tableConfig = {
+    data: Array.isArray(data) ? data : [],
+    columns: columnsConfig,
+    pageCount: rowCount ? Math.ceil(rowCount / pagination.pageSize) : -1,
+    state: {
+      sorting,
+      columnVisibility,
+      columnFilters,
+      columnOrder,
+      pagination,
+    },
+    manualPagination,
+    manualSorting,
+    manualFiltering,
+    enableRowSelection: true,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange,
+    onSortingChange,
+    onColumnFiltersChange,
+    onColumnVisibilityChange,
+    onColumnOrderChange: setColumnOrder,
+  }
 
   const table = useReactTable(tableConfig)
   const postHog = usePostHog()
