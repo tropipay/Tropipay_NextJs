@@ -79,6 +79,7 @@
   "email_description": "Por favor, introduce el código de seguridad recibido por correo electrónico",
   "enter_refund_amount": "Ingresa el monto a reembolsar",
   "errorCode": "Código de respuesta",
+  "error_NO_MOVEMENTS_TO_DOWNLOAD": "No se encontraron movimientos para descargar",
   "error_bad_period": "El periodo especificado es incorrecto",
   "error_detected": "Error detectado",
   "error_execute_operation": "Ocurrió un error en la operación. Intenta más tarde.",

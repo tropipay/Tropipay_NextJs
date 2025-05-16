@@ -85,7 +85,11 @@ const PageClient = ({ tableId, columns, data }: Props) => {
     } catch (e) {
       if (axios.isAxiosError(e)) {
         const error = e as AxiosError<any>
-        toastMessage(t("download"), error.response?.data.error.message, "error")
+        toastMessage(
+          t("download"),
+          t(`error_${error.response?.data.error.code}`),
+          "error"
+        )
       }
     }
   }
