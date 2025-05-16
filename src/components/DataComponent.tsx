@@ -2,7 +2,6 @@
 
 import { FetchDataConfig } from "@/types/fetchData"
 import { useFetchData } from "@/utils/data/useFetchData"
-import { DehydratedState } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
@@ -37,7 +36,6 @@ export default function DataComponent({
   const {
     data: fetchData,
     isLoading,
-    isFetching,
     isError,
   } = useFetchData({
     queryConfig,
