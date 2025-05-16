@@ -1,26 +1,28 @@
-"use client"
-
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import DataComponent from "@/components/DataComponent"
-import React from "react"
+import DataFull from "@/components/DataFull"
 import PageClient from "./pageClient"
 
-export default function Page({ searchParams }) {
-  const queryConfig = apiConfig.charges
+interface Props {
+  searchParams: { [key: string]: string }
+}
+
+export default async function Page({ searchParams }: Props) {
+  const { charges: queryConfig } = apiConfig
+  const { columns, key } = queryConfig
 
   return (
-    <DataComponent
-      key={queryConfig.key}
-      showLoading
+    <DataFull
       {...{
         queryConfig,
-        searchParams: React.use(searchParams),
+        searchParams,
       }}
     >
       <PageClient
-        columns={queryConfig.columns}
-        tableId={queryConfig.key ?? ""}
+        {...{
+          columns,
+          tableId: key ?? "",
+        }}
       />
-    </DataComponent>
+    </DataFull>
   )
 }
