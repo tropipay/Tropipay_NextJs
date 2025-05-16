@@ -1,9 +1,11 @@
-import ReportInformationToolbar from "@/components/reports/ReportInformationToolbar"
 import ReportFooter from "@/components/reports/ReportFooter"
 import ReportHeader from "@/components/reports/ReportHeader"
+import ReportInformationToolbar from "@/components/reports/ReportInformationToolbar"
 import { ReportRowInfo } from "@/components/reports/ReportRowInfo"
 import { BalanceSummaryResponse } from "@/types/reports/balanceSummary/balanceSummaryResponse"
 import { formatAmount } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
+import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 
@@ -21,6 +23,7 @@ export default function ReportBalanceSummary({
   onChangeRangeDate,
 }: Props): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false)
+  const postHog = usePostHog()
   const isBrowser = typeof window !== undefined
 
   /**
@@ -69,6 +72,8 @@ export default function ReportBalanceSummary({
       element.remove()
 
       setLoading(false)
+
+      callPostHog(postHog, "report:balance_summary:download")
     } else {
       console.error(
         "No es posible generar el archivo PDF: Elemento no encontrado."
