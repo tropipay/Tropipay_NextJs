@@ -52,7 +52,7 @@ import {
 import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
-import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { CSSProperties, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -107,20 +107,17 @@ export default function DataTable<TData, TValue>({
     .map(({ id }) => id ?? "")
   const [tableKey, setTableKey] = useState(0)
 
-  const createQueryString = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(searchParams)
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value === null) {
-          params.delete(key)
-        } else {
-          params.set(key, value)
-        }
-      })
-      return params.toString()
-    },
-    [searchParams]
-  )
+  const createQueryString = (updates: Record<string, string | null>) => {
+    const params = new URLSearchParams(searchParams)
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null) {
+        params.delete(key)
+      } else {
+        params.set(key, value)
+      }
+    })
+    return params.toString()
+  }
 
   const [sorting, setSorting] = useState<SortingState>(() => {
     const sortField = searchParams.get("sort")
@@ -150,36 +147,33 @@ export default function DataTable<TData, TValue>({
     return filters
   })
 
-  const onColumnFiltersChange = useCallback(
-    (updater: Updater<ColumnFiltersState>) => {
+  const onColumnFiltersChange = (updater: Updater<ColumnFiltersState>) => {
+    // @ts-ignore
+    const columnsFilters = columnsConfig.filter((item) => item.filter)
+    const newFilters =
+      typeof updater === "function" ? updater(columnFilters) : updater
+    setColumnFilters(newFilters)
+
+    // Crear un nuevo objeto URLSearchParams basado en los searchParams actuales
+    const params = new URLSearchParams(searchParams)
+
+    // Eliminar solo los parámetros de búsqueda que corresponden a los filtros
+    columnsFilters.forEach((filter) => {
       // @ts-ignore
-      const columnsFilters = columnsConfig.filter((item) => item.filter)
-      const newFilters =
-        typeof updater === "function" ? updater(columnFilters) : updater
-      setColumnFilters(newFilters)
+      params.delete(filter.id)
+    })
 
-      // Crear un nuevo objeto URLSearchParams basado en los searchParams actuales
-      const params = new URLSearchParams(searchParams)
+    // Agregar los nuevos filtros al objeto URLSearchParams
+    newFilters.forEach((filter) => {
+      if (filter.value !== null && filter.value !== undefined) {
+        params.set(filter.id, JSON.stringify(filter.value).replace(/"/g, ""))
+      }
+    })
 
-      // Eliminar solo los parámetros de búsqueda que corresponden a los filtros
-      columnsFilters.forEach((filter) => {
-        // @ts-ignore
-        params.delete(filter.id)
-      })
-
-      // Agregar los nuevos filtros al objeto URLSearchParams
-      newFilters.forEach((filter) => {
-        if (filter.value !== null && filter.value !== undefined) {
-          params.set(filter.id, JSON.stringify(filter.value).replace(/"/g, ""))
-        }
-      })
-
-      // Actualizar la URL sin afectar otros parámetros como paginación u orden
-      setIsLoading(true)
-      router.push(`${pathname}?${params.toString()}`, { scroll: false })
-    },
-    [columnFilters, columnsConfig, router, pathname, searchParams]
-  )
+    // Actualizar la URL sin afectar otros parámetros como paginación u orden
+    setIsLoading(true)
+    router.push(`${pathname}?${params.toString()}`, { scroll: false })
+  }
 
   const [columnOrder, setColumnOrder] = useState<string[]>(
     defaultColumnOrder ||
@@ -221,27 +215,26 @@ export default function DataTable<TData, TValue>({
     }
   }
 
-  const onColumnVisibilityChange = useCallback(
-    (updater: Updater<typeof columnVisibility>) => {
-      const visibilityState =
-        typeof updater === "function" ? updater(columnVisibility) : updater
-      setColumnVisibility(visibilityState)
-      setUserSettings(userId, visibilityState, tableId, "columnVisibility")
+  const onColumnVisibilityChange = (
+    updater: Updater<typeof columnVisibility>
+  ) => {
+    const visibilityState =
+      typeof updater === "function" ? updater(columnVisibility) : updater
+    setColumnVisibility(visibilityState)
+    setUserSettings(userId, visibilityState, tableId, "columnVisibility")
 
-      if (Object.keys(columnVisibility).length !== 0) {
-        const columnHash = objToHash(columnVisibility)
-        // Obtener los search params actuales
-        const currentSearchParams = new URLSearchParams(window.location.search)
-        // Actualizar solo el columnHash
-        currentSearchParams.set("columnHash", columnHash)
-        setIsLoading(true)
-        router.push(`${pathname}?${currentSearchParams.toString()}`, {
-          scroll: false,
-        })
-      }
-    },
-    [columnVisibility, userId, pathname] // Añadí pathname a las dependencias
-  )
+    if (Object.keys(columnVisibility).length !== 0) {
+      const columnHash = objToHash(columnVisibility)
+      // Obtener los search params actuales
+      const currentSearchParams = new URLSearchParams(window.location.search)
+      // Actualizar solo el columnHash
+      currentSearchParams.set("columnHash", columnHash)
+      setIsLoading(true)
+      router.push(`${pathname}?${currentSearchParams.toString()}`, {
+        scroll: false,
+      })
+    }
+  }
 
   const DraggableTableHeader = ({
     header,
@@ -282,44 +275,38 @@ export default function DataTable<TData, TValue>({
     )
   }
 
-  const onPaginationChange = useCallback(
-    (updater: Updater<typeof pagination>) => {
-      const newPagination =
-        typeof updater === "function" ? updater(pagination) : updater
-      setPagination(newPagination)
-      if (manualPagination) {
-        setIsLoading(true)
-        router.push(
-          `${pathname}?${createQueryString({
-            page: String(newPagination.pageIndex),
-            size: String(newPagination.pageSize),
-          })}`,
-          { scroll: false }
-        )
-      }
-    },
-    [pagination, manualPagination, router, pathname, createQueryString]
-  )
+  const onPaginationChange = (updater: Updater<typeof pagination>) => {
+    const newPagination =
+      typeof updater === "function" ? updater(pagination) : updater
+    setPagination(newPagination)
+    if (manualPagination) {
+      setIsLoading(true)
+      router.push(
+        `${pathname}?${createQueryString({
+          page: String(newPagination.pageIndex),
+          size: String(newPagination.pageSize),
+        })}`,
+        { scroll: false }
+      )
+    }
+  }
 
-  const onSortingChange = useCallback(
-    (updater: Updater<SortingState>) => {
-      const newSorting =
-        typeof updater === "function" ? updater(sorting) : updater
-      setSorting(newSorting)
-      if (manualSorting) {
-        setIsLoading(true)
-        router.push(
-          `${pathname}?${createQueryString({
-            sort: newSorting[0]?.id ?? null,
-            order: newSorting[0]?.desc ? "desc" : null,
-            page: "0",
-          })}`,
-          { scroll: false }
-        )
-      }
-    },
-    [sorting, manualSorting, router, pathname, createQueryString]
-  )
+  const onSortingChange = (updater: Updater<SortingState>) => {
+    const newSorting =
+      typeof updater === "function" ? updater(sorting) : updater
+    setSorting(newSorting)
+    if (manualSorting) {
+      setIsLoading(true)
+      router.push(
+        `${pathname}?${createQueryString({
+          sort: newSorting[0]?.id ?? null,
+          order: newSorting[0]?.desc ? "desc" : null,
+          page: "0",
+        })}`,
+        { scroll: false }
+      )
+    }
+  }
   const tableConfig = useMemo(
     () => ({
       data: Array.isArray(data) ? data : [],
