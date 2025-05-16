@@ -54,7 +54,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { CSSProperties, useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
-import Spinner from "../Spinner"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
 
@@ -353,7 +352,7 @@ export default function DataTable<TData, TValue>({
   if (userId)
     return (
       <div className="space-y-4">
-        {isLoading && <Spinner />}
+        {/* {isLoading && <Spinner />} */}
         {enableToolbar && (
           <DataTableToolbar
             {...{
