@@ -69,7 +69,7 @@ export async function makeApiRequest({
     })
 
     if (debug) {
-      console.log(response.data)
+      console.log("data:", response.data)
     }
 
     return response.data
