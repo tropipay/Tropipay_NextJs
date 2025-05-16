@@ -133,7 +133,7 @@ export function FilterManager<TData, TValue>({
   const handleApplyFilters = () => {
     const selectedFilterIdsArray = Array.from(selectedFilters)
 
-    callPostHog(postHog, "filterManager_applied", {
+    callPostHog(postHog, "filter_manager:apply", {
       table_id: tableId,
       selected_filter_ids: selectedFilterIdsArray,
     })
@@ -159,7 +159,7 @@ export function FilterManager<TData, TValue>({
     const clearedFilterIds = managedAppliedFilters.map(({ id }) => id)
 
     if (clearedFilterIds.length > 0) {
-      callPostHog(postHog, "filterManager_clearAll", {
+      callPostHog(postHog, "filter_manager:clear_all", {
         table_id: tableId,
         cleared_filter_ids: clearedFilterIds,
       })
@@ -178,7 +178,7 @@ export function FilterManager<TData, TValue>({
   const handleClearFilter = (filterId: string) => {
     const filterValue = table.getColumn(filterId)?.getFilterValue()
 
-    callPostHog(postHog, "filterManager_clear", {
+    callPostHog(postHog, "filter_manager:clear", {
       table_id: tableId,
       filter_id: filterId,
     })

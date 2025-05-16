@@ -30,7 +30,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() 
+  const postHog = usePostHog()
   const filterValue = column?.getFilterValue() as string | undefined
   const [error, setError] = React.useState<string | null>(null)
   // @ts-ignore
@@ -56,7 +56,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
     }
 
     setError(null)
-    callPostHog(postHog, "filterAmount_applied", {
+    callPostHog(postHog, "filter_range_amount:apply", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "amount",
@@ -76,7 +76,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       const [min, max] = filterValue
         .split(",")
         .map((v) => (v ? parseFloat(v) : undefined))
-      callPostHog(postHog, "filterAmount_clear", {
+      callPostHog(postHog, "filter_range_amount:clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: { min, max },

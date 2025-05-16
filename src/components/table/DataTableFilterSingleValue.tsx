@@ -32,7 +32,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() 
+  const postHog = usePostHog()
   // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
 
@@ -49,7 +49,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   // Función para aplicar el filtro a la columna
   const handleApplyFilter = (event: React.FormEvent) => {
     event.preventDefault()
-    callPostHog(postHog, "filterSingleValue_applied", {
+    callPostHog(postHog, "filter_single_value_apply", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "uniqueValue",
@@ -62,7 +62,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (localFilterValue) {
-      callPostHog(postHog, "filterSingleValue_clear", {
+      callPostHog(postHog, "filter_single_value:clear", {
         table_id: tableId,
         filter_id: column.id,
         filter_value: localFilterValue, // Value before clearing

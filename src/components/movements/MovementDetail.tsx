@@ -58,7 +58,7 @@ export default function MovementDetail(props: any): JSX.Element {
   } = row
 
   const onDownloadInvoiceFile = async () => {
-    callPostHog(postHog, "download_invoice_clicked")
+    callPostHog(postHog, "movements:download_invoice_file")
     try {
       const response = await axios.post(
         `${env.API_URL}/api/v3/movements/transferinvoice`,

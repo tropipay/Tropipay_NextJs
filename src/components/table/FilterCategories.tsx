@@ -16,13 +16,13 @@ const FilterCategories: React.FC<Props> = ({
   categoryFilterId,
   categoryFilters,
 }) => {
-  const postHog = usePostHog() 
+  const postHog = usePostHog()
   const filterCategoryValue = table
     .getState()
     .columnFilters.find((filter) => filter.id === categoryFilterId)?.value
 
   const handleFilterChange = (categoryFilterSelected: string) => {
-    callPostHog(postHog, "filterCategory_selected", {
+    callPostHog(postHog, "filter_category:select", {
       category_filter_id: categoryFilterId,
       selected_category: categoryFilterSelected,
     })
