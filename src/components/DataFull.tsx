@@ -1,7 +1,7 @@
 import DataComponent from "@/components/DataComponent"
 import { fetchData } from "@/utils/data/fetchData"
 import { processQueryParameters } from "@/utils/data/utils"
-import { dehydrate } from "@tanstack/react-query"
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import getQueryClient from "./GetQueryClient"
 interface DataFullProps {
   queryConfig: any
@@ -24,20 +24,19 @@ export default async function DataFull({
   // console.log("dehydratedState:", dehydratedState)
   return (
     <>
-      {dehydratedState && (
+      <HydrationBoundary state={dehydratedState}>
         <DataComponent
           key={key}
           showLoading
           {...{
             queryConfig,
-            dehydratedState,
             searchParams: urlParams,
             mockData,
           }}
         >
           <>{children}</>
         </DataComponent>
-      )}
+      </HydrationBoundary>
     </>
   )
 }
