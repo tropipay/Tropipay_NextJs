@@ -25,7 +25,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = session?.user
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" className="w-full max-w-none" {...props}>
       {dehydratedState && (
         <SidebarHeader>
           <DataComponent
