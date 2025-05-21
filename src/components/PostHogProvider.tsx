@@ -1,35 +1,48 @@
 "use client"
+
+import { env } from "@/config/env"
 import posthog from "posthog-js"
 import { PostHogProvider as PHProvider } from "posthog-js/react"
-import { ReactNode } from "react"
-
-// Use standard Next.js environment variables
-import { env } from "@/config/env"
-const postHogKey = env.POSTHOG_KEY
-const postHogHost = env.POSTHOG_HOST
-const postHogEnabled = true
+import { useEffect, useState } from "react"
 
 // Define options
 const postHogOptions = {
-  api_host: postHogHost,
-  autocapture: false,
-  capture_pageview: true,
-  disable_session_recording: true,
-  disable_performance_metrics: true,
+  enabled: true,
+  key: env.POSTHOG_KEY,
+  options: {
+    api_host: env.POSTHOG_HOST,
+    autocapture: false,
+    capture_pageview: true,
+    disable_session_recording: true,
+    disable_performance_metrics: true,
+  },
 }
 
-export function PostHogInsert({ children }: { children: ReactNode }) {
-  if (
-    postHogEnabled &&
-    typeof window !== "undefined" &&
-    postHogKey &&
-    postHogHost
-  ) {
-    posthog.init(postHogKey, postHogOptions)
-    return <PHProvider client={posthog}>{children}</PHProvider>
-  } else {
+export function PostHogInsert({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    if (
+      postHogOptions.enabled &&
+      typeof window !== "undefined" &&
+      postHogOptions.key &&
+      postHogOptions.options.api_host &&
+      !isInitialized
+    ) {
+      try {
+        posthog.init(postHogOptions.key, postHogOptions.options)
+        setIsInitialized(true)
+      } catch (error) {
+        console.error("PostHog initialization failed:", error)
+      }
+    }
+  }, [isInitialized])
+
+  if (!postHogOptions.enabled || !isInitialized) {
     return <>{children}</>
   }
+
+  return <PHProvider client={posthog}>{children}</PHProvider>
 }
 
 export default PostHogInsert
