@@ -29,14 +29,16 @@ export const getTokenFromSession = (session?: any): string => {
   }
 }
 
-export const getToken = (): string =>
-  getTokenFromSession(
+export const getToken = (): string => {
+  if (typeof window === "undefined") return ""
+  return getTokenFromSession(
     CookiesManager.getInstance().get(
       "session",
       "fill_with_session_info",
       window.location.hostname === "localhost"
     )
   )
+}
 
 /**
  * Get the user settings stored in a cookie.
