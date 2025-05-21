@@ -179,7 +179,7 @@ export default function ChargeDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
+      <div className="flex mt-4 gap-4 w-full p-4 px-8 bg-white absolute bottom-0 left-0">
         <Button
           variant="outline"
           className={`${refundable ? "w-1/2" : "w-full"}`}
