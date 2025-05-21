@@ -73,7 +73,7 @@ export function DataTableToolbar<TData, TValue>({
         searchColumn?.setFilterValue(undefined)
       }
     },
-    500
+    800
   )
 
   useEffect(() => {
