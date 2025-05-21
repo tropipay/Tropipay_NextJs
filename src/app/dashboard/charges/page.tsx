@@ -1,6 +1,7 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataFull from "@/components/DataFull"
 import PageClient from "./pageClient"
+import { Suspense } from "react"
 
 interface Props {
   searchParams: { [key: string]: string }
@@ -11,18 +12,20 @@ export default async function Page({ searchParams }: Props) {
   const { columns, key } = queryConfig
 
   return (
-    <DataFull
-      {...{
-        queryConfig,
-        searchParams,
-      }}
-    >
-      <PageClient
+    <Suspense>
+      <DataFull
         {...{
-          columns,
-          tableId: key ?? "",
+          queryConfig,
+          searchParams,
         }}
-      />
-    </DataFull>
+      >
+        <PageClient
+          {...{
+            columns,
+            tableId: key ?? "",
+          }}
+        />
+      </DataFull>
+    </Suspense>
   )
 }
