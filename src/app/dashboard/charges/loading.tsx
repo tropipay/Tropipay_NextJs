@@ -1,7 +1,5 @@
-import React from "react"
+import Loading from "@/components/Loading"
 
-const loading = () => {
-  return <div>loading</div>
-}
+const loading = () => <Loading />
 
 export default loading

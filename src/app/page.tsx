@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 export default function Page() {
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>()
   const [errors, setErrors] = useState<
     Array<string | Error | { message: string }>
   >([])
@@ -22,7 +23,8 @@ export default function Page() {
   const onLogin = async () => {
     const token = getToken()
     if (!token) {
-      setErrors([t("error_login_dialog_title")])
+      setTitle(t("session_no_create"))
+      setErrors([t("session_no_create_description")])
       return
     }
 
@@ -33,7 +35,8 @@ export default function Page() {
       console.log(`Login successfully. Redirect to ${redirectTo} ...`)
       router.push(redirectTo)
     } catch (e) {
-      setErrors([t("error_login_dialog_title")])
+      setTitle(t("session_expired"))
+      setErrors([t("session_expired_description")])
     }
     setLoading(false)
   }
@@ -55,7 +58,14 @@ export default function Page() {
         )}
       </div>
 
-      <ErrorHandler {...{ errors, onOk }} />
+      <ErrorHandler
+        {...{
+          title,
+          buttonOkTitle: t("session_start"),
+          errors,
+          onOk,
+        }}
+      />
     </>
   )
 }

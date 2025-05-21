@@ -165,7 +165,12 @@ const MovementDownloadDialog = ({
   }, [fromDate, toDate, getPeriodFromDates])
 
   return (
-    <Dialog open={open}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onClose?.() // Se ejecuta solo al cerrar
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>

@@ -1,6 +1,12 @@
 import { ReportFilterDate } from "@/components/reports/ReportFilterDate"
-import { Button } from "@/components/ui"
-import { DownloadIcon } from "lucide-react"
+import {
+  Button,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui"
+import { Download } from "lucide-react"
+import { FormattedMessage } from "react-intl"
 
 interface InformationToolbarProps {
   startDate: string
@@ -29,14 +35,20 @@ export default function ReportInformationToolbar({
         />
       </div>
 
-      <Button
-        disabled={downloadButtonDisabled}
-        variant="outline"
-        size="icon"
-        onClick={onDownload}
-      >
-        <DownloadIcon size={16} />
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            disabled={downloadButtonDisabled}
+            variant="outline"
+            onClick={onDownload}
+          >
+            <Download />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" align="center">
+          <FormattedMessage id="download" />
+        </TooltipContent>
+      </Tooltip>
     </div>
   )
 }

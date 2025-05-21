@@ -7,25 +7,35 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui"
-import React, { useEffect, useState } from "react"
+import parse from "html-react-parser"
+import React, { ReactNode, useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 
 interface ErrorHandlerProps {
+  title?: React.ReactNode
+  buttonOkTitle?: ReactNode
   errors: Array<string | Error | { message: string }>
   onOk?: () => void
 }
 
-const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors, onOk }) => {
+const ErrorHandler: React.FC<ErrorHandlerProps> = ({
+  title,
+  buttonOkTitle,
+  errors,
+  onOk,
+}) => {
   const [isOpen, setIsOpen] = useState(true)
 
   const formatErrors = (errors: ErrorHandlerProps["errors"]) => {
-    return errors
-      .map((error) => {
-        if (typeof error === "string") return error
-        if (error instanceof Error) return error.message
-        return error.message || "Error desconocido"
-      })
-      .join("\n• ")
+    return parse(
+      errors
+        .map((error) => {
+          if (typeof error === "string") return error
+          if (error instanceof Error) error.message
+          return error.message || "Error desconocido"
+        })
+        .join("\n• ")
+    )
   }
 
   const handlerOk = () => {
@@ -44,13 +54,17 @@ const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors, onOk }) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            <FormattedMessage
-              id={
-                errors.length === 1
-                  ? "error_detected"
-                  : "errors_have_been_detected"
-              }
-            />
+            {title ? (
+              title
+            ) : (
+              <FormattedMessage
+                id={
+                  errors.length === 1
+                    ? "error_detected"
+                    : "errors_have_been_detected"
+                }
+              />
+            )}
           </AlertDialogTitle>
           <AlertDialogDescription className="whitespace-pre-line">
             {formatErrors(errors)}
@@ -58,7 +72,7 @@ const ErrorHandler: React.FC<ErrorHandlerProps> = ({ errors, onOk }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogAction onClick={handlerOk}>
-            <FormattedMessage id="got_it" />
+            {buttonOkTitle ? buttonOkTitle : <FormattedMessage id="got_it" />}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
