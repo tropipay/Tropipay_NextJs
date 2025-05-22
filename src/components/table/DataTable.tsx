@@ -321,6 +321,7 @@ export default function DataTable<TData, TValue>({
     },
     [sorting, manualSorting, router, pathname, createQueryString]
   )
+
   const tableConfig = useMemo(
     () => ({
       data: Array.isArray(data) ? data : [],
@@ -347,7 +348,7 @@ export default function DataTable<TData, TValue>({
       onColumnVisibilityChange,
       onColumnOrderChange: setColumnOrder,
     }),
-    [data, columnOrder]
+    [data, columnOrder, pagination]
   )
 
   const table = useReactTable(tableConfig)
@@ -362,6 +363,15 @@ export default function DataTable<TData, TValue>({
     setTableKey(Math.random())
     setIsLoading(false)
   }, [data])
+
+  useEffect(
+    () =>
+      setPagination({
+        pageIndex: Number(searchParams.get("page") ?? 0),
+        pageSize: Number(searchParams.get("size") ?? 50),
+      }),
+    [searchParams]
+  )
 
   if (userId)
     return (

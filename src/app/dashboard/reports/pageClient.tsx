@@ -6,12 +6,14 @@ import ReportBalanceSummary from "@/components/reports/ReportBalanceSummary"
 import CookiesManager from "@/utils/cookies/cookiesManager"
 import { callPostHog } from "@/utils/utils"
 import { format, formatISO, parse } from "date-fns"
-import { useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { useMemo } from "react"
 
 const PageClient = () => {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const postHog = usePostHog()
   const accountNumber = CookiesManager.getInstance().get("accountNumber")
 
@@ -64,7 +66,7 @@ const PageClient = () => {
     callPostHog(postHog, "report:balance_summary:change_range_date", {
       filter_date: value,
     })
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
+    router.push(`${pathname}?${newSearchParams.toString()}`)
   }
 
   return (
