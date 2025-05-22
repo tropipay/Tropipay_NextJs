@@ -18,7 +18,10 @@ export default async function Page({ searchParams }: Props) {
           searchParams,
         }}
       >
-        <div>remove pageClient</div>
+        <PageClient
+          columns={queryConfig.columns}
+          tableId={queryConfig.key ?? ""}
+        />
       </DataFull>
     </Suspense>
   )

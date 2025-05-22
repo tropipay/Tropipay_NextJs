@@ -11,10 +11,6 @@ export default async function Page({ searchParams }: Props) {
   const { charges: queryConfig } = apiConfig
   const { columns, key } = queryConfig
 
-  console.log("queryConfig:", queryConfig)
-  console.log("columns:", columns)
-  console.log("key:", key)
-
   return (
     <Suspense>
       <DataFull

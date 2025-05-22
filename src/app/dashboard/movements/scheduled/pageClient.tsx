@@ -15,7 +15,23 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
 
-  return <div className="w-full">{userId && <>remove DataTable</>}</div>
+  return (
+    <div className="w-full">
+      {userId && (
+        <DataTable
+          {...{
+            tableId,
+            userId,
+            columns,
+            data: data?.rows ?? [],
+            rowCount: data?.count ?? 0,
+            rowClickChildren: MovementScheduledDetailContainer,
+            enableToolbar: false,
+          }}
+        />
+      )}
+    </div>
+  )
 }
 
 export default PageClient
