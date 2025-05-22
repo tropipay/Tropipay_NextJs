@@ -5,7 +5,7 @@ import { PopoverClose } from "@radix-ui/react-popover"
 import { Column, Table } from "@tanstack/react-table"
 import { CheckIcon, Plus } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import * as React from "react"
 
 // Componentes UI
@@ -45,11 +45,13 @@ export function FilterManager<TData, TValue>({
   columns,
 }: FilterManagerProps<TData, TValue>) {
   const { data: session } = useSession()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
   const postHog = usePostHog()
   const userId = session?.user?.id
   const { t } = useTranslation()
   const intl = useIntl()
-  const searchParams = useSearchParams()
 
   // Filtros disponibles
   const filters = columns
@@ -144,8 +146,12 @@ export function FilterManager<TData, TValue>({
         newSearchParams.delete(column.id)
       }
     })
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
+    if (newSearchParams.has("page")) {
+      newSearchParams.delete("page")
+      newSearchParams.delete("size")
+    }
 
+    router.push(`${pathname}?${newSearchParams.toString()}`)
     const newFilters = columns.filter(({ id }) => selectedFilters.has(id))
     setActiveFilters(newFilters)
   }
