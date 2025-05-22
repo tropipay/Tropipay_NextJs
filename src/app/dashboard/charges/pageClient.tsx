@@ -15,6 +15,11 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const { data: session } = useSession()
   const userId = session?.user?.id
 
+  console.log("data:", data)
+  console.log("userId:", userId)
+  console.log("tableId:", tableId)
+  console.log("columns:", columns)
+  console.log("data?.data?.charges?.items:", data?.data?.charges?.items)
   return (
     <div className="w-full">
       {userId && (

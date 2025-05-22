@@ -24,6 +24,7 @@ export default async function DataFull({
   const { key } = queryConfig
   const dehydratedState = dehydrate(queryClient)
 
+  console.log("dehydratedState:", dehydratedState)
   return (
     <HydrationBoundary state={dehydratedState}>
       <DataComponent
