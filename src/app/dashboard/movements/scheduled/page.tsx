@@ -1,36 +1,30 @@
+"use client"
+
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import DataFull from "@/components/DataFull"
-import { processQueryParameters } from "@/utils/data/utils"
+import DataComponent from "@/components/DataComponent"
 import PageClient from "./pageClient"
-import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 
-interface Props {
-  searchParams: { [key: string]: string }
-}
-
-export default async function Page({ searchParams }: Props) {
+export default function Page() {
+  const searchParams = useSearchParams()
   const queryConfig = apiConfig.movementsScheduled
-  const urlParams = await processQueryParameters(searchParams)
-  const size = urlParams["size"] ?? "50"
-  const page = urlParams["page"] ?? "0"
+  const size = searchParams.get("size") ?? "50"
+  const page = searchParams.get("page") ?? "0"
 
   return (
-    <Suspense>
-      <DataFull
-        {...{
-          queryConfig,
-          searchParams: {
-            offset: (parseInt(page) * parseInt(size)).toString(),
-            limit: size,
-          },
-          // mockData: movementScheduledMock,
-        }}
-      >
-        <PageClient
-          columns={queryConfig.columns}
-          tableId={queryConfig.key ?? ""}
-        />
-      </DataFull>
-    </Suspense>
+    <DataComponent
+      {...{
+        queryConfig,
+        searchParams: {
+          offset: (parseInt(page) * parseInt(size)).toString(),
+          limit: size,
+        },
+      }}
+    >
+      <PageClient
+        columns={queryConfig.columns}
+        tableId={queryConfig.key ?? ""}
+      />
+    </DataComponent>
   )
 }
