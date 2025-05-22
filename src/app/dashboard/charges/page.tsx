@@ -1,31 +1,31 @@
+"use client"
+
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import DataFull from "@/components/DataFull"
+import DataComponent from "@/components/DataComponent"
 import PageClient from "./pageClient"
-import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 
-interface Props {
-  searchParams: { [key: string]: string }
-}
-
-export default async function Page({ searchParams }: Props) {
+export default function Page() {
+  const searchParams = useSearchParams()
   const { charges: queryConfig } = apiConfig
   const { columns, key } = queryConfig
 
+  // Convertir URLSearchParams a objeto plano
+  const searchParamsObj = Object.fromEntries(searchParams.entries())
+
   return (
-    <Suspense>
-      <DataFull
+    <DataComponent
+      {...{
+        queryConfig,
+        searchParams: searchParamsObj,
+      }}
+    >
+      <PageClient
         {...{
-          queryConfig,
-          searchParams,
+          columns,
+          tableId: key ?? "",
         }}
-      >
-        <PageClient
-          {...{
-            columns,
-            tableId: key ?? "",
-          }}
-        />
-      </DataFull>
-    </Suspense>
+      />
+    </DataComponent>
   )
 }
