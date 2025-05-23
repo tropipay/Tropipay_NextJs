@@ -8,7 +8,6 @@ export const movementsScheduledColumnsDef: any = {
       value,
       currency,
     }),
-    enableHiding: false,
     order: 0,
   },
   nextDate: { type: "date", title: "date_to_pay", order: 1 },

@@ -15,12 +15,14 @@ export const movementsColumnsDef: any = {
     type: "date",
     showFilter: true,
     enableHiding: false,
+    enableSorting: true,
     size: 120,
     order: 0,
   },
   amount: {
     type: "amount",
     enableHiding: false,
+    enableSorting: true,
     showFilter: true,
     order: 1,
     field: `amount { value currency }`,
@@ -35,6 +37,7 @@ export const movementsColumnsDef: any = {
     optionList: movementStates,
     optionListGroups: movementStateGroups,
     enableHiding: false,
+    enableSorting: true,
     showFilter: true,
     order: 2,
   },
@@ -47,7 +50,6 @@ export const movementsColumnsDef: any = {
     title: "type",
     showFilter: true,
     optionList: movementTypes,
-    enableSorting: false,
     size: 200,
     order: 4,
   },
@@ -63,6 +65,7 @@ export const movementsColumnsDef: any = {
   },
   reference: {
     hidden: true,
+    enableSorting: true,
     filterSearchType: "EXACT_MATCH",
   },
   email: {
@@ -72,6 +75,7 @@ export const movementsColumnsDef: any = {
   completedAt: {
     type: "date",
     hidden: true,
+    enableSorting: true,
   },
   fee: {
     type: "amount",

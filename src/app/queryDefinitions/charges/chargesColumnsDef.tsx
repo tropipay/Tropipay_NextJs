@@ -11,6 +11,7 @@ export const chargesColumnsDef: any = {
   createdAt: {
     type: "date",
     showFilter: true,
+    enableSorting: true,
     size: 120,
     order: 0,
   },
@@ -19,6 +20,7 @@ export const chargesColumnsDef: any = {
     showFilter: true,
     order: 1,
     field: `amount { value currency }`,
+    enableSorting: true,
   },
   paymentMethod: {
     type: "faceted",
@@ -31,11 +33,13 @@ export const chargesColumnsDef: any = {
     optionList: chargeStates,
     optionListGroups: chargeStatesGroups,
     showFilter: true,
+    enableSorting: true,
     order: 3,
   },
   reference: {
     order: 4,
     showFilter: true,
+    enableSorting: true,
   },
   email: {
     order: 5,

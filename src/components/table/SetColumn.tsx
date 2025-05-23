@@ -72,7 +72,7 @@ export function setColumns<TData>(
       format: dateFormat,
       component,
       addSign = true,
-      enableSorting = true,
+      enableSorting = false,
       enableHiding = true,
       filter = true,
       filterType = setFilterType(type),

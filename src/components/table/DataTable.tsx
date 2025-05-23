@@ -362,7 +362,7 @@ export default function DataTable<TData, TValue>({
   useEffect(() => {
     setTableKey(Math.random())
     setIsLoading(false)
-  }, [data])
+  }, [data, tableConfig])
 
   useEffect(
     () =>
