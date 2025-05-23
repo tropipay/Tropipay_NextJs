@@ -1,6 +1,7 @@
 "use client"
 
 import { AppSidebar } from "@/components/AppSidebar"
+import CookieMonitor from "@/components/CookieMonitor"
 import DynamicBreadcrumb from "@/components/privateLayout/DynamicBreadcrumb"
 import {
   Separator,
@@ -9,6 +10,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui"
 import { Toaster } from "@/components/ui/Toaster"
+import { env } from "@/config/env"
 import ProfileStore from "@/stores/ProfileStore"
 import { SessionProvider } from "next-auth/react"
 import { useEffect, useState } from "react"
@@ -35,6 +37,10 @@ export default function Page({ children }: ChildrenProps) {
   if (withProfile)
     return (
       <SessionProvider>
+        <CookieMonitor
+          cookieName="session"
+          redirectPath={`${env.TROPIPAY_HOME}/login?redirect=${env.SITE_URL}`}
+        />
         <SidebarProvider defaultOpen={false}>
           <AppSidebar />
           <SidebarInset>
