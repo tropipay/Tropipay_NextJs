@@ -375,97 +375,99 @@ export default function DataTable<TData, TValue>({
 
   if (userId)
     return (
-      <div className="space-y-4">
-        {isLoading && <Spinner />}
-        {enableToolbar && (
-          <DataTableToolbar
-            {...{
-              tableId,
-              table,
-              columns: columnsConfig,
-              categoryFilterId,
-              categoryFilters,
-              actions: toolbarActions,
-            }}
-          />
-        )}
-        <div>
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToHorizontalAxis]}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-          >
-            <Table className="tableComponent" key={tableKey}>
-              <TableHeader>
-                <SortableContext
-                  items={columnsId}
-                  strategy={horizontalListSortingStrategy}
-                >
-                  {table.getHeaderGroups().map(({ id, headers }) => (
-                    <TableRow key={id}>
-                      {headers.map((header) =>
-                        enableColumnOrder ? (
-                          <DraggableTableHeader
-                            key={header.id}
-                            header={header}
-                          />
-                        ) : (
-                          <TableHead
-                            key={header.id}
-                            data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
-                          >
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </TableHead>
-                        )
-                      )}
+      <>
+        <div className="space-y-4">
+          {isLoading && <Spinner />}
+          {enableToolbar && (
+            <DataTableToolbar
+              {...{
+                tableId,
+                table,
+                columns: columnsConfig,
+                categoryFilterId,
+                categoryFilters,
+                actions: toolbarActions,
+              }}
+            />
+          )}
+          <div>
+            <DndContext
+              collisionDetection={closestCenter}
+              modifiers={[restrictToHorizontalAxis]}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              sensors={sensors}
+            >
+              <Table className="tableComponent" key={tableKey}>
+                <TableHeader>
+                  <SortableContext
+                    items={columnsId}
+                    strategy={horizontalListSortingStrategy}
+                  >
+                    {table.getHeaderGroups().map(({ id, headers }) => (
+                      <TableRow key={id}>
+                        {headers.map((header) =>
+                          enableColumnOrder ? (
+                            <DraggableTableHeader
+                              key={header.id}
+                              header={header}
+                            />
+                          ) : (
+                            <TableHead
+                              key={header.id}
+                              data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
+                            >
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                            </TableHead>
+                          )
+                        )}
+                      </TableRow>
+                    ))}
+                  </SortableContext>
+                </TableHeader>
+                <TableBody className="tableBody">
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        rowData={row.original}
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                        className="cursor-pointer hover:bg-gray-100"
+                        data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
+                        // @ts-ignore
+                        onRowClick={handleRowClick}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columnsConfig.length}
+                        className="h-24 text-center"
+                      >
+                        <FormattedMessage id="no_results_found" />
+                      </TableCell>
                     </TableRow>
-                  ))}
-                </SortableContext>
-              </TableHeader>
-              <TableBody className="tableBody">
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      rowData={row.original}
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="cursor-pointer hover:bg-gray-100"
-                      data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
-                      // @ts-ignore
-                      onRowClick={handleRowClick}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columnsConfig.length}
-                      className="h-24 text-center"
-                    >
-                      <FormattedMessage id="no_results_found" />
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </DndContext>
+                  )}
+                </TableBody>
+              </Table>
+            </DndContext>
+          </div>
+          <DataTablePagination table={table} />
         </div>
-        <DataTablePagination table={table} />
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetHeader>
             <SheetTitle />
@@ -480,6 +482,6 @@ export default function DataTable<TData, TValue>({
             </div>
           </SheetContent>
         </Sheet>
-      </div>
+      </>
     )
 }
