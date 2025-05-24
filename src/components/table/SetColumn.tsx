@@ -54,7 +54,7 @@ type ColumnOptions<TData> = {
   order?: number
   meta?: boolean
   hideColumn?: boolean
-  render?: (value: string) => string
+  render?: (row: any) => string
   valueMapper?: (_: any) => any
 }
 
@@ -258,11 +258,11 @@ export function setColumns<TData>(
               ? valueMapper(row.original)
               : rowValue
             let value = getRowValue(rowValueMapper) || "-"
-            if (render && value !== "-") {
-              value = render(value)
+            if (render) {
+              value = render(row.original)
             }
 
-            return value !== "-" ? (
+            return value !== "-" && !render ? (
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="truncate">{value}</div>

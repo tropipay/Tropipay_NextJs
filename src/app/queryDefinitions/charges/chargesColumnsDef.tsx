@@ -63,28 +63,28 @@ export const chargesColumnsDef: any = {
   },
   cardBin: {
     hidden: true,
-    render: (value: string) => `${value} **** `,
+    render: (row: any) => (row.cardBin ? `**** ${row.cardBin}` : ""),
     filterSearchType: "EXACT_MATCH",
   },
   cardPan: {
     hidden: true,
-    render: (value: string) => `**** ${value}`,
+    render: (row: any) => (row.cardPan ? `**** ${row.cardPan}` : ""),
     filterSearchType: "EXACT_MATCH",
   },
   cardType: {
     hidden: true,
     filterPlaceholder: "cardType_placeholder",
-    render: (value: string) => {
+    render: (row: any) => {
       return (
         <div className="flex items-center">
           <ImageIcon
             {...{
-              image: `/images/cardTypes/${value}.svg`,
+              image: `/images/cardTypes/${row.cardType}.svg`,
               fallbackImage: `/images/cardTypes/CARD.svg`,
             }}
           />
           <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
-            {value}
+            {row.cardType}
           </span>
         </div>
       )
@@ -92,7 +92,7 @@ export const chargesColumnsDef: any = {
   },
   fullName: {
     hidden: true,
-    render: (value: string) => <span className="capitalize">{value}</span>,
+    render: (row: any) => <span className="capitalize">{row.fullName}</span>,
     filterSearchType: "PARTIAL_MATCH",
   },
   issuerBank: {
