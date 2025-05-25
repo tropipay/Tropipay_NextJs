@@ -4,6 +4,7 @@ import Spinner from "@/components/Spinner"
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   Table,
@@ -437,14 +438,13 @@ export default function DataTable<TData, TValue>({
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetHeader>
             <SheetTitle />
+            <SheetDescription />
           </SheetHeader>
           <SheetContent className="min-w-[500px]">
-            <div className="pt-2">
-              <div className="mt-6 h-screen overflow-y-auto">
-                {selectedRow && RowClickChildren && (
-                  <RowClickChildren row={selectedRow} />
-                )}
-              </div>
+            <div className="pt-4 h-full">
+              {selectedRow && RowClickChildren && (
+                <RowClickChildren row={selectedRow} />
+              )}
             </div>
           </SheetContent>
         </Sheet>

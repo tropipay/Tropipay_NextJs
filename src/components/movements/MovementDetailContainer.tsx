@@ -17,6 +17,7 @@ const MovementDetailContainer = ({ row: { id } }: Props) => {
         queryConfig,
         searchParams: { id },
       }}
+      className="h-full"
     >
       <MovementDetail />
     </DataComponent>

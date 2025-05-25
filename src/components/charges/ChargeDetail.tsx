@@ -73,7 +73,7 @@ export default function ChargeDetail(props: any): JSX.Element {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
       <div>
         <div className="flex justify-between items-center mb-3">
           <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
@@ -97,6 +97,8 @@ export default function ChargeDetail(props: any): JSX.Element {
             </p>
           )}
         </div>
+      </div>
+      <div className="flex-1 overflow-y-auto min-h-0">
         <RowDetailSection title={<FormattedMessage id="payment_details" />}>
           <RowDetailInfo
             label={<FormattedMessage id="amount" />}
@@ -179,7 +181,7 @@ export default function ChargeDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4 w-full p-4 px-8 bg-white absolute bottom-0 left-0">
+      <div className="flex gap-4">
         <Button
           variant="outline"
           className={`${refundable ? "w-1/2" : "w-full"}`}
