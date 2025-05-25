@@ -107,6 +107,11 @@ export default function DataTable<TData, TValue>({
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
+  const [contextMenu, setContextMenu] = useState<{
+    x: number
+    y: number
+    visible: boolean
+  }>({ x: 0, y: 0, visible: false })
   const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
@@ -406,8 +411,15 @@ export default function DataTable<TData, TValue>({
                         data-state={row.getIsSelected() && "selected"}
                         className="cursor-pointer hover:bg-gray-100"
                         data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
-                        // @ts-ignore
-                        onRowClick={handleRowClick}
+                        onContextMenu={(e) => {
+                          e.preventDefault()
+                          setSelectedRow(row.original)
+                          setContextMenu({
+                            x: e.clientX,
+                            y: e.clientY,
+                            visible: true,
+                          })
+                        }}
                       >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
@@ -440,7 +452,7 @@ export default function DataTable<TData, TValue>({
             <SheetTitle />
             <SheetDescription />
           </SheetHeader>
-          <SheetContent className="w-5/6 md:w-[500px]">
+          <SheetContent className="sm:w-5/6">
             <div className="pt-4 h-full">
               {selectedRow && RowClickChildren && (
                 <RowClickChildren row={selectedRow} />
@@ -448,6 +460,25 @@ export default function DataTable<TData, TValue>({
             </div>
           </SheetContent>
         </Sheet>
+        {contextMenu.visible && (
+          <div
+            className="absolute z-10 bg-white rounded shadow-md"
+            style={{
+              top: contextMenu.y,
+              left: contextMenu.x,
+            }}
+            onClick={() => setContextMenu({ ...contextMenu, visible: false })}
+          >
+            <button
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              onClick={() => {
+                selectedRow && handleRowClick(selectedRow)
+              }}
+            >
+              <FormattedMessage id="show_details" />
+            </button>
+          </div>
+        )}
       </>
     )
 }
