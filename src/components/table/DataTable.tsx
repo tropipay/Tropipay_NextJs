@@ -33,9 +33,7 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
   SortableContext,
-  useSortable,
 } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -44,19 +42,18 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Header,
   SortingState,
   Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
-import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
+import DraggableTableHeader from "./DraggableTableHeader"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -78,6 +75,13 @@ interface DataTableProps<TData, TValue> {
   toolbarActions?: React.ReactNode
 }
 
+/**
+ * DataTable Component
+ *
+ * This component renders a dynamic table with sorting, filtering, pagination,
+ * and column ordering functionalities. It uses TanStack Table for data handling
+ * and dnd-kit for drag and drop interactions.
+ */
 export default function DataTable<TData, TValue>({
   tableId,
   data,
@@ -250,45 +254,6 @@ export default function DataTable<TData, TValue>({
     },
     [columnVisibility, userId, pathname] // Added pathname to dependencies
   )
-
-  const DraggableTableHeader = ({
-    header,
-  }: {
-    header: Header<TData, unknown>
-  }) => {
-    const { attributes, isDragging, listeners, transform, setNodeRef } =
-      useSortable({
-        id: header.column.id,
-      })
-
-    const style: CSSProperties = {
-      transform: CSS.Translate.toString(transform),
-      transition: "width transform 0.2s ease-in-out",
-      ...(isDragging && { opacity: 0.8, zIndex: 1 }),
-    }
-
-    return (
-      <TableHead
-        key={header.id}
-        ref={setNodeRef}
-        className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
-        style={style}
-        data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
-      >
-        <div className="flex gap-1 items-center">
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-          <GripVerticalIcon
-            size={16}
-            className="opacity-0 hover:opacity-100"
-            {...attributes}
-            {...listeners}
-          />
-        </div>
-      </TableHead>
-    )
-  }
 
   const onPaginationChange = useCallback(
     (updater: Updater<typeof pagination>) => {
