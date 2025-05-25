@@ -1,9 +1,10 @@
 "use client"
 
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import { movementsColumns } from "@/app/queryDefinitions/movements/movementsColumns"
 import DataComponent from "@/components/DataComponent"
-import PageClient from "./pageClient"
 import { useSearchParams } from "next/navigation"
+import PageClient from "./pageClient"
 
 export default function Page() {
   const searchParams = useSearchParams()
@@ -16,10 +17,7 @@ export default function Page() {
         searchParams: Object.fromEntries(searchParams.entries()),
       }}
     >
-      <PageClient
-        columns={queryConfig.columns}
-        tableId={queryConfig.key ?? ""}
-      />
+      <PageClient columns={movementsColumns} tableId={queryConfig.key ?? ""} />
     </DataComponent>
   )
 }

@@ -186,7 +186,7 @@ export default function DataTable<TData, TValue>({
     defaultColumnOrder ||
       getUserSettings(userId, null, tableId, "columnOrder") ||
       // @ts-ignore
-      toArrayId(columnsConfig, "hidden", (hiddenValue) => !hiddenValue, "order")
+      toArrayId(columnsConfig, "order", (value) => value >= 0, "order")
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -209,18 +209,6 @@ export default function DataTable<TData, TValue>({
 
   const handleDragStart = ({ active }: DragStartEvent) =>
     active.id || !blockedColumnOrder.includes(active.id)
-
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    if (active && over && active.id !== over.id) {
-      setColumnOrder((columnOrder) => {
-        const oldIndex = columnOrder.indexOf(active.id as string)
-        const newIndex = columnOrder.indexOf(over.id as string)
-        const newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex)
-        setUserSettings(userId, newColumnOrder, tableId, "columnOrder")
-        return newColumnOrder
-      })
-    }
-  }
 
   const onColumnVisibilityChange = useCallback(
     (updater: Updater<typeof columnVisibility>) => {
@@ -353,6 +341,22 @@ export default function DataTable<TData, TValue>({
 
   const table = useReactTable(tableConfig)
   const postHog = usePostHog()
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (active && over && active.id !== over.id) {
+      setColumnOrder((columnOrder) => {
+        console.log(table.getState().columnVisibility)
+        console.log(active.id, over.id)
+        console.log("columnOrder:", columnOrder)
+        const oldIndex = columnOrder.indexOf(active.id as string)
+        const newIndex = columnOrder.indexOf(over.id as string)
+        const newColumnOrder = arrayMove(columnOrder, oldIndex, newIndex)
+        console.log("newColumnOrder:", newColumnOrder)
+        setUserSettings(userId, newColumnOrder, tableId, "columnOrder")
+        return newColumnOrder
+      })
+    }
+  }
 
   const handleRowClick = (row: TData) => {
     setSelectedRow(row)
