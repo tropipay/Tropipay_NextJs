@@ -27,13 +27,18 @@ export function DataTablePagination<TData>({
   return (
     <div className="flex items-center justify-between px-2">
       <div className="flex-1 text-sm text-muted-foreground"></div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex w-[110px] items-center justify-center text-sm font-medium">
-          <FormattedMessage id="page" />{" "}
-          {table.getState().pagination.pageIndex + 1}{" "}
-          <FormattedMessage id="of" /> {table.getPageCount()}
+      <div className="flex items-center gap-2">
+        <div className="flex gap-1 items-center justify-center text-sm font-medium">
+          <span className="hidden md:block">
+            <FormattedMessage id="page" />
+          </span>
+          <span>{table.getState().pagination.pageIndex + 1}</span>
+          <span>
+            <FormattedMessage id="of" />
+          </span>
+          <span>{table.getPageCount()}</span>
         </div>
-        <div className="space-x-2">
+        <div className="flex gap-1">
           <Button
             variant="outline"
             size="sm"
@@ -71,8 +76,8 @@ export function DataTablePagination<TData>({
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium hidden md:block">
             <FormattedMessage id="rows_per_page" />
           </span>
           <Select

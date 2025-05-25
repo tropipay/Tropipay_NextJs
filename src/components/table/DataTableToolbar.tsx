@@ -1,15 +1,14 @@
 "use client"
 
 import FilterCategories from "@/components/table/FilterCategories"
-import { Input } from "@/components/ui/Input"
 import { callPostHog } from "@/utils/utils"
 import { Table } from "@tanstack/react-table"
-import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { useEffect } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
+import { DataTableSearchInput } from "./DataTableSearchInput"
 import { DataTableViewOptions } from "./DataTableViewOptions"
 import { FilterManager } from "./FilterManager"
 
@@ -84,23 +83,13 @@ export function DataTableToolbar<TData, TValue>({
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <FilterCategories {...{ table, categoryFilterId, categoryFilters }} />
-          <div className="relative flex items-center w-full">
-            <span className="absolute left-3 flex items-center text-gray-500">
-              <Search className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <Input
-              id="search"
-              type="search"
-              placeholder={t("search")}
-              onChange={handleSearchChange}
-              className="pl-10 w-full"
-              defaultValue={searchParamValue}
-              data-test-id="dataTableToolbar-input-search" // Updated data-test-id
-            />
-          </div>
+          <DataTableSearchInput
+            handleSearchChange={handleSearchChange}
+            searchParamValue={searchParamValue}
+          />
         </div>
 
         {/* Elementos alineados a la derecha */}

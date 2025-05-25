@@ -440,7 +440,7 @@ export default function DataTable<TData, TValue>({
             <SheetTitle />
             <SheetDescription />
           </SheetHeader>
-          <SheetContent className="min-w-[500px]">
+          <SheetContent className="w-5/6 md:w-[500px]">
             <div className="pt-4 h-full">
               {selectedRow && RowClickChildren && (
                 <RowClickChildren row={selectedRow} />

@@ -46,7 +46,7 @@ const FilterCategories: React.FC<Props> = ({
   }
 
   return (
-    <div className="flex items-center gap-1 bg-grayBackground p-1 rounded-md">
+    <div className="items-center bg-grayBackground p-1 rounded-md hidden md:flex">
       {categoryFilters?.map((categoryFilter) => (
         <Button
           key={categoryFilter}
