@@ -27,6 +27,20 @@ export const movementsColumnsDef: any = {
     order: 1,
     field: `amount { value currency }`,
   },
+  // for CLI-140
+  // netAmount: {
+  //   type: "amount",
+  //   enableHiding: false,
+  //   enableSorting: true,
+  //   showFilter: true,
+  //   order: 1,
+  //   field: `netAmount { value currency }`,
+  // },
+  // amount: {
+  //   type: "amount",
+  //   hidden: true,
+  //   field: `netAmount { value currency }`,
+  // },
   amountCharged: {
     type: "amount",
     hidden: true,
