@@ -88,8 +88,8 @@ export default function MovementDetail(props: any): JSX.Element {
       <div>
         <div className="flex justify-between items-center mb-3">
           <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {amount.value > 0 ? "+" : ""}
-            {formatAmount(amount.value, amount.currency, "right")}
+            {netAmount.value > 0 ? "+" : ""}
+            {formatAmount(netAmount.value, netAmount.currency, "right")}
           </div>
           <FacetedBadge
             value={state}
