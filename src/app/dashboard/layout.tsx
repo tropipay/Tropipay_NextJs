@@ -51,9 +51,7 @@ export default function Page({ children }: ChildrenProps) {
                 <DynamicBreadcrumb />
               </div>
             </header>
-            <div className="flex flex-1 flex-col gap-4 px-4 pt-0">
-              {children}
-            </div>
+            <div className="flex flex-1 px-4 pt-0">{children}</div>
           </SidebarInset>
           <Toaster />
         </SidebarProvider>
