@@ -92,8 +92,7 @@ export default function ReportBalanceSummary({
           downloadButtonDisabled: loading,
         }}
       />
-
-      <div className="report-container">
+      <div className="report-container overflow-y-auto h-[calc(100vh_-_150px)]">
         <ReportHeader className="hidden" {...{ startDate, endDate }} />
         <div className="my-4">
           {/* Summary */}
