@@ -74,9 +74,9 @@ export default function ChargeDetail(props: any): JSX.Element {
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
             {amount.value > 0 ? "+" : ""}
             {formatAmount(amount.value, amount.currency, "right")}
           </div>
@@ -86,7 +86,7 @@ export default function ChargeDetail(props: any): JSX.Element {
             optionListGroups={chargeStatesGroups}
           />
         </div>
-        <div className="flex justify-between items-center mb-4 pb-1">
+        <div className="flex justify-between items-center">
           <p className="text-xs text-gray-500 flex items-center gap-1">
             <FormattedMessage id="charge_to" />
             <span className="uppercase">{fullName}</span>
