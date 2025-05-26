@@ -1,10 +1,12 @@
 import { env } from "@/config/env"
+import ProfileStore from "@/stores/ProfileStore"
 import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import axios from "axios"
 import { format, parse } from "date-fns"
 import getConfig from "next/config"
+import { getUserSettings } from "../user/utilsUser"
 
 /**
  * Makes an API request.
@@ -14,12 +16,18 @@ import getConfig from "next/config"
 export async function makeApiRequest({
   queryConfig,
   variables,
-  columnVisibility,
   token,
   debug = false,
 }: FetchOptions) {
   const { url, method, body } = queryConfig
   const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
+
+  const columnVisibility = getUserSettings(
+    ProfileStore?.getProfile()?.id,
+    {},
+    queryConfig.key,
+    "columnVisibility"
+  )
 
   let bodyUpdated = {}
   if (body) {

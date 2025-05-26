@@ -22,29 +22,22 @@ export const movementsColumnsDef: any = {
   amount: {
     type: "amount",
     enableHiding: false,
-    enableSorting: true,
     showFilter: true,
     order: 1,
     field: `amount { value currency }`,
   },
-  // for CLI-140
-  // netAmount: {
-  //   type: "amount",
-  //   enableHiding: false,
-  //   enableSorting: true,
-  //   showFilter: true,
-  //   order: 1,
-  //   field: `netAmount { value currency }`,
-  // },
-  // amount: {
-  //   type: "amount",
-  //   hidden: true,
-  //   field: `netAmount { value currency }`,
-  // },
-  amountCharged: {
-    type: "amount",
+  netAmount: {
     hidden: true,
-    field: `amountCharged { value currency }`,
+    field: `movementDetail { netAmount { value currency }}`,
+    render: (row: any) => (
+      <span className="capitalize">
+        <span className="font-bold">
+          {row.movementDetail.netAmount.value > 0 ? "+" : ""}
+          {row.movementDetail.netAmount.value}
+        </span>{" "}
+        {row.movementDetail.netAmount.currency}
+      </span>
+    ),
   },
   state: {
     type: "facetedBadge",
@@ -113,7 +106,7 @@ export const movementsColumnsDef: any = {
   },
   cardPan: {
     hidden: true,
-    render: (value: string) => `**** ${value}`,
+    render: (row: any) => (row.cardPan ? `**** ${row.cardPan}` : "-"),
     filterSearchType: "EXACT_MATCH",
   },
   movementDirection: {
