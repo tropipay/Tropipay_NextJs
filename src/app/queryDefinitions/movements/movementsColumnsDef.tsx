@@ -20,30 +20,28 @@ export const movementsColumnsDef: any = {
     size: 120,
     order: 0,
   },
-  amount: {
-    type: "amount",
+  netAmount: {
+    title: "amount",
     enableHiding: false,
     showFilter: true,
     order: 1,
-    field: `amount { value currency }`,
-  },
-  netAmount: {
-    hidden: true,
-    field: `movementDetail { netAmount { value currency }}`,
+    field: `netAmount { value currency }`,
     render: (row: any) => {
-      console.log("row:", row)
       return (
         <div className="flex items-center gap-1">
           <span className="font-bold">
-            {row.movementDetail.netAmount.value > 0 ? "+" : ""}
-            {formatAmount(row.movementDetail.netAmount.value)}
+            {row.netAmount.value > 0 ? "+" : ""}
+            {formatAmount(row.netAmount.value)}
           </span>
-          <span className="text-grayFont">
-            {row.movementDetail.netAmount.currency}
-          </span>
+          <span className="text-grayFont">{row.netAmount.currency}</span>
         </div>
       )
     },
+  },
+  amountCharged: {
+    type: "amount",
+    hidden: true,
+    field: `amountCharged { value currency }`,
   },
   state: {
     type: "facetedBadge",

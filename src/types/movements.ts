@@ -38,6 +38,7 @@ export type MovementDetails = {
     type: string
     clientAddress: string
     netAmount: Amount
+    chargedAmount: Amount
     cardType: string
     cardExpirationDate: string
     cardCountry: string
