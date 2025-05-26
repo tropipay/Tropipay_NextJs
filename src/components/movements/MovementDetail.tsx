@@ -47,6 +47,7 @@ export default function MovementDetail(props: any): JSX.Element {
       clientIp,
       netAmount,
       refundable,
+      chargedAmount,
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
@@ -175,8 +176,12 @@ export default function MovementDetail(props: any): JSX.Element {
 
         <RowDetailSection title={<FormattedMessage id="imports" />}>
           <RowDetailInfo
-            label={<FormattedMessage id="import" />}
-            value={formatAmount(amount.value, amount.currency, "right")}
+            label={<FormattedMessage id="amountCharged" />}
+            value={formatAmount(
+              chargedAmount.value,
+              chargedAmount.currency,
+              "right"
+            )}
           />
           {conversionRate && fee && amount.currency !== fee.currency && (
             <RowDetailInfo
