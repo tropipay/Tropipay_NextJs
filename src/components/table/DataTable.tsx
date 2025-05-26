@@ -4,6 +4,7 @@ import Spinner from "@/components/Spinner"
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   Table,
@@ -33,9 +34,7 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
   SortableContext,
-  useSortable,
 } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -44,19 +43,18 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Header,
   SortingState,
   Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
-import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
+import DraggableTableHeader from "./DraggableTableHeader"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -78,6 +76,13 @@ interface DataTableProps<TData, TValue> {
   toolbarActions?: React.ReactNode
 }
 
+/**
+ * DataTable Component
+ *
+ * This component renders a dynamic table with sorting, filtering, pagination,
+ * and column ordering functionalities. It uses TanStack Table for data handling
+ * and dnd-kit for drag and drop interactions.
+ */
 export default function DataTable<TData, TValue>({
   tableId,
   data,
@@ -102,11 +107,17 @@ export default function DataTable<TData, TValue>({
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
+  const [contextMenu, setContextMenu] = useState<{
+    x: number
+    y: number
+    visible: boolean
+  }>({ x: 0, y: 0, visible: false })
   const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
   const [tableKey, setTableKey] = useState(0)
+  const postHog = usePostHog()
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -186,7 +197,7 @@ export default function DataTable<TData, TValue>({
     defaultColumnOrder ||
       getUserSettings(userId, null, tableId, "columnOrder") ||
       // @ts-ignore
-      toArrayId(columnsConfig, "hidden", (hiddenValue) => !hiddenValue, "order")
+      toArrayId(columnsConfig, "order", (value) => value >= 0, "order")
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -222,6 +233,12 @@ export default function DataTable<TData, TValue>({
     }
   }
 
+  const handleRowClick = (row: TData) => {
+    setSelectedRow(row)
+    setIsSheetOpen(true)
+    callPostHog(postHog, "data_table:show_details", { table_id: tableId })
+  }
+
   const onColumnVisibilityChange = useCallback(
     (updater: Updater<typeof columnVisibility>) => {
       const visibilityState =
@@ -243,45 +260,6 @@ export default function DataTable<TData, TValue>({
     },
     [columnVisibility, userId, pathname] // Added pathname to dependencies
   )
-
-  const DraggableTableHeader = ({
-    header,
-  }: {
-    header: Header<TData, unknown>
-  }) => {
-    const { attributes, isDragging, listeners, transform, setNodeRef } =
-      useSortable({
-        id: header.column.id,
-      })
-
-    const style: CSSProperties = {
-      transform: CSS.Translate.toString(transform),
-      transition: "width transform 0.2s ease-in-out",
-      ...(isDragging && { opacity: 0.8, zIndex: 1 }),
-    }
-
-    return (
-      <TableHead
-        key={header.id}
-        ref={setNodeRef}
-        className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
-        style={style}
-        data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
-      >
-        <div className="flex gap-1 items-center">
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-          <GripVerticalIcon
-            size={16}
-            className="opacity-0 hover:opacity-100"
-            {...attributes}
-            {...listeners}
-          />
-        </div>
-      </TableHead>
-    )
-  }
 
   const onPaginationChange = useCallback(
     (updater: Updater<typeof pagination>) => {
@@ -352,13 +330,7 @@ export default function DataTable<TData, TValue>({
   )
 
   const table = useReactTable(tableConfig)
-  const postHog = usePostHog()
 
-  const handleRowClick = (row: TData) => {
-    setSelectedRow(row)
-    setIsSheetOpen(true)
-    callPostHog(postHog, "data_table:show_details", { table_id: tableId })
-  }
   useEffect(() => {
     setTableKey(Math.random())
     setIsLoading(false)
@@ -439,8 +411,15 @@ export default function DataTable<TData, TValue>({
                         data-state={row.getIsSelected() && "selected"}
                         className="cursor-pointer hover:bg-gray-100"
                         data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
-                        // @ts-ignore
-                        onRowClick={handleRowClick}
+                        onContextMenu={(e) => {
+                          e.preventDefault()
+                          setSelectedRow(row.original)
+                          setContextMenu({
+                            x: e.clientX,
+                            y: e.clientY,
+                            visible: true,
+                          })
+                        }}
                       >
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
@@ -471,17 +450,35 @@ export default function DataTable<TData, TValue>({
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetHeader>
             <SheetTitle />
+            <SheetDescription />
           </SheetHeader>
-          <SheetContent className="min-w-[500px]">
-            <div className="pt-2">
-              <div className="mt-6 h-screen overflow-y-auto">
-                {selectedRow && RowClickChildren && (
-                  <RowClickChildren row={selectedRow} />
-                )}
-              </div>
+          <SheetContent className="sm:w-5/6">
+            <div className="pt-4 h-full">
+              {selectedRow && RowClickChildren && (
+                <RowClickChildren row={selectedRow} />
+              )}
             </div>
           </SheetContent>
         </Sheet>
+        {contextMenu.visible && (
+          <div
+            className="absolute z-10 bg-white rounded shadow-md"
+            style={{
+              top: contextMenu.y,
+              left: contextMenu.x,
+            }}
+            onClick={() => setContextMenu({ ...contextMenu, visible: false })}
+          >
+            <button
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              onClick={() => {
+                selectedRow && handleRowClick(selectedRow)
+              }}
+            >
+              <FormattedMessage id="show_details" />
+            </button>
+          </div>
+        )}
       </>
     )
 }

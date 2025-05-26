@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: MovementDetails = props.data.data.movements.items[0]
@@ -84,12 +85,12 @@ export default function MovementDetail(props: any): JSX.Element {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {amount.value > 0 ? "+" : ""}
-            {formatAmount(amount.value, amount.currency, "right")}
+    <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
+            {netAmount.value > 0 ? "+" : ""}
+            {formatAmount(netAmount.value, netAmount.currency, "right")}
           </div>
           <FacetedBadge
             value={state}
@@ -97,7 +98,7 @@ export default function MovementDetail(props: any): JSX.Element {
             optionListGroups={movementStateGroups}
           />
         </div>
-        <div className="flex justify-between items-center mb-4 pb-1">
+        <div className="flex justify-between items-center">
           <p className="text-xs text-gray-500"> {bankOrderCode}</p>
           {completedAt && (
             <p className="text-xs text-gray-500">
@@ -105,6 +106,8 @@ export default function MovementDetail(props: any): JSX.Element {
             </p>
           )}
         </div>
+      </div>
+      <div className="flex-1 overflow-y-auto min-h-0">
         <RowDetailSection title={<FormattedMessage id="movement_data" />}>
           <RowDetailInfo
             label={<FormattedMessage id="type" />}
@@ -247,7 +250,7 @@ export default function MovementDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4 w-full p-4 px-8 bg-white absolute bottom-0 left-0">
+      <div className="flex gap-4">
         <Button
           variant="outline"
           className={`${refundable ? "w-1/2" : "w-full"}`}

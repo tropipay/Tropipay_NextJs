@@ -19,6 +19,7 @@ const ChargeDetailContainer = ({ row }: Props) => {
         queryConfig,
         searchParams: { id: row.id },
       }}
+      className="h-full"
     >
       <ChargeDetail />
     </DataComponent>

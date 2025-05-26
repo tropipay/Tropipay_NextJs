@@ -21,6 +21,7 @@ interface DataComponentProps {
   showLoading?: boolean
   showError?: boolean
   loader?: ReactNode
+  className?: string
 }
 
 export default function DataComponent({
@@ -31,6 +32,7 @@ export default function DataComponent({
   showLoading = false,
   showError = true,
   loader = <Loader2 className="animate-spin text-[#041266]" size={56} />,
+  className = "",
 }: DataComponentProps) {
   const urlParams = searchParams
   const {
@@ -48,7 +50,11 @@ export default function DataComponent({
   const data = mockData ?? fetchData
 
   return (
-    <div className={`w-full ${loading && "opacity-70 pointer-events-none"}`}>
+    <div
+      className={`w-full ${className} ${
+        loading && "opacity-70 pointer-events-none"
+      }`}
+    >
       {showLoading && loading && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9998]">
           {loader}

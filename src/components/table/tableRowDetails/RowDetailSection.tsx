@@ -32,7 +32,7 @@ export function RowDetailSection({
 
   return (
     <Card className="w-full mb-3">
-      <CardContent className="p-4 space-y-4">
+      <CardContent className="p-2 md:p-4">
         <div>
           <h3 className="font-roboto font-semibold text-sm text-gray-400 mb-3">
             {title}

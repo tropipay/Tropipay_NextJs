@@ -62,7 +62,7 @@ type ColumnOptions<TData> = {
 export function setColumns<TData>(
   columnsConfig: Record<string, ColumnOptions<TData>>
 ): ColumnDef<TData>[] {
-  return Object.entries(columnsConfig).map(([id, options]) => {
+  return Object.entries(columnsConfig).map(([id, options], index) => {
     const {
       type = "simpleText",
       field = id,
@@ -83,7 +83,7 @@ export function setColumns<TData>(
       hidden = false,
       size,
       enableResizing = false,
-      order,
+      order = Object.keys(columnsConfig).length + index,
       meta,
       hideColumn = false,
       render,
