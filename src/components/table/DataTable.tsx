@@ -187,6 +187,10 @@ export default function DataTable<TData, TValue>({
         }
       })
 
+      if (params.has("page")) {
+        params.delete("page")
+      }
+
       // Updates the URL without affecting other parameters such as pagination or order
       setIsLoading(true)
       router.push(`${pathname}?${params.toString()}`, { scroll: false })

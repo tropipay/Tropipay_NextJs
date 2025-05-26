@@ -146,10 +146,6 @@ export function FilterManager<TData, TValue>({
         newSearchParams.delete(column.id)
       }
     })
-    if (newSearchParams.has("page")) {
-      newSearchParams.delete("page")
-      newSearchParams.delete("size")
-    }
 
     router.push(`${pathname}?${newSearchParams.toString()}`)
     const newFilters = columns.filter(({ id }) => selectedFilters.has(id))
