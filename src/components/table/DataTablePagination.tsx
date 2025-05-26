@@ -25,7 +25,11 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   const pageSizeOptions = [10, 20, 30, 40, 50, 100]
   return (
-    <div className="flex items-center justify-between px-2">
+    <div
+      className={`flex items-center justify-between px-2 ${
+        table.getPageCount() < 0 ? "hidden" : ""
+      }`}
+    >
       <div className="flex-1 text-sm text-muted-foreground"></div>
       <div className="flex items-center gap-2">
         <div className="flex gap-1 items-center justify-center text-sm font-medium">

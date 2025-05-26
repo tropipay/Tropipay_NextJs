@@ -108,9 +108,6 @@ export function DataTableFilterFaceted<TData, TValue>({
       })
       setLocalSelectedValues(new Set())
       column?.setFilterValue(undefined)
-
-      const newSearchParams = new URLSearchParams(searchParams.toString())
-      newSearchParams.delete(column?.id || "")
     } else onClear?.(column.id)
   }
 
