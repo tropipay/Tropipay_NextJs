@@ -50,7 +50,7 @@ import {
 } from "@tanstack/react-table"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -112,6 +112,7 @@ export default function DataTable<TData, TValue>({
     y: number
     visible: boolean
   }>({ x: 0, y: 0, visible: false })
+  const contextMenuRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
@@ -345,6 +346,23 @@ export default function DataTable<TData, TValue>({
     [searchParams]
   )
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        contextMenuRef.current &&
+        !(contextMenuRef.current as any).contains(event.target)
+      ) {
+        setContextMenu({ ...contextMenu, visible: false })
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [contextMenu])
+
   if (userId)
     return (
       <>
@@ -420,9 +438,17 @@ export default function DataTable<TData, TValue>({
                             visible: true,
                           })
                         }}
+                        onClick={(e) => {
+                          if (window.getSelection()?.toString() === "") {
+                            handleRowClick(row.original)
+                          }
+                        }}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
+                          <TableCell
+                            key={cell.id}
+                            style={{ userSelect: "text" }}
+                          >
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()
@@ -434,6 +460,7 @@ export default function DataTable<TData, TValue>({
                   ) : (
                     <TableRow>
                       <TableCell
+                        style={{ userSelect: "text" }}
                         colSpan={columnsConfig.length}
                         className="h-24 text-center"
                       >
@@ -452,7 +479,7 @@ export default function DataTable<TData, TValue>({
             <SheetTitle />
             <SheetDescription />
           </SheetHeader>
-          <SheetContent className="sm:w-5/6">
+          <SheetContent className="sm:w-5/6 min-w-[500px]">
             <div className="pt-4 h-full">
               {selectedRow && RowClickChildren && (
                 <RowClickChildren row={selectedRow} />
@@ -462,17 +489,18 @@ export default function DataTable<TData, TValue>({
         </Sheet>
         {contextMenu.visible && (
           <div
+            ref={contextMenuRef}
             className="absolute z-10 bg-white rounded shadow-md"
             style={{
               top: contextMenu.y,
               left: contextMenu.x,
             }}
-            onClick={() => setContextMenu({ ...contextMenu, visible: false })}
           >
             <button
               className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
               onClick={() => {
                 selectedRow && handleRowClick(selectedRow)
+                setContextMenu({ ...contextMenu, visible: false })
               }}
             >
               <FormattedMessage id="show_details" />
