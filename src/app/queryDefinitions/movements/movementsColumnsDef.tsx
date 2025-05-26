@@ -4,6 +4,7 @@ import {
   movementStates,
   movementTypes,
 } from "@/app/filterDefinitions/movements"
+import { formatAmount } from "@/utils/data/utils"
 
 export const movementsColumnsDef: any = {
   /* select: {
@@ -29,15 +30,20 @@ export const movementsColumnsDef: any = {
   netAmount: {
     hidden: true,
     field: `movementDetail { netAmount { value currency }}`,
-    render: (row: any) => (
-      <span className="capitalize">
-        <span className="font-bold">
-          {row.movementDetail.netAmount.value > 0 ? "+" : ""}
-          {row.movementDetail.netAmount.value}
-        </span>{" "}
-        {row.movementDetail.netAmount.currency}
-      </span>
-    ),
+    render: (row: any) => {
+      console.log("row:", row)
+      return (
+        <div className="flex items-center gap-1">
+          <span className="font-bold">
+            {row.movementDetail.netAmount.value > 0 ? "+" : ""}
+            {formatAmount(row.movementDetail.netAmount.value)}
+          </span>
+          <span className="text-grayFont">
+            {row.movementDetail.netAmount.currency}
+          </span>
+        </div>
+      )
+    },
   },
   state: {
     type: "facetedBadge",
