@@ -24,6 +24,7 @@ export type Charge = {
   clientIp?: string
   bankOrderCode: string
   refundable: boolean
+  movementId: string | null
 }
 
 export type GetChargesResponse = {
