@@ -21,22 +21,12 @@ export const movementsColumnsDef: any = {
     order: 0,
   },
   netAmount: {
+    type: "amount",
     title: "amount",
     enableHiding: false,
     showFilter: true,
     order: 1,
     field: `netAmount { value currency }`,
-    render: (row: any) => {
-      return (
-        <div className="flex items-center gap-1">
-          <span className="font-bold">
-            {row.netAmount.value > 0 ? "+" : ""}
-            {formatAmount(row.netAmount.value)}
-          </span>
-          <span className="text-grayFont">{row.netAmount.currency}</span>
-        </div>
-      )
-    },
   },
   amountCharged: {
     type: "amount",
