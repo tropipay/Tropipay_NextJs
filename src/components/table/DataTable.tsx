@@ -494,14 +494,27 @@ export default function DataTable<TData, TValue>({
         {contextMenu.visible && (
           <div
             ref={contextMenuRef}
-            className="absolute z-10 bg-white rounded shadow-md"
+            className="absolute z-10 bg-white rounded shadow-md flex flex-col items-stretch w-[200px]"
             style={{
               top: contextMenu.y,
               left: contextMenu.x,
             }}
           >
+            {window.getSelection()?.toString() && (
+              <button
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-start"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    window.getSelection()!.toString()
+                  )
+                  setContextMenu({ ...contextMenu, visible: false })
+                }}
+              >
+                <FormattedMessage id="copy" />
+              </button>
+            )}
             <button
-              className="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-start"
               onClick={() => {
                 selectedRow && handleRowClick(selectedRow)
                 setContextMenu({ ...contextMenu, visible: false })
