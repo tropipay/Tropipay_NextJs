@@ -16,6 +16,9 @@ export const GET = async () => {
       user: {
         id: session.user.id,
         token: session.user.token,
+        logo: session.user.logo,
+        name: session.user.name,
+        email: session.user.email,
       },
       expires: session.expires,
     }

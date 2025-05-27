@@ -4,7 +4,6 @@ import {
   movementStates,
   movementTypes,
 } from "@/app/filterDefinitions/movements"
-import { formatAmount } from "@/utils/data/utils"
 
 export const movementsColumnsDef: any = {
   /* select: {
@@ -24,6 +23,7 @@ export const movementsColumnsDef: any = {
     type: "amount",
     title: "amount",
     enableHiding: false,
+    filter: false,
     showFilter: true,
     order: 1,
     field: `netAmount { value currency }`,
@@ -31,6 +31,7 @@ export const movementsColumnsDef: any = {
   amountCharged: {
     type: "amount",
     hidden: true,
+    enableSorting: false,
     field: `amountCharged { value currency }`,
   },
   state: {
@@ -80,10 +81,12 @@ export const movementsColumnsDef: any = {
   },
   fee: {
     type: "amount",
+    filter: false,
     hidden: true,
     field: `fee { value currency }`,
   },
   conversionRate: {
+    filter: false,
     hidden: true,
   },
   paymentMethod: {
