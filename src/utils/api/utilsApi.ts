@@ -4,7 +4,7 @@ import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import axios from "axios"
-import { format, parse } from "date-fns"
+import { parse, setHours, setMinutes, setSeconds } from "date-fns"
 import getConfig from "next/config"
 import { getUserSettings } from "../user/utilsUser"
 
@@ -138,15 +138,30 @@ export function buildGraphQLVariables(
         case "date":
           const [dateFrom, dateTo] = filterValue?.split(",") ?? []
           if (dateFrom) {
-            const dateFromParsed = parse(dateFrom, "dd/MM/yyyy", new Date())
-            const dateFromISO = format(dateFromParsed, "yyyy-MM-dd")
-            variables.filter[`${column.id}From`] = dateFromISO
+            let dateFromParsed = parse(
+              dateFrom,
+              "dd/MM/yyyy",
+              new Date().getUTCDate()
+            )
+            dateFromParsed = setSeconds(
+              setMinutes(setHours(dateFromParsed, 0), 0),
+              0
+            )
+
+            variables.filter[`${column.id}From`] = dateFromParsed.toISOString()
           }
 
           if (dateTo) {
-            const dateToParsed = parse(dateTo, "dd/MM/yyyy", new Date())
-            const dateToISO = format(dateToParsed, "yyyy-MM-dd")
-            variables.filter[`${column.id}To`] = dateToISO
+            let dateToParsed = parse(
+              dateTo,
+              "dd/MM/yyyy",
+              new Date().getUTCDate()
+            )
+            dateToParsed = setSeconds(
+              setMinutes(setHours(dateToParsed, 23), 59),
+              59
+            )
+            variables.filter[`${column.id}To`] = dateToParsed.toISOString()
           }
           break
 
