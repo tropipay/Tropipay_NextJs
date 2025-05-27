@@ -4,7 +4,7 @@ import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import axios from "axios"
-import { parse, setHours, setMinutes, setSeconds } from "date-fns"
+import { parse } from "date-fns"
 import getConfig from "next/config"
 import { getUserSettings } from "../user/utilsUser"
 
@@ -17,7 +17,7 @@ export async function makeApiRequest({
   queryConfig,
   variables,
   token,
-  debug = false,
+  debug = true,
 }: FetchOptions) {
   const { url, method, body } = queryConfig
   const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
@@ -138,28 +138,31 @@ export function buildGraphQLVariables(
         case "date":
           const [dateFrom, dateTo] = filterValue?.split(",") ?? []
           if (dateFrom) {
-            let dateFromParsed = parse(
-              dateFrom,
-              "dd/MM/yyyy",
-              new Date().getUTCDate()
+            const dateFromParsed = new Date(
+              Date.UTC(
+                new Date(
+                  parse(dateFrom, "dd/MM/yyyy", new Date())
+                ).getFullYear(),
+                new Date(parse(dateFrom, "dd/MM/yyyy", new Date())).getMonth(),
+                new Date(parse(dateFrom, "dd/MM/yyyy", new Date())).getDate(),
+                0,
+                0,
+                0
+              )
             )
-            dateFromParsed = setSeconds(
-              setMinutes(setHours(dateFromParsed, 0), 0),
-              0
-            )
-
             variables.filter[`${column.id}From`] = dateFromParsed.toISOString()
           }
 
           if (dateTo) {
-            let dateToParsed = parse(
-              dateTo,
-              "dd/MM/yyyy",
-              new Date().getUTCDate()
-            )
-            dateToParsed = setSeconds(
-              setMinutes(setHours(dateToParsed, 23), 59),
-              59
+            const dateToParsed = new Date(
+              Date.UTC(
+                new Date(parse(dateTo, "dd/MM/yyyy", new Date())).getFullYear(),
+                new Date(parse(dateTo, "dd/MM/yyyy", new Date())).getMonth(),
+                new Date(parse(dateTo, "dd/MM/yyyy", new Date())).getDate(),
+                23,
+                59,
+                59
+              )
             )
             variables.filter[`${column.id}To`] = dateToParsed.toISOString()
           }
