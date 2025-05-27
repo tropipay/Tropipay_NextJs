@@ -72,7 +72,7 @@ export const movementTypes = [
   { value: "TRANSFER", icon: ArrowUpRight },
   { value: "CHARGE", icon: Tag },
   { value: "PAYMENT", icon: Wallet },
-  { value: "OTHER", icon: CircleHelp },
+  // { value: "OTHER", icon: CircleHelp },
 ].map((option) => ({ ...option, label: `mt_${option.value}` }))
 
 export const movementsPaymentMethods = [

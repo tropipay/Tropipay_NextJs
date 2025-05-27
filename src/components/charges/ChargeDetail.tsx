@@ -41,6 +41,7 @@ export default function ChargeDetail(props: any): JSX.Element {
     cardCountry,
     clientIp,
     refundable,
+    movementId,
   } = row
 
   const onDownloadInvoiceFile = async () => {
@@ -48,7 +49,7 @@ export default function ChargeDetail(props: any): JSX.Element {
       const response = await axios.post(
         `${env.API_URL}/api/v3/movements/transferinvoice`,
         JSON.stringify({
-          bookingId: row.id,
+          bookingId: movementId,
           label: row.state,
         }),
         {
@@ -182,13 +183,15 @@ export default function ChargeDetail(props: any): JSX.Element {
         </RowDetailSection>
       </div>
       <div className="flex gap-4">
-        <Button
-          variant="outline"
-          className={`${refundable ? "w-1/2" : "w-full"}`}
-          onClick={onDownloadInvoiceFile}
-        >
-          <FormattedMessage id="download" />
-        </Button>
+        {movementId && (
+          <Button
+            variant="outline"
+            className={`${refundable ? "w-1/2" : "w-full"}`}
+            onClick={onDownloadInvoiceFile}
+          >
+            <FormattedMessage id="download" />
+          </Button>
+        )}
         {refundable && (
           <Button
             variant="default"
@@ -203,7 +206,7 @@ export default function ChargeDetail(props: any): JSX.Element {
           onOpenChange={setOpenRefundDialog}
           amountValue={amount.value}
           amountCurrency={amount.currency}
-          orderCode={bankOrderCode}
+          orderCode={movementId}
         />
       </div>
     </div>
