@@ -1,7 +1,5 @@
 "use client"
 
-import { ChevronsUpDown, LogOut } from "lucide-react"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +12,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui"
-
-import { FormattedMessage } from "react-intl"
 import { env } from "@/config/env"
+import { ChevronsUpDown, LogOut } from "lucide-react"
+import { FormattedMessage } from "react-intl"
 import { NavUserAccount } from "./NavUserAccount"
 
 export function NavUser(props: any) {

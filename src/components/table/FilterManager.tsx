@@ -80,7 +80,9 @@ export function FilterManager<TData, TValue>({
     : ""
   const defaultSelectedFilters = initialSelectedFilters
     ? initialSelectedFilters
-    : columns.filter(({ showFilter }: any) => showFilter).map(({ id }) => id)
+    : columns
+        .filter(({ filter, showFilter }: any) => filter && showFilter)
+        .map(({ id }) => id)
   const [selectedFilters, setSelectedFilters] = React.useState<Set<string>>(
     new Set([...defaultSelectedFilters, ...appliedFiltersFromSearchParams])
   )
