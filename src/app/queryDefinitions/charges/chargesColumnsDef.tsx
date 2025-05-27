@@ -47,18 +47,23 @@ export const chargesColumnsDef: any = {
     filterSearchType: "EXACT_MATCH",
   },
   concept: {
+    filter: false,
     hidden: true,
   },
   bankOrderCode: {
+    filter: false,
     hidden: true,
   },
   summary: {
+    filter: false,
     hidden: true,
   },
   clientIp: {
+    filter: false,
     hidden: true,
   },
   cardExpirationDate: {
+    filter: false,
     hidden: true,
   },
   cardBin: {
@@ -112,23 +117,29 @@ export const chargesColumnsDef: any = {
     filterSearchType: "EXACT_MATCH",
   },
   country: {
+    filter: false,
     hidden: true,
   },
   address: {
+    filter: false,
     hidden: true,
   },
   currency: {
+    filter: false,
     type: "faceted",
     hideColumn: true,
     hidden: true,
     optionList: currencyTypes,
   },
   completedAt: {
+    filter: false,
     type: "date",
     size: 120,
     hidden: true,
+    enableSorting: true,
   },
   search: {
+    filter: false,
     hidden: true,
     meta: { hidden: true },
   },
