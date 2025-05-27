@@ -1,5 +1,7 @@
 "use client"
 
+import { useRouter } from "next/navigation"
+import { ChevronsUpDown, LogOut } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,15 +14,18 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui"
-import { env } from "@/config/env"
-import { ChevronsUpDown, LogOut } from "lucide-react"
 import { FormattedMessage } from "react-intl"
+import Cookies from "js-cookie"
 import { NavUserAccount } from "./NavUserAccount"
 
 export function NavUser(props: any) {
+  const router = useRouter()
   const { isMobile } = useSidebar()
   const user = props.user
-  const onExit = () => window.location.assign(`${env.TROPIPAY_HOME}/login`)
+  const onExit = () => {
+    Cookies.remove("session")
+    router.push("/")
+  }
 
   return (
     <SidebarMenu>

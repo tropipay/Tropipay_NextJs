@@ -77,12 +77,14 @@ export const chargesColumnsDef: any = {
     render: (row: any) => {
       return (
         <div className="flex items-center">
-          <ImageIcon
-            {...{
-              image: `/images/cardTypes/${row.cardType}.svg`,
-              fallbackImage: `/images/cardTypes/CARD.svg`,
-            }}
-          />
+          {row.cardType && (
+            <ImageIcon
+              {...{
+                image: `/images/cardTypes/${row.cardType}.svg`,
+                fallbackImage: `/images/cardTypes/CARD.svg`,
+              }}
+            />
+          )}
           <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
             {row.cardType}
           </span>
