@@ -3,6 +3,11 @@ import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { getUserProfile } from "./app/actions/sessionActions"
 
+export const clientTypes = {
+  PHYSICAL: 1,
+  LEGAL: 2,
+}
+
 export default {
   session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
@@ -20,6 +25,9 @@ export default {
 
           if (!profileData) {
             throw new Error("Profile data is empty")
+          }
+          if (profileData.clientTypeId === clientTypes.PHYSICAL) {
+            throw new Error("Authorization failed")
           }
 
           ProfileStore.setData("profile", profileData)
