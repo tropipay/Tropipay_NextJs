@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { ChevronsUpDown, LogOut } from "lucide-react"
+import { signOut } from "@/auth"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +23,9 @@ export function NavUser(props: any) {
   const router = useRouter()
   const { isMobile } = useSidebar()
   const user = props.user
-  const onExit = () => {
-    Cookies.remove("session")
+  const onExit = async () => {
+    await signOut()
+    Cookies.set("session", "")
     router.push("/")
   }
 
