@@ -183,19 +183,10 @@ export default function ChargeDetail(props: any): JSX.Element {
         </RowDetailSection>
       </div>
       <div className="flex gap-4">
-        {movementId && (
-          <Button
-            variant="outline"
-            className={`${refundable ? "w-1/2" : "w-full"}`}
-            onClick={onDownloadInvoiceFile}
-          >
-            <FormattedMessage id="download" />
-          </Button>
-        )}
         {refundable && (
           <Button
             variant="default"
-            className="w-1/2"
+            className="w-full"
             onClick={() => setOpenRefundDialog(true)}
           >
             <FormattedMessage id="refund" />
