@@ -530,3 +530,16 @@ export const errorGenerator = ({
   }
   return false
 }
+
+/**
+ * Gets the base domain.
+ * @returns string
+ */
+export const getBaseDomain = () => {
+  const hostname = window.location.hostname
+  const parts = hostname.split(".")
+  if (parts.length <= 1) {
+    return hostname
+  }
+  return parts.slice(-2).join(".")
+}

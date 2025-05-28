@@ -1,11 +1,12 @@
 "use client"
 
-import { login } from "@/app/actions/sessionActions"
+import { login, logout } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
 import { env } from "@/config/env"
-import CookiesManager from "@/utils/cookies/cookiesManager"
+import { getBaseDomain } from "@/utils/data/utils"
 import { getToken } from "@/utils/user/utilsUser"
+import Cookies from "js-cookie"
 import { Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -48,8 +49,9 @@ export default function Page() {
     }
   }
 
-  const onOk = () => {
-    CookiesManager.getInstance().delete("session")
+  const onOk = async () => {
+    await logout()
+    Cookies.remove("session", { path: "/", domain: getBaseDomain() })
     window.location.assign(
       `${env.TROPIPAY_HOME}/login?redirect=${env.SITE_URL}`
     )
