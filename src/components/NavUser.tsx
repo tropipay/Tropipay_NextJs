@@ -1,7 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-import { ChevronsUpDown, LogOut } from "lucide-react"
 import { logout } from "@/app/actions/sessionActions"
 import {
   DropdownMenu,
@@ -15,8 +13,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui"
-import { FormattedMessage } from "react-intl"
+import { env } from "@/config/env"
 import Cookies from "js-cookie"
+import { ChevronsUpDown, LogOut } from "lucide-react"
+import { FormattedMessage } from "react-intl"
 import { NavUserAccount } from "./NavUserAccount"
 
 export const getBaseDomain = () => {
@@ -26,13 +26,12 @@ export const getBaseDomain = () => {
 }
 
 export function NavUser(props: any) {
-  const router = useRouter()
   const { isMobile } = useSidebar()
   const user = props.user
   const onExit = async () => {
     await logout()
     Cookies.remove("session", { path: "/", domain: getBaseDomain() })
-    router.push("/")
+    window.location.assign(`${env.TROPIPAY_HOME}/login`)
   }
 
   return (

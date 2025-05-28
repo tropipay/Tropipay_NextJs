@@ -200,6 +200,8 @@
   "sender_data": "Datos del remitente",
   "session_expired": "Sesión expirada",
   "session_expired_description": "Estimado usuario:<br/>Por tu seguridad, tu sesión se ha cerrado automáticamente debido a un período prolongado de inactividad.<br/>Esto garantiza la protección de tus datos y evita accesos no autorizados.<br/><br/>Para continuar, por favor vuelve a iniciar sesión con tus credenciales.",
+  "session_no_authorized": "Usuario no autorizado",
+  "session_no_authorized_description": "Estimado usuario:<br/>Lamentamos informarte que actualmente no es posible acceder al sistema, ya que está diseñado exclusivamente para usuarios empresariales.<br/><br/>Para continuar, por favor inicia una sesión con un usuario empresarial.",
   "session_no_create": "Sesión no iniciada",
   "session_no_create_description": "Estimado usuario:<br/>Para acceder a la aplicación es necesario que inicies sesión en tu cuenta. Si aún no estas registrado puedes crearte una cuenta en minutos.<br/><br/>Para continuar, por favor inicia una sesión con tus credenciales.",
   "session_start": "Iniciar sesión",

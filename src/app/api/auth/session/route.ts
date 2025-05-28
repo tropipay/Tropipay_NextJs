@@ -12,14 +12,9 @@ export const GET = async () => {
     }
 
     // Filter sensitive user data
+    const { id, token, logo, name, email } = session.user
     const safeSession: Session = {
-      user: {
-        id: session.user.id,
-        token: session.user.token,
-        logo: session.user.logo,
-        name: session.user.name,
-        email: session.user.email,
-      },
+      user: { id, token, logo, name, email },
       expires: session.expires,
     }
 

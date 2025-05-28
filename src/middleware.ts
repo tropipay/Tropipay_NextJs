@@ -1,8 +1,8 @@
+import { env } from "@/config/env"
 import { isTokenExpired } from "@/utils/data/utils"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { auth } from "./auth"
-import { env } from "@/config/env"
 
 // Specify protected and public routes
 const publicRoutes = ["/"]

@@ -4,6 +4,7 @@ import { login } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
 import { env } from "@/config/env"
+import CookiesManager from "@/utils/cookies/cookiesManager"
 import { getToken } from "@/utils/user/utilsUser"
 import { Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -29,22 +30,30 @@ export default function Page() {
     }
 
     setLoading(true)
-    try {
-      await login(token)
+    const result = await login(token)
+    setLoading(false)
+
+    if (result?.error) {
+      if (result?.error === "ERROR_USER_NOT_AUTHORIZED") {
+        setTitle(t("session_no_authorized"))
+        setErrors([t("session_no_authorized_description")])
+      } else {
+        setTitle(t("session_expired"))
+        setErrors([t("session_expired_description")])
+      }
+    } else {
       const redirectTo = searchParams.get("redirect") ?? "/dashboard/movements"
       console.log(`Login successfully. Redirect to ${redirectTo} ...`)
       router.push(redirectTo)
-    } catch (e) {
-      setTitle(t("session_expired"))
-      setErrors([t("session_expired_description")])
     }
-    setLoading(false)
   }
 
-  const onOk = () =>
+  const onOk = () => {
+    CookiesManager.getInstance().delete("session")
     window.location.assign(
       `${env.TROPIPAY_HOME}/login?redirect=${env.SITE_URL}`
     )
+  }
 
   useEffect(() => {
     onLogin()
