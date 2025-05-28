@@ -116,7 +116,7 @@ export default function ChargeDetail(props: any): JSX.Element {
             />
           )}
           <RowDetailInfo
-            label={<FormattedMessage id="reference" />}
+            label={<FormattedMessage id="movementCode" />}
             value={reference}
           />
           <RowDetailInfo

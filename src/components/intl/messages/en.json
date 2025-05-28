@@ -124,6 +124,7 @@
   "max_attempts_title": "[TRANSLATE] Alcanzaste el máximo de intentos",
   "maximum_opt": "Maximum (optional)",
   "minimum_opt": "Minimum (optional)",
+  "movementCode": "Movement code",
   "movementDirection": "Movement Direction",
   "movement_data": "Movement data",
   "movements": "Movements",
