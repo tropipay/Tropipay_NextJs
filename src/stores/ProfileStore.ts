@@ -61,7 +61,7 @@ const ProfileStore = createStore(
               isRequestInProgress = false
               unsubscribe() // Remover el listener después de recibir la respuesta
             }
-          })
+          }, "ProfileStore-FetchProfile")
         }
       },
 
