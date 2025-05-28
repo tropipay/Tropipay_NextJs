@@ -90,7 +90,7 @@ export const chargesColumnsDef: any = {
               }}
             />
           )}
-          <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
+          <span className="ml-2 whitespace-nowrap overflow-hidden text-ellipsis">
             {row.cardType}
           </span>
         </div>

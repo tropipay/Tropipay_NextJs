@@ -118,21 +118,14 @@ export function createStore<T extends { name: string } & Record<string, any>>(
 
     // Return unsubscribe function
     return () => {
-      console.log(
-        `[DEBUG] Ejecutando unsubscribe para ${combinedStore.name} - key: ${key}`
-      )
       const index = listeners.findIndex((l) => l.listenerId === listenerId)
       if (index !== -1) {
         listeners.splice(index, 1)
-        console.log(
-          `Listener removido para store ${combinedStore.name} y key ${key}`
-        )
       }
     }
   }
 
   const trigger = <TPayload>(eventType: string, payload: TPayload): void => {
-    console.log("listeners:", listeners.slice())
     listeners.slice().forEach(({ callback }) => {
       try {
         callback({ type: eventType, payload })
