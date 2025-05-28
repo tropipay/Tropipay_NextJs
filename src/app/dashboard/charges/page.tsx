@@ -15,6 +15,7 @@ export default function Page() {
 
   return (
     <DataComponent
+      showLoading
       {...{
         queryConfig,
         searchParams: searchParamsObj,

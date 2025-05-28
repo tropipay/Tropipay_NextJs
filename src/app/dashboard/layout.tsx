@@ -1,5 +1,7 @@
 "use client"
 
+import Spinner from "@/components/Spinner"
+
 import { AppSidebar } from "@/components/AppSidebar"
 import CookieMonitor from "@/components/CookieMonitor"
 import DynamicBreadcrumb from "@/components/privateLayout/DynamicBreadcrumb"
@@ -19,7 +21,7 @@ export default function Page({ children }: ChildrenProps) {
   const [withProfile, setWithProfile] = useState(false)
   const listener = (obj) => {
     const actions = {
-      USER_PROFILE_OK: (obj) => {
+      USER_PROFILE_OK: () => {
         setWithProfile(true)
       },
     }
@@ -27,10 +29,10 @@ export default function Page({ children }: ChildrenProps) {
   }
 
   useEffect(() => {
-    const unsuscriber = ProfileStore.listen(listener)
+    const unSubscriber = ProfileStore.listen(listener)
     ProfileStore.FetchProfile()
     return () => {
-      unsuscriber()
+      unSubscriber()
     }
   }, [])
 
@@ -57,4 +59,6 @@ export default function Page({ children }: ChildrenProps) {
         </SidebarProvider>
       </SessionProvider>
     )
+
+  return <Spinner />
 }

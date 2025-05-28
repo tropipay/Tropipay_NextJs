@@ -34,7 +34,11 @@ const roboto = Roboto({
   display: "swap",
 })
 
-export default function RootLayout({ children }: ChildrenProps) {
+interface Props {
+  children: React.ReactNode
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
