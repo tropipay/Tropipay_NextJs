@@ -24,7 +24,7 @@ const ErrorHandler: React.FC<ErrorHandlerProps> = ({
   errors,
   onOk,
 }) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const formatErrors = (errors: ErrorHandlerProps["errors"]) => {
     return parse(

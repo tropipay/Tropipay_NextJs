@@ -3,11 +3,11 @@
 import { login, logout } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
+import Spinner from "@/components/Spinner"
 import { env } from "@/config/env"
 import { getBaseDomain } from "@/utils/data/utils"
 import { getToken } from "@/utils/user/utilsUser"
 import Cookies from "js-cookie"
-import { Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -63,12 +63,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 h-screen">
-        {loading && (
-          <Loader2 className="animate-spin text-[#041266]" size={56} />
-        )}
-      </div>
-
+      {loading && <Spinner />}
       <ErrorHandler
         {...{
           title,

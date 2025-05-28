@@ -12,6 +12,7 @@ export default function Page() {
 
   return (
     <DataComponent
+      showLoading
       {...{
         queryConfig,
         searchParams: Object.fromEntries(searchParams.entries()),
