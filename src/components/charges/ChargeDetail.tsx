@@ -69,10 +69,6 @@ export default function ChargeDetail(props: any): JSX.Element {
     } catch (e) {}
   }
 
-  const onDownload = () => {
-    console.log("Coming soon!")
-  }
-
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
       <div className="flex flex-col gap-2">

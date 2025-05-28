@@ -1,11 +1,13 @@
 "use client"
 
+import { useToast } from "@/hooks/useToast"
 import { Copy } from "lucide-react"
 import { useState } from "react"
 
 interface CopyToClipboardProps {
-  text: string
+  text: string | number | bigint | true
   message?: string
+  toast?: any
 }
 
 export default function CopyToClipboard({
@@ -14,25 +16,35 @@ export default function CopyToClipboard({
 }: CopyToClipboardProps) {
   const [copied, setCopied] = useState(false)
 
+  const { toast } = useToast()
+
   const copyText = async () => {
     try {
-      await navigator.clipboard.writeText(text)
+      await navigator.clipboard.writeText(text.toLocaleString())
       setCopied(true)
+      toast({
+        title: "Copiado",
+        description: message,
+        duration: 3000,
+      })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error("Error al copiar:", err)
+      toast({
+        title: "Error",
+        description: "No se pudo copiar el texto",
+        variant: "destructive",
+        duration: 3000,
+      })
     }
   }
 
   return (
-    <button
+    <Copy
       onClick={copyText}
-      aria-label="Copiar al portapapeles"
-      className="rounded hover:bg-gray-100 transition-colors"
-    >
-      <Copy
-        className={`w-4 h-4 ${copied ? "text-green-500" : "text-gray-500"}`}
-      />
-    </button>
+      className={`cursor-pointer w-3 h-3 ${
+        copied ? "text-green-500" : "text-gray-500"
+      }`}
+    />
   )
 }
