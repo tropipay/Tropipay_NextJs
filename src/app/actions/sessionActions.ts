@@ -14,10 +14,14 @@ import axios from "axios"
 export const login = async (token: string) => {
   await deleteAuthSessionCookies()
 
-  return await signIn("credentials", {
-    redirect: false,
-    token,
-  })
+  try {
+    return await signIn("credentials", {
+      redirect: false,
+      token,
+    })
+  } catch (error: any) {
+    return { error: error?.message || "Failed to sign in." }
+  }
 }
 
 export const getUserProfile = async (token) =>

@@ -200,6 +200,8 @@
   "sender_data": "Dados do remetente",
   "session_expired": "Sessão expirada",
   "session_expired_description": "Caro utilizador,<br/>Para sua segurança, a sua sessão foi automaticamente terminada devido a um longo período de inatividade. <br/>Isto garante a proteção dos seus dados e impede o acesso não autorizado. <br/><br/>Para continuar, inicie sessão novamente com as suas credenciais.",
+  "session_no_authorized": "Utilizador não autorizado",
+  "session_no_authorized_description": "Estimado utilizador:<br/>Lamentamos informar que de momento não é possível aceder ao sistema, que foi concebido exclusivamente para utilizadores empresariais. <br/><br/>Para continuar, por favor inicie uma sessão com um utilizador empresarial.",
   "session_no_create": "Sessão não iniciada",
   "session_no_create_description": "Caro utilizador,<br/>Para aceder à aplicação, necessita de iniciar sessão na sua conta. Se ainda não estiver registado, crie uma conta em poucos minutos. <br/><br/>Para continuar, inicie sessão com as suas credenciais.",
   "session_start": "Iniciar sessão",

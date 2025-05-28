@@ -1,7 +1,8 @@
 import ProfileStore from "@/stores/ProfileStore"
-import type { NextAuthConfig } from "next-auth"
+import { type NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { getUserProfile } from "./app/actions/sessionActions"
+import { SystemCredentialsSignin } from "./types/security/auth"
 
 export const clientTypes = {
   PHYSICAL: 1,
@@ -20,22 +21,20 @@ export default {
         let user: object | null = null
         try {
           const response = await getUserProfile(token)
-
           const profileData = response.data
 
           if (!profileData) {
-            throw new Error("Profile data is empty")
+            throw new SystemCredentialsSignin("ERROR_USER_DATA_EMPTY")
           }
+
           if (profileData.clientTypeId === clientTypes.PHYSICAL) {
-            throw new Error("Authorization failed")
+            throw new SystemCredentialsSignin("ERROR_USER_NOT_AUTHORIZED")
           }
 
           ProfileStore.setData("profile", profileData)
-
           user = { ...profileData, token }
-        } catch (error) {
-          console.error("Authorization failed:", error)
-          return null
+        } catch (error: any) {
+          throw error
         }
 
         return user
