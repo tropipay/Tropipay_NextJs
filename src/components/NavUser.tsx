@@ -14,16 +14,11 @@ import {
   useSidebar,
 } from "@/components/ui"
 import { env } from "@/config/env"
+import { getBaseDomain } from "@/utils/data/utils"
 import Cookies from "js-cookie"
 import { ChevronsUpDown, LogOut } from "lucide-react"
 import { FormattedMessage } from "react-intl"
 import { NavUserAccount } from "./NavUserAccount"
-
-export const getBaseDomain = () => {
-  const hostname = window.location.hostname
-  const parts = hostname.split(".")
-  return "." + parts.slice(-2).join(".")
-}
 
 export function NavUser(props: any) {
   const { isMobile } = useSidebar()
