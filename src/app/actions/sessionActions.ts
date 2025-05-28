@@ -1,6 +1,6 @@
 "use server"
 
-import { signIn } from "@/auth"
+import { signIn, signOut } from "@/auth"
 import { env } from "@/config/env"
 import { deleteAuthSessionCookies } from "@/utils/api/utilsServer"
 import { fetchHeaders } from "@/utils/data/utils"
@@ -28,3 +28,8 @@ export const getUserProfile = async (token) =>
     },
     validateStatus: (status) => status >= 200 && status < 300,
   })
+
+export const logout = async () => {
+  await deleteAuthSessionCookies()
+  await signOut({ redirect: false })
+}

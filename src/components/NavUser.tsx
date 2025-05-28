@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { ChevronsUpDown, LogOut } from "lucide-react"
-import { signOut } from "@/auth"
+import { logout } from "@/app/actions/sessionActions"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,13 +19,19 @@ import { FormattedMessage } from "react-intl"
 import Cookies from "js-cookie"
 import { NavUserAccount } from "./NavUserAccount"
 
+export const getBaseDomain = () => {
+  const hostname = window.location.hostname
+  const parts = hostname.split(".")
+  return "." + parts.slice(-2).join(".")
+}
+
 export function NavUser(props: any) {
   const router = useRouter()
   const { isMobile } = useSidebar()
   const user = props.user
   const onExit = async () => {
-    await signOut()
-    Cookies.set("session", "")
+    await logout()
+    Cookies.remove("session", { path: "/", domain: getBaseDomain() })
     router.push("/")
   }
 
