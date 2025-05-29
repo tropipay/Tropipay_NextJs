@@ -23,7 +23,6 @@ export default function ChargeDetail(props: any): JSX.Element {
   const token = session?.user.token
 
   const {
-    bankOrderCode,
     amount,
     state,
     createdAt,

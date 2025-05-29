@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
+import { TextToCopy } from "../TextToCopy"
 
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -125,7 +126,9 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-xs text-gray-500"> {bankOrderCode}</p>
+          <p className="text-xs text-gray-500">
+            <TextToCopy value={bankOrderCode} className="p-1" />
+          </p>
           {completedAt && (
             <p className="text-xs text-gray-500">
               {format(new Date(completedAt), "dd/MM/yy HH:mm")}
