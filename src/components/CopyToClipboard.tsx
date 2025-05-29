@@ -24,7 +24,8 @@ export default function CopyToClipboard({
     error: t("CopyToClipboardError"),
   }
 
-  const copyText = async () => {
+  const copyText = async (event: React.MouseEvent) => {
+    event.stopPropagation()
     try {
       await navigator.clipboard.writeText(text.toLocaleString())
       setCopied(true)
@@ -45,7 +46,7 @@ export default function CopyToClipboard({
 
   return (
     <Copy
-      onClick={copyText}
+      onClick={(e) => copyText(e)}
       className={`cursor-pointer w-3 h-3 ${
         copied ? "text-green-500" : "text-gray-500"
       }`}
