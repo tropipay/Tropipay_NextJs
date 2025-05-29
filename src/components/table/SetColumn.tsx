@@ -170,9 +170,9 @@ export function setColumns<TData>(
                   dateFormat || "dd/MM/yy HH:mm"
                 )
               }
-              if (toClipboard && value !== "-")
+              /*               if (toClipboard && value !== "-")
                 value = <TextToCopy value={value} />
-              return value
+ */ return value
             } catch (error) {
               return "Fecha inválida"
             }
