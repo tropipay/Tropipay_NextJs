@@ -64,6 +64,7 @@ export const movementsColumnsDef: any = {
   },
   bankOrderCode: {
     order: 6,
+    toClipboard: true,
   },
   reference: {
     hidden: true,

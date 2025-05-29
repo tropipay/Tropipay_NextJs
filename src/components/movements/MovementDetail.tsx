@@ -10,16 +10,14 @@ import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
 import { env } from "@/config/env"
-import DestinationCountryStore from "@/stores/DestinationCountryStore"
 import { MovementDetails } from "@/types/movements"
-import type { Countries } from "@/types/countries"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
-import { callPostHog, listenProcessError } from "@/utils/utils"
+import { callPostHog } from "@/utils/utils"
 import axios from "axios"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { TextToCopy } from "../TextToCopy"
 import { useTranslations } from "@/utils/intl"
 
@@ -62,30 +60,7 @@ export default function MovementDetail(props: any): JSX.Element {
     },
   } = row
 
-  const [countries, setCountries] = useState<Countries>([])
   const { t } = useTranslations()
-
-  const listener = (obj) => {
-    const actions = {
-      DESTINATION_COUNTRY_LIST_OK: (obj) => {
-        setCountries(obj.payload.data)
-        console.log("obj.payload.data:", obj.payload.data)
-      },
-    }
-    actions[obj.type] && actions[obj.type](obj)
-    listenProcessError(obj, actions, null)
-  }
-
-  useEffect(() => {
-    const unsubscriberDestinationCountryStore = DestinationCountryStore.listen(
-      listener,
-      "MovementDetail"
-    )
-    DestinationCountryStore.List()
-    return () => {
-      unsubscriberDestinationCountryStore()
-    }
-  }, [])
 
   const onDownloadInvoiceFile = async () => {
     callPostHog(postHog, "movements:download_invoice_file")
@@ -165,10 +140,7 @@ export default function MovementDetail(props: any): JSX.Element {
           )}
           <RowDetailInfo label={t("account")} value={account} />
           <RowDetailInfo label={t("email")} value={email} />
-          <RowDetailInfo
-            label={t("country")}
-            value={countries.find((c) => c.slug === country)?.name || country}
-          />
+          <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
         <RowDetailSection title={t("sender_data")}>

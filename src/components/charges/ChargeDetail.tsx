@@ -13,12 +13,9 @@ import { fetchHeaders, formatAmount } from "@/utils/data/utils"
 import axios from "axios"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslations } from "@/utils/intl"
 import { TextToCopy } from "../TextToCopy"
-import { Countries } from "@/types/countries"
-import { listenProcessError } from "@/utils/utils"
-import DestinationCountryStore from "@/stores/DestinationCountryStore"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -72,30 +69,6 @@ export default function ChargeDetail(props: any): JSX.Element {
       link.click()
     } catch (e) {}
   }
-
-  const [countries, setCountries] = useState<Countries>([])
-
-  const listener = (obj) => {
-    const actions = {
-      DESTINATION_COUNTRY_LIST_OK: (obj) => {
-        setCountries(obj.payload.data)
-        console.log("obj.payload.data:", obj.payload.data)
-      },
-    }
-    actions[obj.type] && actions[obj.type](obj)
-    listenProcessError(obj, actions, null)
-  }
-
-  useEffect(() => {
-    const unsubscriberDestinationCountryStore = DestinationCountryStore.listen(
-      listener,
-      "MovementDetail"
-    )
-    DestinationCountryStore.List()
-    return () => {
-      unsubscriberDestinationCountryStore()
-    }
-  }, [])
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
@@ -170,12 +143,7 @@ export default function ChargeDetail(props: any): JSX.Element {
               value={format(cardExpirationDate, "dd/MM/yy")}
             />
           )}
-          <RowDetailInfo
-            label={t("cardCountry")}
-            value={
-              countries.find((c) => c.slug === cardCountry)?.name || cardCountry
-            }
-          />
+          <RowDetailInfo label={t("cardCountry")} value={cardCountry} />
           <RowDetailInfo label={t("clientIp")} value={clientIp} />
         </RowDetailSection>
 
