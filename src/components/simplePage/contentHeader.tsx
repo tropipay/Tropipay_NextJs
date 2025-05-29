@@ -1,3 +1,4 @@
+import { cn } from "@/utils/data/utils"
 import React from "react"
 
 interface ContentHeaderProps {
@@ -26,7 +27,7 @@ const ContentHeader: React.FC<ContentHeaderProps> = ({
       )}
       {subtitle ? (
         <p
-          className={`${classNameSubtitle} text-center`}
+          className={cn("text-center", classNameSubtitle)}
           style={styleSubtitle}
           dangerouslySetInnerHTML={{
             __html: subtitle,

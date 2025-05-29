@@ -226,7 +226,7 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="flex gap-4">
         <Button
           variant="outline"
-          className={`${refundable ? "w-1/2" : "w-full"}`}
+          className={refundable ? "w-1/2" : "w-full"}
           onClick={onDownloadInvoiceFile}
         >
           {t("download")}

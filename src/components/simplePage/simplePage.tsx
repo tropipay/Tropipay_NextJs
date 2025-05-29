@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { CheckCircle2, AlertCircle, Info, Loader2 } from "lucide-react"
-import ContentHeader from "./contentHeader"
-import Buttons from "./buttons"
 import Spinner from "@/components/Spinner"
+import { AlertCircle, CheckCircle2, Info, Loader2 } from "lucide-react"
+import React from "react"
+import Buttons from "./buttons"
+import ContentHeader from "./contentHeader"
 
 /**
  * Props para el componente SimplePage
@@ -50,6 +50,7 @@ interface SimplePageProps {
   spinner?: boolean
 }
 
+import { cn } from "@/utils/data/utils"
 import type { ButtonsComponentProps } from "./buttons"
 
 const SimplePage: React.FC<SimplePageProps> = ({
@@ -120,7 +121,7 @@ const SimplePage: React.FC<SimplePageProps> = ({
       />
       {loading && spinner && <Spinner />}
       {!!children && (
-        <div className={`flex-grow ${classChildren}`}>{children}</div>
+        <div className={cn("flex-grow", classChildren)}>{children}</div>
       )}
       <Buttons
         buttonAProps={buttonAProps}

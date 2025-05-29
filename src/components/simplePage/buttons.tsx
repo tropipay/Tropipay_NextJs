@@ -1,6 +1,7 @@
-import React from "react"
 import { Button, type ButtonProps } from "@/components/ui/Button"
+import { cn } from "@/utils/data/utils"
 import { Loader2 } from "lucide-react"
+import React from "react"
 
 export interface ButtonsComponentProps {
   // Añadir export
@@ -79,11 +80,13 @@ const Buttons: React.FC<ButtonsComponentProps> = ({
 
   return (
     <div
-      className={`flex pt-3 ${className} ${
+      className={cn(
+        "flex pt-3",
+        className,
         buttonsDisposition === "vertical"
           ? "flex-col gap-3"
           : "gap-4 flex-row-reverse"
-      }`}
+      )}
     >
       {!!buttonAText && (
         <Button {...finalButtonAProps} variant="default">

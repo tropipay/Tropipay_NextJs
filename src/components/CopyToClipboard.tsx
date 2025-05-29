@@ -2,6 +2,7 @@
 
 import { useToast } from "@/hooks/useToast"
 import { useTranslations } from "@/utils/intl"
+import { cn } from "@/utils/data/utils"
 import { Copy } from "lucide-react"
 import { useState } from "react"
 
@@ -47,9 +48,10 @@ export default function CopyToClipboard({
   return (
     <Copy
       onClick={(e) => copyText(e)}
-      className={`cursor-pointer w-3 h-3 ${
+      className={cn(
+        "cursor-pointer w-3 h-3",
         copied ? "text-green-500" : "text-gray-500"
-      }`}
+      )}
     />
   )
 }

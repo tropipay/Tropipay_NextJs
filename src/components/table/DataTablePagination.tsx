@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui"
+import { cn } from "@/utils/data/utils"
 import { Table } from "@tanstack/react-table"
 import {
   ChevronLeft,
@@ -26,9 +27,10 @@ export function DataTablePagination<TData>({
   const pageSizeOptions = [10, 20, 30, 40, 50, 100]
   return (
     <div
-      className={`flex items-center justify-between px-2 ${
-        table.getPageCount() < 0 ? "hidden" : ""
-      }`}
+      className={cn(
+        "flex items-center justify-between px-2",
+        table.getPageCount() < 0 && "hidden"
+      )}
     >
       <div className="flex-1 text-sm text-muted-foreground"></div>
       <div className="flex items-center gap-2">

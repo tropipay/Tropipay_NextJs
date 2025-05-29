@@ -1,16 +1,10 @@
-import {
-  Header,
-} from "@tanstack/react-table"
-import { CSSProperties } from "react"
-import {
-  TableHead,
-} from "@/components/ui"
-import {
-  useSortable,
-} from "@dnd-kit/sortable"
+import { TableHead } from "@/components/ui"
+import { cn } from "@/utils/data/utils"
+import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
+import { flexRender, Header } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
-import { flexRender } from "@tanstack/react-table"
+import { CSSProperties } from "react"
 
 interface DraggableTableHeaderProps<TData, TValue> {
   header: Header<TData, TValue>
@@ -39,7 +33,7 @@ const DraggableTableHeader = <TData, TValue>({
     <TableHead
       key={header.id}
       ref={setNodeRef}
-      className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
+      className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap cursor-default"
       style={style}
       data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
     >
@@ -49,7 +43,10 @@ const DraggableTableHeader = <TData, TValue>({
           : flexRender(header.column.columnDef.header, header.getContext())}
         <GripVerticalIcon
           size={16}
-          className="opacity-0 hover:opacity-100"
+          className={cn(
+            "opacity-0 hover:opacity-100 cursor-grab",
+            isDragging && "cursor-grabbing"
+          )}
           {...attributes}
           {...listeners}
         />
@@ -58,4 +55,4 @@ const DraggableTableHeader = <TData, TValue>({
   )
 }
 
-export default DraggableTableHeader;
+export default DraggableTableHeader
