@@ -17,7 +17,7 @@ export async function makeApiRequest({
   queryConfig,
   variables,
   token,
-  debug = false,
+  debug = true,
 }: FetchOptions) {
   const { url, method, body } = queryConfig
   const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL

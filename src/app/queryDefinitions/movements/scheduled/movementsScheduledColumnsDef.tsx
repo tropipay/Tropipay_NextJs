@@ -1,27 +1,31 @@
 import { movementsScheduledRecurrences } from "@/app/filterDefinitions/movements"
+import { renderedAmount } from "@/components/table/SetColumn"
+import { TextToCopy } from "@/components/TextToCopy"
 import { MovementScheduled } from "@/types/movements"
 
 export const movementsScheduledColumnsDef: any = {
   amount: {
-    type: "amount",
-    valueMapper: ({ originAmount: value, currency }: MovementScheduled) => ({
-      value,
-      currency,
-    }),
+    render: (row: any) => {
+      return renderedAmount(row.originAmount, row.currency, true, true)
+    },
     order: 0,
   },
   nextDate: { type: "date", title: "date_to_pay", order: 1 },
   fullName: {
     title: "beneficiary",
-    valueMapper: ({ depositaccount: { alias } }: MovementScheduled) => (
-      <span className="capitalize">{alias}</span>
+    render: (row: any) => (
+      <TextToCopy value={row.depositaccount.alias} className="capitalize" />
     ),
     order: 2,
   },
   email: {
     title: "destiny_account",
-    valueMapper: ({ depositaccount: { accountNumber } }: MovementScheduled) =>
-      accountNumber,
+    render: (row: any) => (
+      <TextToCopy
+        value={row.depositaccount.accountNumber}
+        className="capitalize"
+      />
+    ),
     order: 3,
   },
   frecuency: {
