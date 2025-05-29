@@ -192,7 +192,7 @@ const use2FA = (props) => {
     const payload = setPayload(fns.validateCode)
     // Ensure user exists before checking activePin
     if (user?.activePin && payload.baseUrl) {
-      Pin = PinStore.listen(pinListener)
+      Pin = PinStore.listen(pinListener, "use2FA")
       PinStore.DailyLimit(payload)
     } else {
       // Ensure user exists before accessing twoFaType, provide default
@@ -223,7 +223,7 @@ const use2FA = (props) => {
   const sendCodeFn = (data = null) => {
     if (twofa === twoFaTypes.SMS && fns.sendCode?.fn) {
       setErrorData(null)
-      objectStore = fns.sendCode.store.listen(listenerSendCode)
+      objectStore = fns.sendCode.store.listen(listenerSendCode, "use2FA")
       setLoading(true)
       setCountdown(0)
       fns.sendCode.fn()
@@ -246,7 +246,10 @@ const use2FA = (props) => {
     )
       return null
     setErrorData(null)
-    objectStore = fns.validateCode.store.listen(listenerValidationCode)
+    objectStore = fns.validateCode.store.listen(
+      listenerValidationCode,
+      "use2FA"
+    )
     let newData = { [codeName]: code }
     newData = { ...Data, ...newData }
     let arrayData = [newData]

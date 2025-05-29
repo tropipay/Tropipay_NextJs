@@ -7,7 +7,7 @@ import { reduxStore, RootState } from "./reduxStore"
 type ListenerCallback<T = any> = (event: { type: string; payload: T }) => void
 
 export type BaseStore = {
-  listen: (callback: ListenerCallback) => () => void
+  listen: (callback: ListenerCallback, key: string) => () => void
   trigger: <P>(eventType: string, payload: P) => void
 }
 
@@ -21,7 +21,12 @@ export interface EnhancedStore extends BaseStore {
 export function createStore<T extends { name: string } & Record<string, any>>(
   methodsFactory: (store: Omit<EnhancedStore, "name">) => T // Factory receives store without name initially
 ): EnhancedStore & T {
-  const listeners: { callback: ListenerCallback; listenerId: symbol }[] = []
+  const listeners: {
+    callback: ListenerCallback
+    listenerId: symbol
+    name: string
+    key: string
+  }[] = []
 
   // --- Method Implementations ---
 
@@ -69,7 +74,22 @@ export function createStore<T extends { name: string } & Record<string, any>>(
     reduxStore.dispatch(clearAppDataKey(reduxKey)) // Dispatch action to set cache entry to null
   }
 
-  const listen = (callback: ListenerCallback): (() => void) => {
+  const listen = (callback: ListenerCallback, key: string): (() => void) => {
+    const existingListener = listeners.find(
+      (l) => l.name === combinedStore.name && l.key === key
+    )
+
+    if (existingListener) {
+      return () => {
+        const index = listeners.findIndex(
+          (l) => l.listenerId === existingListener.listenerId
+        )
+        if (index !== -1) {
+          listeners.splice(index, 1)
+        }
+      }
+    }
+
     const listenerId = Symbol()
 
     // Wrapper callback that intercepts cacheable events to update cache
@@ -89,12 +109,19 @@ export function createStore<T extends { name: string } & Record<string, any>>(
       callback && callback(event)
     }
 
-    listeners.push({ callback: wrapperCallback, listenerId })
+    listeners.push({
+      callback: wrapperCallback,
+      listenerId,
+      name: combinedStore.name,
+      key,
+    })
 
     // Return unsubscribe function
     return () => {
       const index = listeners.findIndex((l) => l.listenerId === listenerId)
-      if (index !== -1) listeners.splice(index, 1)
+      if (index !== -1) {
+        listeners.splice(index, 1)
+      }
     }
   }
 

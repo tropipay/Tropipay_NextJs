@@ -11,6 +11,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { TextToCopy } from "../TextToCopy"
 
 // Definimos los tipos para los argumentos de la función
 type FacetedOption = {
@@ -56,6 +57,7 @@ type ColumnOptions<TData> = {
   hideColumn?: boolean
   render?: (row: any) => string
   valueMapper?: (_: any) => any
+  toClipboard?: boolean
 }
 
 // Función unificada setColumns
@@ -88,6 +90,7 @@ export function setColumns<TData>(
       hideColumn = false,
       render,
       valueMapper,
+      toClipboard,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
@@ -113,6 +116,7 @@ export function setColumns<TData>(
       order,
       meta,
       hideColumn,
+      toClipboard,
     }
 
     switch (type) {
@@ -138,7 +142,14 @@ export function setColumns<TData>(
                   </div>
                 )}
                 <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
-                  <FormattedMessage id={selectedOption.label} />
+                  {toClipboard ? (
+                    <TextToCopy
+                      value={<FormattedMessage id={selectedOption.label} />}
+                      textToCopy={selectedOption.value}
+                    />
+                  ) : (
+                    <FormattedMessage id={selectedOption.label} />
+                  )}
                 </span>
               </div>
             )
@@ -159,9 +170,8 @@ export function setColumns<TData>(
                   dateFormat || "dd/MM/yy HH:mm"
                 )
               }
-              if (render && value !== "-") {
-                value = render(value)
-              }
+              if (toClipboard && value !== "-")
+                value = <TextToCopy value={value} />
               return value
             } catch (error) {
               return "Fecha inválida"
@@ -200,23 +210,12 @@ export function setColumns<TData>(
             return (
               <div className="flex items-center gap-1">
                 <span className="font-bold">
-                  {addSign && (value > 0 ? "+" : "")}
-                  {formatAmount(value)}
+                  {addSign && (value > 0 ? "+" : "")}${formatAmount(value)}
                 </span>
                 <span className="text-grayFont">{currency}</span>
               </div>
             )
           },
-        }
-        break
-      case "free":
-        if (!component) {
-          throw new Error("component is required for free type")
-        }
-        baseConfig = {
-          ...baseConfig,
-          cell: ({ row }) =>
-            React.cloneElement(component as React.ReactElement, { row }),
         }
         break
       case "select":
@@ -257,20 +256,20 @@ export function setColumns<TData>(
             const rowValueMapper = valueMapper
               ? valueMapper(row.original)
               : rowValue
-            let value = getRowValue(rowValueMapper) || "-"
-            if (render) {
-              value = render(row.original)
-            }
-
-            return value !== "-" && !render ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="truncate">{value}</div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="center">
-                  {value}
-                </TooltipContent>
-              </Tooltip>
+            const value = getRowValue(rowValueMapper) || "-"
+            return value !== "-" ? (
+              toClipboard ? (
+                <TextToCopy value={value} />
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="truncate">{value}</div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center">
+                    {value}
+                  </TooltipContent>
+                </Tooltip>
+              )
             ) : (
               value
             )

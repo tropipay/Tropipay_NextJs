@@ -14,7 +14,8 @@ import axios from "axios"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { useTranslations } from "@/utils/intl"
+import { TextToCopy } from "../TextToCopy"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -22,8 +23,8 @@ export default function ChargeDetail(props: any): JSX.Element {
   const { data: session } = useSession()
   const token = session?.user.token
 
+  const { t } = useTranslations()
   const {
-    bankOrderCode,
     amount,
     state,
     createdAt,
@@ -69,17 +70,18 @@ export default function ChargeDetail(props: any): JSX.Element {
     } catch (e) {}
   }
 
-  const onDownload = () => {
-    console.log("Coming soon!")
-  }
-
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
           <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
-            {amount.value > 0 ? "+" : ""}
-            {formatAmount(amount.value, amount.currency, "right")}
+            <TextToCopy
+              value={`${amount.value > 0 ? "+" : ""}${formatAmount(
+                amount.value,
+                amount.currency,
+                "right"
+              )}`}
+            />
           </div>
           <FacetedBadge
             value={state}
@@ -89,116 +91,85 @@ export default function ChargeDetail(props: any): JSX.Element {
         </div>
         <div className="flex justify-between items-center">
           <p className="text-xs text-gray-500 flex items-center gap-1">
-            <FormattedMessage id="charge_to" />
-            <span className="uppercase">{fullName}</span>
+            {t("charge_to")}
+            <span className="uppercase">
+              <TextToCopy value={fullName} className="p-1" />
+            </span>
           </p>
           {completedAt && (
             <p className="text-xs text-gray-500">
-              {format(new Date(completedAt), "dd/MM/yy HH:mm")}
+              <TextToCopy
+                value={format(new Date(completedAt), "dd/MM/yy HH:mm")}
+                className="p-1"
+              />
             </p>
           )}
         </div>
       </div>
       <div className="flex-1 overflow-y-auto min-h-0">
-        <RowDetailSection title={<FormattedMessage id="payment_details" />}>
+        <RowDetailSection title={t("payment_details")}>
           <RowDetailInfo
-            label={<FormattedMessage id="amount" />}
+            label={t("amount")}
             value={formatAmount(amount.value, amount.currency, "right")}
           />
           <RowDetailInfo
-            label={<FormattedMessage id="paymentMethod" />}
-            value={<FormattedMessage id={`pm_${paymentMethod}`} />}
+            label={t("paymentMethod")}
+            value={t(`pm_${paymentMethod}`)}
           />
           {cardBin && (
-            <RowDetailInfo
-              label={<FormattedMessage id="cardBin" />}
-              value={`${cardBin} **** `}
-            />
+            <RowDetailInfo label={t("cardBin")} value={`${cardBin} **** `} />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="reference" />}
-            value={reference}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="errorCode" />}
-            value={errorCode}
-          />
+          <RowDetailInfo label={t("movementCode")} value={reference} />
+          <RowDetailInfo label={t("errorCode")} value={errorCode} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="client_data" />}>
+        <RowDetailSection title={t("client_data")}>
           <RowDetailInfo
-            label={<FormattedMessage id="fullName" />}
+            label={t("fullName")}
             value={<span className="uppercase">{fullName}</span>}
           />
-          <RowDetailInfo
-            label={<FormattedMessage id="email" />}
-            value={email}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="address" />}
-            value={address}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="country" />}
-            value={country}
-          />
+          <RowDetailInfo label={t("email")} value={email} />
+          <RowDetailInfo label={t("address")} value={address} />
+          <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="payment_method" />}>
+        <RowDetailSection title={t("payment_method")}>
           {cardPan && (
-            <RowDetailInfo
-              label={<FormattedMessage id="cardPan" />}
-              value={`**** ${cardPan}`}
-            />
+            <RowDetailInfo label={t("cardPan")} value={`**** ${cardPan}`} />
           )}
           {cardExpirationDate && (
             <RowDetailInfo
-              label={<FormattedMessage id="cardExpirationDate" />}
+              label={t("cardExpirationDate")}
               value={format(cardExpirationDate, "dd/MM/yy")}
             />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="cardCountry" />}
-            value={cardCountry}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="clientIp" />}
-            value={clientIp}
-          />
+          <RowDetailInfo label={t("cardCountry")} value={cardCountry} />
+          <RowDetailInfo label={t("clientIp")} value={clientIp} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="schedule" />}>
+        <RowDetailSection title={t("schedule")}>
           {createdAt && (
             <RowDetailInfo
-              label={<FormattedMessage id="createdAt" />}
+              label={t("createdAt")}
               value={createdAt && format(new Date(createdAt), "dd/MM/yy")}
             />
           )}
           {completedAt && (
             <RowDetailInfo
-              label={<FormattedMessage id="completedAt" />}
+              label={t("completedAt")}
               value={completedAt && format(new Date(completedAt), "dd/MM/yy")}
             />
           )}
         </RowDetailSection>
       </div>
       <div className="flex gap-4">
-        {movementId && (
-          <Button
-            variant="outline"
-            className={refundable ? "w-1/2" : "w-full"}
-            onClick={onDownloadInvoiceFile}
-          >
-            <FormattedMessage id="download" />
-          </Button>
-        )}
         {refundable && (
           <Button
             variant="default"
-            className="w-1/2"
+            className="w-full"
             onClick={() => setOpenRefundDialog(true)}
           >
-            <FormattedMessage id="refund" />
+            {t("refund")}
           </Button>
         )}
         <RefundWizard

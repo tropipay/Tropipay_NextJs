@@ -29,7 +29,7 @@ export default function Page({ children }: ChildrenProps) {
   }
 
   useEffect(() => {
-    const unSubscriber = ProfileStore.listen(listener)
+    const unSubscriber = ProfileStore.listen(listener, "layout")
     ProfileStore.FetchProfile()
     return () => {
       unSubscriber()
