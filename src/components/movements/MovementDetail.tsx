@@ -20,8 +20,8 @@ import { format } from "date-fns"
 import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { useEffect, useState } from "react"
-import { FormattedMessage } from "react-intl"
 import { TextToCopy } from "../TextToCopy"
+import { useTranslations } from "@/utils/intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -63,11 +63,13 @@ export default function MovementDetail(props: any): JSX.Element {
   } = row
 
   const [countries, setCountries] = useState<Countries>([])
+  const { t } = useTranslations()
 
   const listener = (obj) => {
     const actions = {
       DESTINATION_COUNTRY_LIST_OK: (obj) => {
         setCountries(obj.payload.data)
+        console.log("obj.payload.data:", obj.payload.data)
       },
     }
     actions[obj.type] && actions[obj.type](obj)
@@ -116,8 +118,13 @@ export default function MovementDetail(props: any): JSX.Element {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
           <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
-            {netAmount.value > 0 ? "+" : ""}
-            {formatAmount(netAmount.value, netAmount.currency, "right")}
+            <TextToCopy
+              value={`${netAmount.value > 0 ? "+" : ""}${formatAmount(
+                netAmount.value,
+                netAmount.currency,
+                "right"
+              )}`}
+            />
           </div>
           <FacetedBadge
             value={state}
@@ -131,80 +138,56 @@ export default function MovementDetail(props: any): JSX.Element {
           </p>
           {completedAt && (
             <p className="text-xs text-gray-500">
-              {format(new Date(completedAt), "dd/MM/yy HH:mm")}
+              <TextToCopy
+                value={format(new Date(completedAt), "dd/MM/yy HH:mm")}
+                className="p-1"
+              />
             </p>
           )}
         </div>
       </div>
       <div className="flex-1 overflow-y-auto min-h-0">
-        <RowDetailSection title={<FormattedMessage id="movement_data" />}>
-          <RowDetailInfo
-            label={<FormattedMessage id="type" />}
-            value={<FormattedMessage id={`mt_${type}`} />}
-          />
+        <RowDetailSection title={t("movement_data")}>
+          <RowDetailInfo label={t("type")} value={t(`mt_${type}`)} />
           {product && (
-            <RowDetailInfo
-              label={<FormattedMessage id="product" />}
-              value={<FormattedMessage id={`cp_${product}`} />}
-            />
+            <RowDetailInfo label={t("product")} value={t(`cp_${product}`)} />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="concept" />}
-            value={concept}
-          />
+          <RowDetailInfo label={t("concept")} value={concept} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="beneficiary_data" />}>
-          <RowDetailInfo
-            label={<FormattedMessage id="alias" />}
-            value={alias}
-          />
+        <RowDetailSection title={t("beneficiary_data")}>
+          <RowDetailInfo label={t("alias")} value={alias} />
           {name && (
             <RowDetailInfo
-              label={<FormattedMessage id="name" />}
+              label={t("name")}
               value={<span className="uppercase">{name}</span>}
             />
           )}
+          <RowDetailInfo label={t("account")} value={account} />
+          <RowDetailInfo label={t("email")} value={email} />
           <RowDetailInfo
-            label={<FormattedMessage id="account" />}
-            value={account}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="email" />}
-            value={email}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="country" />}
+            label={t("country")}
             value={countries.find((c) => c.slug === country)?.name || country}
           />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="sender_data" />}>
+        <RowDetailSection title={t("sender_data")}>
           {senderName && (
             <RowDetailInfo
-              label={<FormattedMessage id="name" />}
+              label={t("name")}
               value={
                 <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
               }
             />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="email" />}
-            value={senderEmail}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="address" />}
-            value={clientAddress}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="country" />}
-            value={senderCountry}
-          />
+          <RowDetailInfo label={t("email")} value={senderEmail} />
+          <RowDetailInfo label={t("address")} value={clientAddress} />
+          <RowDetailInfo label={t("country")} value={senderCountry} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="imports" />}>
+        <RowDetailSection title={t("imports")}>
           <RowDetailInfo
-            label={<FormattedMessage id="amountCharged" />}
+            label={t("amountCharged")}
             value={formatAmount(
               chargedAmount.value,
               chargedAmount.currency,
@@ -213,18 +196,18 @@ export default function MovementDetail(props: any): JSX.Element {
           />
           {conversionRate && fee && amount.currency !== fee.currency && (
             <RowDetailInfo
-              label={<FormattedMessage id="conversionRate" />}
+              label={t("conversionRate")}
               value={`1 EUR = ${conversionRate} ${amount.currency}`}
             />
           )}
           {fee && (
             <RowDetailInfo
-              label={<FormattedMessage id="fee" />}
+              label={t("fee")}
               value={formatAmount(fee.value, fee.currency, "right")}
             />
           )}
           <RowDetailInfo
-            label={<FormattedMessage id="netAmount" />}
+            label={t("netAmount")}
             value={`${formatAmount(
               netAmount.value,
               netAmount.currency,
@@ -233,51 +216,36 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="payment_method" />}>
+        <RowDetailSection title={t("payment_method")}>
+          <RowDetailInfo label={t("cardType")} value={cardType} />
+
           <RowDetailInfo
-            label={<FormattedMessage id="cardType" />}
-            value={cardType}
-          />
-          {/* <Info
-            label={<FormattedMessage id="account" />}
-            value="******** FALTA CUENTA"
-          /> */}
-          <RowDetailInfo
-            label={<FormattedMessage id="paymentMethod" />}
-            value={<FormattedMessage id={`pm_${paymentMethod}`} />}
+            label={t("paymentMethod")}
+            value={t(`pm_${paymentMethod}`)}
           />
           {cardPan && (
-            <RowDetailInfo
-              label={<FormattedMessage id="cardPan" />}
-              value={`**** ${cardPan}`}
-            />
+            <RowDetailInfo label={t("cardPan")} value={`**** ${cardPan}`} />
           )}
           {cardExpirationDate && (
             <RowDetailInfo
-              label={<FormattedMessage id="cardExpirationDate" />}
+              label={t("cardExpirationDate")}
               value={format(cardExpirationDate, "dd/MM/yy")}
             />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="cardCountry" />}
-            value={cardCountry}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="clientIp" />}
-            value={clientIp}
-          />
+          <RowDetailInfo label={t("cardCountry")} value={cardCountry} />
+          <RowDetailInfo label={t("clientIp")} value={clientIp} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="schedule" />}>
+        <RowDetailSection title={t("schedule")}>
           {createdAt && (
             <RowDetailInfo
-              label={<FormattedMessage id="createdAt" />}
+              label={t("createdAt")}
               value={format(new Date(createdAt), "dd/MM/yy")}
             />
           )}
           {completedAt && (
             <RowDetailInfo
-              label={<FormattedMessage id="completedAt" />}
+              label={t("completedAt")}
               value={format(new Date(completedAt), "dd/MM/yy")}
             />
           )}
@@ -289,7 +257,7 @@ export default function MovementDetail(props: any): JSX.Element {
           className={`${refundable ? "w-1/2" : "w-full"}`}
           onClick={onDownloadInvoiceFile}
         >
-          <FormattedMessage id="download" />
+          {t("download")}
         </Button>
         {refundable && (
           <Button
@@ -297,7 +265,7 @@ export default function MovementDetail(props: any): JSX.Element {
             className="w-1/2"
             onClick={() => setOpenRefundDialog(true)}
           >
-            <FormattedMessage id="refund" />
+            {t("refund")}
           </Button>
         )}
         <RefundWizard

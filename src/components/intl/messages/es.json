@@ -46,6 +46,8 @@
   "continue": "CONTINUAR",
   "conversionRate": "Tasa de cambio",
   "copy": "Copiar",
+  "CopyToClipboardError": "Error al copiar al portapapeles",
+  "CopyToClipboardSuccess": "Texto copiado al portapapeles",
   "country": "País",
   "cp_API": "API",
   "cp_BUSINESS_PAGE": "Página del Negocio",

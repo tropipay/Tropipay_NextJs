@@ -5,9 +5,18 @@ type TextToCopyProps = {
   value: any
   textToCopy?: string
   className?: string
+  messages?: {
+    success: string
+    error: string
+  }
 }
 
-export function TextToCopy({ value, textToCopy, className }: TextToCopyProps) {
+export function TextToCopy({
+  value,
+  textToCopy,
+  className,
+  messages,
+}: TextToCopyProps) {
   function getTextFromValue(value: any): string {
     if (typeof value === "string" || typeof value === "number") {
       return value.toString()
@@ -29,8 +38,11 @@ export function TextToCopy({ value, textToCopy, className }: TextToCopyProps) {
       }`}
     >
       {value}
-      <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-        <CopyToClipboard text={textToCopy || getTextFromValue(value)} />
+      <span className="hidden opacity-0 group-hover:block group-hover:opacity-100 transition-opacity">
+        <CopyToClipboard
+          text={textToCopy || getTextFromValue(value)}
+          messages={messages}
+        />
       </span>
     </span>
   )

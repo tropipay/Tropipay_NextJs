@@ -1,38 +1,42 @@
 "use client"
 
 import { useToast } from "@/hooks/useToast"
+import { useTranslations } from "@/utils/intl"
 import { Copy } from "lucide-react"
 import { useState } from "react"
 
 interface CopyToClipboardProps {
   text: string | number | bigint | true
-  message?: string
+  messages?: any
   toast?: any
 }
 
 export default function CopyToClipboard({
   text,
-  message = "Texto copiado al portapapeles",
+  messages,
 }: CopyToClipboardProps) {
+  const { t } = useTranslations()
   const [copied, setCopied] = useState(false)
-
   const { toast } = useToast()
+
+  const messagesToUse = messages || {
+    success: t("CopyToClipboardSuccess"),
+    error: t("CopyToClipboardError"),
+  }
 
   const copyText = async () => {
     try {
       await navigator.clipboard.writeText(text.toLocaleString())
       setCopied(true)
       toast({
-        title: "Copiado",
-        description: message,
+        description: messagesToUse?.success,
         duration: 3000,
       })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error("Error al copiar:", err)
       toast({
         title: "Error",
-        description: "No se pudo copiar el texto",
+        description: messagesToUse?.error,
         variant: "destructive",
         duration: 3000,
       })
