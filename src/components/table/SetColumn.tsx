@@ -56,8 +56,39 @@ type ColumnOptions<TData> = {
   meta?: boolean
   hideColumn?: boolean
   render?: (row: any) => string
-  valueMapper?: (_: any) => any
   toClipboard?: boolean
+}
+
+export function renderedAmount(
+  value: number,
+  currency: string,
+  addSign: boolean,
+  toClipboard: boolean
+) {
+  const formattedValue = `${addSign && value > 0 ? "+" : ""}$${formatAmount(
+    value
+  )} ${currency}`
+
+  return toClipboard ? (
+    <TextToCopy
+      value={
+        <div className="flex items-center gap-1">
+          <span className="font-bold">
+            {addSign && (value > 0 ? "+" : "")}${formatAmount(value)}
+          </span>
+          <span className="text-grayFont">{currency}</span>
+        </div>
+      }
+      textToCopy={formattedValue}
+    />
+  ) : (
+    <div className="flex items-center gap-1">
+      <span className="font-bold">
+        {addSign && (value > 0 ? "+" : "")}${formatAmount(value)}
+      </span>
+      <span className="text-grayFont">{currency}</span>
+    </div>
+  )
 }
 
 // Función unificada setColumns
@@ -89,8 +120,7 @@ export function setColumns<TData>(
       meta,
       hideColumn = false,
       render,
-      valueMapper,
-      toClipboard,
+      toClipboard = true,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
@@ -145,7 +175,9 @@ export function setColumns<TData>(
                   {toClipboard ? (
                     <TextToCopy
                       value={<FormattedMessage id={selectedOption.label} />}
-                      textToCopy={selectedOption.value}
+                      textToCopy={selectedOption.label}
+                      className="pl-0"
+                      translate={true}
                     />
                   ) : (
                     <FormattedMessage id={selectedOption.label} />
@@ -170,9 +202,10 @@ export function setColumns<TData>(
                   dateFormat || "dd/MM/yy HH:mm"
                 )
               }
-              /*               if (toClipboard && value !== "-")
-                value = <TextToCopy value={value} />
- */ return value
+              if (toClipboard && value !== "-") {
+                return <TextToCopy value={value.toString()} />
+              }
+              return value
             } catch (error) {
               return "Fecha inválida"
             }
@@ -201,20 +234,9 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const rowValue = row.getValue(id) as any
-            const rowValueMapper = valueMapper
-              ? valueMapper(row.original)
-              : rowValue
-
-            const { value, currency } = rowValueMapper || []
-            return (
-              <div className="flex items-center gap-1">
-                <span className="font-bold">
-                  {addSign && (value > 0 ? "+" : "")}${formatAmount(value)}
-                </span>
-                <span className="text-grayFont">{currency}</span>
-              </div>
-            )
+            const rowValue = row.original[id]
+            const { value, currency } = rowValue || {}
+            return renderedAmount(value, currency, addSign, toClipboard)
           },
         }
         break
@@ -252,26 +274,47 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const rowValue = row.getValue(id) as any
-            const rowValueMapper = valueMapper
-              ? valueMapper(row.original)
-              : rowValue
-            const value = getRowValue(rowValueMapper) || "-"
-            return value !== "-" ? (
-              toClipboard ? (
-                <TextToCopy value={value} />
-              ) : (
+            if (render) return render(row.original)
+            const value = getRowValue(row.getValue(id))
+            if (value === "-") return value
+
+            const TextWithTooltip = ({ text }: { text: string }) => {
+              const [isTruncated, setIsTruncated] = React.useState(false)
+              const textRef = React.useRef<HTMLDivElement>(null)
+
+              React.useEffect(() => {
+                if (textRef.current) {
+                  setIsTruncated(
+                    textRef.current.scrollWidth > textRef.current.clientWidth
+                  )
+                }
+              }, [text])
+
+              return isTruncated ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="truncate">{value}</div>
+                    <div ref={textRef} className="truncate">
+                      {text}
+                    </div>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" align="center">
-                    {value}
+                    {text}
                   </TooltipContent>
                 </Tooltip>
+              ) : (
+                <div ref={textRef} className="truncate">
+                  {text}
+                </div>
               )
+            }
+
+            return toClipboard ? (
+              <TextToCopy
+                value={<TextWithTooltip text={value} />}
+                textToCopy={row.original[id]}
+              />
             ) : (
-              value
+              <TextWithTooltip text={value} />
             )
           },
         }

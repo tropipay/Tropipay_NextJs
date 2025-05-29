@@ -24,7 +24,8 @@ import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { useTranslations } from "@/utils/intl"
+import { TextToCopy } from "../TextToCopy"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
@@ -46,6 +47,8 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     conceptTransfer,
     state,
   } = row
+
+  const { t } = useTranslations()
 
   const onCancel = async () => {
     setIsError(false)
@@ -82,8 +85,13 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
-              {originAmount > 0 ? "+" : ""}
-              {formatAmount(originAmount, currency, "right")}
+              <TextToCopy
+                value={`${originAmount > 0 ? "+" : ""}${formatAmount(
+                  originAmount,
+                  currency,
+                  "right"
+                )}`}
+              />
             </div>
             <FacetedBadge
               value={state}
@@ -93,67 +101,62 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </div>
           <div className="flex justify-between items-center">
             <p className="text-xs text-gray-500 flex items-center gap-1">
-              <FormattedMessage id="send_to" />
-              <span className="capitalize">{alias}</span>
+              <TextToCopy value={t("send_to") + " " + alias} className="p-1" />
             </p>
             {nextDate && (
               <p className="text-xs text-gray-500">
-                {format(new Date(nextDate), "dd/MM/yy HH:mm")}
+                <TextToCopy
+                  value={format(new Date(nextDate), "dd/MM/yy HH:mm")}
+                  className="p-1"
+                />
               </p>
             )}
           </div>
         </div>
         <div className="flex-1 overflow-y-auto min-h-0">
-          <RowDetailSection title={<FormattedMessage id="client_data" />}>
+          <RowDetailSection title={t("client_data")}>
             <RowDetailInfo
-              label={<FormattedMessage id="beneficiary" />}
+              label={t("beneficiary")}
               value={<span className="capitalize">{alias}</span>}
+              textToCopy={alias}
             />
-            <RowDetailInfo
-              label={<FormattedMessage id="destiny_account" />}
-              value={accountNumber}
-            />
-            <RowDetailInfo
-              label={<FormattedMessage id="concept" />}
-              value={conceptTransfer}
-            />
+            <RowDetailInfo label={t("destiny_account")} value={accountNumber} />
+            <RowDetailInfo label={t("concept")} value={conceptTransfer} />
           </RowDetailSection>
 
-          <RowDetailSection title={<FormattedMessage id="payment_details" />}>
-            <></>
-            {/* <Info
-          label={<FormattedMessage id="amount" />}
+          {/* <RowDetailSection title={t("payment_details")}>
+            <Info
+          label={t(amount" />}
           value={formatAmount(originAmount, currency, "right")}
-        /> */}
-            {/* <Info
-          label={<FormattedMessage id="paymentMethod" />}
-          value={<FormattedMessage id={`pm_${paymentMethod}`} />}
+        /> <Info
+          label={t(paymentMethod" />}
+          value={t(`pm_${paymentMethod}`} />}
         />
         {cardBin && (
           <Info
-            label={<FormattedMessage id="cardPan" />}
+            label={t(cardPan" />}
             value={`${cardBin} **** `}
           />
-        )} */}
-          </RowDetailSection>
+        )}
+          </RowDetailSection>  */}
 
-          <RowDetailSection title={<FormattedMessage id="schedule" />}>
+          <RowDetailSection title={t("schedule")}>
             {createdAt && (
               <RowDetailInfo
-                label={<FormattedMessage id="createdAt" />}
+                label={t("createdAt")}
                 value={format(new Date(createdAt), "dd/MM/yy")}
               />
             )}
             {nextDate && (
               <RowDetailInfo
-                label={<FormattedMessage id="date_to_pay" />}
+                label={t("date_to_pay")}
                 value={format(new Date(nextDate), "dd/MM/yy")}
               />
             )}
             {frecuency && (
               <RowDetailInfo
-                label={<FormattedMessage id="recurrence" />}
-                value={<FormattedMessage id={`mr_${frecuency}`} />}
+                label={t("recurrence")}
+                value={t(`mr_${frecuency}`)}
               />
             )}
           </RowDetailSection>
@@ -170,7 +173,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
                 setOpenModalConfirm(true)
               }}
             >
-              <FormattedMessage id="cancel_scheduled" />
+              {t("cancel_scheduled")}
             </Button>
           </div>
         )}
@@ -180,29 +183,23 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              <FormattedMessage
-                id={isDone ? "transfer_cancelled" : "cancel_movement_sched"}
-              />
+              {t(isDone ? "transfer_cancelled" : "cancel_movement_sched")}
             </AlertDialogTitle>
             <AlertDialogDescription className="whitespace-pre-line">
-              <FormattedMessage
-                id={
-                  isDone
-                    ? "transfer_cancelled_desc"
-                    : "cancel_movement_sched_desc"
-                }
-              />
+              {t(
+                isDone
+                  ? "transfer_cancelled_desc"
+                  : "cancel_movement_sched_desc"
+              )}
             </AlertDialogDescription>
             {isError && (
-              <ErrorMessage>
-                <FormattedMessage id="error_execute_operation" />
-              </ErrorMessage>
+              <ErrorMessage>{t("error_execute_operation")}</ErrorMessage>
             )}
           </AlertDialogHeader>
           <AlertDialogFooter>
             {isDone ? (
               <AlertDialogAction onClick={onDone}>
-                <FormattedMessage id="ready" />
+                {t("ready")}
               </AlertDialogAction>
             ) : (
               <>
@@ -210,11 +207,11 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
                   variant={"outline"}
                   onClick={() => setOpenModalConfirm(false)}
                 >
-                  <FormattedMessage id="cancel" />
+                  {t("cancel")}
                 </Button>
                 <Button variant={"default"} onClick={onCancel}>
                   {isLoading && <Loader2 className="animate-spin" />}
-                  <FormattedMessage id="cancel_scheduled" />
+                  {t("cancel_scheduled")}
                 </Button>
               </>
             )}
