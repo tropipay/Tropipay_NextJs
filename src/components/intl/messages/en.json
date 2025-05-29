@@ -46,6 +46,8 @@
   "continue": "[TRANSLATE] CONTINUAR",
   "conversionRate": "Conversion Rate",
   "copy": "Copy",
+  "CopyToClipboardError": "Error copying to clipboard",
+  "CopyToClipboardSuccess": "Text copied to clipboard",
   "country": "Country",
   "cp_API": "API",
   "cp_BUSINESS_PAGE": "Business Page",

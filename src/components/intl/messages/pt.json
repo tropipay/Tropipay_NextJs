@@ -46,6 +46,8 @@
   "continue": "[TRANSLATE] CONTINUAR",
   "conversionRate": "Taxa de câmbio",
   "copy": "Copiar",
+  "CopyToClipboardError": "Erro ao copiar para a área de transferência",
+  "CopyToClipboardSuccess": "Texto copiado para a área de transferência",
   "country": "País",
   "cp_API": "API",
   "cp_BUSINESS_PAGE": "Página Comercial",
