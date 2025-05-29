@@ -2,6 +2,7 @@ import IntlWrapper from "@/components/intl/Wrapper"
 import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
 import { ReduxProvider } from "@/components/ReduxProvider" // Import ReduxProvider
 import TanstackProvider from "@/components/TanstackProvider"
+import { cn } from "@/utils/data/utils"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"
@@ -41,9 +42,8 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
+      <body className={cn(poppins.variable, roboto.variable, "antialiased")}>
         <Suspense>
-          {/* Wrap IntlWrapper with PostHogInsert */}
           <PostHogInsert>
             <ReduxProvider>
               <IntlWrapper>

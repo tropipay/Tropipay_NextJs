@@ -1,5 +1,6 @@
 "use client" // Indica que este es un componente del lado del cliente
 
+import { cn } from "@/utils/data/utils"
 import { useEffect, useState } from "react"
 
 const SwipeAnimation = () => {
@@ -22,9 +23,10 @@ const SwipeAnimation = () => {
 
   return (
     <div
-      className={`absolute h-[110px] w-[120px] block left-[calc(50vw-120px)] top-[calc(50vh-120px)] z-10 ${
+      className={cn(
+        "absolute h-[110px] w-[120px] block left-[calc(50vw-120px)] top-[calc(50vh-120px)] z-10",
         isVisible ? "visible" : "hidden"
-      }`}
+      )}
     >
       <div
         className="path w-5 h-5 absolute bg-indigo-300 bg-opacity-50 rounded-full top-7 left-20 invisible"

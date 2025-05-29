@@ -1,4 +1,5 @@
 import { Button, Input } from "@/components/ui"
+import { cn } from "@/utils/data/utils"
 import React, { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 
@@ -97,9 +98,7 @@ const InputAmount: React.FC<InputAmountProps> = (props) => {
         inputMode="numeric"
         value={internalValue} // Valor controlado
         onChange={handleChange} // Manejar cambios
-        className={`text-right ${className} ${
-          internalValue ? "pr-[62px]" : ""
-        }`} // Agregar padding-right cuando hay un valor
+        className={cn("text-right", className, internalValue && "pr-[62px]")} // Agregar padding-right cuando hay un valor
         placeholder={internalValue ? "" : placeholder} // Mostrar placeholder solo si no hay valor
         {...rest}
       />

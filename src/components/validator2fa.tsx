@@ -1,16 +1,17 @@
 "use client"
-import React, { useEffect, useState } from "react"
-import { useIntl } from "react-intl"
-import Countdown from "react-countdown"
 import ErrorHandler from "@/components/ErrorHandler"
-import use2AF from "@/hooks/use2AF"
 import SimplePage from "@/components/simplePage/simplePage"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
+import use2AF from "@/hooks/use2AF"
+import { cn } from "@/utils/data/utils"
 import { getUserStore } from "@/utils/user/utilsUser"
+import { useEffect, useState } from "react"
+import Countdown from "react-countdown"
+import { useIntl } from "react-intl"
 
 // Define a type for the expected error structure
 interface ApiError {
@@ -134,12 +135,13 @@ const Validator2fa = ({
                   pattern="^[0-9]+$" // Basic pattern validation
                 >
                   <InputOTPGroup
-                    className={`d-flex justify-content-center align-items-center flex-nowrap mx-auto ${
+                    className={cn(
+                      "d-flex justify-content-center align-items-center flex-nowrap mx-auto",
                       v2fa.twofa === local2fa.PIN ||
-                      v2fa.twofa === local2fa.PIN_TROPICARD
+                        v2fa.twofa === local2fa.PIN_TROPICARD
                         ? "password-input" // Apply specific style if needed
                         : ""
-                    }`}
+                    )}
                   >
                     {Array.from({
                       length:
