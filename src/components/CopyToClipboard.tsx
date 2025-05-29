@@ -8,7 +8,10 @@ import { useState } from "react"
 
 interface CopyToClipboardProps {
   text: string | number | bigint | true
-  messages?: any
+  messages?: {
+    success: string
+    error: string
+  }
   toast?: any
 }
 
