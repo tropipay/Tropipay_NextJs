@@ -1,5 +1,6 @@
 "use client"
 
+import { cn } from "@/utils/data/utils"
 import { Copy } from "lucide-react"
 import { useState } from "react"
 
@@ -31,7 +32,7 @@ export default function CopyToClipboard({
       className="rounded hover:bg-gray-100 transition-colors"
     >
       <Copy
-        className={`w-4 h-4 ${copied ? "text-green-500" : "text-gray-500"}`}
+        className={cn("w-4 h-4", copied ? "text-green-500" : "text-gray-500")}
       />
     </button>
   )

@@ -1,3 +1,4 @@
+import { cn } from "@/utils/data/utils"
 import Link from "next/link"
 import { useState } from "react"
 import { Button } from "../ui/Button"
@@ -20,9 +21,10 @@ const Aside = () => {
       {/* Sidebar for large screens */}
       <aside
         id="sidebar"
-        className={`fixed top-0 left-0 z-20 h-full pt-16 lg:flex flex-shrink-0 flex-col w-64 bg-white transition-all duration-300 transform ${
+        className={cn(
+          "fixed top-0 left-0 z-20 h-full pt-16 lg:flex flex-shrink-0 flex-col w-64 bg-white transition-all duration-300 transform lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
+        )}
         aria-label="Sidebar"
       >
         <div className="relative flex-1 flex flex-col min-h-0 border-r border-gray-200">

@@ -1,3 +1,4 @@
+import { cn } from "@/utils/data/utils"
 import { FormattedMessage } from "react-intl"
 import TropipayLogo from "../images/TropipayLogo"
 
@@ -7,9 +8,13 @@ interface Props {
   endDate: string
 }
 
-export default function ReportHeader({ className, startDate, endDate }: Props) {
+export default function ReportHeader({
+  className = "",
+  startDate,
+  endDate,
+}: Props) {
   return (
-    <header className={`w-full text-sm text-left font-sans ${className || ""}`}>
+    <header className={cn("w-full text-sm text-left font-sans", className)}>
       {/* Encabezado principal */}
       <div className="space-y-2 flex items-center justify-between">
         <h1 className="text-sm font-bold text-gray-900">

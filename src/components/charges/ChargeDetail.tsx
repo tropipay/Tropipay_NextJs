@@ -186,7 +186,7 @@ export default function ChargeDetail(props: any): JSX.Element {
         {movementId && (
           <Button
             variant="outline"
-            className={`${refundable ? "w-1/2" : "w-full"}`}
+            className={refundable ? "w-1/2" : "w-full"}
             onClick={onDownloadInvoiceFile}
           >
             <FormattedMessage id="download" />

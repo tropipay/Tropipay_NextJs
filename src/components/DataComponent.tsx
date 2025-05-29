@@ -2,6 +2,7 @@
 
 import { FetchDataConfig } from "@/types/fetchData"
 import { useFetchData } from "@/utils/data/useFetchData"
+import { cn } from "@/utils/data/utils"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
@@ -51,9 +52,11 @@ export default function DataComponent({
 
   return (
     <div
-      className={`w-full ${className} ${
+      className={cn(
+        "w-full",
+        className,
         loading && "opacity-70 pointer-events-none"
-      }`}
+      )}
     >
       {showLoading && loading && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9998]">
