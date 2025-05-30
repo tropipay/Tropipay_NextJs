@@ -82,7 +82,7 @@ export function TextToCopy({
       ) : (
         value
       )}
-      <span className="opacity-25 group-hover:block group-hover:opacity-100 transition-opacity">
+      <span className="opacity-15 group-hover:block group-hover:opacity-100 transition-opacity">
         <CopyToClipboard
           text={textToCopyToUse || getTextFromValue(value)}
           messages={messages}
