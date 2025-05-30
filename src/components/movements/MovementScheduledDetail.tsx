@@ -20,18 +20,20 @@ import { MovementScheduled } from "@/types/movements"
 import { formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations } from "@/utils/intl"
 import { TextToCopy } from "../TextToCopy"
 import BookingStore from "@/stores/BookingStore"
 import ErrorHandler from "../ErrorHandler"
 import useStoreListener from "@/hooks/useStoreListener"
+import ErrorHandlerToast from "../ErrorHandlerToast"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [isError, setIsError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [errorData, setErrorData] = useState(null)
 
   const row: MovementScheduled = props.data
   const {
@@ -47,7 +49,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
   } = row
 
   const { t } = useTranslations()
-  const { errorData } = useStoreListener([
+  useStoreListener([
     {
       stores: [BookingStore],
       eventPrefix: "MovementScheduledDetail",
@@ -56,11 +58,8 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           setIsDone(true)
           setIsLoading(false)
         },
-        DEACTIVATE_SCHEDULED_TRANSACTION_KO: (obj) => {
-          console.error("Error:", obj)
-          setIsLoading(false)
-        },
       },
+      setErrorData,
     },
   ])
 
@@ -173,7 +172,6 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
         )}
       </div>
       {/* <ErrorHandler errorData={errorData} /> */}
-
       <AlertDialog open={openModalConfirm} onOpenChange={setOpenModalConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -213,6 +211,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <ErrorHandlerToast errorData={errorData} setErrorData={setErrorData} />
     </>
   )
 }

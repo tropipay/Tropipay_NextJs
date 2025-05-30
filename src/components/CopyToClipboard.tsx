@@ -5,7 +5,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { useToast } from "@/hooks/useToast"
+import { toast } from "sonner"
 import { cn } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import { Copy } from "lucide-react"
@@ -27,7 +27,6 @@ export default function CopyToClipboard({
 }: CopyToClipboardProps) {
   const { t } = useTranslations()
   const [copied, setCopied] = useState(false)
-  const { toast } = useToast()
 
   const messagesToUse = messages || {
     success: t("CopyToClipboardSuccess"),
@@ -39,18 +38,10 @@ export default function CopyToClipboard({
     try {
       await navigator.clipboard.writeText(text.toLocaleString())
       setCopied(true)
-      toast({
-        description: messagesToUse?.success,
-        duration: 2000,
-      })
+      toast.success(messagesToUse?.success, { duration: 2000 })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      toast({
-        title: "Error",
-        description: messagesToUse?.error,
-        variant: "destructive",
-        duration: 2000,
-      })
+      toast.error(messagesToUse?.error, { duration: 2000 })
     }
   }
 

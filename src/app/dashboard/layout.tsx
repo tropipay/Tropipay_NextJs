@@ -11,7 +11,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui"
-import { Toaster } from "@/components/ui/Toaster"
+import { Toaster } from "@/components/ui/Sonner"
 import { env } from "@/config/env"
 import useStoreListener from "@/hooks/useStoreListener"
 import ProfileStore from "@/stores/ProfileStore"

@@ -13,9 +13,8 @@ import { MovementDetails } from "@/types/movements"
 import { formatAmount } from "@/utils/data/utils"
 import { callPostHog } from "@/utils/utils"
 import { format } from "date-fns"
-import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
-import { useState, useCallback } from "react"
+import { useState } from "react"
 import BookingStore from "@/stores/BookingStore"
 import useStoreListener from "@/hooks/useStoreListener"
 import { TextToCopy } from "../TextToCopy"
@@ -24,8 +23,6 @@ import { useTranslations } from "@/utils/intl"
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: MovementDetails = props.data.data.movements.items[0]
-  const { data: session } = useSession()
-  const token = session?.user.token
   const postHog = usePostHog()
   const {
     email,
@@ -60,10 +57,11 @@ export default function MovementDetail(props: any): JSX.Element {
     },
   } = row
 
+  const [errorData, setErrorData] = useState(null)
+
   const { t } = useTranslations()
 
   const handleDownloadSuccess = (obj: any) => {
-    console.log("data:", obj)
     const blob = obj.payload.data
     const link = document.createElement("a")
     link.href = window.URL.createObjectURL(blob)
@@ -77,10 +75,8 @@ export default function MovementDetail(props: any): JSX.Element {
       eventPrefix: "DOWNLOAD_PDF",
       actions: {
         DOWNLOAD_PDF_OK: handleDownloadSuccess,
-        DOWNLOAD_PDF_KO: (obj: any) => {
-          console.error("Error downloading invoice:", obj)
-        },
       },
+      setErrorData,
     },
   ])
 

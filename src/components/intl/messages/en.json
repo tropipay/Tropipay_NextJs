@@ -81,6 +81,7 @@
   "email": "Email",
   "email_description": "[TRANSLATE] Por favor, introduce el código de seguridad recibido por correo electrónico",
   "enter_refund_amount": "Enter the amount to refund",
+  "error": "Error",
   "errorCode": "Response Code",
   "error_NO_MOVEMENTS_TO_DOWNLOAD": "No movements found to download",
   "error_bad_period": "The specified period is incorrect.",

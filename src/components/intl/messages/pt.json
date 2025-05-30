@@ -81,6 +81,7 @@
   "email": "Email",
   "email_description": "[TRANSLATE] Por favor, introduce el código de seguridad recibido por correo electrónico",
   "enter_refund_amount": "Insira o valor a reembolsar",
+  "error": "Erro",
   "errorCode": "Código de erro",
   "error_NO_MOVEMENTS_TO_DOWNLOAD": "Nenhum movimento encontrado para descarregar",
   "error_bad_period": "O período especificado está incorreto.",
