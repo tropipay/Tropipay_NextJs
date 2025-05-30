@@ -74,7 +74,7 @@ export function renderedAmount(
       value={
         <div className="flex items-center gap-1">
           <span className="font-bold">
-            ${addSign && (value > 0 ? "+" : "")}
+            {addSign && (value > 0 ? "+" : "")}
             {formatAmount(value)}
           </span>
           <span className="text-grayFont">{currency}</span>
@@ -85,7 +85,7 @@ export function renderedAmount(
   ) : (
     <div className="flex items-center gap-1">
       <span className="font-bold">
-        ${addSign && (value > 0 ? "+" : "")}
+        {addSign && (value > 0 ? "+" : "")}
         {formatAmount(value)}
       </span>
       <span className="text-grayFont">{currency}</span>
