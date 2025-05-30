@@ -29,8 +29,8 @@ const FacetedBadge = ({ value, optionList, optionListGroups }) => {
       : "default"
 
   return (
-    <Badge variant={badgeVariant}>
-      <span className="mx-1 min-w-[72px] ">
+    <Badge variant={badgeVariant} className="min-w-[110px]">
+      <span className="mx-1">
         <FormattedMessage id={currentState.label} />
       </span>
       {Icon && <Icon className="h-4 w-4 mr-1" />}
