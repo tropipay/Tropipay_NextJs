@@ -35,7 +35,7 @@ export default function CopyToClipboard({
       setCopied(true)
       toast({
         description: messagesToUse?.success,
-        duration: 3000,
+        duration: 2000,
       })
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
@@ -43,7 +43,7 @@ export default function CopyToClipboard({
         title: "Error",
         description: messagesToUse?.error,
         variant: "destructive",
-        duration: 3000,
+        duration: 2000,
       })
     }
   }
