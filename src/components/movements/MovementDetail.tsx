@@ -62,13 +62,14 @@ export default function MovementDetail(props: any): JSX.Element {
 
   const { t } = useTranslations()
 
-  const handleDownloadSuccess = useCallback((obj: any) => {
-    const blob = obj.data
+  const handleDownloadSuccess = (obj: any) => {
+    console.log("data:", obj)
+    const blob = obj.payload.data
     const link = document.createElement("a")
     link.href = window.URL.createObjectURL(blob)
     link.download = "invoice.pdf"
     link.click()
-  }, [])
+  }
 
   useStoreListener([
     {
