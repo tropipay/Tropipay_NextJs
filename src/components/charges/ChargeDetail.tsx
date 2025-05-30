@@ -7,21 +7,17 @@ import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
-import { env } from "@/config/env"
 import { Charge } from "@/types/charges"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
-import axios from "axios"
-import { format } from "date-fns"
-import { useSession } from "next-auth/react"
-import { useState } from "react"
+import { formatAmount } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
+import { format } from "date-fns"
+import { useState } from "react"
+import { FormattedMessage } from "react-intl"
 import { TextToCopy } from "../TextToCopy"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: Charge = props.data.data.charges.items[0]
-  const { data: session } = useSession()
-  const token = session?.user.token
 
   const { t } = useTranslations()
   const {
@@ -44,31 +40,6 @@ export default function ChargeDetail(props: any): JSX.Element {
     refundable,
     movementId,
   } = row
-
-  const onDownloadInvoiceFile = async () => {
-    try {
-      const response = await axios.post(
-        `${env.API_URL}/api/v3/movements/transferinvoice`,
-        JSON.stringify({
-          bookingId: movementId,
-          label: row.state,
-        }),
-        {
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          responseType: "blob",
-          validateStatus: (status) => status >= 200 && status < 300,
-        }
-      )
-      const blob = await response.data
-      const link = document.createElement("a")
-      link.href = window.URL.createObjectURL(blob)
-      link.download = "invoice.pdf"
-      link.click()
-    } catch (e) {}
-  }
 
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
@@ -119,7 +90,12 @@ export default function ChargeDetail(props: any): JSX.Element {
           {cardBin && (
             <RowDetailInfo label={t("cardBin")} value={`${cardBin} **** `} />
           )}
-          <RowDetailInfo label={t("movementCode")} value={reference} />
+          <RowDetailInfo
+            label={t("movementCode")}
+            value={reference}
+            onValueClick={() => props.onChangeMovementId?.(movementId)}
+            valueTooltip={<FormattedMessage id="show_movement" />}
+          />
           <RowDetailInfo label={t("errorCode")} value={errorCode} />
         </RowDetailSection>
 
