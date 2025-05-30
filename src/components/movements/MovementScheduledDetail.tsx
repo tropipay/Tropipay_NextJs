@@ -198,7 +198,10 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               <>
                 <Button
                   variant={"outline"}
-                  onClick={() => setOpenModalConfirm(false)}
+                  onClick={() => {
+                    setErrorData(null)
+                    setOpenModalConfirm(false)
+                  }}
                 >
                   {t("cancel")}
                 </Button>
