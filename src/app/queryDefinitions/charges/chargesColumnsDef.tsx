@@ -14,6 +14,7 @@ export const chargesColumnsDef: any = {
     enableSorting: true,
     size: 120,
     order: 0,
+    enableHiding: false,
   },
   amount: {
     type: "amount",
@@ -21,12 +22,14 @@ export const chargesColumnsDef: any = {
     order: 1,
     field: `amount { value currency }`,
     enableSorting: true,
+    enableHiding: false,
   },
   paymentMethod: {
     type: "faceted",
     optionList: movementsPaymentMethods,
     size: 220,
     order: 2,
+    enableHiding: false,
   },
   state: {
     type: "facetedBadge",
@@ -35,6 +38,7 @@ export const chargesColumnsDef: any = {
     showFilter: true,
     enableSorting: true,
     order: 3,
+    enableHiding: false,
   },
   reference: {
     order: 4,
