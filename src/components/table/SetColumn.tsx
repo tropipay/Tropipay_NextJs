@@ -65,7 +65,7 @@ export function renderedAmount(
   addSign: boolean,
   toClipboard: boolean
 ) {
-  const formattedValue = `${addSign && value > 0 ? "+" : ""}$${formatAmount(
+  const formattedValue = `${addSign && value > 0 ? "+" : ""}${formatAmount(
     value
   )} ${currency}`
 
