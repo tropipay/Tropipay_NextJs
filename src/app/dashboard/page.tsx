@@ -1,11 +1,7 @@
 "use client"
 
-import { FormattedMessage } from "react-intl"
+import { redirect } from 'next/navigation'
 
 export default function Home() {
-  return (
-    <div className="w-full p-2 uppercase">
-      <FormattedMessage id={"dashboard"} />
-    </div>
-  )
+  redirect('/dashboard/movements')
 }

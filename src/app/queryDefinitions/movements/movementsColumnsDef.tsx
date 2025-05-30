@@ -27,12 +27,14 @@ export const movementsColumnsDef: any = {
     showFilter: true,
     order: 1,
     field: `netAmount { value currency }`,
+    toClipboard: true,
   },
   amountCharged: {
     type: "amount",
     hidden: true,
     enableSorting: false,
     field: `amountCharged { value currency }`,
+    toClipboard: true,
   },
   state: {
     type: "facetedBadge",
@@ -46,6 +48,7 @@ export const movementsColumnsDef: any = {
   sender: {
     enableHiding: false,
     order: 3,
+    toClipboard: true,
   },
   movementType: {
     type: "faceted",
@@ -58,21 +61,25 @@ export const movementsColumnsDef: any = {
   concept: {
     showFilter: true,
     order: 5,
+    toClipboard: true,
   },
   product: {
     hidden: true,
   },
   bankOrderCode: {
     order: 6,
+    toClipboard: true,
   },
   reference: {
     hidden: true,
     enableSorting: true,
     filterSearchType: "EXACT_MATCH",
+    toClipboard: true,
   },
   email: {
     hidden: true,
     filterSearchType: "EXACT_MATCH",
+    toClipboard: true,
   },
   completedAt: {
     type: "date",
@@ -84,6 +91,7 @@ export const movementsColumnsDef: any = {
     filter: false,
     hidden: true,
     field: `fee { value currency }`,
+    toClipboard: true,
   },
   conversionRate: {
     filter: false,
@@ -97,6 +105,7 @@ export const movementsColumnsDef: any = {
   },
   recipient: {
     hidden: true,
+    toClipboard: true,
   },
   summary: {
     hidden: true,
