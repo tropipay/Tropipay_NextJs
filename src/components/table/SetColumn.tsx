@@ -122,7 +122,7 @@ export function setColumns<TData>(
       meta,
       hideColumn = false,
       render,
-      toClipboard = true,
+      toClipboard = false,
     } = options
 
     let baseConfig: ColumnDef<TData> = {

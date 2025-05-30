@@ -23,6 +23,7 @@ export const chargesColumnsDef: any = {
     field: `amount { value currency }`,
     enableSorting: true,
     enableHiding: false,
+    toClipboard: true,
   },
   paymentMethod: {
     type: "faceted",
@@ -44,19 +45,23 @@ export const chargesColumnsDef: any = {
     order: 4,
     showFilter: true,
     enableSorting: true,
+    toClipboard: true,
   },
   email: {
     order: 5,
     showFilter: true,
     filterSearchType: "EXACT_MATCH",
+    toClipboard: true,
   },
   concept: {
     filter: false,
     hidden: true,
+    toClipboard: true,
   },
   bankOrderCode: {
     filter: false,
     hidden: true,
+    toClipboard: true,
   },
   summary: {
     filter: false,
@@ -65,6 +70,7 @@ export const chargesColumnsDef: any = {
   clientIp: {
     filter: false,
     hidden: true,
+    toClipboard: true,
   },
   cardExpirationDate: {
     filter: false,
@@ -105,9 +111,11 @@ export const chargesColumnsDef: any = {
     hidden: true,
     render: (row: any) => <span className="capitalize">{row.fullName}</span>,
     filterSearchType: "PARTIAL_MATCH",
+    toClipboard: true,
   },
   issuerBank: {
     hidden: true,
+    toClipboard: true,
   },
   errorCode: {
     hidden: true,
@@ -127,6 +135,7 @@ export const chargesColumnsDef: any = {
   address: {
     filter: false,
     hidden: true,
+    toClipboard: true,
   },
   currency: {
     filter: false,
