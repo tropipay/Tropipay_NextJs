@@ -1,10 +1,16 @@
 "use client"
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
 import { useToast } from "@/hooks/useToast"
-import { useTranslations } from "@/utils/intl"
 import { cn } from "@/utils/data/utils"
+import { useTranslations } from "@/utils/intl"
 import { Copy } from "lucide-react"
 import { useState } from "react"
+import { FormattedMessage } from "react-intl"
 
 interface CopyToClipboardProps {
   text: string | number | bigint | true
@@ -49,12 +55,23 @@ export default function CopyToClipboard({
   }
 
   return (
-    <Copy
-      onClick={(e) => copyText(e)}
-      className={cn(
-        "cursor-pointer w-3 h-3",
-        copied ? "text-green-500" : "text-gray-500"
-      )}
-    />
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Copy
+          onClick={(e) => copyText(e)}
+          className={cn(
+            "cursor-pointer w-3 h-3",
+            copied ? "text-green-500" : "text-gray-500"
+          )}
+        />
+      </TooltipTrigger>
+      <TooltipContent
+        side="bottom"
+        align="center"
+        className="normal-case font-normal text-sm"
+      >
+        <FormattedMessage id="copy" />
+      </TooltipContent>
+    </Tooltip>
   )
 }

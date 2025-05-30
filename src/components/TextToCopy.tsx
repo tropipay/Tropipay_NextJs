@@ -1,4 +1,9 @@
 import CopyToClipboard from "@/components/CopyToClipboard"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
 import { useTranslations } from "@/utils/intl"
 import React from "react"
 
@@ -11,6 +16,24 @@ type TextToCopyProps = {
     error: string
   }
   translate?: boolean
+  onValueClick?: (v: any) => void
+  valueTooltip?: React.ReactNode
+}
+
+type ClickableValueProps = {
+  value: any
+  onValueClick: (v: any) => void
+}
+
+const ClickableValue: React.FC<ClickableValueProps> = ({
+  value,
+  onValueClick,
+}) => {
+  return (
+    <span className="cursor-pointer" onClick={() => onValueClick(value)}>
+      {value}
+    </span>
+  )
 }
 
 export function TextToCopy({
@@ -19,6 +42,8 @@ export function TextToCopy({
   className,
   messages,
   translate = false,
+  valueTooltip,
+  onValueClick,
 }: TextToCopyProps) {
   const { t } = useTranslations()
   function getTextFromValue(value: any): string {
@@ -39,12 +64,25 @@ export function TextToCopy({
 
   return (
     <span
-      className={`px-2 hover:bg-gray-100 rounded flex items-center gap-1 group ${
-        className || ""
-      }`}
+      className={`rounded flex items-center gap-1 group ${className || ""}`}
     >
-      {value}
-      <span className="hidden opacity-0 group-hover:block group-hover:opacity-100 transition-opacity">
+      {onValueClick ? (
+        valueTooltip ? (
+          <Tooltip>
+            <TooltipTrigger>
+              <ClickableValue value={value} onValueClick={onValueClick} />
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="center">
+              {valueTooltip}
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <ClickableValue value={value} onValueClick={onValueClick} />
+        )
+      ) : (
+        value
+      )}
+      <span className="opacity-25 group-hover:block group-hover:opacity-100 transition-opacity">
         <CopyToClipboard
           text={textToCopyToUse || getTextFromValue(value)}
           messages={messages}

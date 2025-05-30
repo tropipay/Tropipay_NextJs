@@ -1,4 +1,6 @@
 {
+  "CopyToClipboardError": "Error copying to clipboard",
+  "CopyToClipboardSuccess": "Text copied to clipboard",
   "account": "Account",
   "accounts": "Accounts",
   "add_account": "Add account",
@@ -46,8 +48,6 @@
   "continue": "[TRANSLATE] CONTINUAR",
   "conversionRate": "Conversion Rate",
   "copy": "Copy",
-  "CopyToClipboardError": "Error copying to clipboard",
-  "CopyToClipboardSuccess": "Text copied to clipboard",
   "country": "Country",
   "cp_API": "API",
   "cp_BUSINESS_PAGE": "Business Page",
@@ -212,6 +212,7 @@
   "shipments": "Shipments",
   "show_columns": "Show Columns",
   "show_details": "Show details",
+  "show_movement": "Show associated movement",
   "sms_description": "[TRANSLATE] Por favor, introduce el código que hemos enviado a tu teléfono",
   "sort_by": "Sort by",
   "st_CONTAINS": "Contains",
