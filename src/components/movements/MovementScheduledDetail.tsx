@@ -16,24 +16,22 @@ import {
   AlertDialogTitle,
   Button,
 } from "@/components/ui"
-import { env } from "@/config/env"
 import { MovementScheduled } from "@/types/movements"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
-import axios from "axios"
+import { formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { useTranslations } from "@/utils/intl"
 import { TextToCopy } from "../TextToCopy"
+import BookingStore from "@/stores/BookingStore"
+import ErrorHandler from "../ErrorHandler"
+import useStoreListener from "@/hooks/useStoreListener"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [isError, setIsError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { data: session } = useSession()
-  const token = session?.user.token
 
   const row: MovementScheduled = props.data
   const {
@@ -49,34 +47,30 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
   } = row
 
   const { t } = useTranslations()
-
-  const onCancel = async () => {
-    setIsError(false)
-    setIsLoading(true)
-    try {
-      await axios.put(
-        `${env.API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
-        {},
-        {
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          validateStatus: (status) => status >= 200 && status < 300,
-        }
-      )
-
-      setIsDone(true)
-    } catch (error) {
-      setIsError(true)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { errorData } = useStoreListener([
+    {
+      stores: [BookingStore],
+      eventPrefix: "MovementScheduledDetail",
+      actions: {
+        DEACTIVATE_SCHEDULED_TRANSACTION_OK: (obj) => {
+          setIsDone(true)
+          setIsLoading(false)
+        },
+        DEACTIVATE_SCHEDULED_TRANSACTION_KO: (obj) => {
+          console.error("Error:", obj)
+          setIsLoading(false)
+        },
+      },
+    },
+  ])
 
   const onDone = () => {
     setOpenModalConfirm(false)
     window.location.reload()
+  }
+
+  const onCancel = () => {
+    BookingStore.DeactivateScheduled({ id })
   }
 
   return (
@@ -178,6 +172,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </div>
         )}
       </div>
+      {/* <ErrorHandler errorData={errorData} /> */}
 
       <AlertDialog open={openModalConfirm} onOpenChange={setOpenModalConfirm}>
         <AlertDialogContent>

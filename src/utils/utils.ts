@@ -33,15 +33,3 @@ export const callPostHog = (
   }
   postHogInstance.capture(eventName, properties)
 }
-
-export const listenProcessError = (obj, actions, setErrorData) => {
-  const last_ = obj.type.lastIndexOf("_")
-  const largePrefix = obj.type.substring(0, last_)
-  const responseToProcess = Object.keys(actions).some((key) =>
-    key.startsWith(largePrefix)
-  )
-
-  if (obj.type.endsWith("_KO") && responseToProcess) {
-    if (!actions[obj.type]) setErrorData(obj)
-  }
-}
