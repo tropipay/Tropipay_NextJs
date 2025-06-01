@@ -12,6 +12,7 @@ import { Button } from "@/components/ui"
 import { env } from "@/config/env"
 import { MovementDetails } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { useTranslations } from "@/utils/intl"
 import { callPostHog } from "@/utils/utils"
 import axios from "axios"
 import { format } from "date-fns"
@@ -19,7 +20,6 @@ import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
 import { TextToCopy } from "../TextToCopy"
-import { useTranslations } from "@/utils/intl"
 
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -94,6 +94,7 @@ export default function MovementDetail(props: any): JSX.Element {
         <div className="flex justify-between items-center">
           <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
             <TextToCopy
+              classNameIcon={"hidden"}
               value={`${netAmount.value > 0 ? "+" : ""}${formatAmount(
                 netAmount.value,
                 netAmount.currency,
@@ -109,14 +110,15 @@ export default function MovementDetail(props: any): JSX.Element {
         </div>
         <div className="flex justify-between items-center">
           <p className="text-xs text-gray-500">
-            <TextToCopy value={bankOrderCode} className="p-1" />
+            <TextToCopy
+              classNameIcon={"hidden"}
+              value={bankOrderCode}
+              className="p-1"
+            />
           </p>
           {completedAt && (
             <p className="text-xs text-gray-500">
-              <TextToCopy
-                value={format(new Date(completedAt), "dd/MM/yy HH:mm")}
-                className="p-1"
-              />
+              {format(new Date(completedAt), "dd/MM/yy HH:mm")}
             </p>
           )}
         </div>
@@ -127,38 +129,49 @@ export default function MovementDetail(props: any): JSX.Element {
           {product && (
             <RowDetailInfo label={t("product")} value={t(`cp_${product}`)} />
           )}
-          <RowDetailInfo label={t("concept")} value={concept} />
+          <RowDetailInfo toClipboard label={t("concept")} value={concept} />
         </RowDetailSection>
 
         <RowDetailSection title={t("beneficiary_data")}>
-          <RowDetailInfo label={t("alias")} value={alias} />
+          <RowDetailInfo toClipboard label={t("alias")} value={alias} />
           {name && (
             <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
               label={t("name")}
               value={<span className="uppercase">{name}</span>}
             />
           )}
           <RowDetailInfo label={t("account")} value={account} />
-          <RowDetailInfo label={t("email")} value={email} />
+          <RowDetailInfo toClipboard label={t("email")} value={email} />
           <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
         <RowDetailSection title={t("sender_data")}>
           {senderName && (
             <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
               label={t("name")}
               value={
                 <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
               }
             />
           )}
-          <RowDetailInfo label={t("email")} value={senderEmail} />
-          <RowDetailInfo label={t("address")} value={clientAddress} />
+          <RowDetailInfo toClipboard label={t("email")} value={senderEmail} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("address")}
+            value={clientAddress}
+          />
           <RowDetailInfo label={t("country")} value={senderCountry} />
         </RowDetailSection>
 
         <RowDetailSection title={t("imports")}>
           <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
             label={t("amountCharged")}
             value={formatAmount(
               chargedAmount.value,
@@ -168,17 +181,23 @@ export default function MovementDetail(props: any): JSX.Element {
           />
           {conversionRate && fee && amount.currency !== fee.currency && (
             <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
               label={t("conversionRate")}
               value={`1 EUR = ${conversionRate} ${amount.currency}`}
             />
           )}
           {fee && (
             <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
               label={t("fee")}
               value={formatAmount(fee.value, fee.currency, "right")}
             />
           )}
           <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
             label={t("netAmount")}
             value={`${formatAmount(
               netAmount.value,
@@ -205,7 +224,12 @@ export default function MovementDetail(props: any): JSX.Element {
             />
           )}
           <RowDetailInfo label={t("cardCountry")} value={cardCountry} />
-          <RowDetailInfo label={t("clientIp")} value={clientIp} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("clientIp")}
+            value={clientIp}
+          />
         </RowDetailSection>
 
         <RowDetailSection title={t("schedule")}>

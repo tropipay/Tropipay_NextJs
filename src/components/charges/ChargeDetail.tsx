@@ -47,6 +47,7 @@ export default function ChargeDetail(props: any): JSX.Element {
         <div className="flex justify-between items-center">
           <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
             <TextToCopy
+              classNameIcon={"hidden"}
               value={`${amount.value > 0 ? "+" : ""}${formatAmount(
                 amount.value,
                 amount.currency,
@@ -64,15 +65,16 @@ export default function ChargeDetail(props: any): JSX.Element {
           <p className="text-xs text-gray-500 flex items-center gap-1">
             {t("charge_to")}
             <span className="uppercase">
-              <TextToCopy value={fullName} className="p-1" />
+              <TextToCopy
+                classNameIcon={"hidden"}
+                value={fullName}
+                className="p-1"
+              />
             </span>
           </p>
           {completedAt && (
             <p className="text-xs text-gray-500">
-              <TextToCopy
-                value={format(new Date(completedAt), "dd/MM/yy HH:mm")}
-                className="p-1"
-              />
+              {format(new Date(completedAt), "dd/MM/yy HH:mm")}
             </p>
           )}
         </div>
@@ -80,6 +82,8 @@ export default function ChargeDetail(props: any): JSX.Element {
       <div className="flex-1 overflow-y-auto min-h-0">
         <RowDetailSection title={t("payment_details")}>
           <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
             label={t("amount")}
             value={formatAmount(amount.value, amount.currency, "right")}
           />
@@ -91,6 +95,8 @@ export default function ChargeDetail(props: any): JSX.Element {
             <RowDetailInfo label={t("cardBin")} value={`${cardBin} **** `} />
           )}
           <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
             label={t("movementCode")}
             value={reference}
             onValueClick={() => props.onChangeMovementId?.(movementId)}
@@ -101,11 +107,23 @@ export default function ChargeDetail(props: any): JSX.Element {
 
         <RowDetailSection title={t("client_data")}>
           <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
             label={t("fullName")}
             value={<span className="uppercase">{fullName}</span>}
           />
-          <RowDetailInfo label={t("email")} value={email} />
-          <RowDetailInfo label={t("address")} value={address} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("email")}
+            value={email}
+          />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("address")}
+            value={address}
+          />
           <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
@@ -120,7 +138,12 @@ export default function ChargeDetail(props: any): JSX.Element {
             />
           )}
           <RowDetailInfo label={t("cardCountry")} value={cardCountry} />
-          <RowDetailInfo label={t("clientIp")} value={clientIp} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("clientIp")}
+            value={clientIp}
+          />
         </RowDetailSection>
 
         <RowDetailSection title={t("schedule")}>

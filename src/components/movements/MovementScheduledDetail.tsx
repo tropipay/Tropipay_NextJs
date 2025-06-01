@@ -19,12 +19,12 @@ import {
 import { env } from "@/config/env"
 import { MovementScheduled } from "@/types/movements"
 import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { useTranslations } from "@/utils/intl"
 import axios from "axios"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { useState } from "react"
-import { useTranslations } from "@/utils/intl"
 import { TextToCopy } from "../TextToCopy"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
@@ -86,6 +86,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           <div className="flex justify-between items-center">
             <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
               <TextToCopy
+                classNameIcon={"hidden"}
                 value={`${originAmount > 0 ? "+" : ""}${formatAmount(
                   originAmount,
                   currency,
@@ -101,14 +102,15 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </div>
           <div className="flex justify-between items-center">
             <p className="text-xs text-gray-500 flex items-center gap-1">
-              <TextToCopy value={t("send_to") + " " + alias} className="p-1" />
+              <TextToCopy
+                classNameIcon={"hidden"}
+                value={t("send_to") + " " + alias}
+                className="p-1"
+              />
             </p>
             {nextDate && (
               <p className="text-xs text-gray-500">
-                <TextToCopy
-                  value={format(new Date(nextDate), "dd/MM/yy HH:mm")}
-                  className="p-1"
-                />
+                {format(new Date(nextDate), "dd/MM/yy HH:mm")}
               </p>
             )}
           </div>
@@ -116,12 +118,24 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
         <div className="flex-1 overflow-y-auto min-h-0">
           <RowDetailSection title={t("client_data")}>
             <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
               label={t("beneficiary")}
               value={<span className="capitalize">{alias}</span>}
               textToCopy={alias}
             />
-            <RowDetailInfo label={t("destiny_account")} value={accountNumber} />
-            <RowDetailInfo label={t("concept")} value={conceptTransfer} />
+            <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
+              label={t("destiny_account")}
+              value={accountNumber}
+            />
+            <RowDetailInfo
+              toClipboard
+              toClipboardIconHidden
+              label={t("concept")}
+              value={conceptTransfer}
+            />
           </RowDetailSection>
 
           {/* <RowDetailSection title={t("payment_details")}>
