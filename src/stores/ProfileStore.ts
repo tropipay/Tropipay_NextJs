@@ -53,7 +53,7 @@ const ProfileStore = createStore(
           // Crear un listener temporal para este request específico
           const unsubscribe = store.listen((event) => {
             if (event.type === "USER_PROFILE_OK") {
-              const profileData = event.data?.data
+              const profileData = event.data
               if (profileData) {
                 store.setData(PROFILE_CACHE_ID, {
                   type: "USER_PROFILE_OK",

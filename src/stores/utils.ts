@@ -216,11 +216,14 @@ export async function fetchGetWithTriggers({
     const response = await axios.get(url, finalAxiosConfig)
 
     // 3. Trigger OK event with full response
-    store.trigger(eventOk, response)
+    store.trigger(eventOk, response.data)
   } catch (error) {
     // 4. Trigger KO event with error response if available
     const errorResponse = axios.isAxiosError(error) ? error.response : error
-    store.trigger(eventKO, errorResponse)
+    const errorData = (errorResponse as any)?.data?.error || errorResponse
+    store.trigger(eventKO, {
+      error: errorData,
+    })
   }
 }
 
@@ -246,10 +249,13 @@ export async function fetchPostWithTriggers<TPayload = any>({
 
     const actualEndpoint = env.API_URL + endpoint
     const response = await axios.post(actualEndpoint, payload, finalAxiosConfig)
-    store.trigger(eventOk, response)
+    store.trigger(eventOk, response.data)
   } catch (error) {
     const errorResponse = axios.isAxiosError(error) ? error.response : error
-    store.trigger(eventKO, errorResponse)
+    const errorData = (errorResponse as any)?.data?.error || errorResponse
+    store.trigger(eventKO, {
+      error: errorData,
+    })
   }
 }
 
@@ -275,10 +281,13 @@ export async function fetchPutWithTriggers<TPayload = any>({
 
     const actualEndpoint = env.API_URL + endpoint
     const response = await axios.put(actualEndpoint, payload, finalAxiosConfig)
-    store.trigger(eventOk, response)
+    store.trigger(eventOk, response.data)
   } catch (error) {
     const errorResponse = axios.isAxiosError(error) ? error.response : error
-    store.trigger(eventKO, errorResponse)
+    const errorData = (errorResponse as any)?.data?.error || errorResponse
+    store.trigger(eventKO, {
+      error: errorData,
+    })
   }
 }
 
@@ -306,10 +315,13 @@ export async function fetchDeleteWithTriggers({
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
     const response = await axios.delete(url, finalAxiosConfig)
-    store.trigger(eventOk, response)
+    store.trigger(eventOk, response.data)
   } catch (error) {
     const errorResponse = axios.isAxiosError(error) ? error.response : error
-    store.trigger(eventKO, errorResponse)
+    const errorData = (errorResponse as any)?.data?.error || errorResponse
+    store.trigger(eventKO, {
+      error: errorData,
+    })
   }
 }
 
