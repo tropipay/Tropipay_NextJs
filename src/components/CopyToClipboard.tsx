@@ -51,7 +51,7 @@ export default function CopyToClipboard({
         <Copy
           onClick={(e) => copyText(e)}
           className={cn(
-            "cursor-pointer w-3 h-3",
+            "cursor-pointer w-4 h-4",
             copied ? "text-green-500" : "text-gray-500"
           )}
         />

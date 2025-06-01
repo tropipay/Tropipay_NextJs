@@ -1,7 +1,6 @@
 import { movementsScheduledRecurrences } from "@/app/filterDefinitions/movements"
 import { renderedAmount } from "@/components/table/SetColumn"
 import { TextToCopy } from "@/components/TextToCopy"
-import { MovementScheduled } from "@/types/movements"
 
 export const movementsScheduledColumnsDef: any = {
   amount: {
@@ -9,6 +8,7 @@ export const movementsScheduledColumnsDef: any = {
       return renderedAmount(row.originAmount, row.currency, true, true)
     },
     order: 0,
+    toClipboard: true,
   },
   nextDate: { type: "date", title: "date_to_pay", order: 1 },
   fullName: {
@@ -17,6 +17,7 @@ export const movementsScheduledColumnsDef: any = {
       <TextToCopy value={row.depositaccount.alias} className="capitalize" />
     ),
     order: 2,
+    toClipboard: true,
   },
   email: {
     title: "destiny_account",
@@ -27,6 +28,7 @@ export const movementsScheduledColumnsDef: any = {
       />
     ),
     order: 3,
+    toClipboard: true,
   },
   frecuency: {
     type: "faceted",
@@ -34,5 +36,5 @@ export const movementsScheduledColumnsDef: any = {
     optionList: movementsScheduledRecurrences,
     order: 4,
   },
-  conceptTransfer: { title: "concept", order: 5 },
+  conceptTransfer: { title: "concept", order: 5, toClipboard: true },
 }

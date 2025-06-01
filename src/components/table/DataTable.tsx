@@ -36,6 +36,12 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable"
 import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@radix-ui/react-context-menu"
+import {
   ColumnDef,
   ColumnFiltersState,
   flexRender,
@@ -50,7 +56,7 @@ import {
 } from "@tanstack/react-table"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
@@ -107,12 +113,7 @@ export default function DataTable<TData, TValue>({
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
-  const [contextMenu, setContextMenu] = useState<{
-    x: number
-    y: number
-    visible: boolean
-  }>({ x: 0, y: 0, visible: false })
-  const contextMenuRef = useRef(null)
+  const [selectedText, setSelectedText] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
@@ -351,21 +352,12 @@ export default function DataTable<TData, TValue>({
   )
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        contextMenuRef.current &&
-        !(contextMenuRef.current as any).contains(event.target)
-      ) {
-        setContextMenu({ ...contextMenu, visible: false })
-      }
+    const handleGlobalMouseUp = () => {
+      setSelectedText(window.getSelection()?.toString() ?? "")
     }
-
-    document.addEventListener("mousedown", handleClickOutside)
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [contextMenu])
+    document.addEventListener("mouseup", handleGlobalMouseUp)
+    return () => document.removeEventListener("mouseup", handleGlobalMouseUp)
+  }, [])
 
   if (userId)
     return (
@@ -427,39 +419,53 @@ export default function DataTable<TData, TValue>({
                 <TableBody className="tableBody">
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        rowData={row.original}
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                        className="cursor-pointer hover:bg-gray-100"
-                        data-test-id="dataTable-tableRow-openDetail" // Updated data-test-id
-                        onContextMenu={(e) => {
-                          e.preventDefault()
-                          setSelectedRow(row.original)
-                          setContextMenu({
-                            x: e.clientX,
-                            y: e.clientY,
-                            visible: true,
-                          })
-                        }}
-                        onClick={(e) => {
-                          if (window.getSelection()?.toString() === "") {
-                            handleRowClick(row.original)
-                          }
-                        }}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell
-                            key={cell.id}
-                            style={{ userSelect: "text" }}
+                      <ContextMenu key={row.id}>
+                        <ContextMenuTrigger asChild>
+                          <TableRow
+                            rowData={row.original}
+                            data-state={row.getIsSelected() && "selected"}
+                            className="cursor-pointer hover:bg-gray-100"
+                            data-test-id="dataTable-tableRow-openDetail"
+                            onClick={(e) => {
+                              if (window.getSelection()?.toString() === "") {
+                                handleRowClick(row.original)
+                              }
+                            }}
                           >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
+                            {row.getVisibleCells().map((cell) => (
+                              <TableCell
+                                key={cell.id}
+                                style={{ userSelect: "text" }}
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </ContextMenuTrigger>
+                        <ContextMenuContent className="w-[200px] bg-white shadow-md">
+                          {selectedText && (
+                            <ContextMenuItem
+                              className="h-[30px] hover:bg-gray-200 flex items-center justify-start px-2"
+                              onSelect={() => {
+                                navigator.clipboard.writeText(selectedText)
+                              }}
+                            >
+                              <FormattedMessage id="copy" />
+                            </ContextMenuItem>
+                          )}
+                          <ContextMenuItem
+                            className="h-[30px] hover:bg-gray-200 flex items-center justify-start px-2"
+                            onSelect={() => {
+                              selectedRow && handleRowClick(selectedRow)
+                            }}
+                          >
+                            <FormattedMessage id="show_details" />
+                          </ContextMenuItem>
+                        </ContextMenuContent>
+                      </ContextMenu>
                     ))
                   ) : (
                     <TableRow>
@@ -491,39 +497,6 @@ export default function DataTable<TData, TValue>({
             </div>
           </SheetContent>
         </Sheet>
-        {contextMenu.visible && (
-          <div
-            ref={contextMenuRef}
-            className="absolute z-10 bg-white rounded shadow-md flex flex-col items-stretch w-[200px]"
-            style={{
-              top: contextMenu.y,
-              left: contextMenu.x,
-            }}
-          >
-            {window.getSelection()?.toString() && (
-              <button
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-start"
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    window.getSelection()!.toString()
-                  )
-                  setContextMenu({ ...contextMenu, visible: false })
-                }}
-              >
-                <FormattedMessage id="copy" />
-              </button>
-            )}
-            <button
-              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-start"
-              onClick={() => {
-                selectedRow && handleRowClick(selectedRow)
-                setContextMenu({ ...contextMenu, visible: false })
-              }}
-            >
-              <FormattedMessage id="show_details" />
-            </button>
-          </div>
-        )}
       </>
     )
 }

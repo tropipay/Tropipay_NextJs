@@ -4,6 +4,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
+import { cn } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import React from "react"
 
@@ -11,6 +12,7 @@ type TextToCopyProps = {
   value: any
   textToCopy?: string
   className?: string
+  classNameIcon?: string
   messages?: {
     success: string
     error: string
@@ -25,7 +27,7 @@ type ClickableValueProps = {
   onValueClick: (v: any) => void
 }
 
-const ClickableValue: React.FC<ClickableValueProps> = ({
+export const ClickableValue: React.FC<ClickableValueProps> = ({
   value,
   onValueClick,
 }) => {
@@ -39,7 +41,8 @@ const ClickableValue: React.FC<ClickableValueProps> = ({
 export function TextToCopy({
   value,
   textToCopy,
-  className,
+  className = "",
+  classNameIcon = "",
   messages,
   translate = false,
   valueTooltip,
@@ -82,7 +85,12 @@ export function TextToCopy({
       ) : (
         value
       )}
-      <span className="opacity-15 group-hover:block group-hover:opacity-100 transition-opacity">
+      <span
+        className={cn(
+          "opacity-15 group-hover:block group-hover:opacity-100 transition-opacity",
+          classNameIcon
+        )}
+      >
         <CopyToClipboard
           text={textToCopyToUse || getTextFromValue(value)}
           messages={messages}
