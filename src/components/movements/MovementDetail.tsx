@@ -19,6 +19,7 @@ import BookingStore from "@/stores/BookingStore"
 import useStoreListener from "@/hooks/useStoreListener"
 import { TextToCopy } from "../TextToCopy"
 import { useTranslations } from "@/utils/intl"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
