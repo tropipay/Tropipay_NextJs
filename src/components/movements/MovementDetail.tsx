@@ -63,7 +63,7 @@ export default function MovementDetail(props: any): JSX.Element {
   const { t } = useTranslations()
 
   const handleDownloadSuccess = (obj: any) => {
-    const blob = obj.data.data
+    const blob = obj.data
     const link = document.createElement("a")
     link.href = window.URL.createObjectURL(blob)
     link.download = "invoice.pdf"

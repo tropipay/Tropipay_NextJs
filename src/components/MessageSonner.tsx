@@ -4,15 +4,15 @@ import { toast } from "sonner"
 
 function getApiErrorMessage(
   t,
-  error,
+  obj,
   defaultKey = "CONNECTION_ERROR.RETRY_LATER"
 ) {
-  console.log("error:", error)
-  if (!error?.data?.response.data.error) {
+  console.log("error xxxxxxxxxxxxxxxxx:", obj)
+  if (!obj?.data?.error) {
     return t(defaultKey)
   }
 
-  const { i18n, details } = error.response.data.error
+  const { i18n, details } = obj.data.error
   return details?.length
     ? details[0].i18n || i18n || t(defaultKey)
     : i18n || t(defaultKey)
@@ -32,6 +32,7 @@ const MessageSonner = ({ errorData, setErrorData }) => {
       const message = getApiErrorMessage(t, errorData)
       console.log("message:", message)
       console.log("isError:", isError)
+      console.log("isError:", errorData)
       if (isError) {
         toast.error("Error", {
           description: message,
