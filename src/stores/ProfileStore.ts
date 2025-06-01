@@ -4,9 +4,7 @@ import { getToken } from "@/utils/user/utilsUser"
 type UserProfile = {
   lang: string
   type?: string
-  result?: {
-    data?: Record<string, any>
-  }
+  data?: Record<string, any>
 } & Record<string, any>
 
 interface ProfileStoreMethods {
@@ -54,12 +52,19 @@ const ProfileStore = createStore(
 
           // Crear un listener temporal para este request específico
           const unsubscribe = store.listen((event) => {
-            if (
-              event.type === "USER_PROFILE_OK" ||
-              event.type === "USER_PROFILE_KO"
-            ) {
+            if (event.type === "USER_PROFILE_OK") {
+              const profileData = event.data?.data
+              if (profileData) {
+                store.setData(PROFILE_CACHE_ID, {
+                  type: "USER_PROFILE_OK",
+                  data: profileData,
+                })
+              }
               isRequestInProgress = false
-              unsubscribe() // Remover el listener después de recibir la respuesta
+              unsubscribe()
+            } else if (event.type === "USER_PROFILE_KO") {
+              isRequestInProgress = false
+              unsubscribe()
             }
           }, "ProfileStore-FetchProfile")
         }
@@ -70,11 +75,12 @@ const ProfileStore = createStore(
         return cachedEntry?.data || { lang: DEFAULT_LANGUAGE }
       },
 
-      Update(user?: Record<string, any>): void {
-        if (user) {
+      Update(userOrResponse?: Record<string, any> | { data?: any }): void {
+        if (userOrResponse) {
+          const userData = userOrResponse.data?.data || userOrResponse
           store.setData(PROFILE_CACHE_ID, {
             type: "USER_PROFILE_OK",
-            result: { data: user },
+            data: userData,
           })
         } else if (this.exist()) {
           this.FetchProfile()
@@ -97,7 +103,7 @@ const ProfileStore = createStore(
       getProfileData(): Record<string, any> | { lang: string } {
         try {
           const profile = this.getProfile()
-          return profile?.result?.data || { lang: DEFAULT_LANGUAGE }
+          return profile?.data || { lang: DEFAULT_LANGUAGE }
         } catch {
           return { lang: DEFAULT_LANGUAGE }
         }

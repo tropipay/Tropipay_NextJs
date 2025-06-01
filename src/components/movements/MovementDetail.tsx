@@ -19,6 +19,7 @@ import BookingStore from "@/stores/BookingStore"
 import useStoreListener from "@/hooks/useStoreListener"
 import { TextToCopy } from "../TextToCopy"
 import { useTranslations } from "@/utils/intl"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -62,7 +63,7 @@ export default function MovementDetail(props: any): JSX.Element {
   const { t } = useTranslations()
 
   const handleDownloadSuccess = (obj: any) => {
-    const blob = obj.payload.data
+    const blob = obj.data.data
     const link = document.createElement("a")
     link.href = window.URL.createObjectURL(blob)
     link.download = "invoice.pdf"
@@ -248,6 +249,7 @@ export default function MovementDetail(props: any): JSX.Element {
           orderCode={bankOrderCode}
         />
       </div>
+      <MessageSonner errorData={errorData} setErrorData={setErrorData} />
     </div>
   )
 }

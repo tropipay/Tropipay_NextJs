@@ -20,13 +20,12 @@ import { MovementScheduled } from "@/types/movements"
 import { formatAmount } from "@/utils/data/utils"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslations } from "@/utils/intl"
 import { TextToCopy } from "../TextToCopy"
 import BookingStore from "@/stores/BookingStore"
-import ErrorHandler from "../ErrorHandler"
 import useStoreListener from "@/hooks/useStoreListener"
-import ErrorHandlerToast from "../ErrorHandlerToast"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
@@ -214,7 +213,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <ErrorHandlerToast errorData={errorData} setErrorData={setErrorData} />
+      <MessageSonner errorData={errorData} setErrorData={setErrorData} />
     </>
   )
 }

@@ -7,7 +7,8 @@ function getApiErrorMessage(
   error,
   defaultKey = "CONNECTION_ERROR.RETRY_LATER"
 ) {
-  if (!error?.response?.data?.error) {
+  console.log("error:", error)
+  if (!error?.data?.response.data.error) {
     return t(defaultKey)
   }
 
@@ -17,20 +18,20 @@ function getApiErrorMessage(
     : i18n || t(defaultKey)
 }
 
-const ErrorHandlerToast = ({ errorData, setErrorData }) => {
+const MessageSonner = ({ errorData, setErrorData }) => {
   const { t } = useTranslations()
 
   useEffect(() => {
-    if (!errorData?.payload?.error) return
-
+    if (!errorData) return
     const isError =
       errorData.type.includes("error") ||
       errorData.type.includes("_KO") ||
       errorData.type.includes("_ERROR")
 
     try {
-      const message = getApiErrorMessage(t, errorData.payload.error)
-
+      const message = getApiErrorMessage(t, errorData)
+      console.log("message:", message)
+      console.log("isError:", isError)
       if (isError) {
         toast.error("Error", {
           description: message,
@@ -50,4 +51,4 @@ const ErrorHandlerToast = ({ errorData, setErrorData }) => {
   return null
 }
 
-export default ErrorHandlerToast
+export default MessageSonner

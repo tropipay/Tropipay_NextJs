@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig } from "axios"
 import { CacheEntry, clearAppDataKey, updateAppData } from "./appSlice"
 import { reduxStore, RootState } from "./reduxStore"
 
-type ListenerCallback<T = any> = (event: { type: string; payload: T }) => void
+type ListenerCallback<T = any> = (event: { type: string; data: T }) => void
 
 export type BaseStore = {
   listen: (callback: ListenerCallback, key: string) => () => void
@@ -93,18 +93,7 @@ export function createStore<T extends { name: string } & Record<string, any>>(
     const listenerId = Symbol()
 
     // Wrapper callback that intercepts cacheable events to update cache
-    const wrapperCallback = (event: { type: string; payload: any }) => {
-      if (
-        event.payload?.source === "network" &&
-        event.payload?.cacheConfig?.id &&
-        event.payload?.data !== undefined
-      ) {
-        const storeName = combinedStore.name
-        const cacheId = event.payload.cacheConfig.id
-        // Use the injected setData to update the cache, ensuring correct structure and timestamp
-        setData(cacheId, event.payload.data)
-      }
-
+    const wrapperCallback = (event: { type: string; data: any }) => {
       // Call the original user-provided callback
       callback && callback(event)
     }
@@ -125,10 +114,10 @@ export function createStore<T extends { name: string } & Record<string, any>>(
     }
   }
 
-  const trigger = <TPayload>(eventType: string, payload: TPayload): void => {
+  const trigger = <TData>(eventType: string, data: TData): void => {
     listeners.slice().forEach(({ callback }) => {
       try {
-        callback({ type: eventType, payload })
+        callback({ type: eventType, data })
       } catch (error) {
         console.error("Error in listener callback:", error)
       }
@@ -204,7 +193,7 @@ export async function fetchGetWithTriggers({
 
     if (isCacheValid) {
       // Cache is valid
-      store.trigger(eventOk, { data: cachedEntry.data, source: "cache" }) // Trigger with cached data
+      store.trigger(eventOk, cachedEntry.data) // Trigger with cached data directly
       return // Stop execution, serve from cache
     }
   }
@@ -224,13 +213,14 @@ export async function fetchGetWithTriggers({
     const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
-    const { data } = await axios.get(url, finalAxiosConfig) // Use finalAxiosConfig
+    const response = await axios.get(url, finalAxiosConfig)
 
-    // 3. Trigger OK event - include cacheConfig so listener can update cache
-    store.trigger(eventOk, { data, source: "network", cacheConfig: cache })
+    // 3. Trigger OK event with full response
+    store.trigger(eventOk, response)
   } catch (error) {
-    // 4. Trigger KO event on error
-    store.trigger(eventKO, { error })
+    // 4. Trigger KO event with error response if available
+    const errorResponse = axios.isAxiosError(error) ? error.response : error
+    store.trigger(eventKO, errorResponse)
   }
 }
 
@@ -255,10 +245,11 @@ export async function fetchPostWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = env.API_URL + endpoint
-    const { data } = await axios.post(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
-    store.trigger(eventOk, { data, source: "network" })
+    const response = await axios.post(actualEndpoint, payload, finalAxiosConfig)
+    store.trigger(eventOk, response)
   } catch (error) {
-    store.trigger(eventKO, { error })
+    const errorResponse = axios.isAxiosError(error) ? error.response : error
+    store.trigger(eventKO, errorResponse)
   }
 }
 
@@ -283,10 +274,11 @@ export async function fetchPutWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = env.API_URL + endpoint
-    const { data } = await axios.put(actualEndpoint, payload, finalAxiosConfig) // Use finalAxiosConfig
-    store.trigger(eventOk, { data, source: "network" })
+    const response = await axios.put(actualEndpoint, payload, finalAxiosConfig)
+    store.trigger(eventOk, response)
   } catch (error) {
-    store.trigger(eventKO, { error })
+    const errorResponse = axios.isAxiosError(error) ? error.response : error
+    store.trigger(eventKO, errorResponse)
   }
 }
 
@@ -313,10 +305,11 @@ export async function fetchDeleteWithTriggers({
     const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
-    const { data } = await axios.delete(url, finalAxiosConfig) // Use finalAxiosConfig
-    store.trigger(eventOk, { data, source: "network" })
+    const response = await axios.delete(url, finalAxiosConfig)
+    store.trigger(eventOk, response)
   } catch (error) {
-    store.trigger(eventKO, { error })
+    const errorResponse = axios.isAxiosError(error) ? error.response : error
+    store.trigger(eventKO, errorResponse)
   }
 }
 
