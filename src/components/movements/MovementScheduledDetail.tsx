@@ -2,7 +2,6 @@ import {
   movementScheduledStates,
   movementStateGroups,
 } from "@/app/filterDefinitions/movements"
-import ErrorMessage from "@/components/ErrorMessage"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
@@ -30,7 +29,6 @@ import MessageSonner from "../MessageSonner"
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
-  const [isError, setIsError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errorData, setErrorData] = useState(null)
 
@@ -173,7 +171,6 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               variant="default"
               className="w-full"
               onClick={() => {
-                setIsError(false)
                 setIsDone(false)
                 setIsLoading(false)
                 setOpenModalConfirm(true)
