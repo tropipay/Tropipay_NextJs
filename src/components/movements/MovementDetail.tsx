@@ -9,23 +9,21 @@ import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
-import { env } from "@/config/env"
 import { MovementDetails } from "@/types/movements"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
-import { useTranslations } from "@/utils/intl"
+import { formatAmount } from "@/utils/data/utils"
 import { callPostHog } from "@/utils/utils"
-import axios from "axios"
 import { format } from "date-fns"
-import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
+import BookingStore from "@/stores/BookingStore"
+import useStoreListener from "@/hooks/useStoreListener"
 import { TextToCopy } from "../TextToCopy"
+import { useTranslations } from "@/utils/intl"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: MovementDetails = props.data.data.movements.items[0]
-  const { data: session } = useSession()
-  const token = session?.user.token
   const postHog = usePostHog()
   const {
     email,
@@ -60,32 +58,35 @@ export default function MovementDetail(props: any): JSX.Element {
     },
   } = row
 
+  const [messageData, setMessageData] = useState(null)
+
   const { t } = useTranslations()
 
-  const onDownloadInvoiceFile = async () => {
+  const handleDownloadSuccess = (obj: any) => {
+    const blob = obj.data
+    const link = document.createElement("a")
+    link.href = window.URL.createObjectURL(blob)
+    link.download = "invoice.pdf"
+    link.click()
+  }
+
+  useStoreListener([
+    {
+      stores: [BookingStore],
+      eventPrefix: "DOWNLOAD_PDF",
+      actions: {
+        DOWNLOAD_PDF_OK: handleDownloadSuccess,
+      },
+      setMessageData,
+    },
+  ])
+
+  const onDownloadInvoiceFile = () => {
     callPostHog(postHog, "movements:download_invoice_file")
-    try {
-      const response = await axios.post(
-        `${env.API_URL}/api/v3/movements/transferinvoice`,
-        JSON.stringify({
-          bookingId: row.id,
-          label: row.state,
-        }),
-        {
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          responseType: "blob",
-          validateStatus: (status) => status >= 200 && status < 300,
-        }
-      )
-      const blob = await response.data
-      const link = document.createElement("a")
-      link.href = window.URL.createObjectURL(blob)
-      link.download = "invoice.pdf"
-      link.click()
-    } catch (e) {}
+    BookingStore.DownloadPDF({
+      bookingId: row.id,
+      label: row.state,
+    })
   }
 
   return (
@@ -272,6 +273,10 @@ export default function MovementDetail(props: any): JSX.Element {
           orderCode={bankOrderCode}
         />
       </div>
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </div>
   )
 }

@@ -62,7 +62,7 @@ export default function ChargeDetail(props: any): JSX.Element {
           />
         </div>
         <div className="flex justify-between items-center">
-          <p className="text-xs text-gray-500 flex items-center gap-1">
+          <span className="text-xs text-gray-500 flex items-center gap-1">
             {t("charge_to")}
             <span className="uppercase">
               <TextToCopy
@@ -71,11 +71,11 @@ export default function ChargeDetail(props: any): JSX.Element {
                 className="p-1"
               />
             </span>
-          </p>
+          </span>
           {completedAt && (
-            <p className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500">
               {format(new Date(completedAt), "dd/MM/yy HH:mm")}
-            </p>
+            </span>
           )}
         </div>
       </div>

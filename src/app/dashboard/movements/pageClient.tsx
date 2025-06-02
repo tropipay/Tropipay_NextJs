@@ -4,24 +4,23 @@ import { useTranslation } from "@/components/intl/useTranslation"
 import MovementDetailContainer from "@/components/movements/MovementDetailContainer"
 import MovementDownloadDialog from "@/components/movements/MovementDownloadModal"
 import DataTable from "@/components/table/DataTable"
+import BookingStore from "@/stores/BookingStore"
+import useStoreListener from "@/hooks/useStoreListener"
 import {
   Button,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui"
-import { env } from "@/config/env"
 import { GetMovementsResponse } from "@/types/movements"
-import { fetchHeaders, getUrlSearchData } from "@/utils/data/utils"
-import { toastMessage } from "@/utils/ui/utilsUI"
 import { callPostHog } from "@/utils/utils"
-import axios, { AxiosError } from "axios"
 import { format, parse } from "date-fns"
 import { Download } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+import MessageSonner from "@/components/MessageSonner"
 
 interface Props {
   tableId: string
@@ -33,21 +32,40 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const { t } = useTranslation()
   const postHog = usePostHog()
   const { data: session } = useSession()
-  const { id: userId, token } = session?.user
+  const { id: userId } = session?.user
 
   const [open, setOpen] = useState<boolean>(false)
+  const [messageData, setMessageData] = useState(null)
 
   const onDownloadButtonClick = () => setOpen(true)
 
   const onDownloadModalClose = () => setOpen(false)
 
-  const onDownload = async (
+  useStoreListener([
+    {
+      stores: [BookingStore],
+      eventPrefix: "DOWNLOAD",
+      actions: {
+        DOWNLOAD_OK: () => {
+          setMessageData({
+            // @ts-ignore
+            title: t("download"),
+            message: t("you_will_receive_email_transactions"),
+          })
+          callPostHog(postHog, "movements:download", {})
+        },
+      },
+      setMessageData,
+    },
+  ])
+
+  const onDownload = (
     reportType: string,
     reportFormat: string,
     dateStart?: string,
     dateEnd?: string
   ) => {
-    const queryParams = {
+    const filter = {
       reportType,
       format: reportFormat,
       ...(reportType === "FILTERED_MOVEMENTS" &&
@@ -64,34 +82,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
         }),
     }
 
-    try {
-      const response = await axios(
-        `${env.API_URL}/api/v3/movements/download?${getUrlSearchData(
-          queryParams
-        ).toString()}`,
-        {
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          validateStatus: (status) => status >= 200 && status < 300,
-        }
-      )
-
-      if (response.data.download === "OK") {
-        toastMessage(t("download"), t("you_will_receive_email_transactions"))
-        callPostHog(postHog, "movements:download", queryParams)
-      }
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        const error = e as AxiosError<any>
-        toastMessage(
-          t("download"),
-          t(`error_${error.response?.data.error.code}`),
-          "error"
-        )
-      }
-    }
+    BookingStore.Download(filter)
   }
 
   const toolbarActions = (
@@ -133,6 +124,10 @@ const PageClient = ({ tableId, columns, data }: Props) => {
           }}
         />
       )}
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </div>
   )
 }

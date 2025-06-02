@@ -2,7 +2,6 @@ import {
   movementScheduledStates,
   movementStateGroups,
 } from "@/app/filterDefinitions/movements"
-import ErrorMessage from "@/components/ErrorMessage"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
@@ -16,24 +15,22 @@ import {
   AlertDialogTitle,
   Button,
 } from "@/components/ui"
-import { env } from "@/config/env"
 import { MovementScheduled } from "@/types/movements"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { formatAmount } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
-import axios from "axios"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { useState } from "react"
 import { TextToCopy } from "../TextToCopy"
+import BookingStore from "@/stores/BookingStore"
+import useStoreListener from "@/hooks/useStoreListener"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
-  const [isError, setIsError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { data: session } = useSession()
-  const token = session?.user.token
+  const [messageData, setMessageData] = useState(null)
 
   const row: MovementScheduled = props.data
   const {
@@ -49,34 +46,27 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
   } = row
 
   const { t } = useTranslations()
-
-  const onCancel = async () => {
-    setIsError(false)
-    setIsLoading(true)
-    try {
-      await axios.put(
-        `${env.API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
-        {},
-        {
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          validateStatus: (status) => status >= 200 && status < 300,
-        }
-      )
-
-      setIsDone(true)
-    } catch (error) {
-      setIsError(true)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  useStoreListener([
+    {
+      stores: [BookingStore],
+      eventPrefix: "MovementScheduledDetail",
+      actions: {
+        DEACTIVATE_SCHEDULED_TRANSACTION_OK: (obj) => {
+          setIsDone(true)
+          setIsLoading(false)
+        },
+      },
+      setMessageData,
+    },
+  ])
 
   const onDone = () => {
     setOpenModalConfirm(false)
     window.location.reload()
+  }
+
+  const onCancel = () => {
+    BookingStore.DeactivateScheduled({ id })
   }
 
   return (
@@ -101,17 +91,17 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
             />
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="text-xs text-gray-500 flex items-center gap-1">
               <TextToCopy
                 classNameIcon={"hidden"}
                 value={t("send_to") + " " + alias}
                 className="p-1"
               />
-            </p>
+            </span>
             {nextDate && (
-              <p className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500">
                 {format(new Date(nextDate), "dd/MM/yy HH:mm")}
-              </p>
+              </span>
             )}
           </div>
         </div>
@@ -181,7 +171,6 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               variant="default"
               className="w-full"
               onClick={() => {
-                setIsError(false)
                 setIsDone(false)
                 setIsLoading(false)
                 setOpenModalConfirm(true)
@@ -192,7 +181,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </div>
         )}
       </div>
-
+      {/* <ErrorHandler messageData={messageData} /> */}
       <AlertDialog open={openModalConfirm} onOpenChange={setOpenModalConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -206,9 +195,6 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
                   : "cancel_movement_sched_desc"
               )}
             </AlertDialogDescription>
-            {isError && (
-              <ErrorMessage>{t("error_execute_operation")}</ErrorMessage>
-            )}
           </AlertDialogHeader>
           <AlertDialogFooter>
             {isDone ? (
@@ -219,7 +205,10 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               <>
                 <Button
                   variant={"outline"}
-                  onClick={() => setOpenModalConfirm(false)}
+                  onClick={() => {
+                    setMessageData(null)
+                    setOpenModalConfirm(false)
+                  }}
                 >
                   {t("cancel")}
                 </Button>
@@ -232,6 +221,10 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </>
   )
 }

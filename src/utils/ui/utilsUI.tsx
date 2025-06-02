@@ -1,4 +1,4 @@
-import { toast } from "@/hooks/useToast"
+import { toast } from "sonner"
 import { CircleX, Info, TriangleAlert } from "lucide-react"
 
 type IconMessageType = "info" | "warn" | "error"
@@ -18,16 +18,20 @@ export const toastMessage = (
   description: React.ReactNode,
   type: IconMessageType = "info"
 ) => {
-  toast({
-    //@ts-ignore
-    title: (
+  const icon = getIconMessageByType(type)
+
+  toast(
+    <div>
       <div className="w-full flex items-center">
-        {getIconMessageByType(type)}
+        {icon}
         <span>{title}</span>
       </div>
-    ),
-    description: <span className="pl-6">{description}</span>,
-  })
+      <div className="pl-6">{description}</div>
+    </div>,
+    {
+      icon: icon,
+    }
+  )
 }
 
 /** Crea un objeto de error con mensaje personalizado para ser utilizado con el componente ErrorHandler

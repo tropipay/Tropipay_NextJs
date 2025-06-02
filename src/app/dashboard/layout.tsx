@@ -11,29 +11,28 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui"
-import { Toaster } from "@/components/ui/Toaster"
+import { Toaster } from "@/components/ui/Sonner"
 import { env } from "@/config/env"
+import useStoreListener from "@/hooks/useStoreListener"
 import ProfileStore from "@/stores/ProfileStore"
 import { SessionProvider } from "next-auth/react"
 import { useEffect, useState } from "react"
 
 export default function Page({ children }: ChildrenProps) {
   const [withProfile, setWithProfile] = useState(false)
-  const listener = (obj) => {
-    const actions = {
-      USER_PROFILE_OK: () => {
-        setWithProfile(true)
+
+  useStoreListener([
+    {
+      stores: [ProfileStore],
+      eventPrefix: "layout",
+      actions: {
+        USER_PROFILE_OK: () => setWithProfile(true),
       },
-    }
-    actions[obj.type] && actions[obj.type](obj)
-  }
+    },
+  ])
 
   useEffect(() => {
-    const unSubscriber = ProfileStore.listen(listener, "layout")
     ProfileStore.FetchProfile()
-    return () => {
-      unSubscriber()
-    }
   }, [])
 
   if (withProfile)

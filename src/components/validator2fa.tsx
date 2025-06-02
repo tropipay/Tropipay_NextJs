@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/input-otp"
 import use2AF from "@/hooks/use2AF"
 import { cn } from "@/utils/data/utils"
+import { useTranslations } from "@/utils/intl"
 import { getUserStore } from "@/utils/user/utilsUser"
 import { useEffect, useState } from "react"
 import Countdown from "react-countdown"
-import { useIntl } from "react-intl"
 
 // Define a type for the expected error structure
 interface ApiError {
@@ -39,7 +39,7 @@ const Validator2fa = ({
   toSend,
   data,
 }) => {
-  const intl = useIntl() // Get intl object
+  const { t } = useTranslations()
   const user = getUserStore() // Corrected function call
   const [expired, setExpired] = useState(false)
   const [otpValue, setOtpValue] = useState("")
@@ -64,7 +64,7 @@ const Validator2fa = ({
         <>
           {!v2fa.loading && (
             <div className="d-flex flex-nowrap align-items-center justify-content-center col-alert pt-5 ">
-              {intl.formatMessage({ id: "code_expired" })}{" "}
+              {t("code_expired")}{" "}
             </div>
           )}
         </>
@@ -75,8 +75,7 @@ const Validator2fa = ({
         <>
           <div className="d-flex flex-nowrap align-items-center justify-content-center colPri-form">
             <div className="text-center font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm mt-3">
-              {intl.formatMessage({ id: "expires_in" })}:{" "}
-              {/* Use formatMessage */}
+              {t("expires_in")}: {/* Use formatMessage */}
               {minutes.toString().length === 1 ? `0${minutes}` : minutes}:
               {seconds.toString().length === 1 ? `0${seconds}` : seconds}
             </div>
@@ -90,17 +89,15 @@ const Validator2fa = ({
     return (
       <SimplePage
         icon=""
-        title={intl.formatMessage({ id: titleLabel })}
+        title={t(titleLabel)}
         className={className}
-        description={intl.formatMessage({ id: v2fa.messageLabel })} // Use formatMessage
+        description={v2fa.messageLabel ? t(v2fa.messageLabel) : ""} // Use formatMessage
         classTitle={`${classNameTitle}`}
         classDescription={`${classNameSubtitle}`}
         loading={v2fa.loading}
-        buttonBText={intl.formatMessage({ id: buttonCancelLabel })} // Use formatMessage
+        buttonBText={t(buttonCancelLabel)} // Use formatMessage
         buttonBAction={v2fa.cancel}
-        buttonAText={
-          expired ? intl.formatMessage({ id: buttonResendLabel }) : ""
-        } // Use formatMessage
+        buttonAText={expired ? t(buttonResendLabel) : ""} // Use formatMessage
         buttonsDisposition="horizontal"
         buttonAAction={() => {
           v2fa.sendCode()
@@ -167,8 +164,7 @@ const Validator2fa = ({
                 v2fa.errorState &&
                 !finish && (
                   <p className="box210 error fs14 text-left mt-3">
-                    {v2fa.twofa === local2fa.PIN &&
-                      intl.formatMessage({ id: "incorrect_pin" })}{" "}
+                    {v2fa.twofa === local2fa.PIN && t("incorrect_pin")}{" "}
                     {/* Use formatMessage */}
                     {v2fa.twofa === local2fa.PIN &&
                       v2fa.errorState !== "INVALID_PIN1" && (
@@ -180,12 +176,9 @@ const Validator2fa = ({
                             v2fa.resetMethod()
                           }}
                         >
-                          {intl.formatMessage({
-                            id:
-                              method === "useSMS"
-                                ? "use_sms"
-                                : "use_google_auth",
-                          })}{" "}
+                          {t(
+                            method === "useSMS" ? "use_sms" : "use_google_auth"
+                          )}{" "}
                           {/* Use formatMessage with conditional id */}
                         </span>
                       )}
@@ -227,18 +220,18 @@ const Validator2fa = ({
     )
   }
   if (v2fa.errorState === "PIN_DISABLED") {
-    // Use intl.formatMessage for props expecting strings
+    // Use t for props expecting strings
     return (
       <SimplePage
-        title={intl.formatMessage({ id: "max_attempts_title" })}
-        description={intl.formatMessage({ id: "max_attempts_desc" })}
+        title={t("max_attempts_title")}
+        description={t("max_attempts_desc")}
         icon="error"
-        buttonAText={intl.formatMessage({ id: "continue" })}
+        buttonAText={t("continue")}
         buttonAAction={() => {
           v2fa.sendCode()
           v2fa.resetMethod()
         }}
-        buttonBText={intl.formatMessage({ id: "cancel" })}
+        buttonBText={t("cancel")}
         buttonBAction={() => {
           // Assuming getUser() returns an object where twoFaType can be set.
           // If getUser() returns undefined initially, this might need adjustment
