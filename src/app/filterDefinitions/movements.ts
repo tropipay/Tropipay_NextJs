@@ -13,8 +13,8 @@ import {
   Check,
   CircleHelp,
   Clock4,
+  ClockFadingIcon,
   CreditCardIcon,
-  LoaderCircle,
   Plus,
   Tag,
   Wallet,
@@ -23,7 +23,7 @@ import {
 export const movementStates = [
   {
     value: "processing",
-    icon: LoaderCircle,
+    icon: ClockFadingIcon,
   },
   {
     value: "completed",
