@@ -36,7 +36,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
   const { id: userId } = session?.user
 
   const [open, setOpen] = useState<boolean>(false)
-  const [errorData, setErrorData] = useState(null)
+  const [messageData, setMessageData] = useState(null)
 
   const onDownloadButtonClick = () => setOpen(true)
 
@@ -52,7 +52,7 @@ const PageClient = ({ tableId, columns, data }: Props) => {
           callPostHog(postHog, "movements:download", {})
         },
       },
-      setErrorData,
+      setMessageData,
     },
   ])
 
@@ -121,7 +121,10 @@ const PageClient = ({ tableId, columns, data }: Props) => {
           }}
         />
       )}
-      <MessageSonner errorData={errorData} setErrorData={setErrorData} />
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </div>
   )
 }

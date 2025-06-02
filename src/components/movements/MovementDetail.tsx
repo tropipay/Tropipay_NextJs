@@ -58,7 +58,7 @@ export default function MovementDetail(props: any): JSX.Element {
     },
   } = row
 
-  const [errorData, setErrorData] = useState(null)
+  const [messageData, setMessageData] = useState(null)
 
   const { t } = useTranslations()
 
@@ -77,7 +77,7 @@ export default function MovementDetail(props: any): JSX.Element {
       actions: {
         DOWNLOAD_PDF_OK: handleDownloadSuccess,
       },
-      setErrorData,
+      setMessageData,
     },
   ])
 
@@ -273,7 +273,10 @@ export default function MovementDetail(props: any): JSX.Element {
           orderCode={bankOrderCode}
         />
       </div>
-      <MessageSonner errorData={errorData} setErrorData={setErrorData} />
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </div>
   )
 }

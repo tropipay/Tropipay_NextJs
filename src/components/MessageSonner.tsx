@@ -29,33 +29,35 @@ function getApiErrorMessage(t, obj, defaultKey = "ERRORAPI_unexpected") {
   return details[0]?.i18n || i18n || t(matchedError?.errorType) || t(defaultKey)
 }
 
-const MessageSonner = ({ errorData, setErrorData }) => {
+const MessageSonner = ({ messageData, setMessageData }) => {
   const { t } = useTranslations()
 
   useEffect(() => {
-    if (!errorData) return
+    if (!messageData) return
     const isError =
-      errorData.type.includes("error") ||
-      errorData.type.includes("_KO") ||
-      errorData.type.includes("_ERROR")
+      messageData.type.includes("error") ||
+      messageData.type.includes("_KO") ||
+      messageData.type.includes("_ERROR")
 
     try {
-      const message = getApiErrorMessage(t, errorData)
+      const message = getApiErrorMessage(t, messageData)
       if (isError) {
         toast.error("Error", {
           description: message,
-          onAutoClose: () => setErrorData(null),
+          onAutoClose: () => setMessageData(null),
+          onDismiss: () => setMessageData(null),
         })
       } else {
         toast.success(t("success"), {
           description: message,
-          onAutoClose: () => setErrorData(null),
+          onAutoClose: () => setMessageData(null),
+          onDismiss: () => setMessageData(null),
         })
       }
     } catch (err) {
       toast.error(t("error"), { description: t("UNKNOWN_ERROR") })
     }
-  }, [errorData, t])
+  }, [messageData, t])
 
   return null
 }

@@ -30,7 +30,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [errorData, setErrorData] = useState(null)
+  const [messageData, setMessageData] = useState(null)
 
   const row: MovementScheduled = props.data
   const {
@@ -56,7 +56,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           setIsLoading(false)
         },
       },
-      setErrorData,
+      setMessageData,
     },
   ])
 
@@ -181,7 +181,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </div>
         )}
       </div>
-      {/* <ErrorHandler errorData={errorData} /> */}
+      {/* <ErrorHandler messageData={messageData} /> */}
       <AlertDialog open={openModalConfirm} onOpenChange={setOpenModalConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -206,7 +206,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
                 <Button
                   variant={"outline"}
                   onClick={() => {
-                    setErrorData(null)
+                    setMessageData(null)
                     setOpenModalConfirm(false)
                   }}
                 >
@@ -221,7 +221,10 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <MessageSonner errorData={errorData} setErrorData={setErrorData} />
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </>
   )
 }
