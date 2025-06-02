@@ -12,7 +12,8 @@ type InfoProps = {
   icon?: React.ReactNode
   textToCopy?: string
   onValueClick?: (v: any) => void
-  valueTooltip?: React.ReactNode
+  toolTipForValue?: React.ReactNode
+  classNameForValue?: string
   toClipboard?: boolean
   toClipboardIconHidden?: boolean
 }
@@ -23,9 +24,10 @@ export function RowDetailInfo({
   icon,
   textToCopy,
   onValueClick,
-  valueTooltip,
+  toolTipForValue,
   toClipboard = false,
   toClipboardIconHidden = false,
+  classNameForValue = "",
 }: InfoProps): any {
   if (!value) return null
 
@@ -39,18 +41,18 @@ export function RowDetailInfo({
               value,
               textToCopy: textToCopy ?? value,
               onValueClick,
-              valueTooltip,
-              ...(toClipboardIconHidden && { classNameIcon: "hidden" }),
+              toolTipForValue,
+              ...(toClipboardIconHidden && { classNameIcon: "hidden", classNameForValue }),
             }}
           />
         ) : onValueClick ? (
-          valueTooltip ? (
+          toolTipForValue ? (
             <Tooltip>
               <TooltipTrigger>
                 <ClickableValue value={value} onValueClick={onValueClick} />
               </TooltipTrigger>
               <TooltipContent side="bottom" align="center">
-                {valueTooltip}
+                <span className={classNameForValue}>{toolTipForValue}</span>
               </TooltipContent>
             </Tooltip>
           ) : (
