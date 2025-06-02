@@ -34,22 +34,19 @@ const MessageSonner = ({ messageData, setMessageData }) => {
 
   useEffect(() => {
     if (!messageData) return
-    const isError =
-      messageData.type.includes("error") ||
-      messageData.type.includes("_KO") ||
-      messageData.type.includes("_ERROR")
+    const isError = messageData?.data?.error
 
     try {
-      const message = getApiErrorMessage(t, messageData)
       if (isError) {
-        toast.error("Error", {
+        const message = getApiErrorMessage(t, messageData)
+        toast.error("error", {
           description: message,
           onAutoClose: () => setMessageData(null),
           onDismiss: () => setMessageData(null),
         })
       } else {
-        toast.success(t("success"), {
-          description: message,
+        toast.success(messageData?.title || t("Success"), {
+          description: messageData?.message,
           onAutoClose: () => setMessageData(null),
           onDismiss: () => setMessageData(null),
         })
