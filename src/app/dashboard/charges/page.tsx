@@ -8,7 +8,7 @@ import PageClient from "./pageClient"
 
 export default function Page() {
   const searchParams = useSearchParams()
-  const { charges: queryConfig } = apiConfig
+  const queryConfig = apiConfig.charges
 
   // Convertir URLSearchParams a objeto plano
   const searchParamsObj = Object.fromEntries(searchParams.entries())

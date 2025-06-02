@@ -5,12 +5,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/Tooltip"
-import { toast } from "sonner"
 import { cn } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import { Copy } from "lucide-react"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
+import { toast } from "sonner"
 
 interface CopyToClipboardProps {
   text: string | number | bigint | true
