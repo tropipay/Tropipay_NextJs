@@ -23,7 +23,7 @@ export async function makeApiRequest({
   const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
 
   const columnVisibility = getUserSettings(
-    ProfileStore?.getProfile()?.id,
+    (ProfileStore?.getProfileData() as any)?.id,
     {},
     queryConfig.key,
     "columnVisibility"

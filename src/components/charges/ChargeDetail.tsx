@@ -29,7 +29,7 @@ export default function ChargeDetail(props: any): JSX.Element {
     paymentMethod,
     cardBin,
     cardPan,
-    reference,
+    bankOrderCode,
     errorCode,
     email,
     address,
@@ -98,7 +98,7 @@ export default function ChargeDetail(props: any): JSX.Element {
             toClipboard
             toClipboardIconHidden
             label={t("movementCode")}
-            value={reference}
+            value={bankOrderCode}
             onValueClick={() => props.onChangeMovementId?.(movementId)}
             toolTipForValue={<FormattedMessage id="show_movement" />}
             classNameForValue={"text-primary underline"}

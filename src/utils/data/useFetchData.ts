@@ -10,7 +10,6 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query"
  */
 export function useFetchData<T>({
   queryConfig,
-  dehydratedState,
   urlParams,
   enabled = true,
 }: any): UseQueryResult<T> {
