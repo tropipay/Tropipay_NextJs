@@ -6,7 +6,7 @@ interface StoreGroupConfig {
   stores: any[]
   eventPrefix: string
   actions: Record<string, StoreAction>
-  setErrorData?: (obj: any) => void
+  setMessageData?: (obj: any) => void
 }
 
 /**
@@ -16,7 +16,7 @@ interface StoreGroupConfig {
 const useStoreListener = (storeGroups: StoreGroupConfig[]) => {
   useEffect(() => {
     const unsubscribers = storeGroups.flatMap(
-      ({ stores, eventPrefix, actions, setErrorData }) => {
+      ({ stores, eventPrefix, actions, setMessageData }) => {
         return stores.map((store) => {
           const listener = (obj: any) => {
             // Ejecuta la acción si está definida
@@ -26,8 +26,8 @@ const useStoreListener = (storeGroups: StoreGroupConfig[]) => {
             // Manejo genérico para cualquier _KO no definido
             else if (obj.type.endsWith("_KO")) {
               if (!actions[obj.type]) {
-                if (setErrorData) {
-                  setErrorData(obj)
+                if (setMessageData) {
+                  setMessageData(obj)
                 }
               }
             }

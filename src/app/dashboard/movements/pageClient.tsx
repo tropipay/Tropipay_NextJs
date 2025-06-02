@@ -13,7 +13,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui"
 import { GetMovementsResponse } from "@/types/movements"
-import { toastMessage } from "@/utils/ui/utilsUI"
 import { callPostHog } from "@/utils/utils"
 import { format, parse } from "date-fns"
 import { Download } from "lucide-react"
@@ -48,7 +47,11 @@ const PageClient = ({ tableId, columns, data }: Props) => {
       eventPrefix: "DOWNLOAD",
       actions: {
         DOWNLOAD_OK: () => {
-          toastMessage(t("download"), t("you_will_receive_email_transactions"))
+          setMessageData({
+            // @ts-ignore
+            title: t("download"),
+            message: t("you_will_receive_email_transactions"),
+          })
           callPostHog(postHog, "movements:download", {})
         },
       },
