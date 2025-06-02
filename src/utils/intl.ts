@@ -5,12 +5,11 @@ export function useTranslations() {
 
   const t = (id: string, values?: Record<string, any>) => {
     try {
-      intl.formatMessage({ id }, values)
+      return intl.formatMessage({ id }, values)
     } catch (error) {
       console.error(`Translation error for id "${id}":`, error)
-      return id // Fallback to the id if translation fails
+      return id
     }
-    return intl.formatMessage({ id }, values)
   }
 
   return { t }
