@@ -18,7 +18,8 @@ const AppStores = createStore(
   (store): AppStoreMethods => ({
     name: "AppStore",
     Page(pageToGo: string): void {
-      store.trigger<PageChangePayload>("PAGE_CHANGE", {
+      store.trigger("PAGE_CHANGE", {
+        // @ts-ignore
         result: {
           msg: "done",
           data: pageToGo,
