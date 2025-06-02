@@ -91,17 +91,17 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
             />
           </div>
           <div className="flex justify-between items-center">
-            <p className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="text-xs text-gray-500 flex items-center gap-1">
               <TextToCopy
                 classNameIcon={"hidden"}
                 value={t("send_to") + " " + alias}
                 className="p-1"
               />
-            </p>
+            </span>
             {nextDate && (
-              <p className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500">
                 {format(new Date(nextDate), "dd/MM/yy HH:mm")}
-              </p>
+              </span>
             )}
           </div>
         </div>
