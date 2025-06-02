@@ -19,20 +19,26 @@ type TextToCopyProps = {
   }
   translate?: boolean
   onValueClick?: (v: any) => void
-  valueTooltip?: React.ReactNode
+  toolTipForValue?: React.ReactNode
+  classNameForValue?: string
 }
 
 type ClickableValueProps = {
   value: any
   onValueClick: (v: any) => void
+  classNameForValue?: string
 }
 
 export const ClickableValue: React.FC<ClickableValueProps> = ({
   value,
   onValueClick,
+  classNameForValue,
 }) => {
   return (
-    <span className="cursor-pointer" onClick={() => onValueClick(value)}>
+    <span
+      className={cn("cursor-pointer", classNameForValue)}
+      onClick={() => onValueClick(value)}
+    >
       {value}
     </span>
   )
@@ -45,8 +51,9 @@ export function TextToCopy({
   classNameIcon = "",
   messages,
   translate = false,
-  valueTooltip,
+  toolTipForValue,
   onValueClick,
+  classNameForValue,
 }: TextToCopyProps) {
   const { t } = useTranslations()
   function getTextFromValue(value: any): string {
@@ -70,17 +77,17 @@ export function TextToCopy({
       className={`rounded flex items-center gap-1 group ${className || ""}`}
     >
       {onValueClick ? (
-        valueTooltip ? (
+        toolTipForValue ? (
           <Tooltip>
             <TooltipTrigger>
-              <ClickableValue value={value} onValueClick={onValueClick} />
+              <ClickableValue {...{ value, onValueClick, classNameForValue }} />
             </TooltipTrigger>
             <TooltipContent side="bottom" align="center">
-              {valueTooltip}
+              {toolTipForValue}
             </TooltipContent>
           </Tooltip>
         ) : (
-          <ClickableValue value={value} onValueClick={onValueClick} />
+          <ClickableValue {...{ value, onValueClick, classNameForValue }} />
         )
       ) : (
         value

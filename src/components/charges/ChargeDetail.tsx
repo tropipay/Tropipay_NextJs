@@ -100,7 +100,8 @@ export default function ChargeDetail(props: any): JSX.Element {
             label={t("movementCode")}
             value={reference}
             onValueClick={() => props.onChangeMovementId?.(movementId)}
-            valueTooltip={<FormattedMessage id="show_movement" />}
+            toolTipForValue={<FormattedMessage id="show_movement" />}
+            classNameForValue={"text-primary underline"}
           />
           <RowDetailInfo label={t("errorCode")} value={errorCode} />
         </RowDetailSection>
