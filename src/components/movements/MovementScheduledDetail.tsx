@@ -198,9 +198,6 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
                   : "cancel_movement_sched_desc"
               )}
             </AlertDialogDescription>
-            {isError && (
-              <ErrorMessage>{t("error_execute_operation")}</ErrorMessage>
-            )}
           </AlertDialogHeader>
           <AlertDialogFooter>
             {isDone ? (

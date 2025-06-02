@@ -226,7 +226,7 @@
   "tomorrow": "Mañana",
   "total": "Total",
   "transfer_cancelled": "Transferencia cancelada",
-  "transfer_cancelled_desc": "Cancelamos la transferencia programada, puedes programarla nuevamente desde la sección enviar desde la aplicación Tropipay",
+  "transfer_cancelled_desc": "Cancelamos la transferencia programada, puedes programarla nuevamente desde la sección ENVIAR desde la aplicación Tropipay",
   "tropicard_pin_description": "Por favor, Ingresa la clave de tu tarjeta para confirmar la operación",
   "try_again_later": "Inténtalo de nuevo más tarde",
   "twofa_title": "Validación adicional",

@@ -226,7 +226,7 @@
   "tomorrow": "Tomorrow",
   "total": "Total",
   "transfer_cancelled": "Transfer canceled",
-  "transfer_cancelled_desc": "We canceled the scheduled transfer. You can schedule it again from the Send section of the Tropipay application",
+  "transfer_cancelled_desc": "We cancel the scheduled transfer, you can schedule it again from the SEND section of the Tropipay application",
   "tropicard_pin_description": "[TRANSLATE] Por favor, Ingresa la clave de tu tarjeta para confirmar la operación",
   "try_again_later": "Try it again later",
   "twofa_title": "[TRANSLATE] Validación adicional",
