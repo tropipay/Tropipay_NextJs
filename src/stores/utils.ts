@@ -4,11 +4,17 @@ import axios, { AxiosRequestConfig } from "axios"
 import { CacheEntry, clearAppDataKey, updateAppData } from "./appSlice"
 import { reduxStore, RootState } from "./reduxStore"
 
-type ListenerCallback<T = any> = (event: { type: string; data: T }) => void
+type ListenerCallback<T = any> = (event: {
+  type: string
+  data: T & { status?: number }
+}) => void
 
 export type BaseStore = {
   listen: (callback: ListenerCallback, key: string) => () => void
-  trigger: <P>(eventType: string, payload: P) => void
+  trigger: <P extends { status?: number }>(
+    eventType: string,
+    payload: P
+  ) => void
 }
 
 export interface EnhancedStore extends BaseStore {
@@ -222,8 +228,9 @@ export async function fetchGetWithTriggers({
     const errorResponse = axios.isAxiosError(error) ? error.response : error
     const errorData = (errorResponse as any)?.data?.error || errorResponse
     store.trigger(eventKO, {
-      error: errorData,
-    })
+      // @ts-ignore
+      error: { ...errorData, status: errorResponse?.status },
+    } as any)
   }
 }
 
@@ -254,8 +261,9 @@ export async function fetchPostWithTriggers<TPayload = any>({
     const errorResponse = axios.isAxiosError(error) ? error.response : error
     const errorData = (errorResponse as any)?.data?.error || errorResponse
     store.trigger(eventKO, {
-      error: errorData,
-    })
+      // @ts-ignore
+      error: { ...errorData, status: errorResponse?.status },
+    } as any)
   }
 }
 
@@ -286,8 +294,9 @@ export async function fetchPutWithTriggers<TPayload = any>({
     const errorResponse = axios.isAxiosError(error) ? error.response : error
     const errorData = (errorResponse as any)?.data?.error || errorResponse
     store.trigger(eventKO, {
-      error: errorData,
-    })
+      // @ts-ignore
+      error: { ...errorData, status: errorResponse?.status },
+    } as any)
   }
 }
 
@@ -320,8 +329,9 @@ export async function fetchDeleteWithTriggers({
     const errorResponse = axios.isAxiosError(error) ? error.response : error
     const errorData = (errorResponse as any)?.data?.error || errorResponse
     store.trigger(eventKO, {
-      error: errorData,
-    })
+      // @ts-ignore
+      error: { ...errorData, status: errorResponse?.status },
+    } as any)
   }
 }
 
