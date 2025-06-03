@@ -1,50 +1,48 @@
 "use client"
+
+import { env } from "@/config/env"
 import posthog from "posthog-js"
 import { PostHogProvider as PHProvider } from "posthog-js/react"
-import { ReactNode, useEffect } from "react"
+import { useEffect, useState } from "react"
 
-const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY
-const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST
-
-if (typeof window !== "undefined" && posthogKey && posthogHost) {
-  posthog.init(posthogKey, {
-    api_host: posthogHost,
-    capture_pageview: false, // Disable automatic pageview capture, we'll handle it manually if needed in Next.js
-  })
+// Define options
+const postHogOptions = {
+  enabled: true,
+  key: env.POSTHOG_KEY,
+  options: {
+    api_host: env.POSTHOG_HOST,
+    autocapture: false,
+    capture_pageview: true,
+    disable_session_recording: true,
+    disable_performance_metrics: true,
+  },
 }
 
-export function PostHogProvider({ children }: { children: ReactNode }) {
-  // We only wrap with the PostHog Provider if the key and host are defined
-  if (!posthogKey || !posthogHost) {
+export function PostHogInsert({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    if (
+      postHogOptions.enabled &&
+      typeof window !== "undefined" &&
+      postHogOptions.key &&
+      postHogOptions.options.api_host &&
+      !isInitialized
+    ) {
+      try {
+        posthog.init(postHogOptions.key, postHogOptions.options)
+        setIsInitialized(true)
+      } catch (error) {
+        console.error("PostHog initialization failed:", error)
+      }
+    }
+  }, [isInitialized])
+
+  if (!postHogOptions.enabled || !isInitialized) {
     return <>{children}</>
   }
 
   return <PHProvider client={posthog}>{children}</PHProvider>
 }
 
-// Optional: Component to capture page views on route changes
-// You might need to integrate this differently depending on your router setup (App Router vs Pages Router)
-// For App Router, you might use NavigationEvents from 'next/navigation'
-// import { usePathname, useSearchParams } from 'next/navigation'
-
-// export function PostHogPageview(): null {
-//   const pathname = usePathname()
-//   const searchParams = useSearchParams()
-
-//   useEffect(() => {
-//     if (pathname && posthogKey && posthogHost) {
-//       let url = window.origin + pathname
-//       if (searchParams && searchParams.toString()) {
-//         url = url + `?${searchParams.toString()}`
-//       }
-//       posthog.capture(
-//         '$pageview',
-//         {
-//           '$current_url': url,
-//         }
-//       )
-//     }
-//   }, [pathname, searchParams])
-
-//   return null
-// }
+export default PostHogInsert

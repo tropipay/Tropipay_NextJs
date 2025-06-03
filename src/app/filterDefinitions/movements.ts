@@ -13,8 +13,8 @@ import {
   Check,
   CircleHelp,
   Clock4,
+  ClockFadingIcon,
   CreditCardIcon,
-  LoaderCircle,
   Plus,
   Tag,
   Wallet,
@@ -23,7 +23,7 @@ import {
 export const movementStates = [
   {
     value: "processing",
-    icon: LoaderCircle,
+    icon: ClockFadingIcon,
   },
   {
     value: "completed",
@@ -72,7 +72,7 @@ export const movementTypes = [
   { value: "TRANSFER", icon: ArrowUpRight },
   { value: "CHARGE", icon: Tag },
   { value: "PAYMENT", icon: Wallet },
-  { value: "OTHER", icon: CircleHelp },
+  // { value: "OTHER", icon: CircleHelp },
 ].map((option) => ({ ...option, label: `mt_${option.value}` }))
 
 export const movementsPaymentMethods = [

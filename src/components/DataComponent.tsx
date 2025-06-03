@@ -2,7 +2,7 @@
 
 import { FetchDataConfig } from "@/types/fetchData"
 import { useFetchData } from "@/utils/data/useFetchData"
-import { DehydratedState } from "@tanstack/react-query"
+import { cn } from "@/utils/data/utils"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
@@ -15,7 +15,6 @@ interface DataChildProps {
 }
 
 interface DataComponentProps {
-  dehydratedState?: DehydratedState
   children: ReactElement<DataChildProps>
   queryConfig: FetchDataConfig
   searchParams?: { [key: string]: string }
@@ -23,37 +22,42 @@ interface DataComponentProps {
   showLoading?: boolean
   showError?: boolean
   loader?: ReactNode
+  className?: string
 }
 
 export default function DataComponent({
-  dehydratedState,
   queryConfig,
   searchParams = {},
   mockData,
   children,
   showLoading = false,
   showError = true,
-  loader = <Loader2 className="animate-spin text-[#041266]" size={72} />,
+  loader = <Loader2 className="animate-spin text-[#041266]" size={56} />,
+  className = "",
 }: DataComponentProps) {
   const urlParams = searchParams
   const {
     data: fetchData,
     isLoading,
-    isFetching,
     isError,
   } = useFetchData({
     queryConfig,
-    dehydratedState,
     urlParams,
     enabled: !mockData,
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
-  const loading = isLoading || isFetching
+  const loading = isLoading
   const data = mockData ?? fetchData
 
   return (
-    <div className={`w-full ${loading && "opacity-70 pointer-events-none"}`}>
+    <div
+      className={cn(
+        "w-full",
+        className,
+        loading && "opacity-70 pointer-events-none"
+      )}
+    >
       {showLoading && loading && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9998]">
           {loader}

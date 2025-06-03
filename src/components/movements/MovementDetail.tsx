@@ -1,22 +1,30 @@
+"use client"
+
 import {
   movementStateGroups,
   movementStates,
 } from "@/app/filterDefinitions/movements"
+import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
 import { MovementDetails } from "@/types/movements"
-import { processEnvNEXT_PUBLIC_API_URL } from "@/utils/config"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { formatAmount } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
 import { format } from "date-fns"
-import { useSession } from "next-auth/react"
-import { FormattedMessage } from "react-intl"
+import { usePostHog } from "posthog-js/react"
+import { useState } from "react"
+import BookingStore from "@/stores/BookingStore"
+import useStoreListener from "@/hooks/useStoreListener"
+import { TextToCopy } from "../TextToCopy"
+import { useTranslations } from "@/utils/intl"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementDetail(props: any): JSX.Element {
+  const [openRefundDialog, setOpenRefundDialog] = useState(false)
   const row: MovementDetails = props.data.data.movements.items[0]
-  const { data: session } = useSession()
-  const token = session?.user.token
+  const postHog = usePostHog()
   const {
     email,
     fee,
@@ -37,6 +45,8 @@ export default function MovementDetail(props: any): JSX.Element {
       clientAddress,
       clientIp,
       netAmount,
+      refundable,
+      chargedAmount,
       recipientData: { alias, name, account, country },
       senderData: {
         name: senderName,
@@ -48,37 +58,50 @@ export default function MovementDetail(props: any): JSX.Element {
     },
   } = row
 
-  const onDownloadInvoiceFile = async () => {
-    try {
-      const response = await fetch(
-        `${processEnvNEXT_PUBLIC_API_URL}/api/v3/movements/transferinvoice`,
-        {
-          method: "POST",
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            bookingId: row.id,
-            label: row.state,
-          }),
-        }
-      )
-      const blob = await response.blob()
-      const link = document.createElement("a")
-      link.href = window.URL.createObjectURL(blob)
-      link.download = "invoice.pdf"
-      link.click()
-    } catch (e) {}
+  const [messageData, setMessageData] = useState(null)
+
+  const { t } = useTranslations()
+
+  const handleDownloadSuccess = (obj: any) => {
+    const blob = obj.data
+    const link = document.createElement("a")
+    link.href = window.URL.createObjectURL(blob)
+    link.download = "invoice.pdf"
+    link.click()
+  }
+
+  useStoreListener([
+    {
+      stores: [BookingStore],
+      eventPrefix: "DOWNLOAD_PDF",
+      actions: {
+        DOWNLOAD_PDF_OK: handleDownloadSuccess,
+      },
+      setMessageData,
+    },
+  ])
+
+  const onDownloadInvoiceFile = () => {
+    callPostHog(postHog, "movements:download_invoice_file")
+    BookingStore.DownloadPDF({
+      bookingId: row.id,
+      label: row.state,
+    })
   }
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-            {amount.value > 0 ? "+" : ""}
-            {formatAmount(amount.value, amount.currency, "right")}
+    <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
+            <TextToCopy
+              classNameIcon={"hidden"}
+              value={`${netAmount.value > 0 ? "+" : ""}${formatAmount(
+                netAmount.value,
+                netAmount.currency,
+                "right"
+              )}`}
+            />
           </div>
           <FacetedBadge
             value={state}
@@ -86,98 +109,97 @@ export default function MovementDetail(props: any): JSX.Element {
             optionListGroups={movementStateGroups}
           />
         </div>
-        <div className="flex justify-between items-center mb-4 pb-1">
-          <p className="text-xs text-gray-500"> {bankOrderCode}</p>
+        <div className="flex justify-between items-center">
+          <p className="text-xs text-gray-500">
+            <TextToCopy
+              classNameIcon={"hidden"}
+              value={bankOrderCode}
+              className="p-1"
+            />
+          </p>
           {completedAt && (
             <p className="text-xs text-gray-500">
               {format(new Date(completedAt), "dd/MM/yy HH:mm")}
             </p>
           )}
         </div>
-        <RowDetailSection title={<FormattedMessage id="movement_data" />}>
-          <RowDetailInfo
-            label={<FormattedMessage id="type" />}
-            value={<FormattedMessage id={`mt_${type}`} />}
-          />
+      </div>
+      <div className="flex-1 overflow-y-auto min-h-0">
+        <RowDetailSection title={t("movement_data")}>
+          <RowDetailInfo label={t("type")} value={t(`mt_${type}`)} />
           {product && (
-            <RowDetailInfo
-              label={<FormattedMessage id="product" />}
-              value={<FormattedMessage id={`cp_${product}`} />}
-            />
+            <RowDetailInfo label={t("product")} value={t(`cp_${product}`)} />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="concept" />}
-            value={concept}
-          />
+          <RowDetailInfo toClipboard label={t("concept")} value={concept} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="beneficiary_data" />}>
-          <RowDetailInfo
-            label={<FormattedMessage id="alias" />}
-            value={alias}
-          />
+        <RowDetailSection title={t("beneficiary_data")}>
+          <RowDetailInfo toClipboard label={t("alias")} value={alias} />
           {name && (
             <RowDetailInfo
-              label={<FormattedMessage id="name" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("name")}
               value={<span className="uppercase">{name}</span>}
             />
           )}
-          <RowDetailInfo
-            label={<FormattedMessage id="account" />}
-            value={account}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="email" />}
-            value={email}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="country" />}
-            value={country}
-          />
+          <RowDetailInfo label={t("account")} value={account} />
+          <RowDetailInfo toClipboard label={t("email")} value={email} />
+          <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="sender_data" />}>
+        <RowDetailSection title={t("sender_data")}>
           {senderName && (
             <RowDetailInfo
-              label={<FormattedMessage id="name" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("name")}
               value={
                 <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
               }
             />
           )}
+          <RowDetailInfo toClipboard label={t("email")} value={senderEmail} />
           <RowDetailInfo
-            label={<FormattedMessage id="email" />}
-            value={senderEmail}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="address" />}
+            toClipboard
+            toClipboardIconHidden
+            label={t("address")}
             value={clientAddress}
           />
-          <RowDetailInfo
-            label={<FormattedMessage id="country" />}
-            value={senderCountry}
-          />
+          <RowDetailInfo label={t("country")} value={senderCountry} />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="imports" />}>
+        <RowDetailSection title={t("imports")}>
           <RowDetailInfo
-            label={<FormattedMessage id="import" />}
-            value={formatAmount(amount.value, amount.currency, "right")}
+            toClipboard
+            toClipboardIconHidden
+            label={t("amountCharged")}
+            value={formatAmount(
+              chargedAmount.value,
+              chargedAmount.currency,
+              "right"
+            )}
           />
           {conversionRate && fee && amount.currency !== fee.currency && (
             <RowDetailInfo
-              label={<FormattedMessage id="conversionRate" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("conversionRate")}
               value={`1 EUR = ${conversionRate} ${amount.currency}`}
             />
           )}
           {fee && (
             <RowDetailInfo
-              label={<FormattedMessage id="fee" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("fee")}
               value={formatAmount(fee.value, fee.currency, "right")}
             />
           )}
           <RowDetailInfo
-            label={<FormattedMessage id="netAmount" />}
+            toClipboard
+            toClipboardIconHidden
+            label={t("netAmount")}
             value={`${formatAmount(
               netAmount.value,
               netAmount.currency,
@@ -186,69 +208,75 @@ export default function MovementDetail(props: any): JSX.Element {
           />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="payment_method" />}>
+        <RowDetailSection title={t("payment_method")}>
+          <RowDetailInfo label={t("cardType")} value={cardType} />
+
           <RowDetailInfo
-            label={<FormattedMessage id="cardType" />}
-            value={cardType}
-          />
-          {/* <Info
-            label={<FormattedMessage id="account" />}
-            value="******** FALTA CUENTA"
-          /> */}
-          <RowDetailInfo
-            label={<FormattedMessage id="paymentMethod" />}
-            value={<FormattedMessage id={`pm_${paymentMethod}`} />}
+            label={t("paymentMethod")}
+            value={t(`pm_${paymentMethod}`)}
           />
           {cardPan && (
-            <RowDetailInfo
-              label={<FormattedMessage id="cardPan" />}
-              value={`**** ${cardPan}`}
-            />
+            <RowDetailInfo label={t("cardPan")} value={`**** ${cardPan}`} />
           )}
           {cardExpirationDate && (
             <RowDetailInfo
-              label={<FormattedMessage id="cardExpirationDate" />}
+              label={t("cardExpirationDate")}
               value={format(cardExpirationDate, "dd/MM/yy")}
             />
           )}
+          <RowDetailInfo label={t("cardCountry")} value={cardCountry} />
           <RowDetailInfo
-            label={<FormattedMessage id="cardCountry" />}
-            value={cardCountry}
-          />
-          <RowDetailInfo
-            label={<FormattedMessage id="clientIp" />}
+            toClipboard
+            toClipboardIconHidden
+            label={t("clientIp")}
             value={clientIp}
           />
         </RowDetailSection>
 
-        <RowDetailSection title={<FormattedMessage id="schedule" />}>
+        <RowDetailSection title={t("schedule")}>
           {createdAt && (
             <RowDetailInfo
-              label={<FormattedMessage id="createdAt" />}
+              label={t("createdAt")}
               value={format(new Date(createdAt), "dd/MM/yy")}
             />
           )}
           {completedAt && (
             <RowDetailInfo
-              label={<FormattedMessage id="completedAt" />}
+              label={t("completedAt")}
               value={format(new Date(completedAt), "dd/MM/yy")}
             />
           )}
         </RowDetailSection>
       </div>
-      <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
+      <div className="flex gap-4">
         <Button
           variant="outline"
-          className="w-full"
+          className={refundable ? "w-1/2" : "w-full"}
           onClick={onDownloadInvoiceFile}
         >
-          <FormattedMessage id="download" />
+          {t("download")}
         </Button>
-        {/*           <Button variant="default" className="w-1/2">
-            <FormattedMessage id="refound" />
+        {refundable && (
+          <Button
+            variant="default"
+            className="w-1/2"
+            onClick={() => setOpenRefundDialog(true)}
+          >
+            {t("refund")}
           </Button>
- */}
+        )}
+        <RefundWizard
+          open={openRefundDialog}
+          onOpenChange={setOpenRefundDialog}
+          amountValue={amount.value}
+          amountCurrency={amount.currency}
+          orderCode={bankOrderCode}
+        />
       </div>
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </div>
   )
 }

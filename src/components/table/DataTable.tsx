@@ -4,6 +4,7 @@ import Spinner from "@/components/Spinner"
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   Table,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui"
 import { objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
+import { callPostHog } from "@/utils/utils"
 import {
   closestCenter,
   DndContext,
@@ -32,9 +34,13 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
   SortableContext,
-  useSortable,
 } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@radix-ui/react-context-menu"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -43,18 +49,18 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Header,
   SortingState,
   Updater,
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-import { GripVerticalIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { CSSProperties, useCallback, useEffect, useMemo, useState } from "react"
+import { usePostHog } from "posthog-js/react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
+import DraggableTableHeader from "./DraggableTableHeader"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -73,8 +79,16 @@ interface DataTableProps<TData, TValue> {
   manualFiltering?: boolean
   rowCount?: number
   rowClickChildren?: React.ComponentType<{ row: TData }>
+  toolbarActions?: React.ReactNode
 }
 
+/**
+ * DataTable Component
+ *
+ * This component renders a dynamic table with sorting, filtering, pagination,
+ * and column ordering functionalities. It uses TanStack Table for data handling
+ * and dnd-kit for drag and drop interactions.
+ */
 export default function DataTable<TData, TValue>({
   tableId,
   data,
@@ -92,17 +106,20 @@ export default function DataTable<TData, TValue>({
   manualFiltering = true,
   rowCount,
   rowClickChildren: RowClickChildren,
+  toolbarActions,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [selectedRow, setSelectedRow] = useState<TData | null>(null)
+  const [selectedText, setSelectedText] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const columnsId = columnsConfig
     .filter(({ id }) => !!id)
     .map(({ id }) => id ?? "")
   const [tableKey, setTableKey] = useState(0)
+  const postHog = usePostHog()
 
   const createQueryString = useCallback(
     (updates: Record<string, string | null>) => {
@@ -155,23 +172,27 @@ export default function DataTable<TData, TValue>({
         typeof updater === "function" ? updater(columnFilters) : updater
       setColumnFilters(newFilters)
 
-      // Crear un nuevo objeto URLSearchParams basado en los searchParams actuales
+      // Create a new URLSearchParams object based on the current searchParams
       const params = new URLSearchParams(searchParams)
 
-      // Eliminar solo los parámetros de búsqueda que corresponden a los filtros
+      // Delete only the search parameters that correspond to the filters
       columnsFilters.forEach((filter) => {
         // @ts-ignore
         params.delete(filter.id)
       })
 
-      // Agregar los nuevos filtros al objeto URLSearchParams
+      // Adds the new filters to the URLSearchParams object
       newFilters.forEach((filter) => {
         if (filter.value !== null && filter.value !== undefined) {
           params.set(filter.id, JSON.stringify(filter.value).replace(/"/g, ""))
         }
       })
 
-      // Actualizar la URL sin afectar otros parámetros como paginación u orden
+      if (params.has("page")) {
+        params.delete("page")
+      }
+
+      // Updates the URL without affecting other parameters such as pagination or order
       setIsLoading(true)
       router.push(`${pathname}?${params.toString()}`, { scroll: false })
     },
@@ -182,7 +203,7 @@ export default function DataTable<TData, TValue>({
     defaultColumnOrder ||
       getUserSettings(userId, null, tableId, "columnOrder") ||
       // @ts-ignore
-      toArrayId(columnsConfig, "hidden", (hiddenValue) => !hiddenValue, "order")
+      toArrayId(columnsConfig, "order", (value) => value >= 0, "order")
   )
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -218,6 +239,12 @@ export default function DataTable<TData, TValue>({
     }
   }
 
+  const handleRowClick = (row: TData) => {
+    setSelectedRow(row)
+    setIsSheetOpen(true)
+    callPostHog(postHog, "data_table:show_details", { table_id: tableId })
+  }
+
   const onColumnVisibilityChange = useCallback(
     (updater: Updater<typeof columnVisibility>) => {
       const visibilityState =
@@ -227,9 +254,9 @@ export default function DataTable<TData, TValue>({
 
       if (Object.keys(columnVisibility).length !== 0) {
         const columnHash = objToHash(columnVisibility)
-        // Obtener los search params actuales
+        // Get the current search params
         const currentSearchParams = new URLSearchParams(window.location.search)
-        // Actualizar solo el columnHash
+        // Update only the columnHash
         currentSearchParams.set("columnHash", columnHash)
         setIsLoading(true)
         router.push(`${pathname}?${currentSearchParams.toString()}`, {
@@ -237,46 +264,8 @@ export default function DataTable<TData, TValue>({
         })
       }
     },
-    [columnVisibility, userId, pathname] // Añadí pathname a las dependencias
+    [columnVisibility, userId, pathname] // Added pathname to dependencies
   )
-
-  const DraggableTableHeader = ({
-    header,
-  }: {
-    header: Header<TData, unknown>
-  }) => {
-    const { attributes, isDragging, listeners, transform, setNodeRef } =
-      useSortable({
-        id: header.column.id,
-      })
-
-    const style: CSSProperties = {
-      transform: CSS.Translate.toString(transform),
-      transition: "width transform 0.2s ease-in-out",
-      ...(isDragging && { opacity: 0.8, zIndex: 1 }),
-    }
-
-    return (
-      <TableHead
-        key={header.id}
-        ref={setNodeRef}
-        className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap"
-        style={style}
-      >
-        <div className="flex gap-1 items-center">
-          {header.isPlaceholder
-            ? null
-            : flexRender(header.column.columnDef.header, header.getContext())}
-          <GripVerticalIcon
-            size={16}
-            className="opacity-0 hover:opacity-100"
-            {...attributes}
-            {...listeners}
-          />
-        </div>
-      </TableHead>
-    )
-  }
 
   const onPaginationChange = useCallback(
     (updater: Updater<typeof pagination>) => {
@@ -316,6 +305,7 @@ export default function DataTable<TData, TValue>({
     },
     [sorting, manualSorting, router, pathname, createQueryString]
   )
+
   const tableConfig = useMemo(
     () => ({
       data: Array.isArray(data) ? data : [],
@@ -342,123 +332,171 @@ export default function DataTable<TData, TValue>({
       onColumnVisibilityChange,
       onColumnOrderChange: setColumnOrder,
     }),
-    [data, columnOrder]
+    [data, columnOrder, pagination]
   )
 
   const table = useReactTable(tableConfig)
 
-  const handleRowClick = (row: TData) => {
-    setSelectedRow(row)
-    setIsSheetOpen(true)
-  }
-
   useEffect(() => {
     setTableKey(Math.random())
     setIsLoading(false)
-  }, [data])
+  }, [data, tableConfig])
+
+  useEffect(
+    () =>
+      setPagination({
+        pageIndex: Number(searchParams.get("page") ?? 0),
+        pageSize: Number(searchParams.get("size") ?? 50),
+      }),
+    [searchParams]
+  )
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      setSelectedText(window.getSelection()?.toString() ?? "")
+    }
+    document.addEventListener("mouseup", handleGlobalMouseUp)
+    return () => document.removeEventListener("mouseup", handleGlobalMouseUp)
+  }, [])
 
   if (userId)
     return (
-      <div className="space-y-4">
-        {isLoading && <Spinner />}
-        {enableToolbar && (
-          <DataTableToolbar
-            {...{
-              tableId,
-              table,
-              columns: columnsConfig,
-              categoryFilterId,
-              categoryFilters,
-            }}
-          />
-        )}
-        <div>
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToHorizontalAxis]}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-          >
-            <Table className="tableComponent" key={tableKey}>
-              <TableHeader>
-                <SortableContext
-                  items={columnsId}
-                  strategy={horizontalListSortingStrategy}
-                >
-                  {table.getHeaderGroups().map(({ id, headers }) => (
-                    <TableRow key={id}>
-                      {headers.map((header) =>
-                        enableColumnOrder ? (
-                          <DraggableTableHeader
-                            key={header.id}
-                            header={header}
-                          />
-                        ) : (
-                          <TableHead key={header.id}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
+      <>
+        <div className="space-y-4">
+          {isLoading && <Spinner />}
+          {enableToolbar && (
+            <DataTableToolbar
+              {...{
+                tableId,
+                table,
+                columns: columnsConfig,
+                categoryFilterId,
+                categoryFilters,
+                actions: toolbarActions,
+              }}
+            />
+          )}
+          <div>
+            <DndContext
+              collisionDetection={closestCenter}
+              modifiers={[restrictToHorizontalAxis]}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              sensors={sensors}
+            >
+              <Table className="tableComponent" key={tableKey}>
+                <TableHeader>
+                  <SortableContext
+                    items={columnsId}
+                    strategy={horizontalListSortingStrategy}
+                  >
+                    {table.getHeaderGroups().map(({ id, headers }) => (
+                      <TableRow key={id}>
+                        {headers.map((header) =>
+                          enableColumnOrder ? (
+                            <DraggableTableHeader
+                              key={header.id}
+                              header={header}
+                            />
+                          ) : (
+                            <TableHead
+                              key={header.id}
+                              data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
+                            >
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                            </TableHead>
+                          )
+                        )}
+                      </TableRow>
+                    ))}
+                  </SortableContext>
+                </TableHeader>
+                <TableBody className="tableBody">
+                  {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <ContextMenu key={row.id}>
+                        <ContextMenuTrigger asChild>
+                          <TableRow
+                            rowData={row.original}
+                            data-state={row.getIsSelected() && "selected"}
+                            className="cursor-pointer hover:bg-gray-100"
+                            data-test-id="dataTable-tableRow-openDetail"
+                            onClick={(e) => {
+                              if (window.getSelection()?.toString() === "") {
+                                handleRowClick(row.original)
+                              }
+                            }}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <TableCell
+                                key={cell.id}
+                                style={{ userSelect: "text" }}
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
                                 )}
-                          </TableHead>
-                        )
-                      )}
-                    </TableRow>
-                  ))}
-                </SortableContext>
-              </TableHeader>
-              <TableBody className="tableBody">
-                {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      rowData={row.original}
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="cursor-pointer hover:bg-gray-100"
-                      // @ts-ignore
-                      onRowClick={handleRowClick}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </ContextMenuTrigger>
+                        <ContextMenuContent className="w-[200px] bg-white shadow-md">
+                          {selectedText && (
+                            <ContextMenuItem
+                              className="h-[30px] hover:bg-gray-200 flex items-center justify-start px-2"
+                              onSelect={() => {
+                                navigator.clipboard.writeText(selectedText)
+                              }}
+                            >
+                              <FormattedMessage id="copy" />
+                            </ContextMenuItem>
                           )}
-                        </TableCell>
-                      ))}
+                          <ContextMenuItem
+                            className="h-[30px] hover:bg-gray-200 flex items-center justify-start px-2"
+                            onSelect={() => {
+                              selectedRow && handleRowClick(selectedRow)
+                            }}
+                          >
+                            <FormattedMessage id="show_details" />
+                          </ContextMenuItem>
+                        </ContextMenuContent>
+                      </ContextMenu>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        style={{ userSelect: "text" }}
+                        colSpan={columnsConfig.length}
+                        className="h-24 text-center"
+                      >
+                        <FormattedMessage id="no_results_found" />
+                      </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columnsConfig.length}
-                      className="h-24 text-center"
-                    >
-                      <FormattedMessage id="no_results_found" />
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </DndContext>
+                  )}
+                </TableBody>
+              </Table>
+            </DndContext>
+          </div>
+          <DataTablePagination table={table} />
         </div>
-        <DataTablePagination table={table} />
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetHeader>
             <SheetTitle />
+            <SheetDescription />
           </SheetHeader>
-          <SheetContent className="min-w-[500px]">
-            <div className="pt-2">
-              <div className="mt-6 h-screen overflow-y-auto">
-                {selectedRow && RowClickChildren && (
-                  <RowClickChildren row={selectedRow} />
-                )}
-              </div>
+          <SheetContent className="sm:w-full md:min-w-[500px]">
+            <div className="pt-4 h-full">
+              {selectedRow && RowClickChildren && (
+                <RowClickChildren row={selectedRow} />
+              )}
             </div>
           </SheetContent>
         </Sheet>
-      </div>
+      </>
     )
 }

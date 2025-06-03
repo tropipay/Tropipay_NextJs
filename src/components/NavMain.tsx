@@ -21,6 +21,7 @@ import {
 } from "@/components/ui"
 import { SidebarOption } from "@/types/sidebarOption"
 import { ChevronRight } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React from "react"
 import { FormattedMessage } from "react-intl"
@@ -75,11 +76,11 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                           >
                             <DropdownMenuGroup>
                               {item.items?.map((subItem) => (
-                                <DropdownMenuItem key={`ms-${subItem.title}`}>
-                                  <a href={subItem.url}>
+                                <Link key={`ms-${subItem.title}`} href={subItem.url}>
+                                  <DropdownMenuItem>
                                     <FormattedMessage id={subItem.title} />
-                                  </a>
-                                </DropdownMenuItem>
+                                  </DropdownMenuItem>
+                                </Link>
                               ))}
                             </DropdownMenuGroup>
                           </DropdownMenuContent>
@@ -92,9 +93,9 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={`s-${subItem.title}`}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <Link key={subItem.title} href={subItem.url}>
                               {<FormattedMessage id={subItem.title} />}
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

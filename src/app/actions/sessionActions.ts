@@ -1,7 +1,10 @@
 "use server"
 
-import { signIn } from "@/auth"
+import { signIn, signOut } from "@/auth"
+import { env } from "@/config/env"
 import { deleteAuthSessionCookies } from "@/utils/api/utilsServer"
+import { fetchHeaders } from "@/utils/data/utils"
+import axios from "axios"
 
 /**
  * sign in with Next Auth.
@@ -11,8 +14,26 @@ import { deleteAuthSessionCookies } from "@/utils/api/utilsServer"
 export const login = async (token: string) => {
   await deleteAuthSessionCookies()
 
-  return await signIn("credentials", {
-    redirect: false,
-    token,
+  try {
+    return await signIn("credentials", {
+      redirect: false,
+      token,
+    })
+  } catch (error: any) {
+    return { error: error?.message || "Failed to sign in." }
+  }
+}
+
+export const getUserProfile = async (token) =>
+  axios(`${env.API_URL}/api/v3/users/profile`, {
+    headers: {
+      ...fetchHeaders,
+      Authorization: `Bearer ${token}`,
+    },
+    validateStatus: (status) => status >= 200 && status < 300,
   })
+
+export const logout = async () => {
+  await deleteAuthSessionCookies()
+  await signOut({ redirect: false })
 }

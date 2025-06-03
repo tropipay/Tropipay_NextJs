@@ -44,7 +44,7 @@ class CookiesManager {
     }
 
     if (!value) {
-      if(createCookie) this.set(id, defaultValue)
+      if (createCookie) this.set(id, defaultValue)
       return defaultValue
     }
 
@@ -61,6 +61,14 @@ class CookiesManager {
      * Sets the cookie value using the js-cookie library.
      */
     Cookies.set(id, typeof value === "string" ? value : JSON.stringify(value))
+  }
+
+  /**
+   * Deletes a cookie by its ID.
+   * @param {string} id The ID of the cookie to delete.
+   */
+  delete = (id: string) => {
+    Cookies.remove(id)
   }
 }
 

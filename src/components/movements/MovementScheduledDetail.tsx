@@ -2,7 +2,6 @@ import {
   movementScheduledStates,
   movementStateGroups,
 } from "@/app/filterDefinitions/movements"
-import ErrorMessage from "@/components/ErrorMessage"
 import FacetedBadge from "@/components/table/FacetedBadge"
 import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
 import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
@@ -17,21 +16,21 @@ import {
   Button,
 } from "@/components/ui"
 import { MovementScheduled } from "@/types/movements"
-import { processEnvNEXT_PUBLIC_API_URL } from "@/utils/config"
-import { fetchHeaders, formatAmount } from "@/utils/data/utils"
+import { formatAmount } from "@/utils/data/utils"
+import { useTranslations } from "@/utils/intl"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { useState } from "react"
-import { FormattedMessage } from "react-intl"
+import { TextToCopy } from "../TextToCopy"
+import BookingStore from "@/stores/BookingStore"
+import useStoreListener from "@/hooks/useStoreListener"
+import MessageSonner from "../MessageSonner"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {
   const [openModalConfirm, setOpenModalConfirm] = useState(false)
   const [isDone, setIsDone] = useState(false)
-  const [isError, setIsError] = useState<boolean>(false)
   const [isLoading, setIsLoading] = useState(false)
-  const { data: session } = useSession()
-  const token = session?.user.token
+  const [messageData, setMessageData] = useState(null)
 
   const row: MovementScheduled = props.data
   const {
@@ -46,46 +45,44 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     state,
   } = row
 
-  const onCancel = async () => {
-    setIsError(false)
-    setIsLoading(true)
-    try {
-      const res = await fetch(
-        `${processEnvNEXT_PUBLIC_API_URL}/api/v3/scheduled_transaction/${id}/deactivate`,
-        {
-          method: "PUT",
-          headers: {
-            ...fetchHeaders,
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      if (!res.ok) {
-        throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`)
-      }
-
-      setIsDone(true)
-    } catch (error) {
-      setIsError(true)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { t } = useTranslations()
+  useStoreListener([
+    {
+      stores: [BookingStore],
+      eventPrefix: "MovementScheduledDetail",
+      actions: {
+        DEACTIVATE_SCHEDULED_TRANSACTION_OK: (obj) => {
+          setIsDone(true)
+          setIsLoading(false)
+        },
+      },
+      setMessageData,
+    },
+  ])
 
   const onDone = () => {
     setOpenModalConfirm(false)
     window.location.reload()
   }
 
+  const onCancel = () => {
+    BookingStore.DeactivateScheduled({ id })
+  }
+
   return (
     <>
-      <div className="max-w-md mx-auto p-4">
-        <div>
-          <div className="flex justify-between items-center mb-3">
-            <div className="font-poppins text-2xl leading-5 tracking-tight uppercase font-bold">
-              {originAmount > 0 ? "+" : ""}
-              {formatAmount(originAmount, currency, "right")}
+      <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
+              <TextToCopy
+                classNameIcon={"hidden"}
+                value={`${originAmount > 0 ? "+" : ""}${formatAmount(
+                  originAmount,
+                  currency,
+                  "right"
+                )}`}
+              />
             </div>
             <FacetedBadge
               value={state}
@@ -93,134 +90,141 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               optionListGroups={movementStateGroups}
             />
           </div>
-          <div className="flex justify-between items-center mb-4 pb-1">
-            <p className="text-xs text-gray-500 flex items-center gap-1">
-              <FormattedMessage id="send_to" />
-              <span className="capitalize">{alias}</span>
-            </p>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500 flex items-center gap-1">
+              <TextToCopy
+                classNameIcon={"hidden"}
+                value={t("send_to") + " " + alias}
+                className="p-1"
+              />
+            </span>
             {nextDate && (
-              <p className="text-xs text-gray-500">
+              <span className="text-xs text-gray-500">
                 {format(new Date(nextDate), "dd/MM/yy HH:mm")}
-              </p>
+              </span>
             )}
           </div>
-          <RowDetailSection title={<FormattedMessage id="client_data" />}>
+        </div>
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <RowDetailSection title={t("client_data")}>
             <RowDetailInfo
-              label={<FormattedMessage id="beneficiary" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("beneficiary")}
               value={<span className="capitalize">{alias}</span>}
+              textToCopy={alias}
             />
             <RowDetailInfo
-              label={<FormattedMessage id="destiny_account" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("destiny_account")}
               value={accountNumber}
             />
             <RowDetailInfo
-              label={<FormattedMessage id="concept" />}
+              toClipboard
+              toClipboardIconHidden
+              label={t("concept")}
               value={conceptTransfer}
             />
           </RowDetailSection>
 
-          <RowDetailSection title={<FormattedMessage id="payment_details" />}>
-            <></>
-            {/* <Info
-          label={<FormattedMessage id="amount" />}
+          {/* <RowDetailSection title={t("payment_details")}>
+            <Info
+          label={t(amount" />}
           value={formatAmount(originAmount, currency, "right")}
-        /> */}
-            {/* <Info
-          label={<FormattedMessage id="paymentMethod" />}
-          value={<FormattedMessage id={`pm_${paymentMethod}`} />}
+        /> <Info
+          label={t(paymentMethod" />}
+          value={t(`pm_${paymentMethod}`} />}
         />
         {cardBin && (
           <Info
-            label={<FormattedMessage id="cardPan" />}
+            label={t(cardPan" />}
             value={`${cardBin} **** `}
           />
-        )} */}
-          </RowDetailSection>
+        )}
+          </RowDetailSection>  */}
 
-          <RowDetailSection title={<FormattedMessage id="schedule" />}>
+          <RowDetailSection title={t("schedule")}>
             {createdAt && (
               <RowDetailInfo
-                label={<FormattedMessage id="createdAt" />}
+                label={t("createdAt")}
                 value={format(new Date(createdAt), "dd/MM/yy")}
               />
             )}
             {nextDate && (
               <RowDetailInfo
-                label={<FormattedMessage id="date_to_pay" />}
+                label={t("date_to_pay")}
                 value={format(new Date(nextDate), "dd/MM/yy")}
               />
             )}
             {frecuency && (
               <RowDetailInfo
-                label={<FormattedMessage id="recurrence" />}
-                value={<FormattedMessage id={`mr_${frecuency}`} />}
+                label={t("recurrence")}
+                value={t(`mr_${frecuency}`)}
               />
             )}
           </RowDetailSection>
         </div>
         {!isDone && (
-          <div className="flex mt-4 gap-4 w-full p-4 bg-white absolute bottom-0 left-0">
+          <div className="flex gap-4">
             <Button
               variant="default"
               className="w-full"
               onClick={() => {
-                setIsError(false)
                 setIsDone(false)
                 setIsLoading(false)
                 setOpenModalConfirm(true)
               }}
             >
-              <FormattedMessage id="cancel_scheduled" />
+              {t("cancel_scheduled")}
             </Button>
           </div>
         )}
       </div>
-
+      {/* <ErrorHandler messageData={messageData} /> */}
       <AlertDialog open={openModalConfirm} onOpenChange={setOpenModalConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              <FormattedMessage
-                id={isDone ? "transfer_cancelled" : "cancel_movement_sched"}
-              />
+              {t(isDone ? "transfer_cancelled" : "cancel_movement_sched")}
             </AlertDialogTitle>
             <AlertDialogDescription className="whitespace-pre-line">
-              <FormattedMessage
-                id={
-                  isDone
-                    ? "transfer_cancelled_desc"
-                    : "cancel_movement_sched_desc"
-                }
-              />
+              {t(
+                isDone
+                  ? "transfer_cancelled_desc"
+                  : "cancel_movement_sched_desc"
+              )}
             </AlertDialogDescription>
-            {isError && (
-              <ErrorMessage>
-                <FormattedMessage id="error_execute_operation" />
-              </ErrorMessage>
-            )}
           </AlertDialogHeader>
           <AlertDialogFooter>
             {isDone ? (
               <AlertDialogAction onClick={onDone}>
-                <FormattedMessage id="ready" />
+                {t("ready")}
               </AlertDialogAction>
             ) : (
               <>
                 <Button
                   variant={"outline"}
-                  onClick={() => setOpenModalConfirm(false)}
+                  onClick={() => {
+                    setMessageData(null)
+                    setOpenModalConfirm(false)
+                  }}
                 >
-                  <FormattedMessage id="cancel" />
+                  {t("cancel")}
                 </Button>
                 <Button variant={"default"} onClick={onCancel}>
                   {isLoading && <Loader2 className="animate-spin" />}
-                  <FormattedMessage id="cancel_scheduled" />
+                  {t("cancel_scheduled")}
                 </Button>
               </>
             )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <MessageSonner
+        messageData={messageData}
+        setMessageData={setMessageData}
+      />
     </>
   )
 }

@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`] (https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
@@ -28,6 +28,23 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Environment Variables
+
+Las siguientes variables deben estar configuradas en producción:
+
+- `NEXT_PUBLIC_API_URL`: URL base de la API backend
+- `NEXT_PUBLIC_TROPIPAY_HOME`: URL principal de TropiPay
+- `NEXT_PUBLIC_SITE_URL`: URL del frontend
+- `NEXT_PUBLIC_V3_ACCESS_MODE`: Habilita/deshabilita funciones V3
+- `NEXT_PUBLIC_POSTHOG_KEY`: Key para analytics con PostHog
+- `NEXT_PUBLIC_POSTHOG_HOST`: URL de instancia PostHog
+
+Variables solo para desarrollo (no requieren NEXT*PUBLIC*):
+
+- `AUTH_SECRET`: Secreto para autenticación
+- `NEXTAUTH_SECRET`: Secreto para NextAuth
+- `NEXTAUTH_URL`: URL base para autenticación en dev
 
 ## Deploy on Vercel
 

@@ -1,17 +1,20 @@
 "use client"
 
-import { login } from "@/app/actions/sessionActions"
+import { login, logout } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
-import CookiesManager from "@/utils/cookies/cookiesManager"
-import { getTokenFromSession } from "@/utils/user/utilsUser"
-import { Loader2 } from "lucide-react"
+import Spinner from "@/components/Spinner"
+import { env } from "@/config/env"
+import { getBaseDomain } from "@/utils/data/utils"
+import { getToken } from "@/utils/user/utilsUser"
+import Cookies from "js-cookie"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function Page() {
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState<boolean>(false)
+  const [title, setTitle] = useState<string>()
   const [errors, setErrors] = useState<
     Array<string | Error | { message: string }>
   >([])
@@ -19,36 +22,40 @@ export default function Page() {
   const router = useRouter()
   const { t } = useTranslation()
 
-  const getToken = (): string =>
-    getTokenFromSession(
-      CookiesManager.getInstance().get(
-        "session",
-        'fill_with_session_info',
-        typeof window !== 'undefined' && window.location.hostname === 'localhost' && window.location.port === '3000'
-      )
-    )
-
   const onLogin = async () => {
     const token = getToken()
     if (!token) {
-      setErrors([t("error_login_dialog_title")])
+      setTitle(t("session_no_create"))
+      setErrors([t("session_no_create_description")])
       return
     }
 
     setLoading(true)
-    try {
-      await login(token)
-      router.push(searchParams.get("redirect") ?? "/dashboard/movements")
-    } catch (e) {
-      setErrors([t("error_login_dialog_title")])
-    }
+    const result = await login(token)
     setLoading(false)
+
+    if (result?.error) {
+      if (result?.error === "ERROR_USER_NOT_AUTHORIZED") {
+        setTitle(t("session_no_authorized"))
+        setErrors([t("session_no_authorized_description")])
+      } else {
+        setTitle(t("session_expired"))
+        setErrors([t("session_expired_description")])
+      }
+    } else {
+      const redirectTo = searchParams.get("redirect") ?? "/dashboard/movements"
+      console.log(`Login successfully. Redirect to ${redirectTo} ...`)
+      router.push(redirectTo)
+    }
   }
 
-  const onOk = () =>
+  const onOk = async () => {
+    await logout()
+    Cookies.remove("session", { path: "/", domain: getBaseDomain() })
     window.location.assign(
-      `${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login?redirect=${process.env.NEXT_PUBLIC_SITE_URL}`
+      `${env.TROPIPAY_HOME}/login?redirect=${env.SITE_URL}`
     )
+  }
 
   useEffect(() => {
     onLogin()
@@ -56,13 +63,15 @@ export default function Page() {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 h-screen">
-        {loading && (
-          <Loader2 className="animate-spin text-[#041266]" size={72} />
-        )}
-      </div>
-
-      <ErrorHandler {...{ errors, onOk }} />
+      {loading && <Spinner />}
+      <ErrorHandler
+        {...{
+          title,
+          buttonOkTitle: t("session_start"),
+          errors,
+          onOk,
+        }}
+      />
     </>
   )
 }

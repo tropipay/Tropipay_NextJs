@@ -1,13 +1,14 @@
 "use client"
 
 import FilterCategories from "@/components/table/FilterCategories"
-import { Input } from "@/components/ui/Input"
+import { callPostHog } from "@/utils/utils"
 import { Table } from "@tanstack/react-table"
-import { Search } from "lucide-react"
 import { useSearchParams } from "next/navigation"
+import { usePostHog } from "posthog-js/react"
 import { useEffect } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import { useTranslation } from "../intl/useTranslation"
+import { DataTableSearchInput } from "./DataTableSearchInput"
 import { DataTableViewOptions } from "./DataTableViewOptions"
 import { FilterManager } from "./FilterManager"
 
@@ -15,8 +16,9 @@ interface Props<TData, TValue> {
   tableId: string
   table: Table<TData>
   columns: any
-  categoryFilterId: string,
+  categoryFilterId: string
   categoryFilters?: string[]
+  actions?: React.ReactNode
 }
 
 export function DataTableToolbar<TData, TValue>({
@@ -24,9 +26,11 @@ export function DataTableToolbar<TData, TValue>({
   table,
   columns,
   categoryFilterId,
-  categoryFilters
+  categoryFilters,
+  actions,
 }: Props<TData, TValue>) {
   const { t } = useTranslation()
+  const postHog = usePostHog()
   const searchParams = useSearchParams()
   const searchParamValue = searchParams.get("search") || ""
   const searchColumn = table.getColumn("search")
@@ -36,7 +40,9 @@ export function DataTableToolbar<TData, TValue>({
         const searchFilter = prev.find(({ id }) => id === "search")
         if (searchFilter) {
           return prev.map((filter) =>
-            filter.id === "search" ? { ...filter, value: searchParamValue } : filter
+            filter.id === "search"
+              ? { ...filter, value: searchParamValue }
+              : filter
           )
         }
         return [...prev, { id: "search", value: searchParamValue }]
@@ -47,6 +53,10 @@ export function DataTableToolbar<TData, TValue>({
   const handleSearchChange = useDebouncedCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value
+
+      callPostHog(postHog, "filter_search:apply", {
+        table_id: tableId,
+      })
 
       if (value) {
         table.setColumnFilters((prev) => {
@@ -62,7 +72,7 @@ export function DataTableToolbar<TData, TValue>({
         searchColumn?.setFilterValue(undefined)
       }
     },
-    500
+    800
   )
 
   useEffect(() => {
@@ -73,31 +83,19 @@ export function DataTableToolbar<TData, TValue>({
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        {/* Elementos alineados a la izquierda */}
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <FilterCategories {...{ table, categoryFilterId, categoryFilters }} />
-          <div className="relative flex items-center w-full">
-            <span className="absolute left-3 flex items-center text-gray-500">
-              <Search className="h-5 w-5" aria-hidden="true" />
-            </span>
-            <Input
-              id="search"
-              type="search"
-              placeholder={t("search")}
-              onChange={handleSearchChange}
-              className="pl-10 w-full"
-              defaultValue={searchParamValue}
-            />
-          </div>
+          <DataTableSearchInput
+            handleSearchChange={handleSearchChange}
+            searchParamValue={searchParamValue}
+          />
         </div>
 
         {/* Elementos alineados a la derecha */}
         <div className="flex items-center gap-2">
-          {/* <Button variant="outline">
-            <Download />
-          </Button> */}
-          <DataTableViewOptions table={table} />
+          {actions}
+          <DataTableViewOptions table={table} tableId={tableId} />
         </div>
       </div>
       {/* Delegamos la visualización de filtros a FilterManager */}

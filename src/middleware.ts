@@ -1,3 +1,4 @@
+import { env } from "@/config/env"
 import { isTokenExpired } from "@/utils/data/utils"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
@@ -30,11 +31,9 @@ export async function middleware(req: NextRequest) {
   if (isProtectedRoute && isTokenExpired(token)) {
     return NextResponse.redirect(
       new URL(
-        `${
-          process.env.NEXT_PUBLIC_TROPIPAY_HOME
-        }/login?redirect=${getRedirectRoute(
+        `${env.TROPIPAY_HOME}/login?redirect=${getRedirectRoute(
           req.nextUrl.pathname,
-          process.env.NEXT_PUBLIC_SITE_URL ?? req.nextUrl.origin
+          env.SITE_URL ?? req.nextUrl.origin
         )}`,
         req.nextUrl
       )

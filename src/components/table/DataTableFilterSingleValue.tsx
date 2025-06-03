@@ -10,24 +10,29 @@ import {
 } from "@/components/ui/Popover"
 import { Separator } from "@/components/ui/Separator"
 import { selStyle } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
 import { CrossCircledIcon } from "@radix-ui/react-icons"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
+  tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
+  tableId, // Receive tableId
   column,
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
+  const postHog = usePostHog()
   // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
 
@@ -44,6 +49,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
   // Función para aplicar el filtro a la columna
   const handleApplyFilter = (event: React.FormEvent) => {
     event.preventDefault()
+    callPostHog(postHog, "filter_single_value_apply", {
+      table_id: tableId,
+      filter_id: column?.id,
+      filter_type: "uniqueValue",
+      filter_value: localFilterValue || undefined,
+    })
     column?.setFilterValue(localFilterValue || undefined)
   }
 
@@ -51,6 +62,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const handleClearFilter = () => {
     if (!column) return
     if (localFilterValue) {
+      callPostHog(postHog, "filter_single_value:clear", {
+        table_id: tableId,
+        filter_id: column.id,
+        filter_value: localFilterValue, // Value before clearing
+        filter_type: "uniqueValue",
+      })
       setLocalFilterValue(undefined)
       column.setFilterValue(undefined)
     } else onClear?.(column.id)
@@ -60,7 +77,10 @@ export function DataTableFilterSingleValue<TData, TValue>({
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        data-test-id="dataTableFilterSingleValue-popoverTrigger-openFilter"
+      >
         <Button
           // @ts-ignore
           variant={selStyle(filterValue, "active", "inactive", "")}
@@ -89,7 +109,6 @@ export function DataTableFilterSingleValue<TData, TValue>({
           </div>
         </Button>
       </PopoverTrigger>
-
       <PopoverContent className="w-[264px] p-6" align="start">
         <form onSubmit={handleApplyFilter}>
           <Label htmlFor="filterValue" className="my-2 font-bold text-gray-800">
@@ -112,9 +131,16 @@ export function DataTableFilterSingleValue<TData, TValue>({
             placeholder={filterPlaceholder ? t(filterPlaceholder) : ""}
             value={localFilterValue || ""}
             onChange={handleFilterChange}
+            data-test-id="dataTableFilterSingleValue-input-filterValue" // Added data-test-id
           />
           <PopoverClose asChild>
-            <Button variant="default" className="w-full mt-6" type="submit">
+            {/* Added data-test-id to the apply filter button */}
+            <Button
+              variant="default"
+              className="w-full mt-6"
+              type="submit"
+              data-test-id="dataTableFilterSingleValue-button-applyFilter" // Updated data-test-id
+            >
               <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>

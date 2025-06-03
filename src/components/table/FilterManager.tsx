@@ -5,7 +5,7 @@ import { PopoverClose } from "@radix-ui/react-popover"
 import { Column, Table } from "@tanstack/react-table"
 import { CheckIcon, Plus } from "lucide-react"
 import { useSession } from "next-auth/react"
-import { useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import * as React from "react"
 
 // Componentes UI
@@ -24,6 +24,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover"
 import { cn } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
+import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import { FormattedMessage, useIntl } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 import { DataTableFilterDate } from "./DataTableFilterDate"
@@ -43,10 +45,13 @@ export function FilterManager<TData, TValue>({
   columns,
 }: FilterManagerProps<TData, TValue>) {
   const { data: session } = useSession()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const postHog = usePostHog()
   const userId = session?.user?.id
   const { t } = useTranslation()
   const intl = useIntl()
-  const searchParams = useSearchParams()
 
   // Filtros disponibles
   const filters = columns
@@ -75,7 +80,9 @@ export function FilterManager<TData, TValue>({
     : ""
   const defaultSelectedFilters = initialSelectedFilters
     ? initialSelectedFilters
-    : columns.filter(({ showFilter }: any) => showFilter).map(({ id }) => id)
+    : columns
+        .filter(({ filter, showFilter }: any) => filter && showFilter)
+        .map(({ id }) => id)
   const [selectedFilters, setSelectedFilters] = React.useState<Set<string>>(
     new Set([...defaultSelectedFilters, ...appliedFiltersFromSearchParams])
   )
@@ -128,14 +135,21 @@ export function FilterManager<TData, TValue>({
 
   // Aplicar filtros seleccionados
   const handleApplyFilters = () => {
+    const selectedFilterIdsArray = Array.from(selectedFilters)
+
+    callPostHog(postHog, "filter_manager:apply", {
+      table_id: tableId,
+      selected_filter_ids: selectedFilterIdsArray,
+    })
+
     const newSearchParams = new URLSearchParams(searchParams.toString())
     filters.forEach((column) => {
       if (!selectedFilters.has(column.id)) {
         newSearchParams.delete(column.id)
       }
     })
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
 
+    router.push(`${pathname}?${newSearchParams.toString()}`)
     const newFilters = columns.filter(({ id }) => selectedFilters.has(id))
     setActiveFilters(newFilters)
   }
@@ -143,6 +157,18 @@ export function FilterManager<TData, TValue>({
   // Limpiar filtros
   const handleClearFilters = () => {
     const appliedFilters = table.getState().columnFilters
+    const managedAppliedFilters = appliedFilters.filter(({ id }) =>
+      filters.some((filter) => filter.id === id)
+    )
+    const clearedFilterIds = managedAppliedFilters.map(({ id }) => id)
+
+    if (clearedFilterIds.length > 0) {
+      callPostHog(postHog, "filter_manager:clear_all", {
+        table_id: tableId,
+        cleared_filter_ids: clearedFilterIds,
+      })
+    }
+
     const remainingFilters = appliedFilters.filter(
       ({ id }) => !filters.some((filter) => filter.id === id)
     )
@@ -154,6 +180,13 @@ export function FilterManager<TData, TValue>({
    * @param filterId Filter identifier.
    */
   const handleClearFilter = (filterId: string) => {
+    const filterValue = table.getColumn(filterId)?.getFilterValue()
+
+    callPostHog(postHog, "filter_manager:clear", {
+      table_id: tableId,
+      filter_id: filterId,
+    })
+
     setActiveFilters(activeFilters.filter(({ id }) => id !== filterId))
     const newSelectedFilters = new Set(selectedFilters)
     if (newSelectedFilters.has(filterId)) {
@@ -176,7 +209,10 @@ export function FilterManager<TData, TValue>({
     <div className="flex w-full items-start justify-between">
       <div className="flex flex-1 items-start space-x-2 p-0 overflow-x-auto mr-4 pr-2">
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger
+            asChild
+            data-test-id="filterManager-popoverTrigger-addFilter"
+          >
             <Button
               variant="secondary"
               size="sm"
@@ -191,7 +227,10 @@ export function FilterManager<TData, TValue>({
           </PopoverTrigger>
           <PopoverContent className="w-[264px] p-0" align="start">
             <Command>
-              <CommandInput placeholder={t("search_filters")} />
+              <CommandInput
+                placeholder={t("search_filters")}
+                data-test-id="filterManager-commandInput-searchFilters"
+              />
               <CommandList>
                 <CommandEmpty>
                   <FormattedMessage id="no_results_found" />
@@ -203,6 +242,7 @@ export function FilterManager<TData, TValue>({
                       <CommandItem
                         key={id}
                         onSelect={() => handleSelectOption(id)}
+                        data-test-id={`filterManager-commandItem-toggleFilter-${id}`}
                       >
                         <div
                           className={cn(
@@ -227,6 +267,7 @@ export function FilterManager<TData, TValue>({
                   variant="default"
                   className="w-full"
                   onClick={handleApplyFilters}
+                  data-test-id="filterManager-button-applyFilters" // Updated data-test-id
                 >
                   <FormattedMessage id="apply" />
                 </Button>
@@ -259,6 +300,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterFaceted
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -271,6 +313,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterDate
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     // @ts-ignore
                     column={{
                       ...table.getColumn(column.id),
@@ -283,6 +326,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterRangeAmount
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -295,6 +339,7 @@ export function FilterManager<TData, TValue>({
                 return (
                   <DataTableFilterSingleValue
                     key={column.id}
+                    tableId={tableId} // Pass tableId
                     column={{
                       ...table.getColumn(column.id),
                       // @ts-ignore
@@ -313,6 +358,7 @@ export function FilterManager<TData, TValue>({
           variant="active"
           onClick={handleClearFilters}
           className="h-8 px-2"
+          data-test-id="filterManager-button-clearAllFilters" // Updated data-test-id
         >
           <FormattedMessage id="clean_filters" />
         </Button>

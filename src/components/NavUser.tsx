@@ -1,7 +1,6 @@
 "use client"
 
-import { ChevronsUpDown, LogOut } from "lucide-react"
-
+import { logout } from "@/app/actions/sessionActions"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,15 +13,21 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui"
-
+import { env } from "@/config/env"
+import { getBaseDomain } from "@/utils/data/utils"
+import Cookies from "js-cookie"
+import { ChevronsUpDown, LogOut } from "lucide-react"
 import { FormattedMessage } from "react-intl"
 import { NavUserAccount } from "./NavUserAccount"
 
 export function NavUser(props: any) {
   const { isMobile } = useSidebar()
   const user = props.user
-  const onExit = () =>
-    window.location.assign(`${process.env.NEXT_PUBLIC_TROPIPAY_HOME}/login`)
+  const onExit = async () => {
+    await logout()
+    Cookies.remove("session", { path: "/", domain: getBaseDomain() })
+    window.location.assign(`${env.TROPIPAY_HOME}/login`)
+  }
 
   return (
     <SidebarMenu>

@@ -11,6 +11,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
 import React from "react"
 import { FormattedMessage } from "react-intl"
+import { TextToCopy } from "../TextToCopy"
 
 // Definimos los tipos para los argumentos de la función
 type FacetedOption = {
@@ -54,15 +55,49 @@ type ColumnOptions<TData> = {
   order?: number
   meta?: boolean
   hideColumn?: boolean
-  render?: (value: string) => string
-  valueMapper?: (_: any) => any
+  render?: (row: any) => string
+  toClipboard?: boolean
+}
+
+export function renderedAmount(
+  value: number,
+  currency: string,
+  addSign: boolean,
+  toClipboard: boolean
+) {
+  const formattedValue = `${addSign && value > 0 ? "+" : ""}${formatAmount(
+    value
+  )} ${currency}`
+
+  return toClipboard ? (
+    <TextToCopy
+      value={
+        <div className="flex items-center gap-1">
+          <span className="font-bold">
+            {addSign && (value > 0 ? "+" : "")}
+            {formatAmount(value)}
+          </span>
+          <span className="text-grayFont">{currency}</span>
+        </div>
+      }
+      textToCopy={formattedValue}
+    />
+  ) : (
+    <div className="flex items-center gap-1">
+      <span className="font-bold">
+        {addSign && (value > 0 ? "+" : "")}
+        {formatAmount(value)}
+      </span>
+      <span className="text-grayFont">{currency}</span>
+    </div>
+  )
 }
 
 // Función unificada setColumns
 export function setColumns<TData>(
   columnsConfig: Record<string, ColumnOptions<TData>>
 ): ColumnDef<TData>[] {
-  return Object.entries(columnsConfig).map(([id, options]) => {
+  return Object.entries(columnsConfig).map(([id, options], index) => {
     const {
       type = "simpleText",
       field = id,
@@ -72,7 +107,7 @@ export function setColumns<TData>(
       format: dateFormat,
       component,
       addSign = true,
-      enableSorting = true,
+      enableSorting = false,
       enableHiding = true,
       filter = true,
       filterType = setFilterType(type),
@@ -83,11 +118,11 @@ export function setColumns<TData>(
       hidden = false,
       size,
       enableResizing = false,
-      order,
+      order = Object.keys(columnsConfig).length + index,
       meta,
       hideColumn = false,
       render,
-      valueMapper,
+      toClipboard = false,
     } = options
 
     let baseConfig: ColumnDef<TData> = {
@@ -113,6 +148,7 @@ export function setColumns<TData>(
       order,
       meta,
       hideColumn,
+      toClipboard,
     }
 
     switch (type) {
@@ -138,7 +174,16 @@ export function setColumns<TData>(
                   </div>
                 )}
                 <span className="ml-1 whitespace-nowrap overflow-hidden text-ellipsis">
-                  <FormattedMessage id={selectedOption.label} />
+                  {toClipboard ? (
+                    <TextToCopy
+                      value={<FormattedMessage id={selectedOption.label} />}
+                      textToCopy={selectedOption.label}
+                      className="pl-0"
+                      translate={true}
+                    />
+                  ) : (
+                    <FormattedMessage id={selectedOption.label} />
+                  )}
                 </span>
               </div>
             )
@@ -159,8 +204,8 @@ export function setColumns<TData>(
                   dateFormat || "dd/MM/yy HH:mm"
                 )
               }
-              if (render && value !== "-") {
-                value = render(value)
+              if (toClipboard && value !== "-") {
+                return <TextToCopy value={value.toString()} />
               }
               return value
             } catch (error) {
@@ -191,32 +236,10 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const rowValue = row.getValue(id) as any
-            const rowValueMapper = valueMapper
-              ? valueMapper(row.original)
-              : rowValue
-
-            const { value, currency } = rowValueMapper || []
-            return (
-              <div className="flex items-center gap-1">
-                <span className="font-bold">
-                  {addSign && (value > 0 ? "+" : "")}
-                  {formatAmount(value)}
-                </span>
-                <span className="text-grayFont">{currency}</span>
-              </div>
-            )
+            const rowValue = row.original[id]
+            const { value, currency } = rowValue || {}
+            return renderedAmount(value, currency, addSign, toClipboard)
           },
-        }
-        break
-      case "free":
-        if (!component) {
-          throw new Error("component is required for free type")
-        }
-        baseConfig = {
-          ...baseConfig,
-          cell: ({ row }) =>
-            React.cloneElement(component as React.ReactElement, { row }),
         }
         break
       case "select":
@@ -253,26 +276,47 @@ export function setColumns<TData>(
         baseConfig = {
           ...baseConfig,
           cell: ({ row }) => {
-            const rowValue = row.getValue(id) as any
-            const rowValueMapper = valueMapper
-              ? valueMapper(row.original)
-              : rowValue
-            let value = getRowValue(rowValueMapper) || "-"
-            if (render && value !== "-") {
-              value = render(value)
+            if (render) return render(row.original)
+            const value = getRowValue(row.getValue(id))
+            if (value === "-") return value
+
+            const TextWithTooltip = ({ text }: { text: string }) => {
+              const [isTruncated, setIsTruncated] = React.useState(false)
+              const textRef = React.useRef<HTMLDivElement>(null)
+
+              React.useEffect(() => {
+                if (textRef.current) {
+                  setIsTruncated(
+                    textRef.current.scrollWidth > textRef.current.clientWidth
+                  )
+                }
+              }, [text])
+
+              return isTruncated ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div ref={textRef} className="truncate">
+                      {text}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="center">
+                    {text}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <div ref={textRef} className="truncate">
+                  {text}
+                </div>
+              )
             }
 
-            return value !== "-" ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="truncate">{value}</div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="center">
-                  {value}
-                </TooltipContent>
-              </Tooltip>
+            return toClipboard ? (
+              <TextToCopy
+                value={<TextWithTooltip text={value} />}
+                textToCopy={row.original[id]}
+              />
             ) : (
-              value
+              <TextWithTooltip text={value} />
             )
           },
         }

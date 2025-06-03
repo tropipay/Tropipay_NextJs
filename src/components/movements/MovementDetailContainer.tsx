@@ -1,7 +1,5 @@
-"use client"
-
-import MovementDetail from "@/components/movements/MovementDetail"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
+import MovementDetail from "@/components/movements/MovementDetail"
 import DataComponent from "../DataComponent"
 
 interface Props {
@@ -19,6 +17,7 @@ const MovementDetailContainer = ({ row: { id } }: Props) => {
         queryConfig,
         searchParams: { id },
       }}
+      className="h-full"
     >
       <MovementDetail />
     </DataComponent>

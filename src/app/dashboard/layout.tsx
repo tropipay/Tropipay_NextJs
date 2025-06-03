@@ -1,6 +1,9 @@
 "use client"
 
+import Spinner from "@/components/Spinner"
+
 import { AppSidebar } from "@/components/AppSidebar"
+import CookieMonitor from "@/components/CookieMonitor"
 import DynamicBreadcrumb from "@/components/privateLayout/DynamicBreadcrumb"
 import {
   Separator,
@@ -8,13 +11,37 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui"
+import { Toaster } from "@/components/ui/Sonner"
+import { env } from "@/config/env"
+import useStoreListener from "@/hooks/useStoreListener"
+import ProfileStore from "@/stores/ProfileStore"
 import { SessionProvider } from "next-auth/react"
-import { Suspense } from "react"
+import { useEffect, useState } from "react"
 
 export default function Page({ children }: ChildrenProps) {
-  return (
-    <Suspense>
+  const [withProfile, setWithProfile] = useState(false)
+
+  useStoreListener([
+    {
+      stores: [ProfileStore],
+      eventPrefix: "layout",
+      actions: {
+        USER_PROFILE_OK: () => setWithProfile(true),
+      },
+    },
+  ])
+
+  useEffect(() => {
+    ProfileStore.FetchProfile()
+  }, [])
+
+  if (withProfile)
+    return (
       <SessionProvider>
+        <CookieMonitor
+          cookieName="session"
+          redirectPath={`${env.TROPIPAY_HOME}/login?redirect=${env.SITE_URL}`}
+        />
         <SidebarProvider defaultOpen={false}>
           <AppSidebar />
           <SidebarInset>
@@ -25,12 +52,12 @@ export default function Page({ children }: ChildrenProps) {
                 <DynamicBreadcrumb />
               </div>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-              {children}
-            </div>
+            <div className="flex flex-1 px-4 pt-0">{children}</div>
           </SidebarInset>
+          <Toaster />
         </SidebarProvider>
       </SessionProvider>
-    </Suspense>
-  )
+    )
+
+  return <Spinner />
 }

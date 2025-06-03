@@ -1,13 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/Button"
-import { cn } from "@/utils/data/utils"
-import { PopoverClose } from "@radix-ui/react-popover"
-import { Table } from "@tanstack/react-table"
-import { CheckIcon, Ellipsis } from "lucide-react"
-import { useMemo, useState } from "react"
-import { FormattedMessage, useIntl } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
 import {
   Command,
   CommandEmpty,
@@ -21,17 +14,33 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/Popover"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/Tooltip"
+import { cn } from "@/utils/data/utils"
+import { callPostHog } from "@/utils/utils"
+import { PopoverClose } from "@radix-ui/react-popover"
+import { Table } from "@tanstack/react-table"
+import { CheckIcon, Ellipsis } from "lucide-react"
+import { usePostHog } from "posthog-js/react"
+import { useMemo, useState } from "react"
+import { FormattedMessage, useIntl } from "react-intl"
+import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
+  tableId: string // Añadir tableId a las props
 }
 
 export function DataTableViewOptions<TData>({
   table,
+  tableId, // Recibir tableId
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
-  const intl = useIntl() // Use useIntl to translate column names
+  const postHog = usePostHog() 
+  const intl = useIntl()
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>
   >({})
@@ -84,6 +93,19 @@ export function DataTableViewOptions<TData>({
   }
 
   const handleApply = () => {
+    const visibleColumns = Object.keys(pendingVisibility).filter(
+      (id) => pendingVisibility[id]
+    )
+    const hiddenColumns = Object.keys(pendingVisibility).filter(
+      (id) => !pendingVisibility[id]
+    )
+
+    callPostHog(postHog, "data_table:column_visibility:apply", {
+      table_id: tableId,
+      visible_columns: visibleColumns,
+      hidden_columns: hiddenColumns,
+    })
+
     table.setColumnVisibility(pendingVisibility)
     const newlyVisible = sortedColumns
       .filter(
@@ -112,7 +134,10 @@ export function DataTableViewOptions<TData>({
     >
       <Tooltip>
         <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
+          <PopoverTrigger
+            asChild
+            data-test-id="dataTableViewOptions-popoverTrigger-openOptions"
+          >
             <Button variant="outline" aria-label="Column options">
               <Ellipsis className="mr-0 h-4 w-4" />
             </Button>
@@ -124,7 +149,10 @@ export function DataTableViewOptions<TData>({
       </Tooltip>
       <PopoverContent className="w-[270px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={t("search_columns")} />
+          <CommandInput
+            placeholder={t("search_columns")}
+            data-test-id="dataTableViewOptions-commandInput-searchColumns" // Added data-test-id
+          />
           <CommandList>
             <CommandEmpty>
               <FormattedMessage id="no_results_found" />
@@ -138,6 +166,7 @@ export function DataTableViewOptions<TData>({
                     key={column.id}
                     onSelect={() => handleToggleColumn(column.id)}
                     aria-selected={isVisible}
+                    data-test-id={`dataTableViewOptions-commandItem-toggleVisibility-${column.id}`}
                   >
                     <div
                       className={cn(
@@ -160,7 +189,13 @@ export function DataTableViewOptions<TData>({
         </Command>
         <div className="p-3 flex gap-2">
           <PopoverClose asChild>
-            <Button variant="default" className="w-full" onClick={handleApply}>
+            {/* Added data-test-id to the apply button */}
+            <Button
+              variant="default"
+              className="w-full"
+              onClick={handleApply}
+              data-test-id="dataTableViewOptions-button-apply" // Updated data-test-id
+            >
               <FormattedMessage id="apply" />
             </Button>
           </PopoverClose>

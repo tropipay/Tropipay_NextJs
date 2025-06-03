@@ -22,6 +22,9 @@ export type Charge = {
   country?: string
   cardExpirationDate?: string
   clientIp?: string
+  bankOrderCode: string
+  refundable: boolean
+  movementId?: string | null
 }
 
 export type GetChargesResponse = {

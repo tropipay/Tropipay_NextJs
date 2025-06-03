@@ -61,6 +61,9 @@ export const chargesApiConfig: Record<string, FetchDataConfig> = {
             cardCountry
             cardExpirationDate
             clientIp
+            refundable
+            movementId
+            bankOrderCode
           }
           totalCount
         }

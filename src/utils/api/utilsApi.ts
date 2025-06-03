@@ -1,8 +1,12 @@
+import { env } from "@/config/env"
+import ProfileStore from "@/stores/ProfileStore"
 import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
-import { format, parse } from "date-fns"
-import { processEnvNEXT_PUBLIC_API_URL } from "../config"
+import axios from "axios"
+import { parse } from "date-fns"
+import getConfig from "next/config"
+import { getUserSettings } from "../user/utilsUser"
 
 /**
  * Makes an API request.
@@ -12,11 +16,19 @@ import { processEnvNEXT_PUBLIC_API_URL } from "../config"
 export async function makeApiRequest({
   queryConfig,
   variables,
-  columnVisibility,
   token,
   debug = false,
 }: FetchOptions) {
   const { url, method, body } = queryConfig
+  const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
+
+  const columnVisibility = getUserSettings(
+    (ProfileStore?.getProfileData() as any)?.id,
+    {},
+    queryConfig.key,
+    "columnVisibility"
+  )
+
   let bodyUpdated = {}
   if (body) {
     const visibleColumns = Object.keys(queryConfig.columnsDef).filter(
@@ -43,28 +55,44 @@ export async function makeApiRequest({
   }
 
   if (debug) {
-    console.log("url: ", url)
+    console.log("url: ", `${apiUrl}${url}`)
     body && console.log("body: ", JSON.stringify(bodyUpdated, null, 2))
   }
 
-  const response = await fetch(`${processEnvNEXT_PUBLIC_API_URL}${url}`, {
-    method,
-    headers: {
-      ...fetchHeaders,
-      Authorization: `Bearer ${token}`,
-    },
-    ...(body && {
-      body: JSON.stringify(bodyUpdated),
-    }),
-    cache: "no-store",
-  })
-  // console.log("response:", await response.json())
+  try {
+    const response = await axios({
+      url: `${env.API_URL}${url}`,
+      method,
+      headers: {
+        ...fetchHeaders,
+        Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+      ...(body && {
+        data: JSON.stringify(bodyUpdated),
+      }),
+      validateStatus: (status) => status >= 200 && status < 300,
+    })
 
-  if (!response.ok) throw new Error(response.statusText)
+    if (debug) {
+      console.log("data:", response.data)
+    }
 
-  return response.json()
+    return response.data
+  } catch (e) {
+    console.error(e)
+    return null
+  }
 }
 
+/**
+ * Builds GraphQL variables based on search parameters and column definitions.
+ * @param {SearchParams} searchParams - The search parameters.
+ * @param {any} columns - The column definitions.
+ * @returns {{ variables: GraphQLVariables }} The GraphQL variables.
+ */
 export function buildGraphQLVariables(
   searchParams: SearchParams,
   columns: any
@@ -110,15 +138,33 @@ export function buildGraphQLVariables(
         case "date":
           const [dateFrom, dateTo] = filterValue?.split(",") ?? []
           if (dateFrom) {
-            const dateFromParsed = parse(dateFrom, "dd/MM/yyyy", new Date())
-            const dateFromISO = format(dateFromParsed, "yyyy-MM-dd")
-            variables.filter[`${column.id}From`] = dateFromISO
+            const dateFromParsed = new Date(
+              Date.UTC(
+                new Date(
+                  parse(dateFrom, "dd/MM/yyyy", new Date())
+                ).getFullYear(),
+                new Date(parse(dateFrom, "dd/MM/yyyy", new Date())).getMonth(),
+                new Date(parse(dateFrom, "dd/MM/yyyy", new Date())).getDate(),
+                0,
+                0,
+                0
+              )
+            )
+            variables.filter[`${column.id}From`] = dateFromParsed.toISOString()
           }
 
           if (dateTo) {
-            const dateToParsed = parse(dateTo, "dd/MM/yyyy", new Date())
-            const dateToISO = format(dateToParsed, "yyyy-MM-dd")
-            variables.filter[`${column.id}To`] = dateToISO
+            const dateToParsed = new Date(
+              Date.UTC(
+                new Date(parse(dateTo, "dd/MM/yyyy", new Date())).getFullYear(),
+                new Date(parse(dateTo, "dd/MM/yyyy", new Date())).getMonth(),
+                new Date(parse(dateTo, "dd/MM/yyyy", new Date())).getDate(),
+                23,
+                59,
+                59
+              )
+            )
+            variables.filter[`${column.id}To`] = dateToParsed.toISOString()
           }
           break
 
@@ -144,6 +190,12 @@ export function buildGraphQLVariables(
   return { variables }
 }
 
+/**
+ * Generates a string of query fields based on active columns.
+ * @param {Record<string, any>} columns - The column definitions.
+ * @param {string[]} activeColumns - The active columns.
+ * @returns {string} The generated query fields.
+ */
 export const generateQueryFields = (
   columns: Record<string, any>,
   activeColumns: string[]

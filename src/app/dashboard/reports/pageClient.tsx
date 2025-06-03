@@ -4,12 +4,17 @@ import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataComponent from "@/components/DataComponent"
 import ReportBalanceSummary from "@/components/reports/ReportBalanceSummary"
 import CookiesManager from "@/utils/cookies/cookiesManager"
+import { callPostHog } from "@/utils/utils"
 import { format, formatISO, parse } from "date-fns"
-import { useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { usePostHog } from "posthog-js/react"
 import { useMemo } from "react"
 
 const PageClient = () => {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const pathname = usePathname()
+  const postHog = usePostHog()
   const accountNumber = CookiesManager.getInstance().get("accountNumber")
 
   // Get dates from query params url
@@ -58,7 +63,10 @@ const PageClient = () => {
   const onChangeRangeDate = (value: string) => {
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.set("period", value)
-    window.history.pushState(null, "", `?${newSearchParams.toString()}`)
+    callPostHog(postHog, "report:balance_summary:change_range_date", {
+      filter_date: value,
+    })
+    router.push(`${pathname}?${newSearchParams.toString()}`)
   }
 
   return (

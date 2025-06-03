@@ -1,7 +1,8 @@
 import IntlWrapper from "@/components/intl/Wrapper"
-import { PostHogProvider } from "@/components/PostHogProvider" // Import PostHogProvider
+import PostHogInsert from "@/components/PostHogProvider" // Import PostHogInsert (using the new name)
+import { ReduxProvider } from "@/components/ReduxProvider" // Import ReduxProvider
 import TanstackProvider from "@/components/TanstackProvider"
-import { Toaster } from "@/components/ui"
+import { cn } from "@/utils/data/utils"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"
@@ -27,25 +28,29 @@ const poppins = Poppins({
 
 // Configuración de Roboto
 const roboto = Roboto({
-  weight: ["400", "500"], // regular y medium (en lugar de semibold)
+  weight: ["400", "500", "600"], // regular y medium (en lugar de semibold)
   // O si prefieres que sea más bold: weight: ['400', '700']
   subsets: ["latin"],
   variable: "--font-roboto",
   display: "swap",
 })
 
-export default function RootLayout({ children }: ChildrenProps) {
+interface Props {
+  children: React.ReactNode
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
+      <body className={cn(poppins.variable, roboto.variable, "antialiased")}>
         <Suspense>
-          {/* Wrap IntlWrapper with PostHogProvider */}
-          <PostHogProvider>
-            <IntlWrapper>
-              <Toaster />
-              <TanstackProvider>{children}</TanstackProvider>
-            </IntlWrapper>
-          </PostHogProvider>
+          <PostHogInsert>
+            <ReduxProvider>
+              <IntlWrapper>
+                <TanstackProvider>{children}</TanstackProvider>
+              </IntlWrapper>
+            </ReduxProvider>
+          </PostHogInsert>
         </Suspense>
       </body>
     </html>

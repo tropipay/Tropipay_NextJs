@@ -1,7 +1,13 @@
-import type { NextAuthConfig } from "next-auth"
+import ProfileStore from "@/stores/ProfileStore"
+import { type NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { fetchHeaders } from "@/utils/data/utils"
-import { processEnvNEXT_PUBLIC_API_URL } from "./utils/config"
+import { getUserProfile } from "./app/actions/sessionActions"
+import { SystemCredentialsSignin } from "./types/security/auth"
+
+export const clientTypes = {
+  PHYSICAL: 1,
+  LEGAL: 2,
+}
 
 export default {
   session: { strategy: "jwt" },
@@ -14,31 +20,21 @@ export default {
       async authorize({ token }) {
         let user: object | null = null
         try {
-          const res = await fetch(
-            `${processEnvNEXT_PUBLIC_API_URL}/api/v3/users/profile`,
-            {
-              method: "GET",
-              headers: {
-                ...fetchHeaders,
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
+          const response = await getUserProfile(token)
+          const profileData = response.data
 
-          if (!res.ok) {
-            throw new Error(
-              `Failed to fetch user profile: ${res.status} ${res.statusText}`
-            )
+          if (!profileData) {
+            throw new SystemCredentialsSignin("ERROR_USER_DATA_EMPTY")
           }
 
-          user = await res.json()
-          user = { ...user, token }
-        } catch (error) {
-          if (error instanceof Error) {
-            throw new Error(`Authorization failed: ${error.message}`)
-          } else {
-            throw new Error("Authorization failed: Unknown error occurred")
+          if (profileData.clientTypeId === clientTypes.PHYSICAL) {
+            throw new SystemCredentialsSignin("ERROR_USER_NOT_AUTHORIZED")
           }
+
+          ProfileStore.setData("profile", profileData)
+          user = { ...profileData, token }
+        } catch (error: any) {
+          throw error
         }
 
         return user
