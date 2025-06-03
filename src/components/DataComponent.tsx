@@ -3,6 +3,7 @@
 import { FetchDataConfig } from "@/types/fetchData"
 import { useFetchData } from "@/utils/data/useFetchData"
 import { cn } from "@/utils/data/utils"
+import { isProduction } from "@/utils/utils"
 import { Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
@@ -44,6 +45,7 @@ export default function DataComponent({
     queryConfig,
     urlParams,
     enabled: !mockData,
+    debug: !isProduction(),
   })
   const { data: session } = useSession()
   const userId = session?.user?.id
