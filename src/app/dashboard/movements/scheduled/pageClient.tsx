@@ -2,8 +2,8 @@
 
 import MovementScheduledDetailContainer from "@/components/movements/MovementScheduledDetailContainer"
 import DataTable from "@/components/table/DataTable"
+import ProfileStore from "@/stores/ProfileStore"
 import { GetMovementsScheduledResponse } from "@/types/movements"
-import { useSession } from "next-auth/react"
 
 interface Props {
   tableId: string
@@ -12,8 +12,7 @@ interface Props {
 }
 
 const PageClient = ({ tableId, columns, data }: Props) => {
-  const { data: session } = useSession()
-  const userId = session?.user?.id
+  const userId = (ProfileStore?.getProfileData() as any)?.id
 
   return (
     <div className="w-full">

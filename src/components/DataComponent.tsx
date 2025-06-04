@@ -1,11 +1,11 @@
 "use client"
 
+import ProfileStore from "@/stores/ProfileStore"
 import { FetchDataConfig } from "@/types/fetchData"
 import { useFetchData } from "@/utils/data/useFetchData"
 import { cn } from "@/utils/data/utils"
 import { isProduction } from "@/utils/utils"
 import { Loader2 } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { cloneElement, ReactElement, ReactNode } from "react"
 import { FormattedMessage } from "react-intl"
 import ErrorMessage from "./ErrorMessage"
@@ -47,8 +47,7 @@ export default function DataComponent({
     enabled: !mockData,
     debug: !isProduction(),
   })
-  const { data: session } = useSession()
-  const userId = session?.user?.id
+  const userId = (ProfileStore?.getProfileData() as any)?.id
   const loading = isLoading
   const data = mockData ?? fetchData
 
