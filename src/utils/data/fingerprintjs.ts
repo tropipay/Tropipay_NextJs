@@ -4,15 +4,14 @@ import Cookies from "js-cookie"
 const DEVICE_ID_COOKIE_NAME: string = "tppdID"
 const DEVICE_ID_COOKIE_EXPIRY_DAYS: number = 30
 
-const fingerprintJsPromise = FingerprintJS.load({
-  monitoring: false,
-})
-
 /**
  * Retrieves the device ID from the cookie or generates a new one using FingerprintJS.
  * @returns {Promise<string | null>} The device ID or null if an error occurred.
  */
-async function getDeviceId(): Promise<string | null> {
+export async function getDeviceId(): Promise<string | null> {
+  const fingerprintJsPromise = FingerprintJS.load({
+    monitoring: false,
+  })
   let deviceId: string | null = Cookies.get(DEVICE_ID_COOKIE_NAME) || null
   if (deviceId) {
     return deviceId
@@ -34,4 +33,4 @@ async function getDeviceId(): Promise<string | null> {
   }
 }
 
-export default { get: getDeviceId }
+export default { getDeviceId }

@@ -6,11 +6,16 @@ import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
 import axios from "axios"
 import { parse } from "date-fns"
 import getConfig from "next/config"
+import { getDeviceId } from "../data/fingerprintjs"
 import { getUserSettings } from "../user/utilsUser"
 
 /**
  * Makes an API request.
- * @param {FetchOptions} { queryConfig, variables, columnVisibility, token, debug }
+ * @param {FetchOptions} options - Configuration options for the API request.
+ * @param {object} options.queryConfig - The query configuration.
+ * @param {object} options.variables - The variables for the query.
+ * @param {string} options.token - The authentication token.
+ * @param {boolean} options.debug - Whether to enable debug logging.
  * @returns {Promise<any>} The response from the API.
  */
 export async function makeApiRequest({
@@ -21,6 +26,7 @@ export async function makeApiRequest({
 }: FetchOptions) {
   const { url, method, body } = queryConfig
   const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
+  const deviceId = await getDeviceId()
 
   const columnVisibility = getUserSettings(
     (ProfileStore?.getProfileData() as any)?.id,
@@ -66,6 +72,7 @@ export async function makeApiRequest({
       headers: {
         ...fetchHeaders,
         Authorization: `Bearer ${token}`,
+        "X-DEVICE-ID": deviceId || "",
         "Cache-Control": "no-cache, no-store, must-revalidate",
         Pragma: "no-cache",
         Expires: "0",
