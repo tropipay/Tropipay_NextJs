@@ -5,6 +5,7 @@ import { createHash } from "crypto"
 import { isBefore, startOfDay } from "date-fns"
 import { twMerge } from "tailwind-merge"
 import { getUser } from "../user/utilsUser"
+import { getDeviceId } from "./fingerprintjs"
 
 /**
  * Types for fetchGetData and headerData.
@@ -65,10 +66,12 @@ export const fetchGetWithTriggers = async (
       console.warn("No se pudo obtener el usuario en el servidor:", error)
       user = {} // Default empty if it cannot be obtained on the server
     }
+    const deviceId = await getDeviceId()
 
     const headers: Record<string, string> = {
       ...fetchHeaders,
       "Accept-Language": user?.lang || "en",
+      "X-DEVICE-ID": deviceId || "",
     }
 
     for (const key in headerData) {
@@ -83,10 +86,8 @@ export const fetchGetWithTriggers = async (
       endpoint += `?${queryParams(filter)}`
     }
 
-    const deviceId = "010101" // Simulado, reemplazar con fingerprint si es necesario
-
     const response = await fetch(endpoint, {
-      headers: { ...headers, "X-DEVICE-ID": deviceId },
+      headers,
     })
 
     if (!response.ok) throw new Error(response.statusText)
