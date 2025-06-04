@@ -1,6 +1,9 @@
 import FingerprintJS from "@fingerprintjs/fingerprintjs"
 import Cookies from "js-cookie"
-import { getDeviceId } from "../../../src/utils/data/fingerprintjs"
+import {
+  DEVICE_ID_COOKIE_NAME,
+  getDeviceId,
+} from "../../../src/utils/data/fingerprintjs"
 
 jest.mock("@fingerprintjs/fingerprintjs")
 jest.mock("js-cookie")
@@ -20,7 +23,7 @@ describe("getDeviceId", () => {
     })
     const deviceId = await getDeviceId()
     expect(deviceId).toBe(mockVisitorId)
-    expect(Cookies.get).toHaveBeenCalledWith("tppdID")
+    expect(Cookies.get).toHaveBeenCalledWith(DEVICE_ID_COOKIE_NAME)
   })
 
   it("should generate and return a new deviceId if cookie does not exist", async () => {

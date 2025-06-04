@@ -1,9 +1,9 @@
 import { env } from "@/config/env"
+import axiosApi from "@/utils/api/axiosApi"
 import { getToken } from "@/utils/user/utilsUser"
 import axios, { AxiosRequestConfig } from "axios"
 import { CacheEntry, clearAppDataKey, updateAppData } from "./appSlice"
 import { reduxStore, RootState } from "./reduxStore"
-import { getDeviceId } from "@/utils/data/fingerprintjs"
 
 type ListenerCallback<T = any> = (event: {
   type: string
@@ -220,13 +220,9 @@ export async function fetchGetWithTriggers({
     const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
-    const deviceId = await getDeviceId()
-    const response = await axios.get(url, {
+    const response = await axiosApi.get(url, {
       ...finalAxiosConfig,
-      headers: {
-        ...(finalAxiosConfig?.headers || {}),
-        "X-DEVICE-ID": deviceId || "",
-      },
+      headers: finalAxiosConfig?.headers || {},
     })
 
     // 3. Trigger OK event with full response
@@ -263,13 +259,9 @@ export async function fetchPostWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = env.API_URL + endpoint
-    const deviceId = await getDeviceId()
-    const response = await axios.post(actualEndpoint, payload, {
+    const response = await axiosApi.post(actualEndpoint, payload, {
       ...finalAxiosConfig,
-      headers: {
-        ...(finalAxiosConfig?.headers || {}),
-        "X-DEVICE-ID": deviceId || "",
-      },
+      headers: finalAxiosConfig?.headers || {},
     })
     store.trigger(eventOk, response.data)
   } catch (error) {
@@ -303,13 +295,9 @@ export async function fetchPutWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = env.API_URL + endpoint
-    const deviceId = await getDeviceId()
-    const response = await axios.put(actualEndpoint, payload, {
+    const response = await axiosApi.put(actualEndpoint, payload, {
       ...finalAxiosConfig,
-      headers: {
-        ...(finalAxiosConfig?.headers || {}),
-        "X-DEVICE-ID": deviceId || "",
-      },
+      headers: finalAxiosConfig?.headers || {},
     })
     store.trigger(eventOk, response.data)
   } catch (error) {
@@ -345,13 +333,9 @@ export async function fetchDeleteWithTriggers({
     const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
-    const deviceId = await getDeviceId()
-    const response = await axios.delete(url, {
+    const response = await axiosApi.delete(url, {
       ...finalAxiosConfig,
-      headers: {
-        ...(finalAxiosConfig?.headers || {}),
-        "X-DEVICE-ID": deviceId || "",
-      },
+      headers: finalAxiosConfig?.headers || {},
     })
     store.trigger(eventOk, response.data)
   } catch (error) {
