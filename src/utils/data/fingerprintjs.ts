@@ -1,8 +1,8 @@
 import FingerprintJS from "@fingerprintjs/fingerprintjs"
 import Cookies from "js-cookie"
 
-const DEVICE_ID_COOKIE_NAME: string = "tppdID"
-const DEVICE_ID_COOKIE_EXPIRY_DAYS: number = 30
+export const DEVICE_ID_COOKIE_NAME: string = "tppdID"
+export const DEVICE_ID_COOKIE_EXPIRY_DAYS: number = 30
 
 /**
  * Retrieves the device ID from the cookie or generates a new one using FingerprintJS.
@@ -20,12 +20,14 @@ export async function getDeviceId(): Promise<string | null> {
     const fingerprint = await fingerprintJsPromise
     const fingerprintResult = await fingerprint.get()
     deviceId = fingerprintResult.visitorId
-    // Save cookie
-    Cookies.set(DEVICE_ID_COOKIE_NAME, deviceId, {
-      expires: DEVICE_ID_COOKIE_EXPIRY_DAYS,
-      secure: true,
-      sameSite: "strict",
-    })
+    // Save cookie (client-side only)
+    if (typeof window !== "undefined") {
+      Cookies.set(DEVICE_ID_COOKIE_NAME, deviceId, {
+        expires: DEVICE_ID_COOKIE_EXPIRY_DAYS,
+        secure: true,
+        sameSite: "strict",
+      })
+    }
     return deviceId
   } catch (error) {
     console.error("Failed to get fingerprint:", error)
