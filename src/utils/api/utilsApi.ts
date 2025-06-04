@@ -3,11 +3,10 @@ import ProfileStore from "@/stores/ProfileStore"
 import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
-import axios from "axios"
 import { parse } from "date-fns"
 import getConfig from "next/config"
-import { getDeviceId } from "../data/fingerprintjs"
 import { getUserSettings } from "../user/utilsUser"
+import axiosApi from "./axiosApi"
 
 /**
  * Makes an API request.
@@ -26,7 +25,6 @@ export async function makeApiRequest({
 }: FetchOptions) {
   const { url, method, body } = queryConfig
   const apiUrl = getConfig()?.publicRuntimeConfig?.API_URL || env.API_URL
-  const deviceId = await getDeviceId()
 
   const columnVisibility = getUserSettings(
     (ProfileStore?.getProfileData() as any)?.id,
@@ -66,16 +64,12 @@ export async function makeApiRequest({
   }
 
   try {
-    const response = await axios({
+    const response = await axiosApi({
       url: `${env.API_URL}${url}`,
       method,
       headers: {
         ...fetchHeaders,
         Authorization: `Bearer ${token}`,
-        "X-DEVICE-ID": deviceId || "",
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
       },
       ...(body && {
         data: JSON.stringify(bodyUpdated),

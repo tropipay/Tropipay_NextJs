@@ -3,9 +3,10 @@
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
 import DataComponent from "@/components/DataComponent"
 import ReportBalanceSummary from "@/components/reports/ReportBalanceSummary"
+import ProfileStore from "@/stores/ProfileStore"
 import CookiesManager from "@/utils/cookies/cookiesManager"
 import { callPostHog } from "@/utils/utils"
-import { format, formatISO, parse } from "date-fns"
+import { format, parse } from "date-fns"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { useMemo } from "react"
@@ -15,7 +16,10 @@ const PageClient = () => {
   const router = useRouter()
   const pathname = usePathname()
   const postHog = usePostHog()
-  const accountNumber = CookiesManager.getInstance().get("accountNumber")
+  const userId = (ProfileStore?.getProfileData() as any)?.id
+  const accountNumber = CookiesManager.getInstance().get(
+    `accountNumber-${userId}`
+  )
 
   // Get dates from query params url
   const [startDate, endDate] = useMemo(() => {
@@ -37,12 +41,28 @@ const PageClient = () => {
     )
   }, [searchParams])
 
-  const isoStartDate = startDate
-    ? formatISO(parse(startDate, "dd/MM/yyyy", new Date()))
-    : ""
-  const isoEndDate = endDate
-    ? formatISO(parse(endDate, "dd/MM/yyyy", new Date()))
-    : ""
+  const isoStartDate = new Date(
+    Date.UTC(
+      new Date(parse(startDate, "dd/MM/yyyy", new Date())).getFullYear(),
+      new Date(parse(startDate, "dd/MM/yyyy", new Date())).getMonth(),
+      new Date(parse(startDate, "dd/MM/yyyy", new Date())).getDate(),
+      0,
+      0,
+      0
+    )
+  ).toISOString()
+
+  const isoEndDate = new Date(
+    Date.UTC(
+      new Date(parse(endDate, "dd/MM/yyyy", new Date())).getFullYear(),
+      new Date(parse(endDate, "dd/MM/yyyy", new Date())).getMonth(),
+      new Date(parse(endDate, "dd/MM/yyyy", new Date())).getDate(),
+      23,
+      59,
+      59
+    )
+  ).toISOString()
+
   const queryParams = [
     isoStartDate && `startDate=${isoStartDate}`,
     isoEndDate && `endDate=${isoEndDate}`,

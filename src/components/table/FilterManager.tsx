@@ -4,7 +4,6 @@ import CookiesManager from "@/utils/cookies/cookiesManager"
 import { PopoverClose } from "@radix-ui/react-popover"
 import { Column, Table } from "@tanstack/react-table"
 import { CheckIcon, Plus } from "lucide-react"
-import { useSession } from "next-auth/react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import * as React from "react"
 
@@ -23,6 +22,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/Popover"
+import ProfileStore from "@/stores/ProfileStore"
 import { cn } from "@/utils/data/utils"
 import { callPostHog } from "@/utils/utils"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
@@ -44,12 +44,11 @@ export function FilterManager<TData, TValue>({
   table,
   columns,
 }: FilterManagerProps<TData, TValue>) {
-  const { data: session } = useSession()
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
   const postHog = usePostHog()
-  const userId = session?.user?.id
+  const userId = (ProfileStore?.getProfileData() as any)?.id
   const { t } = useTranslation()
   const intl = useIntl()
 

@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui"
+import ProfileStore from "@/stores/ProfileStore"
 import { UserBusinessAccount } from "@/types/accounts"
 import CookiesManager from "@/utils/cookies/cookiesManager"
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu"
@@ -23,10 +24,12 @@ interface Props {
 }
 
 export const NavUserBusiness = ({ data }: Props) => {
+  const userId = (ProfileStore?.getProfileData() as any)?.id
+
   const [userBusinessAccountSelectedId, setUserBusinessAccountSelectedId] =
     useState<string>(
       CookiesManager.getInstance().get(
-        "accountNumber",
+        `accountNumber-${userId}`,
         data?.[0]?.accountNumber.toString() ?? "0"
       )
     )
@@ -37,7 +40,11 @@ export const NavUserBusiness = ({ data }: Props) => {
 
   const onSelectUserBusinessAccount = (accountNumber: string) => {
     setUserBusinessAccountSelectedId(accountNumber)
-    CookiesManager.getInstance().set("accountNumber", accountNumber.toString())
+
+    CookiesManager.getInstance().set(
+      `accountNumber-${userId}`,
+      accountNumber.toString()
+    )
   }
 
   useEffect(() => {
