@@ -24,6 +24,7 @@ interface DataTableFilterSingleValueProps<TData, TValue> {
   tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   defaultOpenFilterOptions?: boolean
+  activeFilter?: boolean
   onClear?: (filterId: string) => void
 }
 
@@ -31,6 +32,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   tableId, // Receive tableId
   column,
   defaultOpenFilterOptions = false,
+  activeFilter,
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
@@ -52,11 +54,12 @@ export function DataTableFilterSingleValue<TData, TValue>({
   // Función para aplicar el filtro a la columna
   const handleApplyFilter = (event: React.FormEvent) => {
     event.preventDefault()
-    callPostHog(postHog, "filter_single_value_apply", {
+    callPostHog(postHog, "filter_single_value:apply", {
       table_id: tableId,
       filter_id: column?.id,
       filter_type: "uniqueValue",
       filter_value: localFilterValue || undefined,
+      active_filter: activeFilter,
     })
     column?.setFilterValue(localFilterValue || undefined)
   }
@@ -70,6 +73,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
         filter_id: column.id,
         filter_value: localFilterValue, // Value before clearing
         filter_type: "uniqueValue",
+        active_filter: activeFilter,
       })
       setLocalFilterValue(undefined)
       column.setFilterValue(undefined)

@@ -22,14 +22,16 @@ interface DataTableFilterRangeAmountProps<TData, TValue> {
   tableId: string
   column?: Column<TData, TValue>
   defaultOpenFilterOptions?: boolean
+  activeFilter?: boolean
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterRangeAmount<TData, TValue>({
   tableId, // Receive tableId
   column,
-  onClear,
   defaultOpenFilterOptions = false,
+  activeFilter,
+  onClear,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
   const postHog = usePostHog()
@@ -64,6 +66,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
       filter_id: column?.id,
       filter_type: "amount",
       filter_value: { min: minValue, max: maxValue },
+      active_filter: activeFilter,
     })
     const serializedValue = [minValue, maxValue].join(",")
     column?.setFilterValue(serializedValue)
@@ -84,6 +87,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
         filter_id: column.id,
         filter_value: { min, max },
         filter_type: "amount",
+        active_filter: activeFilter,
       })
       column.setFilterValue(undefined)
       setError(null)

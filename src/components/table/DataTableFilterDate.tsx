@@ -43,15 +43,17 @@ interface ColumnConfig {
 interface DataTableFilterDateProps<TData, TValue> {
   tableId: string
   column?: Column<TData, TValue>
-  onClear?: (filterId: string) => void
   defaultOpenFilterOptions?: boolean
+  activeFilter?: boolean
+  onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterDate<TData, TValue>({
   tableId, // Receive tableId
   column,
-  onClear,
   defaultOpenFilterOptions = false,
+  activeFilter,
+  onClear,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
   const postHog = usePostHog()
@@ -160,6 +162,7 @@ export function DataTableFilterDate<TData, TValue>({
       filter_id: column?.id,
       filter_type: "date",
       filter_value: appliedValue,
+      active_filter: activeFilter,
     })
     column?.setFilterValue(appliedValue)
   }, [column, fromDate, toDate, t, postHog, tableId])
@@ -172,6 +175,7 @@ export function DataTableFilterDate<TData, TValue>({
         filter_id: column.id,
         filter_value: filterValue,
         filter_type: "date",
+        active_filter: activeFilter,
       })
       setFromDate(undefined)
       setToDate(undefined)

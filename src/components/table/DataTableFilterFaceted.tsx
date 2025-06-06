@@ -37,6 +37,7 @@ interface DataTableFilterFacetedProps<TData, TValue> {
   tableId: string // Add tableId prop
   column?: Column<TData, TValue>
   defaultOpenFilterOptions?: boolean
+  activeFilter?: boolean
   onClear?: (filterId: string) => void
 }
 
@@ -45,6 +46,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   tableId, // Receive tableId
   column,
   defaultOpenFilterOptions = false,
+  activeFilter,
   onClear,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
@@ -93,6 +95,7 @@ export function DataTableFilterFaceted<TData, TValue>({
       filter_id: column?.id,
       filter_type: "list",
       filter_value: filterValuesArray,
+      active_filter: activeFilter,
     })
     const serializedValue = filterValuesArray.join(",")
     column?.setFilterValue(
@@ -109,6 +112,7 @@ export function DataTableFilterFaceted<TData, TValue>({
         filter_id: column.id,
         filter_value: filterValuesArray,
         filter_type: "list",
+        active_filter: activeFilter,
       })
       setLocalSelectedValues(new Set())
       column?.setFilterValue(undefined)
