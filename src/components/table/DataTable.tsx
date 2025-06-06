@@ -65,7 +65,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { FilterManager } from "./FilterManager"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
 import DraggableTableHeader from "./DraggableTableHeader"
@@ -348,10 +347,12 @@ export default function DataTable<TData, TValue>({
 
   const getHeaderActionsForColumn = (id: string) => {
     const handleClearFilter = (filterId: string) => {
-      const appliedFilters = table.getState().columnFilters;
-      const remainingFilters = appliedFilters.filter(filter => filter.id !== filterId);
-      table.setColumnFilters(remainingFilters);
-    };
+      const appliedFilters = table.getState().columnFilters
+      const remainingFilters = appliedFilters.filter(
+        (filter) => filter.id !== filterId
+      )
+      table.setColumnFilters(remainingFilters)
+    }
 
     return (
       <>
@@ -386,6 +387,7 @@ export default function DataTable<TData, TValue>({
               {...{
                 tableId,
                 table,
+                activeFilter: false,
                 handleClearFilter,
                 column: columnsConfig.find(
                   ({ id: columnId }) => columnId === id

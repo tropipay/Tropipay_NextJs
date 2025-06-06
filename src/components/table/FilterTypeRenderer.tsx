@@ -12,6 +12,7 @@ interface Props<TData, TValue> {
   tableId: string
   table: Table<TData>
   defaultOpenFilterOptions?: boolean
+  activeFilter?: boolean
   handleClearFilter: (filterId: string) => void
 }
 
@@ -20,6 +21,7 @@ export function FilterTypeRenderer<TData, TValue>({
   tableId,
   table,
   defaultOpenFilterOptions = false,
+  activeFilter = true,
   handleClearFilter,
 }: Props<TData, TValue>) {
   switch (column.filterType) {
@@ -27,6 +29,7 @@ export function FilterTypeRenderer<TData, TValue>({
       return (
         <DataTableFilterFaceted
           key={column.id}
+          activeFilter={activeFilter}
           tableId={tableId}
           column={{
             ...table.getColumn(column.id),
@@ -41,6 +44,7 @@ export function FilterTypeRenderer<TData, TValue>({
       return (
         <DataTableFilterDate
           key={column.id}
+          activeFilter={activeFilter}
           tableId={tableId}
           column={{
             ...table.getColumn(column.id),
@@ -55,6 +59,7 @@ export function FilterTypeRenderer<TData, TValue>({
       return (
         <DataTableFilterRangeAmount
           key={column.id}
+          activeFilter={activeFilter}
           tableId={tableId}
           column={{
             ...table.getColumn(column.id),
@@ -69,6 +74,7 @@ export function FilterTypeRenderer<TData, TValue>({
       return (
         <DataTableFilterSingleValue
           key={column.id}
+          activeFilter={activeFilter}
           tableId={tableId}
           column={{
             ...table.getColumn(column.id),
