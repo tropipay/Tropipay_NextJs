@@ -1,13 +1,14 @@
 "use client"
 
 import { env } from "@/config/env"
+import { isProduction } from "@/utils/utils"
 import posthog from "posthog-js"
 import { PostHogProvider as PHProvider } from "posthog-js/react"
 import { useEffect, useState } from "react"
 
 // Define options
 const postHogOptions = {
-  enabled: true,
+  enabled: isProduction(),
   key: env.POSTHOG_KEY,
   options: {
     api_host: env.POSTHOG_HOST,

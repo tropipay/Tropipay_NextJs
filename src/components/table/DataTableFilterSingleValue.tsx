@@ -23,18 +23,21 @@ import { useTranslation } from "../intl/useTranslation"
 interface DataTableFilterSingleValueProps<TData, TValue> {
   tableId: string // Add tableId prop
   column?: Column<TData, TValue>
+  defaultOpenFilterOptions?: boolean
   onClear?: (filterId: string) => void
 }
 
 export function DataTableFilterSingleValue<TData, TValue>({
   tableId, // Receive tableId
   column,
+  defaultOpenFilterOptions = false,
   onClear,
 }: DataTableFilterSingleValueProps<TData, TValue>) {
   const { t } = useTranslation()
   const postHog = usePostHog()
   // @ts-ignore
   const { filterLabel, filterPlaceholder } = column?.config ?? {}
+  const [open, setOpen] = useState(defaultOpenFilterOptions)
 
   // Estado interno para manejar el valor del filtro localmente
   const [localFilterValue, setLocalFilterValue] = useState<string | undefined>(
@@ -76,7 +79,7 @@ export function DataTableFilterSingleValue<TData, TValue>({
   const filterValue = column?.getFilterValue() as string | undefined
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         asChild
         data-test-id="dataTableFilterSingleValue-popoverTrigger-openFilter"

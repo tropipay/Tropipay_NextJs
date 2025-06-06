@@ -41,15 +41,17 @@ interface ColumnConfig {
 }
 
 interface DataTableFilterDateProps<TData, TValue> {
-  tableId: string // Add tableId prop
-  column?: Column<TData, TValue> & { config?: ColumnConfig }
+  tableId: string
+  column?: Column<TData, TValue>
   onClear?: (filterId: string) => void
+  defaultOpenFilterOptions?: boolean
 }
 
 export function DataTableFilterDate<TData, TValue>({
   tableId, // Receive tableId
   column,
   onClear,
+  defaultOpenFilterOptions = false,
 }: DataTableFilterDateProps<TData, TValue>) {
   const { t } = useTranslation()
   const postHog = usePostHog()
@@ -57,8 +59,9 @@ export function DataTableFilterDate<TData, TValue>({
   const [fromDate, setFromDate] = React.useState<string | undefined>(undefined)
   const [toDate, setToDate] = React.useState<string | undefined>(undefined)
   const [error, setError] = React.useState<string | null>(null)
-
+  //@ts-ignore
   const { filterLabel = "date" } = column?.config || {}
+  const [open, setOpen] = React.useState(defaultOpenFilterOptions || false)
   const today = React.useMemo(() => startOfDay(new Date()), [])
   const todayFormatted = React.useMemo(
     () => format(today, "dd/MM/yyyy"),
@@ -237,7 +240,7 @@ export function DataTableFilterDate<TData, TValue>({
   if (!column) return null
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         asChild
         data-test-id="dataTableFilterDate-popoverTrigger-openFilter"
