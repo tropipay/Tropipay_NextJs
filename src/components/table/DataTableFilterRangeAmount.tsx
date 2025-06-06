@@ -14,13 +14,14 @@ import { PopoverClose } from "@radix-ui/react-popover"
 import { Column } from "@tanstack/react-table"
 import { Eraser } from "lucide-react"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import React from "react"
+import React, { useState } from "react"
 import { FormattedMessage } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
-  tableId: string // Add tableId prop
+  tableId: string
   column?: Column<TData, TValue>
+  defaultOpenFilterOptions?: boolean
   onClear?: (filterId: string) => void
 }
 
@@ -28,6 +29,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   tableId, // Receive tableId
   column,
   onClear,
+  defaultOpenFilterOptions = false,
 }: DataTableFilterRangeAmountProps<TData, TValue>) {
   const { t } = useTranslation()
   const postHog = usePostHog()
@@ -35,6 +37,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   const [error, setError] = React.useState<string | null>(null)
   // @ts-ignore
   const { filterLabel } = column?.config || {}
+  const [open, setOpen] = useState(defaultOpenFilterOptions)
 
   const handleApplyFilter = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -115,7 +118,7 @@ export function DataTableFilterRangeAmount<TData, TValue>({
   }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         asChild
         data-test-id="dataTableFilterRangeAmount-popoverTrigger-openFilter"

@@ -4,10 +4,11 @@ import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { flexRender, Header } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
-import { CSSProperties } from "react"
+import { CSSProperties, ReactNode } from "react"
 
 interface DraggableTableHeaderProps<TData, TValue> {
   header: Header<TData, TValue>
+  actions?: ReactNode
 }
 
 /**
@@ -17,6 +18,7 @@ interface DraggableTableHeaderProps<TData, TValue> {
  */
 const DraggableTableHeader = <TData, TValue>({
   header,
+  actions,
 }: DraggableTableHeaderProps<TData, TValue>) => {
   const { attributes, isDragging, listeners, transform, setNodeRef } =
     useSortable({
@@ -41,6 +43,7 @@ const DraggableTableHeader = <TData, TValue>({
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
+        {actions}
         <GripVerticalIcon
           size={16}
           className={cn(

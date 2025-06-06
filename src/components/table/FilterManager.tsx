@@ -28,10 +28,7 @@ import { callPostHog } from "@/utils/utils"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import { FormattedMessage, useIntl } from "react-intl"
 import { useTranslation } from "../intl/useTranslation"
-import { DataTableFilterDate } from "./DataTableFilterDate"
-import { DataTableFilterFaceted } from "./DataTableFilterFaceted"
-import { DataTableFilterRangeAmount } from "./DataTableFilterRangeAmount"
-import { DataTableFilterSingleValue } from "./DataTableFilterSingleValue"
+import { FilterTypeRenderer } from "./FilterTypeRenderer"
 
 interface FilterManagerProps<TData, TValue> {
   tableId: string
@@ -176,11 +173,8 @@ export function FilterManager<TData, TValue>({
 
   /**
    * Clear filter by id.
-   * @param filterId Filter identifier.
    */
   const handleClearFilter = (filterId: string) => {
-    const filterValue = table.getColumn(filterId)?.getFilterValue()
-
     callPostHog(postHog, "filter_manager:clear", {
       table_id: tableId,
       filter_id: filterId,
@@ -293,62 +287,12 @@ export function FilterManager<TData, TValue>({
             const bLabel = intl.formatMessage({ id: b.filterLabel })
             return aLabel.localeCompare(bLabel)
           })
-          .map((column: any) => {
-            switch (column.filterType) {
-              case "list":
-                return (
-                  <DataTableFilterFaceted
-                    key={column.id}
-                    tableId={tableId} // Pass tableId
-                    column={{
-                      ...table.getColumn(column.id),
-                      // @ts-ignore
-                      config: column,
-                    }}
-                    onClear={handleClearFilter}
-                  />
-                )
-              case "date":
-                return (
-                  <DataTableFilterDate
-                    key={column.id}
-                    tableId={tableId} // Pass tableId
-                    // @ts-ignore
-                    column={{
-                      ...table.getColumn(column.id),
-                      config: column,
-                    }}
-                    onClear={handleClearFilter}
-                  />
-                )
-              case "amount":
-                return (
-                  <DataTableFilterRangeAmount
-                    key={column.id}
-                    tableId={tableId} // Pass tableId
-                    column={{
-                      ...table.getColumn(column.id),
-                      // @ts-ignore
-                      config: column,
-                    }}
-                    onClear={handleClearFilter}
-                  />
-                )
-              case "uniqueValue":
-                return (
-                  <DataTableFilterSingleValue
-                    key={column.id}
-                    tableId={tableId} // Pass tableId
-                    column={{
-                      ...table.getColumn(column.id),
-                      // @ts-ignore
-                      config: column,
-                    }}
-                    onClear={handleClearFilter}
-                  />
-                )
-            }
-          })}
+          .map((column: any) => (
+            <FilterTypeRenderer
+              key={column.id}
+              {...{ tableId, table, column, handleClearFilter }}
+            />
+          ))}
       </div>
 
       {/* Botón de limpieza de filtros */}

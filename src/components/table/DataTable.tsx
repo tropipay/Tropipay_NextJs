@@ -2,6 +2,9 @@
 
 import Spinner from "@/components/Spinner"
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Sheet,
   SheetContent,
   SheetDescription,
@@ -13,8 +16,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui"
-import { objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
+import { cn, objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
 import { callPostHog } from "@/utils/utils"
 import {
@@ -54,13 +60,16 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
+import { ListFilterIcon } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
+import { FilterManager } from "./FilterManager"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
 import DraggableTableHeader from "./DraggableTableHeader"
+import { FilterTypeRenderer } from "./FilterTypeRenderer"
 
 interface DataTableProps<TData, TValue> {
   tableId: string
@@ -337,6 +346,58 @@ export default function DataTable<TData, TValue>({
 
   const table = useReactTable(tableConfig)
 
+  const getHeaderActionsForColumn = (id: string) => {
+    const handleClearFilter = (filterId: string) => {
+      const appliedFilters = table.getState().columnFilters;
+      const remainingFilters = appliedFilters.filter(filter => filter.id !== filterId);
+      table.setColumnFilters(remainingFilters);
+    };
+
+    return (
+      <>
+        <Popover>
+          <PopoverTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <ListFilterIcon
+                  size={16}
+                  className={cn(
+                    "hover:opacity-100 cursor-pointer",
+                    columnFilters.some(({ id: columnId }) => columnId === id)
+                      ? "opacity-100"
+                      : "opacity-0"
+                  )}
+                />
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="center">
+                <FormattedMessage id="filter" />
+              </TooltipContent>
+            </Tooltip>
+          </PopoverTrigger>
+          <PopoverContent
+            className="p-0 w-auto"
+            align="center"
+            side="bottom"
+            //@ts-ignore
+            enableAnimation={false}
+          >
+            <FilterTypeRenderer
+              defaultOpenFilterOptions
+              {...{
+                tableId,
+                table,
+                handleClearFilter,
+                column: columnsConfig.find(
+                  ({ id: columnId }) => columnId === id
+                ),
+              }}
+            />
+          </PopoverContent>
+        </Popover>
+      </>
+    )
+  }
+
   useEffect(() => {
     setTableKey(Math.random())
     setIsLoading(false)
@@ -397,6 +458,7 @@ export default function DataTable<TData, TValue>({
                             <DraggableTableHeader
                               key={header.id}
                               header={header}
+                              actions={getHeaderActionsForColumn(header.id)}
                             />
                           ) : (
                             <TableHead

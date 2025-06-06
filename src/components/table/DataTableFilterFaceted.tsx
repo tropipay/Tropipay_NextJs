@@ -6,6 +6,7 @@ import { Column } from "@tanstack/react-table"
 import { CheckIcon, Eraser } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import * as React from "react"
+import { useState } from "react"
 import { FormattedMessage } from "react-intl"
 
 // Componentes UI
@@ -35,6 +36,7 @@ import { useTranslation } from "../intl/useTranslation"
 interface DataTableFilterFacetedProps<TData, TValue> {
   tableId: string // Add tableId prop
   column?: Column<TData, TValue>
+  defaultOpenFilterOptions?: boolean
   onClear?: (filterId: string) => void
 }
 
@@ -42,6 +44,7 @@ interface DataTableFilterFacetedProps<TData, TValue> {
 export function DataTableFilterFaceted<TData, TValue>({
   tableId, // Receive tableId
   column,
+  defaultOpenFilterOptions = false,
   onClear,
 }: DataTableFilterFacetedProps<TData, TValue>) {
   // Hooks
@@ -50,6 +53,7 @@ export function DataTableFilterFaceted<TData, TValue>({
   const searchParams = useSearchParams()
   // @ts-ignore
   const { filterLabel, optionList } = column?.config ?? {}
+  const [open, setOpen] = useState(defaultOpenFilterOptions)
 
   // Estados y memoización
   const selectedValues = React.useMemo(() => {
@@ -113,7 +117,7 @@ export function DataTableFilterFaceted<TData, TValue>({
 
   // Renderizado
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         asChild
         data-test-id="dataTableFilterFaceted-popoverTrigger-openFilter"
