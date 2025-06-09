@@ -1,5 +1,5 @@
-import InputAmount from "@/components/InputAmount"
 import { Button } from "@/components/ui/Button"
+import InputAmount from "@/components/ui/InputAmount"
 import { Label } from "@/components/ui/Label"
 import {
   Popover,
@@ -16,7 +16,7 @@ import { Eraser } from "lucide-react"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import React, { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 
 interface DataTableFilterRangeAmountProps<TData, TValue> {
   tableId: string

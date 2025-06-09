@@ -1,6 +1,6 @@
 "use client"
 
-import Spinner from "@/components/Spinner"
+import Spinner from "@/components/ui/spinner/Spinner"
 
 import { AppSidebar } from "@/components/AppSidebar"
 import CookieMonitor from "@/components/CookieMonitor"

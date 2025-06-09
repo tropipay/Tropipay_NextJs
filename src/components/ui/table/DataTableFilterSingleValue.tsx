@@ -18,7 +18,7 @@ import { Eraser } from "lucide-react"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 
 interface DataTableFilterSingleValueProps<TData, TValue> {
   tableId: string // Add tableId prop

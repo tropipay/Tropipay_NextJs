@@ -1,7 +1,7 @@
 "use client"
 
 import { Avatar } from "@/components/ui"
-import { UserBusinessAccount } from "@/types/accounts"
+import { UserBusinessAccount } from "@/types/security/userAccounts"
 import { cn } from "@/utils/data/utils"
 import { AvatarImage } from "@radix-ui/react-avatar"
 

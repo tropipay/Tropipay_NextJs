@@ -34,7 +34,7 @@ import { CalendarIcon, Eraser } from "lucide-react"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 
 interface ColumnConfig {
   filterLabel?: string

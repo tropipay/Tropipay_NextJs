@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui"
 import ProfileStore from "@/stores/ProfileStore"
-import { UserBusinessAccount } from "@/types/accounts"
+import { UserBusinessAccount } from "@/types/security/userAccounts"
 import CookiesManager from "@/utils/cookies/cookiesManager"
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu"
 import { Check, ChevronsUpDown } from "lucide-react"

@@ -1,7 +1,7 @@
 "use client"
 
 import ChargeDetailContainer from "@/components/charges/ChargeDetailContainer"
-import DataTable from "@/components/table/DataTable"
+import DataTable from "@/components/ui/table/DataTable"
 import ProfileStore from "@/stores/ProfileStore"
 import { GetChargesResponse } from "@/types/charges"
 

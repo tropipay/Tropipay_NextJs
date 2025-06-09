@@ -1,4 +1,4 @@
-import CopyToClipboard from "@/components/CopyToClipboard"
+import CopyToClipboard from "@/components/copyToClipboard/CopyToClipboard"
 import {
   Tooltip,
   TooltipContent,

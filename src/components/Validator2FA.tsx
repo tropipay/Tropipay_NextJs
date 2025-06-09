@@ -1,12 +1,8 @@
 "use client"
 import ErrorHandler from "@/components/ErrorHandler"
 import SimplePage from "@/components/simplePage/simplePage"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp"
-import use2AF from "@/hooks/use2AF"
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/InputOTP"
+import use2FA from "@/hooks/use2FA"
 import { cn } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import { getUserStore } from "@/utils/user/utilsUser"
@@ -51,7 +47,7 @@ const Validator2fa = ({
   const method = user?.twoFaType === local2fa.SMS ? "useSMS" : "useGoogle"
   const [finish, setFinish] = useState(false)
 
-  const v2fa = use2AF({ ...toSend, data, clearInput })
+  const v2fa = use2FA({ ...toSend, data, clearInput })
 
   useEffect(() => {
     v2fa.setData(data)

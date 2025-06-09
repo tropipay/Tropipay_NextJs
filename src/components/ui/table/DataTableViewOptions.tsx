@@ -27,7 +27,7 @@ import { CheckIcon, Ellipsis } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
 import { useMemo, useState } from "react"
 import { FormattedMessage, useIntl } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -39,7 +39,7 @@ export function DataTableViewOptions<TData>({
   tableId, // Recibir tableId
 }: DataTableViewOptionsProps<TData>) {
   const { t } = useTranslation()
-  const postHog = usePostHog() 
+  const postHog = usePostHog()
   const intl = useIntl()
   const [initialVisibility, setInitialVisibility] = useState<
     Record<string, boolean>

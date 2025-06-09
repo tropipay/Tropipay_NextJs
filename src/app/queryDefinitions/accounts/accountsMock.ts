@@ -1,4 +1,4 @@
-import { UserBusinessAccount } from "@/types/accounts"
+import { UserBusinessAccount } from "@/types/security/userAccounts"
 
 export const accountsMock: UserBusinessAccount[] = [
   {

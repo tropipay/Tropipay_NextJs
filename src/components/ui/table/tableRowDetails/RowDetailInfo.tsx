@@ -1,4 +1,7 @@
-import { ClickableValue, TextToCopy } from "@/components/TextToCopy"
+import {
+  ClickableValue,
+  TextToCopy,
+} from "@/components/copyToClipboard/TextToCopy"
 import {
   Tooltip,
   TooltipContent,
@@ -42,7 +45,10 @@ export function RowDetailInfo({
               textToCopy: textToCopy ?? value,
               onValueClick,
               toolTipForValue,
-              ...(toClipboardIconHidden && { classNameIcon: "hidden", classNameForValue }),
+              ...(toClipboardIconHidden && {
+                classNameIcon: "hidden",
+                classNameForValue,
+              }),
             }}
           />
         ) : onValueClick ? (

@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/Input"
 import { cn } from "@/utils/data/utils"
 import { Search } from "lucide-react"
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 
 interface Props {
   className?: string

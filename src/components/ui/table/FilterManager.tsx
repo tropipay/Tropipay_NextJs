@@ -27,7 +27,7 @@ import { cn } from "@/utils/data/utils"
 import { callPostHog } from "@/utils/utils"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
 import { FormattedMessage, useIntl } from "react-intl"
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 import { FilterTypeRenderer } from "./FilterTypeRenderer"
 
 interface FilterManagerProps<TData, TValue> {

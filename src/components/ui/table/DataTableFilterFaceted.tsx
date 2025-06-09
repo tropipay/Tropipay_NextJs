@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/Separator"
 import { cn, truncateLabels } from "@/utils/data/utils"
 import { callPostHog } from "@/utils/utils"
 import { usePostHog } from "posthog-js/react" // Importar usePostHog
-import { useTranslation } from "../intl/useTranslation"
+import { useTranslation } from "../../intl/useTranslation"
 
 // Interfaces
 interface DataTableFilterFacetedProps<TData, TValue> {

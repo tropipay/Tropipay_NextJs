@@ -3,17 +3,17 @@ import {
   chargeStatesGroups,
 } from "@/app/filterDefinitions/charges"
 import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
-import FacetedBadge from "@/components/table/FacetedBadge"
-import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
-import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
+import FacetedBadge from "@/components/ui/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/ui/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/ui/table/tableRowDetails/RowDetailSection"
 import { Charge } from "@/types/charges"
 import { formatAmount } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import { format } from "date-fns"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { TextToCopy } from "../TextToCopy"
+import { TextToCopy } from "../copyToClipboard/TextToCopy"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
