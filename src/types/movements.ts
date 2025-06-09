@@ -1,5 +1,5 @@
-import { UserDepositAccount } from "./accounts"
 import { ApiDataResponse } from "./api"
+import { UserDepositAccount } from "./security/userAccounts"
 
 export type MovementClientData = {
   name: string

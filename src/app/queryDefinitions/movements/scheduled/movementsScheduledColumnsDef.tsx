@@ -1,6 +1,6 @@
 import { movementsScheduledRecurrences } from "@/app/filterDefinitions/movements"
-import { renderedAmount } from "@/components/table/SetColumn"
-import { TextToCopy } from "@/components/TextToCopy"
+import { TextToCopy } from "@/components/copyToClipboard/TextToCopy"
+import { renderedAmount } from "@/components/ui/table/SetColumn"
 
 export const movementsScheduledColumnsDef: any = {
   amount: {

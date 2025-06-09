@@ -2,9 +2,6 @@ import {
   movementScheduledStates,
   movementStateGroups,
 } from "@/app/filterDefinitions/movements"
-import FacetedBadge from "@/components/table/FacetedBadge"
-import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
-import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,15 +12,18 @@ import {
   AlertDialogTitle,
   Button,
 } from "@/components/ui"
+import FacetedBadge from "@/components/ui/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/ui/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/ui/table/tableRowDetails/RowDetailSection"
+import useStoreListener from "@/hooks/useStoreListener"
+import BookingStore from "@/stores/BookingStore"
 import { MovementScheduled } from "@/types/movements"
 import { formatAmount } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
-import { TextToCopy } from "../TextToCopy"
-import BookingStore from "@/stores/BookingStore"
-import useStoreListener from "@/hooks/useStoreListener"
+import { TextToCopy } from "../copyToClipboard/TextToCopy"
 import MessageSonner from "../MessageSonner"
 
 export default function MovementScheduledDetail(props: any): JSX.Element {

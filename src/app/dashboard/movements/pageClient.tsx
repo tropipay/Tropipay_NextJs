@@ -4,13 +4,13 @@ import { useTranslation } from "@/components/intl/useTranslation"
 import MessageSonner from "@/components/MessageSonner"
 import MovementDetailContainer from "@/components/movements/MovementDetailContainer"
 import MovementDownloadDialog from "@/components/movements/MovementDownloadModal"
-import DataTable from "@/components/table/DataTable"
 import {
   Button,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui"
+import DataTable from "@/components/ui/table/DataTable"
 import useStoreListener from "@/hooks/useStoreListener"
 import BookingStore from "@/stores/BookingStore"
 import ProfileStore from "@/stores/ProfileStore"

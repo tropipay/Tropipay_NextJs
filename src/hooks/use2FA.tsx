@@ -32,6 +32,7 @@
     setData
  */
 "use client"
+
 import PinStore from "@/stores/PinStore"
 import { errorGenerator } from "@/utils/data/utils"
 import { twoFaEndpointList, twoFaTypes } from "@/utils/enums"

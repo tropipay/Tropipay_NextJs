@@ -25,7 +25,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { useTranslation } from "./intl/useTranslation"
+import { useTranslation } from "../intl/useTranslation"
 
 export function NavMain({ items }: { items: SidebarOption[] }) {
   const router = useRouter()
@@ -76,7 +76,10 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                           >
                             <DropdownMenuGroup>
                               {item.items?.map((subItem) => (
-                                <Link key={`ms-${subItem.title}`} href={subItem.url}>
+                                <Link
+                                  key={`ms-${subItem.title}`}
+                                  href={subItem.url}
+                                >
                                   <DropdownMenuItem>
                                     <FormattedMessage id={subItem.title} />
                                   </DropdownMenuItem>

@@ -1,8 +1,8 @@
-import React from "react"
 import { Button, DialogHeader, DialogTitle, Label } from "@/components/ui"
-import { FormattedMessage } from "react-intl"
-import InputAmount from "@/components/InputAmount"
+import InputAmount from "@/components/ui/InputAmount"
 import { formatAmount } from "@/utils/data/utils"
+import React from "react"
+import { FormattedMessage } from "react-intl"
 
 const Step0_DefineAmount = ({ data, setData, next }) => {
   const { amountValue, amountCurrency } = data

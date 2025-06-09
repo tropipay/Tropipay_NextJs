@@ -6,7 +6,7 @@ import { flexRender, Header } from "@tanstack/react-table"
 import { GripVerticalIcon } from "lucide-react"
 import { CSSProperties, ReactNode } from "react"
 
-interface DraggableTableHeaderProps<TData, TValue> {
+interface Props<TData, TValue> {
   header: Header<TData, TValue>
   actions?: ReactNode
 }
@@ -16,10 +16,10 @@ interface DraggableTableHeaderProps<TData, TValue> {
  *
  * This component renders a draggable table header with drag and drop functionalities.
  */
-const DraggableTableHeader = <TData, TValue>({
+const DataTableDraggableHeader = <TData, TValue>({
   header,
   actions,
-}: DraggableTableHeaderProps<TData, TValue>) => {
+}: Props<TData, TValue>) => {
   const { attributes, isDragging, listeners, transform, setNodeRef } =
     useSortable({
       id: header.column.id,
@@ -58,4 +58,4 @@ const DraggableTableHeader = <TData, TValue>({
   )
 }
 
-export default DraggableTableHeader
+export default DataTableDraggableHeader

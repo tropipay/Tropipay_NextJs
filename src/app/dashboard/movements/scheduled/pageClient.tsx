@@ -1,7 +1,7 @@
 "use client"
 
 import MovementScheduledDetailContainer from "@/components/movements/MovementScheduledDetailContainer"
-import DataTable from "@/components/table/DataTable"
+import DataTable from "@/components/ui/table/DataTable"
 import ProfileStore from "@/stores/ProfileStore"
 import { GetMovementsScheduledResponse } from "@/types/movements"
 

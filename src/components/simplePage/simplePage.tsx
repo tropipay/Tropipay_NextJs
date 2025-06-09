@@ -1,6 +1,8 @@
-import Spinner from "@/components/Spinner"
+import { cn } from "@/utils/data/utils"
 import { AlertCircle, CheckCircle2, Info, Loader2 } from "lucide-react"
 import React from "react"
+import Spinner from "../ui/spinner/Spinner"
+import type { ButtonsComponentProps } from "./buttons"
 import Buttons from "./buttons"
 import ContentHeader from "./contentHeader"
 
@@ -49,9 +51,6 @@ interface SimplePageProps {
   buttonsDisposition?: ButtonsComponentProps["buttonsDisposition"]
   spinner?: boolean
 }
-
-import { cn } from "@/utils/data/utils"
-import type { ButtonsComponentProps } from "./buttons"
 
 const SimplePage: React.FC<SimplePageProps> = ({
   title = null,

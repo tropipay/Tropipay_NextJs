@@ -3,7 +3,7 @@
 import { login, logout } from "@/app/actions/sessionActions"
 import ErrorHandler from "@/components/ErrorHandler"
 import { useTranslation } from "@/components/intl/useTranslation"
-import Spinner from "@/components/Spinner"
+import Spinner from "@/components/ui/spinner/Spinner"
 import { env } from "@/config/env"
 import { getBaseDomain } from "@/utils/data/utils"
 import { getToken } from "@/utils/user/utilsUser"

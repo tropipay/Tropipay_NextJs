@@ -1,6 +1,6 @@
-import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader"
-import FacetedBadge from "@/components/table/FacetedBadge"
 import { Checkbox } from "@/components/ui/Checkbox"
+import { DataTableColumnHeader } from "@/components/ui/table/DataTableColumnHeader"
+import FacetedBadge from "@/components/ui/table/FacetedBadge"
 import {
   Tooltip,
   TooltipContent,
@@ -11,7 +11,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
 import React from "react"
 import { FormattedMessage } from "react-intl"
-import { TextToCopy } from "../TextToCopy"
+import { TextToCopy } from "../../copyToClipboard/TextToCopy"
 
 // Definimos los tipos para los argumentos de la función
 type FacetedOption = {

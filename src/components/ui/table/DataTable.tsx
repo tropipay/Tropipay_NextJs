@@ -1,6 +1,5 @@
 "use client"
 
-import Spinner from "@/components/Spinner"
 import {
   Popover,
   PopoverContent,
@@ -20,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui"
+import Spinner from "@/components/ui/spinner/Spinner"
 import { cn, objToHash, toActiveObject, toArrayId } from "@/utils/data/utils"
 import { getUserSettings, setUserSettings } from "@/utils/user/utilsUser"
 import { callPostHog } from "@/utils/utils"
@@ -65,9 +65,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { usePostHog } from "posthog-js/react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { FormattedMessage } from "react-intl"
+import DataTableDraggableHeader from "./DataTableDraggableHeader"
 import { DataTablePagination } from "./DataTablePagination"
 import { DataTableToolbar } from "./DataTableToolbar"
-import DraggableTableHeader from "./DraggableTableHeader"
 import { FilterTypeRenderer } from "./FilterTypeRenderer"
 
 interface DataTableProps<TData, TValue> {
@@ -457,7 +457,7 @@ export default function DataTable<TData, TValue>({
                       <TableRow key={id}>
                         {headers.map((header) =>
                           enableColumnOrder ? (
-                            <DraggableTableHeader
+                            <DataTableDraggableHeader
                               key={header.id}
                               header={header}
                               actions={getHeaderActionsForColumn(header.id)}
