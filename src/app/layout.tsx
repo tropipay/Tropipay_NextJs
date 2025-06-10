@@ -6,6 +6,7 @@ import { cn } from "@/utils/data/utils"
 import type { Metadata } from "next"
 import { Poppins, Roboto } from "next/font/google"
 import { Suspense } from "react"
+import { PublicEnvScript } from 'next-runtime-env';
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -42,6 +43,9 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
+      <head>
+        <PublicEnvScript />
+      </head>
       <body className={cn(poppins.variable, roboto.variable, "antialiased")}>
         <Suspense>
           <PostHogInsert>
