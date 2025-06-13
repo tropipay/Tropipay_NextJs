@@ -425,7 +425,7 @@ export default function DataTable<TData, TValue>({
   if (userId)
     return (
       <>
-        <div className="space-y-4">
+        <div>
           {isLoading && <Spinner />}
           {enableToolbar && (
             <DataTableToolbar
@@ -439,7 +439,7 @@ export default function DataTable<TData, TValue>({
               }}
             />
           )}
-          <div>
+          <div className="mt-2">
             <DndContext
               collisionDetection={closestCenter}
               modifiers={[restrictToHorizontalAxis]}

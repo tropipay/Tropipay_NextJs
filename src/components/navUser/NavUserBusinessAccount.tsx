@@ -17,7 +17,11 @@ export const NavUserBusinessAccount = ({
   return (
     <>
       <Avatar className="h-8 w-8 rounded-lg">
-        <AvatarImage src={`/images/currencies/${currency}.svg`} alt={alias} />
+        <AvatarImage
+          src={`/images/currencies/${currency}.svg`}
+          alt={alias}
+          className="rounded-[12px]"
+        />
       </Avatar>
       <div className="grid flex-1 text-left text-sm leading-tight">
         <span className={cn("truncate", !asContext && "font-semibold")}>

@@ -199,7 +199,7 @@ export function FilterManager<TData, TValue>({
   }, [table.getState().columnFilters, columns])
 
   return (
-    <div className="flex w-full items-start justify-between">
+    <div className="flex w-full items-start justify-between mt-4 pt-2">
       <div className="flex flex-1 items-start space-x-2 p-0 overflow-x-auto mr-4 pr-2">
         <Popover>
           <PopoverTrigger
@@ -209,7 +209,7 @@ export function FilterManager<TData, TValue>({
             <Button
               variant="secondary"
               size="sm"
-              className="px-2 h-8 bg-grayBackground"
+              className="px-2 h-8 bg-grayBackground mb-1"
               onClick={sortingFilters}
             >
               <Plus />
