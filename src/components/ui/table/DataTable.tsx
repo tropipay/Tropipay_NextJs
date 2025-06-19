@@ -45,6 +45,7 @@ import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuPortal,
   ContextMenuTrigger,
 } from "@radix-ui/react-context-menu"
 import {
@@ -362,12 +363,10 @@ export default function DataTable<TData, TValue>({
               <TooltipTrigger asChild>
                 <ListFilterIcon
                   size={16}
-                  className={cn(
-                    "hover:opacity-100 cursor-pointer",
-                    columnFilters.some(({ id: columnId }) => columnId === id)
-                      ? "opacity-100"
-                      : "opacity-0"
-                  )}
+                  className={cn("cursor-pointer")}
+                  {...(columnFilters.some(
+                    ({ id: columnId }) => columnId === id
+                  ) && { color: "#041266" })}
                 />
               </TooltipTrigger>
               <TooltipContent side="bottom" align="center">
@@ -483,7 +482,7 @@ export default function DataTable<TData, TValue>({
                 <TableBody className="tableBody">
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <ContextMenu key={row.id}>
+                      <ContextMenu key={row.id} modal={false}>
                         <ContextMenuTrigger asChild>
                           <TableRow
                             rowData={row.original}
@@ -509,26 +508,26 @@ export default function DataTable<TData, TValue>({
                             ))}
                           </TableRow>
                         </ContextMenuTrigger>
-                        <ContextMenuContent className="w-[200px] bg-white shadow-md">
-                          {selectedText && (
+                        <ContextMenuPortal>
+                          <ContextMenuContent className="tropipay-context-menu-item">
+                            {selectedText && (
+                              <ContextMenuItem
+                                className="tropipay-context-menu-item-content"
+                                onSelect={() => {
+                                  navigator.clipboard.writeText(selectedText)
+                                }}
+                              >
+                                <FormattedMessage id="copy" />
+                              </ContextMenuItem>
+                            )}
                             <ContextMenuItem
-                              className="h-[30px] hover:bg-gray-200 flex items-center justify-start px-2"
-                              onSelect={() => {
-                                navigator.clipboard.writeText(selectedText)
-                              }}
+                              className="tropipay-context-menu-item-content"
+                              onSelect={() => handleRowClick(row.original)}
                             >
-                              <FormattedMessage id="copy" />
+                              <FormattedMessage id="show_details" />
                             </ContextMenuItem>
-                          )}
-                          <ContextMenuItem
-                            className="h-[30px] hover:bg-gray-200 flex items-center justify-start px-2"
-                            onSelect={() => {
-                              selectedRow && handleRowClick(selectedRow)
-                            }}
-                          >
-                            <FormattedMessage id="show_details" />
-                          </ContextMenuItem>
-                        </ContextMenuContent>
+                          </ContextMenuContent>
+                        </ContextMenuPortal>
                       </ContextMenu>
                     ))
                   ) : (

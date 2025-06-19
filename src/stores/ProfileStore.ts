@@ -1,5 +1,10 @@
-import { createStore, fetchGetWithTriggers, EnhancedStore } from "./utils"
 import { getToken } from "@/utils/user/utilsUser"
+import {
+  createStore,
+  EnhancedStore,
+  fetchGetWithTriggers,
+  transformEndpointToV3,
+} from "./utils"
 
 type UserProfile = {
   lang: string
@@ -38,7 +43,7 @@ const ProfileStore = createStore(
 
           fetchGetWithTriggers({
             store: store as EnhancedStore,
-            endpoint: "/api/users/profile",
+            endpoint: transformEndpointToV3("/api/users/profile"),
             cache: {
               id: PROFILE_CACHE_ID,
               time:
@@ -111,8 +116,5 @@ const ProfileStore = createStore(
     }
   }
 ) as ProfileStoreType
-
-// Inicialización
-ProfileStore.Update()
 
 export default ProfileStore

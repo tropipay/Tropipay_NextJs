@@ -14,23 +14,23 @@ interface Props {
 const PageClient = ({ tableId, columns, data }: Props) => {
   const userId = (ProfileStore?.getProfileData() as any)?.id
 
-  return (
+  return userId ? (
     <div className="w-full">
-      {userId && (
-        <DataTable
-          {...{
-            tableId,
-            userId,
-            columns,
-            data: data?.data?.charges?.items ?? [],
-            rowCount: data?.data?.charges?.totalCount ?? 0,
-            categoryFilterId: "state",
-            categoryFilters: ["ALL", "CAPTURED", "DECLINED"],
-            rowClickChildren: ChargeDetailContainer,
-          }}
-        />
-      )}
+      <DataTable
+        {...{
+          tableId,
+          userId,
+          columns,
+          data: data?.data?.charges?.items ?? [],
+          rowCount: data?.data?.charges?.totalCount ?? 0,
+          categoryFilterId: "state",
+          categoryFilters: ["ALL", "CAPTURED", "DECLINED"],
+          rowClickChildren: ChargeDetailContainer,
+        }}
+      />
     </div>
+  ) : (
+    <></>
   )
 }
 

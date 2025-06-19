@@ -16,19 +16,17 @@ const PageClient = ({ tableId, columns, data }: Props) => {
 
   return (
     <div className="w-full">
-      {userId && (
-        <DataTable
-          {...{
-            tableId,
-            userId,
-            columns,
-            data: data?.rows ?? [],
-            rowCount: data?.count ?? 0,
-            rowClickChildren: MovementScheduledDetailContainer,
-            enableToolbar: false,
-          }}
-        />
-      )}
+      <DataTable
+        {...{
+          tableId,
+          userId,
+          columns,
+          data: data?.rows ?? [],
+          rowCount: data?.count ?? 0,
+          rowClickChildren: MovementScheduledDetailContainer,
+          enableToolbar: false,
+        }}
+      />
     </div>
   )
 }

@@ -31,7 +31,7 @@ export default {
             throw new SystemCredentialsSignin("ERROR_USER_NOT_AUTHORIZED")
           }
 
-          ProfileStore.setData("profile", profileData)
+          ProfileStore.Update(profileData)
           user = { ...profileData, token }
         } catch (error: any) {
           throw error
