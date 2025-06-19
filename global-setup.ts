@@ -7,7 +7,7 @@ async function globalSetup() {
 
   // Authenticate
   await page.goto("https://sandbox.tropipay.me/login")
-  await page.fill("input#email", user, { timeout: 60000 })
+  await page.fill("input#email", user, { timeout: 90000 })
   await page.fill("input#password", password)
   await page.click('button[type="submit"]')
   await page.waitForURL("https://sandbox.tropipay.me/home", { timeout: 5000 })

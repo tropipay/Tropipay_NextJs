@@ -51,7 +51,6 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
                 currency
               }
               email
-              createdAt
               paymentMethod
                   amount{
                   currency
@@ -62,12 +61,12 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
               completedAt
               concept
               conversionRate
-              createdAt
               amount {
                   currency
                   value
               }
               sender
+              recipient
               product
               movementDetail {
                 cardCountry
@@ -96,7 +95,6 @@ export const movementsApiConfig: Record<string, FetchDataConfig> = {
                 type
                 refundable
               }
-              
             }
             totalCount
           }

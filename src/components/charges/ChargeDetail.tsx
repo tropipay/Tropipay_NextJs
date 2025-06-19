@@ -64,7 +64,7 @@ export default function ChargeDetail(props: any): JSX.Element {
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-500 flex items-center gap-1">
             {t("charge_to")}
-            <span className="uppercase">
+            <span className="capitalize">
               <TextToCopy
                 classNameIcon={"hidden"}
                 value={fullName}
@@ -111,7 +111,7 @@ export default function ChargeDetail(props: any): JSX.Element {
             toClipboard
             toClipboardIconHidden
             label={t("fullName")}
-            value={<span className="uppercase">{fullName}</span>}
+            value={<span className="capitalize">{fullName}</span>}
           />
           <RowDetailInfo
             toClipboard

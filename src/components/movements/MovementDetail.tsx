@@ -130,21 +130,36 @@ export default function MovementDetail(props: any): JSX.Element {
           {product && (
             <RowDetailInfo label={t("product")} value={t(`cp_${product}`)} />
           )}
-          <RowDetailInfo toClipboard label={t("concept")} value={concept} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("concept")}
+            value={concept}
+          />
         </RowDetailSection>
 
         <RowDetailSection title={t("beneficiary_data")}>
-          <RowDetailInfo toClipboard label={t("alias")} value={alias} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("alias")}
+            value={alias}
+          />
           {name && (
             <RowDetailInfo
               toClipboard
               toClipboardIconHidden
               label={t("name")}
-              value={<span className="uppercase">{name}</span>}
+              value={<span className="capitalize">{name}</span>}
             />
           )}
           <RowDetailInfo label={t("account")} value={account} />
-          <RowDetailInfo toClipboard label={t("email")} value={email} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("email")}
+            value={email}
+          />
           <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
@@ -155,7 +170,7 @@ export default function MovementDetail(props: any): JSX.Element {
               toClipboardIconHidden
               label={t("name")}
               value={
-                <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
+                <span className="capitalize">{`${senderName} ${senderLastName}`}</span>
               }
             />
           )}
