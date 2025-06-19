@@ -73,7 +73,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
     <>
       <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
         <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-1">
             <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
               <TextToCopy
                 classNameIcon={"hidden"}
@@ -90,7 +90,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
               optionListGroups={movementStateGroups}
             />
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-1">
             <span className="text-xs text-gray-500 flex items-center gap-1">
               <TextToCopy
                 classNameIcon={"hidden"}
@@ -166,7 +166,7 @@ export default function MovementScheduledDetail(props: any): JSX.Element {
           </RowDetailSection>
         </div>
         {!isDone && (
-          <div className="flex gap-4">
+          <div className="flex gap-4 border-t border-gray-200 mt-4 pt-4">
             <Button
               variant="default"
               className="w-full"

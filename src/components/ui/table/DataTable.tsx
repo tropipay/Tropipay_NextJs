@@ -424,7 +424,7 @@ export default function DataTable<TData, TValue>({
   if (userId)
     return (
       <>
-        <div className="space-y-4">
+        <div>
           {isLoading && <Spinner />}
           {enableToolbar && (
             <DataTableToolbar
@@ -438,7 +438,7 @@ export default function DataTable<TData, TValue>({
               }}
             />
           )}
-          <div>
+          <div className="mt-2">
             <DndContext
               collisionDetection={closestCenter}
               modifiers={[restrictToHorizontalAxis]}
@@ -553,7 +553,7 @@ export default function DataTable<TData, TValue>({
             <SheetDescription />
           </SheetHeader>
           <SheetContent className="sm:w-full md:min-w-[500px]">
-            <div className="pt-4 h-full">
+            <div className="pt-4 h-full mt-2">
               {selectedRow && RowClickChildren && (
                 <RowClickChildren row={selectedRow} />
               )}
