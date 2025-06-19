@@ -3,7 +3,6 @@ import { cn } from "@/utils/data/utils"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { flexRender, Header } from "@tanstack/react-table"
-import { GripVerticalIcon } from "lucide-react"
 import { CSSProperties, ReactNode } from "react"
 
 interface Props<TData, TValue> {
@@ -35,24 +34,21 @@ const DataTableDraggableHeader = <TData, TValue>({
     <TableHead
       key={header.id}
       ref={setNodeRef}
-      className="sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap cursor-default"
       style={style}
       data-test-id={`dataTable-tableHead-sortBy-${header.id}`}
+      className={cn(
+        "sticky top-0 border-b-1 border-gray-500 bg-white whitespace-nowrap cursor-default",
+        "cursor-grab",
+        isDragging && "cursor-grabbing"
+      )}
+      {...attributes}
+      {...listeners}
     >
       <div className="flex gap-1 items-center">
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
         {actions}
-        <GripVerticalIcon
-          size={16}
-          className={cn(
-            "opacity-0 hover:opacity-100 cursor-grab",
-            isDragging && "cursor-grabbing"
-          )}
-          {...attributes}
-          {...listeners}
-        />
       </div>
     </TableHead>
   )

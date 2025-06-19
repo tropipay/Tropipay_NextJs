@@ -11,7 +11,7 @@ interface Props {
   row: any
 }
 
-const ChargeDetailContainer = ({ row }: Props) => {
+const ChargeDetailContainer = ({ row: { id } }: Props) => {
   const queryConfig = apiConfig.chargesDetail
   const [movementId, setMovementId] = useState<string | null>(null)
 
@@ -27,7 +27,7 @@ const ChargeDetailContainer = ({ row }: Props) => {
           showLoading
           {...{
             queryConfig,
-            searchParams: { id: row.id },
+            searchParams: { id },
           }}
           className="h-full"
         >

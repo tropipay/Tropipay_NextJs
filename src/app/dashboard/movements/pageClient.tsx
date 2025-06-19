@@ -19,7 +19,7 @@ import { callPostHog } from "@/utils/utils"
 import { format, parse } from "date-fns"
 import { Download } from "lucide-react"
 import { usePostHog } from "posthog-js/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FormattedMessage } from "react-intl"
 
 interface Props {
@@ -84,6 +84,10 @@ const PageClient = ({ tableId, columns, data }: Props) => {
     BookingStore.Download(filter)
   }
 
+  useEffect(() => {
+    document.addEventListener("load", (e) => e.stopPropagation())
+  }, [])
+
   const toolbarActions = (
     <>
       <Tooltip>
@@ -108,21 +112,20 @@ const PageClient = ({ tableId, columns, data }: Props) => {
 
   return (
     <div className="w-full">
-      {userId && (
-        <DataTable
-          {...{
-            tableId,
-            userId,
-            columns,
-            data: data?.data?.movements?.items ?? [],
-            rowCount: data?.data?.movements?.totalCount ?? 0,
-            categoryFilterId: "movementDirection",
-            categoryFilters: ["ALL", "IN", "OUT"],
-            rowClickChildren: MovementDetailContainer,
-            toolbarActions,
-          }}
-        />
-      )}
+      <DataTable
+        {...{
+          tableId,
+          userId,
+          columns,
+          data: data?.data?.movements?.items ?? [],
+          rowCount: data?.data?.movements?.totalCount ?? 0,
+          categoryFilterId: "movementDirection",
+          categoryFilters: ["ALL", "IN", "OUT"],
+          rowClickChildren: MovementDetailContainer,
+          toolbarActions,
+        }}
+      />
+
       <MessageSonner
         messageData={messageData}
         setMessageData={setMessageData}
