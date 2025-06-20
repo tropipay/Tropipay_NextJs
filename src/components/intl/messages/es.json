@@ -141,6 +141,7 @@
   "max_attempts_title": "Alcanzaste el máximo de intentos",
   "maximum_opt": "Máximo (opcional)",
   "minimum_opt": "Mínimo (opcional)",
+  "move_column": "Mover columna",
   "movementCode": "Código del movimiento",
   "movementDirection": "Dirección del movimiento",
   "movement_data": "Datos del movimiento",
