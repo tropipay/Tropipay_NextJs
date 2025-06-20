@@ -112,7 +112,7 @@ export function NavMain({ items }: { items: SidebarOption[] }) {
                   tooltip={t(item.title)}
                   {...(item.url && { onClick: () => onItemClick(item.url) })}
                 >
-                  {item.icon && <item.icon />}
+                  {item.icon && <item.icon size={24} />}
                   <FormattedMessage id={item.title} />
                 </SidebarMenuButton>
               </SidebarMenuItem>
