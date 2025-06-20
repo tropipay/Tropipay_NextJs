@@ -1,9 +1,16 @@
-import { TableHead } from "@/components/ui"
+import {
+  TableHead,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui"
 import { cn } from "@/utils/data/utils"
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { flexRender, Header } from "@tanstack/react-table"
+import { GripVerticalIcon } from "lucide-react"
 import { CSSProperties, ReactNode } from "react"
+import { FormattedMessage } from "react-intl"
 
 interface Props<TData, TValue> {
   header: Header<TData, TValue>
@@ -41,14 +48,28 @@ const DataTableDraggableHeader = <TData, TValue>({
         "cursor-grab",
         isDragging && "cursor-grabbing"
       )}
-      {...attributes}
-      {...listeners}
     >
-      <div className="flex gap-1 items-center">
+      <div className="flex gap-1 items-center group">
         {header.isPlaceholder
           ? null
           : flexRender(header.column.columnDef.header, header.getContext())}
         {actions}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <GripVerticalIcon
+              size={16}
+              className={cn(
+                "opacity-0 group-hover:opacity-100 cursor-grab focus:outline-none",
+                isDragging && "cursor-grabbing"
+              )}
+              {...attributes}
+              {...listeners}
+            />
+          </TooltipTrigger>
+          <TooltipContent side="bottom" align="center">
+            <FormattedMessage id="move_column" />
+          </TooltipContent>
+        </Tooltip>
       </div>
     </TableHead>
   )
