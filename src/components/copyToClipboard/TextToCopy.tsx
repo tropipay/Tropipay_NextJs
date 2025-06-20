@@ -94,7 +94,7 @@ export function TextToCopy({
       )}
       <span
         className={cn(
-          "opacity-15 group-hover:block group-hover:opacity-100 transition-opacity",
+          "opacity-0 group-hover:block group-hover:opacity-100 transition-opacity",
           classNameIcon
         )}
       >

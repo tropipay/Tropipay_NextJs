@@ -174,7 +174,12 @@ export default function MovementDetail(props: any): JSX.Element {
               }
             />
           )}
-          <RowDetailInfo toClipboard label={t("email")} value={senderEmail} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("email")}
+            value={senderEmail}
+          />
           <RowDetailInfo
             toClipboard
             toClipboardIconHidden
