@@ -1,6 +1,5 @@
 "use client"
 
-import InputAmount from "@/components/InputAmount"
 import {
   Button,
   Dialog,
@@ -9,6 +8,7 @@ import {
   DialogTitle,
   Label,
 } from "@/components/ui"
+import InputAmount from "@/components/ui/InputAmount"
 import { formatAmount } from "@/utils/data/utils"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"

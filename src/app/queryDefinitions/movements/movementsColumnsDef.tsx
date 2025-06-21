@@ -49,6 +49,7 @@ export const movementsColumnsDef: any = {
     enableHiding: false,
     order: 3,
     toClipboard: true,
+    render: (row: any) => <span className="capitalize">{row.sender}</span>,
   },
   movementType: {
     type: "faceted",
@@ -106,6 +107,7 @@ export const movementsColumnsDef: any = {
   recipient: {
     hidden: true,
     toClipboard: true,
+    render: (row: any) => <span className="capitalize">{row.recipient}</span>,
   },
   summary: {
     hidden: true,

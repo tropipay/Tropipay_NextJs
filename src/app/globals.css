@@ -15,7 +15,7 @@ body {
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 245 26% 29%;
+    --foreground: 245 26% 28%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
@@ -116,5 +116,11 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .tropipay-context-menu-item {
+    @apply w-[200px] bg-white shadow-md;
+  }
+  .tropipay-context-menu-item-content {
+    @apply h-[30px] text-sm hover:bg-gray-200 flex items-center justify-start px-2 cursor-pointer;
   }
 }

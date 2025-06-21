@@ -1,4 +1,5 @@
 import { env } from "@/config/env"
+import axiosApi from "@/utils/api/axiosApi"
 import { getToken } from "@/utils/user/utilsUser"
 import axios, { AxiosRequestConfig } from "axios"
 import { CacheEntry, clearAppDataKey, updateAppData } from "./appSlice"
@@ -219,7 +220,10 @@ export async function fetchGetWithTriggers({
     const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
-    const response = await axios.get(url, finalAxiosConfig)
+    const response = await axiosApi.get(url, {
+      ...finalAxiosConfig,
+      headers: finalAxiosConfig?.headers || {},
+    })
 
     // 3. Trigger OK event with full response
     store.trigger(eventOk, response.data)
@@ -255,7 +259,10 @@ export async function fetchPostWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = env.API_URL + endpoint
-    const response = await axios.post(actualEndpoint, payload, finalAxiosConfig)
+    const response = await axiosApi.post(actualEndpoint, payload, {
+      ...finalAxiosConfig,
+      headers: finalAxiosConfig?.headers || {},
+    })
     store.trigger(eventOk, response.data)
   } catch (error) {
     const errorResponse = axios.isAxiosError(error) ? error.response : error
@@ -288,7 +295,10 @@ export async function fetchPutWithTriggers<TPayload = any>({
     }
 
     const actualEndpoint = env.API_URL + endpoint
-    const response = await axios.put(actualEndpoint, payload, finalAxiosConfig)
+    const response = await axiosApi.put(actualEndpoint, payload, {
+      ...finalAxiosConfig,
+      headers: finalAxiosConfig?.headers || {},
+    })
     store.trigger(eventOk, response.data)
   } catch (error) {
     const errorResponse = axios.isAxiosError(error) ? error.response : error
@@ -323,7 +333,10 @@ export async function fetchDeleteWithTriggers({
     const actualEndpoint = env.API_URL + endpoint
     const params = new URLSearchParams(filter).toString()
     const url = `${actualEndpoint}${params ? `?${params}` : ""}`
-    const response = await axios.delete(url, finalAxiosConfig)
+    const response = await axiosApi.delete(url, {
+      ...finalAxiosConfig,
+      headers: finalAxiosConfig?.headers || {},
+    })
     store.trigger(eventOk, response.data)
   } catch (error) {
     const errorResponse = axios.isAxiosError(error) ? error.response : error

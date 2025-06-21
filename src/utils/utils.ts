@@ -6,7 +6,7 @@ import { PostHog } from "posthog-js"
  */
 export const isProduction = (): boolean => {
   if (typeof window !== "undefined") {
-    return window.location.hostname.startsWith("business.tropipay")
+    return window.location.hostname.includes("business.tropipay.com")
   }
   // Default to false if window is not defined (e.g., during SSR)
   return false

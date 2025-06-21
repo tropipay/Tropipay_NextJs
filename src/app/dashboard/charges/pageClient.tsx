@@ -1,9 +1,9 @@
 "use client"
 
 import ChargeDetailContainer from "@/components/charges/ChargeDetailContainer"
-import DataTable from "@/components/table/DataTable"
+import DataTable from "@/components/ui/table/DataTable"
+import ProfileStore from "@/stores/ProfileStore"
 import { GetChargesResponse } from "@/types/charges"
-import { useSession } from "next-auth/react"
 
 interface Props {
   tableId: string
@@ -12,26 +12,25 @@ interface Props {
 }
 
 const PageClient = ({ tableId, columns, data }: Props) => {
-  const { data: session } = useSession()
-  const userId = session?.user?.id
+  const userId = (ProfileStore?.getProfileData() as any)?.id
 
-  return (
+  return userId ? (
     <div className="w-full">
-      {userId && (
-        <DataTable
-          {...{
-            tableId,
-            userId,
-            columns,
-            data: data?.data?.charges?.items ?? [],
-            rowCount: data?.data?.charges?.totalCount ?? 0,
-            categoryFilterId: "state",
-            categoryFilters: ["ALL", "CAPTURED", "DECLINED"],
-            rowClickChildren: ChargeDetailContainer,
-          }}
-        />
-      )}
+      <DataTable
+        {...{
+          tableId,
+          userId,
+          columns,
+          data: data?.data?.charges?.items ?? [],
+          rowCount: data?.data?.charges?.totalCount ?? 0,
+          categoryFilterId: "state",
+          categoryFilters: ["ALL", "CAPTURED", "DECLINED"],
+          rowClickChildren: ChargeDetailContainer,
+        }}
+      />
     </div>
+  ) : (
+    <></>
   )
 }
 

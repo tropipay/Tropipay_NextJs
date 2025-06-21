@@ -5,20 +5,20 @@ import {
   movementStates,
 } from "@/app/filterDefinitions/movements"
 import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
-import FacetedBadge from "@/components/table/FacetedBadge"
-import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
-import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
+import FacetedBadge from "@/components/ui/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/ui/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/ui/table/tableRowDetails/RowDetailSection"
+import useStoreListener from "@/hooks/useStoreListener"
+import BookingStore from "@/stores/BookingStore"
 import { MovementDetails } from "@/types/movements"
 import { formatAmount } from "@/utils/data/utils"
+import { useTranslations } from "@/utils/intl"
 import { callPostHog } from "@/utils/utils"
 import { format } from "date-fns"
 import { usePostHog } from "posthog-js/react"
 import { useState } from "react"
-import BookingStore from "@/stores/BookingStore"
-import useStoreListener from "@/hooks/useStoreListener"
-import { TextToCopy } from "../TextToCopy"
-import { useTranslations } from "@/utils/intl"
+import { TextToCopy } from "../copyToClipboard/TextToCopy"
 import MessageSonner from "../MessageSonner"
 
 export default function MovementDetail(props: any): JSX.Element {
@@ -92,7 +92,7 @@ export default function MovementDetail(props: any): JSX.Element {
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-1">
           <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
             <TextToCopy
               classNameIcon={"hidden"}
@@ -109,7 +109,7 @@ export default function MovementDetail(props: any): JSX.Element {
             optionListGroups={movementStateGroups}
           />
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-1">
           <p className="text-xs text-gray-500">
             <TextToCopy
               classNameIcon={"hidden"}
@@ -130,21 +130,36 @@ export default function MovementDetail(props: any): JSX.Element {
           {product && (
             <RowDetailInfo label={t("product")} value={t(`cp_${product}`)} />
           )}
-          <RowDetailInfo toClipboard label={t("concept")} value={concept} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("concept")}
+            value={concept}
+          />
         </RowDetailSection>
 
         <RowDetailSection title={t("beneficiary_data")}>
-          <RowDetailInfo toClipboard label={t("alias")} value={alias} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("alias")}
+            value={alias}
+          />
           {name && (
             <RowDetailInfo
               toClipboard
               toClipboardIconHidden
               label={t("name")}
-              value={<span className="uppercase">{name}</span>}
+              value={<span className="capitalize">{name}</span>}
             />
           )}
           <RowDetailInfo label={t("account")} value={account} />
-          <RowDetailInfo toClipboard label={t("email")} value={email} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("email")}
+            value={email}
+          />
           <RowDetailInfo label={t("country")} value={country} />
         </RowDetailSection>
 
@@ -155,11 +170,16 @@ export default function MovementDetail(props: any): JSX.Element {
               toClipboardIconHidden
               label={t("name")}
               value={
-                <span className="uppercase">{`${senderName} ${senderLastName}`}</span>
+                <span className="capitalize">{`${senderName} ${senderLastName}`}</span>
               }
             />
           )}
-          <RowDetailInfo toClipboard label={t("email")} value={senderEmail} />
+          <RowDetailInfo
+            toClipboard
+            toClipboardIconHidden
+            label={t("email")}
+            value={senderEmail}
+          />
           <RowDetailInfo
             toClipboard
             toClipboardIconHidden
@@ -248,7 +268,7 @@ export default function MovementDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 border-t border-gray-200 mt-4 pt-4">
         <Button
           variant="outline"
           className={refundable ? "w-1/2" : "w-full"}

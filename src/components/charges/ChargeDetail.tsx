@@ -3,17 +3,17 @@ import {
   chargeStatesGroups,
 } from "@/app/filterDefinitions/charges"
 import { RefundWizard } from "@/components/refund/RefundDialog/RefundWizard"
-import FacetedBadge from "@/components/table/FacetedBadge"
-import { RowDetailInfo } from "@/components/table/tableRowDetails/RowDetailInfo"
-import { RowDetailSection } from "@/components/table/tableRowDetails/RowDetailSection"
 import { Button } from "@/components/ui"
+import FacetedBadge from "@/components/ui/table/FacetedBadge"
+import { RowDetailInfo } from "@/components/ui/table/tableRowDetails/RowDetailInfo"
+import { RowDetailSection } from "@/components/ui/table/tableRowDetails/RowDetailSection"
 import { Charge } from "@/types/charges"
 import { formatAmount } from "@/utils/data/utils"
 import { useTranslations } from "@/utils/intl"
 import { format } from "date-fns"
 import { useState } from "react"
 import { FormattedMessage } from "react-intl"
-import { TextToCopy } from "../TextToCopy"
+import { TextToCopy } from "../copyToClipboard/TextToCopy"
 
 export default function ChargeDetail(props: any): JSX.Element {
   const [openRefundDialog, setOpenRefundDialog] = useState(false)
@@ -44,7 +44,7 @@ export default function ChargeDetail(props: any): JSX.Element {
   return (
     <div className="max-w-md mx-auto p-4 flex flex-col gap-4 h-full">
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-1">
           <div className="font-poppins md:text-2xl leading-5 tracking-tight uppercase font-bold">
             <TextToCopy
               classNameIcon={"hidden"}
@@ -61,10 +61,10 @@ export default function ChargeDetail(props: any): JSX.Element {
             optionListGroups={chargeStatesGroups}
           />
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mt-1">
           <span className="text-xs text-gray-500 flex items-center gap-1">
             {t("charge_to")}
-            <span className="uppercase">
+            <span className="capitalize">
               <TextToCopy
                 classNameIcon={"hidden"}
                 value={fullName}
@@ -111,7 +111,7 @@ export default function ChargeDetail(props: any): JSX.Element {
             toClipboard
             toClipboardIconHidden
             label={t("fullName")}
-            value={<span className="uppercase">{fullName}</span>}
+            value={<span className="capitalize">{fullName}</span>}
           />
           <RowDetailInfo
             toClipboard
@@ -162,7 +162,7 @@ export default function ChargeDetail(props: any): JSX.Element {
           )}
         </RowDetailSection>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 border-t border-gray-200 mt-4 pt-4">
         {refundable && (
           <Button
             variant="default"

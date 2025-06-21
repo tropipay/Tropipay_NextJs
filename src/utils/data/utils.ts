@@ -4,6 +4,7 @@ import { clsx, type ClassValue } from "clsx"
 import { createHash } from "crypto"
 import { isBefore, startOfDay } from "date-fns"
 import { twMerge } from "tailwind-merge"
+import { fetchApi } from "../api/fetchApi"
 import { getUser } from "../user/utilsUser"
 
 /**
@@ -83,10 +84,8 @@ export const fetchGetWithTriggers = async (
       endpoint += `?${queryParams(filter)}`
     }
 
-    const deviceId = "010101" // Simulado, reemplazar con fingerprint si es necesario
-
-    const response = await fetch(endpoint, {
-      headers: { ...headers, "X-DEVICE-ID": deviceId },
+    const response = await fetchApi(endpoint, {
+      headers,
     })
 
     if (!response.ok) throw new Error(response.statusText)

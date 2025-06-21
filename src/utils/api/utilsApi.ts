@@ -3,14 +3,18 @@ import ProfileStore from "@/stores/ProfileStore"
 import { GraphQLVariables, SearchParams } from "@/types/api"
 import { FetchOptions } from "@/types/fetchData"
 import { fetchHeaders, formatAmountToCents } from "@/utils/data/utils"
-import axios from "axios"
 import { parse } from "date-fns"
 import getConfig from "next/config"
 import { getUserSettings } from "../user/utilsUser"
+import axiosApi from "./axiosApi"
 
 /**
  * Makes an API request.
- * @param {FetchOptions} { queryConfig, variables, columnVisibility, token, debug }
+ * @param {FetchOptions} options - Configuration options for the API request.
+ * @param {object} options.queryConfig - The query configuration.
+ * @param {object} options.variables - The variables for the query.
+ * @param {string} options.token - The authentication token.
+ * @param {boolean} options.debug - Whether to enable debug logging.
  * @returns {Promise<any>} The response from the API.
  */
 export async function makeApiRequest({
@@ -60,15 +64,12 @@ export async function makeApiRequest({
   }
 
   try {
-    const response = await axios({
+    const response = await axiosApi({
       url: `${env.API_URL}${url}`,
       method,
       headers: {
         ...fetchHeaders,
         Authorization: `Bearer ${token}`,
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
       },
       ...(body && {
         data: JSON.stringify(bodyUpdated),

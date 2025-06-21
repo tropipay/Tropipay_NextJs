@@ -2,8 +2,7 @@
 
 import { sideBarOptions } from "@/app/data/sideBarOptions"
 import { apiConfig } from "@/app/queryDefinitions/apiConfig"
-import { NavMain } from "@/components/NavMain"
-import { NavUser } from "@/components/NavUser"
+import { NavUser } from "@/components/navUser/NavUser"
 import {
   Sidebar,
   SidebarContent,
@@ -11,11 +10,12 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui"
+import { NavMain } from "@/components/ui/NavMain"
 import { dehydrate, useQueryClient } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import * as React from "react"
 import DataComponent from "./DataComponent"
-import { NavUserBusiness } from "./NavUserBusiness"
+import { NavUserBusiness } from "./navUser/NavUserBusiness"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession()

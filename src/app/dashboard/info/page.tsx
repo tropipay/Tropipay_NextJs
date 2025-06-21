@@ -1,5 +1,5 @@
 "use client"
-import Validator2fa from "@/components/validator2fa"
+import Validator2fa from "@/components/Validator2FA"
 import BookingStore from "@/stores/BookingStore"
 import React from "react"
 
